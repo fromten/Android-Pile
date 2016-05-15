@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Joke</string>
+    <string name="tab_joke">笑话</string>
+    <string name="tab_pic">图片</string>
+    <string name="tab_setting">设置</string>
+    <item name="link" type="id"/>
+</resources>

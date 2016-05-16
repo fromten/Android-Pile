@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         getMenuInflater().inflate(R.menu.main_menu,menu);
         return true;
     }
@@ -47,6 +46,9 @@ public class MainActivity extends AppCompatActivity {
         mViewPager.setAdapter(new ViewPageAdapter(getSupportFragmentManager()));
         mTabLayout.setupWithViewPager(mViewPager);
     }
+
+
+    //检查网络是否可用
     public boolean isConnectionNet()
     {
         ConnectivityManager manager= (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);

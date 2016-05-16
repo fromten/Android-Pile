@@ -18,7 +18,7 @@ public class UrlCheck {
         int last=url.lastIndexOf("?");
         String[] strarry=new String[2];
         strarry[0]=url.substring(0,last);
-        strarry[1]=url.substring(++last,url.length());
+        strarry[1]=url.substring(last+1,url.length());
         return strarry;
     }
 }

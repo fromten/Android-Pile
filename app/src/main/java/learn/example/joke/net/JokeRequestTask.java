@@ -10,7 +10,6 @@ import java.util.Collections;
 import java.util.List;
 
 import learn.example.joke.jsonobject.BaseJokeData;
-import learn.example.joke.jsonobject.JokeDataBuilder;
 import learn.example.joke.jsonobject.JokeJsonData;
 import learn.example.joke.util.UrlCheck;
 
@@ -79,7 +78,7 @@ public class JokeRequestTask extends AsyncTask<String,Void,List<BaseJokeData>>
         {
             String msg="empty Data ";
             if(mTaskCompleteListener!=null)
-            mTaskCompleteListener.taskError(msg);
+            mTaskCompleteListener.taskFail(msg);
         }else if(mTaskCompleteListener!=null)
         {
             mTaskCompleteListener.taskComplete(result);
@@ -96,6 +95,6 @@ public class JokeRequestTask extends AsyncTask<String,Void,List<BaseJokeData>>
 
     public interface TaskCompleteListener{
          void taskComplete(List<BaseJokeData> data);
-         void taskError(String msg);
+         void taskFail(String msg);
     }
 }

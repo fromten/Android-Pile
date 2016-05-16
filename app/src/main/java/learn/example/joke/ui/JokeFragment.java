@@ -1,7 +1,10 @@
 package learn.example.joke.ui;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -15,11 +18,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +31,10 @@ import java.util.List;
 import learn.example.joke.MainActivity;
 import learn.example.joke.MyURI;
 import learn.example.joke.R;
+import learn.example.joke.database.JokeDataBaseHelper;
 import learn.example.joke.jsonobject.BaseJokeData;
 import learn.example.joke.net.JokeRequestTask;
+import learn.example.joke.util.DataBaseManager;
 
 /**
  * Created on 2016/5/5.
@@ -39,14 +45,17 @@ public class JokeFragment extends Fragment implements JokeRequestTask.TaskComple
     private SwipeRefreshLayout mRefreshLayout;
     private RecyclerViewAdapter mRecyclerAdapter;
     private JokeRequestTask mRequestTask;
+    private DataBaseManager mDBManager;
 
     public final static String HISTORY_PAGE_KEY="HISTORY_PAGE_KEY";
     private final String STATE_LIST_KEY="STATE_LIST_KEY";
+    private int currentDataBasePage=0;
+
     private String TAG="JokeFragemnt";
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.fragment_text_joke,container,false);
+        View view=inflater.inflate(R.layout.fragment_joke,container,false);
         mRefreshLayout= (SwipeRefreshLayout) view.findViewById(R.id.refreshlayout);
         mRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         mRefreshLayout.setOnRefreshListener(this);
@@ -54,6 +63,7 @@ public class JokeFragment extends Fragment implements JokeRequestTask.TaskComple
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerAdapter=new RecyclerViewAdapter();
         mRecyclerView.setAdapter(mRecyclerAdapter);
+        mDBManager = new DataBaseManager(getContext());
         return view;
     }
 
@@ -107,10 +117,10 @@ public class JokeFragment extends Fragment implements JokeRequestTask.TaskComple
         mRecyclerAdapter.addItem(data);
         mRefreshLayout.setRefreshing(false);
         saveLastHistoryPage(data.get(0).getCurrentPage());
+        mDBManager.saveJokeToDataBase(data);
     }
-
     @Override
-    public void taskError(String msg) {
+    public void taskFail(String msg) {
          Log.e(TAG,msg);
          mRefreshLayout.setRefreshing(false);
     }
@@ -119,21 +129,36 @@ public class JokeFragment extends Fragment implements JokeRequestTask.TaskComple
     public void onDestroy() {
         if(mRefreshLayout.isRefreshing())
             mRefreshLayout.setRefreshing(false);
+        mDBManager.closeDB();
         super.onDestroy();
+    }
+    public void loadLocalData()
+    {
+        List<BaseJokeData> list=mDBManager.readJokeFromDataBase(currentDataBasePage,currentDataBasePage+10);
+        mRecyclerAdapter.addItem(list);
+        currentDataBasePage=currentDataBasePage+10;
+        mRefreshLayout.setRefreshing(false);
     }
     //执行网络数据获取
     public void requestData(int page)
     {
-        if(!((MainActivity)getActivity()).isConnectionNet()) return;//没有网络直接返回
-        mRequestTask=new JokeRequestTask();
-        mRequestTask.setTaskCompleteListener(this);
-        mRefreshLayout.setRefreshing(true);
-        String texturl=MyURI.TEXT_JOKE_REQUEST_URL+"?page="+page;
-        String imgurl=MyURI.IMAGE_JOKE_REQUEST_URL+"?page="+page;
-        mRequestTask.execute(texturl,imgurl);
+        if(!((MainActivity)getActivity()).isConnectionNet())
+        {
+            loadLocalData();
+        }else
+        {
+            mRefreshLayout.setRefreshing(true);
+            mRequestTask=new JokeRequestTask();
+            mRequestTask.setTaskCompleteListener(this);
+            String texturl=MyURI.TEXT_JOKE_REQUEST_URL+"?page="+page;
+            String imgurl=MyURI.IMAGE_JOKE_REQUEST_URL+"?page="+page;
+            mRequestTask.execute(texturl,imgurl);
+        }
     }
     @Override
     public void onRefresh() {
+
+        if(mRecyclerAdapter.getItemCount()>=20)//只有在Adapter大于等于20个是才清空数据
         mRecyclerAdapter.clearItem();
         requestData(readLastHistoryPage());
     }
@@ -173,7 +198,7 @@ public class JokeFragment extends Fragment implements JokeRequestTask.TaskComple
         }
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View  view=LayoutInflater.from(getContext()).inflate(R.layout.fragment_text_joke_adpter,parent,false);
+            View  view=LayoutInflater.from(getContext()).inflate(R.layout.fragment_joke_adpter_view,parent,false);
             return new ReViewItemHolder(view);
         }
 

@@ -81,6 +81,7 @@ public class SettingFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        //转换成字符串,在取小数点后一位;
         String size= String.valueOf(readDiskCacheSize()/1024.0/1024.0);
         int index=size.indexOf(".");
         size=size.substring(0,index+2)+" mb";

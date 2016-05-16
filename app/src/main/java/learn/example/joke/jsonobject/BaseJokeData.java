@@ -3,6 +3,8 @@ package learn.example.joke.jsonobject;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.JsonObject;
+
 import java.util.List;
 
 /**
@@ -16,8 +18,8 @@ public  class BaseJokeData implements Parcelable{
     private String imgurl;
     private String title;
     private String text;
-    private String lastTime;
-    private int currentPage;
+    private String lasttime;
+    private int currentpage;
 
     //使用JokeDataBuilder去 new BaseJokeData
     public BaseJokeData() {
@@ -57,19 +59,19 @@ public  class BaseJokeData implements Parcelable{
     }
 
     public String getLastTime() {
-        return lastTime;
+        return lasttime;
     }
 
     public void setLastTime(String lastTime) {
-        this.lastTime = lastTime;
+        this.lasttime = lastTime;
     }
 
     public int getCurrentPage() {
-        return currentPage;
+        return currentpage;
     }
 
     public void setCurrentPage(int currentPage) {
-        this.currentPage = currentPage;
+        this.currentpage = currentPage;
     }
 
     @Override
@@ -83,8 +85,8 @@ public  class BaseJokeData implements Parcelable{
           dest.writeString(text);
           dest.writeString(imgurl);
           dest.writeInt(type);
-          dest.writeInt(currentPage);
-          dest.writeString(lastTime);
+          dest.writeInt(currentpage);
+          dest.writeString(lasttime);
     }
     public  static final Parcelable.Creator<BaseJokeData> CREATOR=new Parcelable.Creator<BaseJokeData>()
     {
@@ -105,5 +107,17 @@ public  class BaseJokeData implements Parcelable{
             return new BaseJokeData[size];
         }
     };
+
+    @Override
+    public String toString() {
+        JsonObject jsonObject=new JsonObject();
+        jsonObject.addProperty("type",type);
+        jsonObject.addProperty("lasttime",lasttime);
+        jsonObject.addProperty("title",title);
+        jsonObject.addProperty("text",text);
+        jsonObject.addProperty("imgurl",imgurl);
+        jsonObject.addProperty("currentpage",currentpage);
+        return jsonObject.toString();
+    }
 }
 

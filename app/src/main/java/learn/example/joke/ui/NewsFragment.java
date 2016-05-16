@@ -117,7 +117,7 @@ public class NewsFragment extends Fragment implements ListView.OnItemClickListen
     }
 
     @Override
-    public void error(String msg) {
+    public void taskFail(String msg) {
         Toast.makeText(getActivity(),"数据请求失败",Toast.LENGTH_SHORT).show();
         mListView.onRefreshComplete();
     }
@@ -171,7 +171,7 @@ public class NewsFragment extends Fragment implements ListView.OnItemClickListen
             NewsViewHolder holder;
             if(convertView==null)
             {
-                convertView=LayoutInflater.from(getContext()).inflate(R.layout.fragment_news_adpterview,parent,false);
+                convertView=LayoutInflater.from(getContext()).inflate(R.layout.fragment_news_adpter_view,parent,false);
                 holder=new NewsViewHolder();
                 holder.title= (TextView) convertView.findViewById(R.id.news_title);
                 holder.describe= (TextView) convertView.findViewById(R.id.news_descr);

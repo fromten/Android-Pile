@@ -30,6 +30,4 @@ public class JokeJsonData {
              public int type;
         }
     }
-
-
 }

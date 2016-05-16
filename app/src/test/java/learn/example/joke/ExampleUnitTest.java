@@ -1,9 +1,9 @@
 package learn.example.joke;
 
 
-import org.junit.Test;
+import com.google.gson.Gson;
 
-import java.util.List;
+import org.junit.Test;
 
 import learn.example.joke.jsonobject.BaseJokeData;
 
@@ -247,9 +247,17 @@ public class ExampleUnitTest {
             "}";
     @Test
     public void addition_isCorrect() {
-           String str="hello hello ";
-        System.out.println(str.indexOf(" "));
-        System.out.println(str.indexOf(" ",6));
+         BaseJokeData baseJokeData=new BaseJokeData();
+        baseJokeData.setText("text");
+        baseJokeData.setCurrentPage(1);
+        baseJokeData.setLastTime("time");
+        baseJokeData.setType(2);
+        baseJokeData.setImgUrl("imgurl");
+        baseJokeData.setTitle("title");
+        System.out.println(baseJokeData.toString());
+        Gson gson=new Gson();
+        BaseJokeData newb=gson.fromJson(baseJokeData.toString(),BaseJokeData.class);
+        System.out.println(newb.toString());
     }
     public void getException() throws Exception {
          throw new Exception();

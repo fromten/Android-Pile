@@ -46,13 +46,13 @@ public class NewsRequestTask extends AsyncTask<String,Void,NewsJsonData>{
                   mTaskCompleteListener.taskComplete(newsJsonData.resData);
           }else if(mTaskCompleteListener !=null)
           {
-              mTaskCompleteListener.error(null);
+              mTaskCompleteListener.taskFail(null);
           }
     }
 
     public interface TaskCompleteListener
     {
         void taskComplete(List<NewsJsonData.resData> data);
-        void error(String msg);
+        void taskFail(String msg);
     }
 }

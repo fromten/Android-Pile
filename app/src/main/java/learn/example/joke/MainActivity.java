@@ -3,21 +3,13 @@ package learn.example.joke;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.PersistableBundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.disklrucache.DiskLruCache;
-
-import java.io.IOException;
-
-import learn.example.joke.ui.SettingFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -44,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
         mTabLayout= (TabLayout) findViewById(R.id.tab_layout);
         mViewPager= (ViewPager) findViewById(R.id.page_layout);
         mViewPager.setAdapter(new ViewPageAdapter(getSupportFragmentManager()));
+
+        mTabLayout.setTabMode(TabLayout.MODE_FIXED);
         mTabLayout.setupWithViewPager(mViewPager);
     }
 

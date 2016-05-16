@@ -38,12 +38,13 @@ public class JokeRequestTask extends AsyncTask<String,Void,List<BaseJokeData>>
         List<BaseJokeData> items=new ArrayList<>();
         for (String res:jsonstr)
         {
-            JokeJsonData data=null;
+            JokeJsonData data;
             try{
                 data=gson.fromJson(res,JokeJsonData.class);
             }catch (JsonSyntaxException exception)
             {
                 exception.printStackTrace();
+                continue;
             }
             if(data!=null&&data.showapi_res_code==0)
             {

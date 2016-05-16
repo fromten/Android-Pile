@@ -34,7 +34,6 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/pic_cache"
-        android:text="0.0 mb"
         android:layout_alignBottom="@+id/textView"
         android:layout_alignParentRight="true"
         android:textColor="@color/colorPrimary"

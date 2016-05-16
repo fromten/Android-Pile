@@ -3,9 +3,16 @@ package learn.example.joke;
 
 import com.google.gson.Gson;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.junit.Test;
 
-import learn.example.joke.jsonobject.BaseJokeData;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import learn.example.joke.net.StringRequest;
+
 
 /**
  * To work on unit tests, switch the Test Artifact in the Build Variants view.
@@ -247,17 +254,10 @@ public class ExampleUnitTest {
             "}";
     @Test
     public void addition_isCorrect() {
-         BaseJokeData baseJokeData=new BaseJokeData();
-        baseJokeData.setText("text");
-        baseJokeData.setCurrentPage(1);
-        baseJokeData.setLastTime("time");
-        baseJokeData.setType(2);
-        baseJokeData.setImgUrl("imgurl");
-        baseJokeData.setTitle("title");
-        System.out.println(baseJokeData.toString());
-        Gson gson=new Gson();
-        BaseJokeData newb=gson.fromJson(baseJokeData.toString(),BaseJokeData.class);
-        System.out.println(newb.toString());
+        String url="http://slide.news.sina.com.cn/s/slide_1_2841_99109.html#p=1";
+        String json= StringRequest.request("http://apis.baidu.com/showapi_open_bus/extract/extract","url="+url);
+        System.out.println(json);
+
     }
     public void getException() throws Exception {
          throw new Exception();

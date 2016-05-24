@@ -1,17 +1,11 @@
 package learn.example.joke;
 
 
-import com.google.gson.Gson;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import learn.example.joke.net.StringRequest;
+import learn.example.pile.MyURI;
+import learn.example.pile.jsonobject.BaseJokeData;
+import learn.example.pile.net.StringRequest;
 
 
 /**
@@ -254,9 +248,8 @@ public class ExampleUnitTest {
             "}";
     @Test
     public void addition_isCorrect() {
-        String url="http://slide.news.sina.com.cn/s/slide_1_2841_99109.html#p=1";
-        String json= StringRequest.request("http://apis.baidu.com/showapi_open_bus/extract/extract","url="+url);
-        System.out.println(json);
+       String res=StringRequest.request(MyURI.NEW_DATA_REQUEST_URL,null);
+        System.out.println(res);
 
     }
     public void getException() throws Exception {

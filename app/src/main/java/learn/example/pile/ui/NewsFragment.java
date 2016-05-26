@@ -53,6 +53,8 @@ public class NewsFragment extends RecyclerViewFragment implements NewsRequestTas
 
     @Override
     public void onDestroy() {
+        mNewsListAdapter=null;
+        mNewsRequestTask=null;
         super.onDestroy();
     }
 
@@ -83,16 +85,17 @@ public class NewsFragment extends RecyclerViewFragment implements NewsRequestTas
 
     @Override
     public void onItemClick(RecyclerView recyclerView,View view, int position) {
-//        String link= (String) view.getTag(R.id.link);
-//        Intent intent=new Intent(getActivity(),NewsActivity.class);
-//        intent.putExtra(NewsActivity.LINK_KEY,link);
-//        startActivity(intent);
-//
+
+        String link= mNewsListAdapter.getItem(position).getNewsUrl();
+        Intent intent=new Intent(getActivity(),NewsActivity.class);
+        intent.putExtra(NewsActivity.LINK_KEY,link);
+        startActivity(intent);
+
 //          String url=mNewsListAdapter.getItem(position).getNewsUrl();
 //          Intent intent=new Intent(Intent.ACTION_VIEW);
 //          intent.setData(Uri.parse(url));
 //          startActivity(intent);
-        System.out.println(position);
+
     }
 
     public void correctReqData()

@@ -7,7 +7,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import learn.example.joke.R;
-import learn.example.pile.net.StringRequest;
 
 /**
  * Created on 2016/5/7.
@@ -21,6 +20,8 @@ public class NewsActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news);
         mWebView= (WebView) findViewById(R.id.news_webview);
+        mWebView.getSettings().setDomStorageEnabled(true);
+        mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.setWebViewClient(new WebViewClient(){
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -36,17 +37,5 @@ public class NewsActivity extends AppCompatActivity  {
             mWebView.loadUrl(url);
         }
 
-    }
-    public class RequestThread extends Thread
-    {
-        private String url;
-        RequestThread(String url)
-       {
-         this.url=url;
-      }
-        @Override
-        public void run() {
-            String html= StringRequest.request(url,null);
-        }
     }
 }

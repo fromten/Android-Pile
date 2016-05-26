@@ -1,12 +1,10 @@
 package learn.example.pile.ui;
 
 import android.content.Context;
-import android.graphics.Rect;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,10 +12,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import learn.example.joke.R;
@@ -42,8 +36,8 @@ public class RecyclerViewFragment extends Fragment implements RecyclerPullUPImpl
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.addOnScrollListener(new RecyclerPullUPImpl(this));//添加上拉刷新监听
-        mRefreshView.setOnRefreshListener(this);
-        mRecyclerView.setOnTouchListener(new OnItemClickImpl());
+        mRefreshView.setOnRefreshListener(this);//设置下拉监听
+        mRecyclerView.setOnTouchListener(new OnItemClickImpl());//View点击监听
         return v;
     }
     public final void setRecyclerAdapter(RecyclerView.Adapter adapter)
@@ -82,6 +76,7 @@ public class RecyclerViewFragment extends Fragment implements RecyclerPullUPImpl
          //下拉刷新
     }
 
+    //元素点击
     public void onItemClick(RecyclerView recyclerView,View view,int position)
     {
 

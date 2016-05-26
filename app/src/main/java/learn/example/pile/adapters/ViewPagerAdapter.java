@@ -1,4 +1,4 @@
-package learn.example.pile;
+package learn.example.pile.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,10 +11,10 @@ import learn.example.pile.ui.SettingFragment;
 /**
  * Created on 2016/5/6.
  */
-public class ViewPageAdapter extends FragmentStatePagerAdapter {
+public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
     private final String[] title={"笑话","新闻","设置"};
-    public ViewPageAdapter(FragmentManager fm) {
+    public ViewPagerAdapter(FragmentManager fm) {
         super(fm);
     }
 

@@ -57,7 +57,7 @@ public abstract class FooterAdapter<T extends RecyclerView.ViewHolder> extends R
 
         public abstract int getItemSize();
         public abstract T onCreateItemHolder(ViewGroup parent);
-        public abstract void onBindItemHolder(T t,int position);
+        public abstract void onBindItemHolder(T holder,int position);
 
 
     public static class FooterViewHolder extends RecyclerView.ViewHolder {

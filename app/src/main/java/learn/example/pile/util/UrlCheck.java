@@ -1,5 +1,16 @@
 package learn.example.pile.util;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+
 /**
  * Created on 2016/5/7.
  */
@@ -20,5 +31,38 @@ public class UrlCheck {
         strarry[0]=url.substring(0,last);
         strarry[1]=url.substring(last+1,url.length());
         return strarry;
+    }
+
+    //解析微博,[0] 视频源地址,[1]图片url
+    public static String[] parserWeiboHtml(Document doc)
+    {
+        Element video=doc.select("video").first();
+        Element img=doc.select("img.poster").first();
+        String[] arr=new String[2];
+        if(video!=null)
+        {
+            arr[0]=video.attr("src");
+        }
+        if(img!=null)
+        {
+            arr[1]=img.attr("src");
+        }
+        return arr;
+    }
+    //解析秒拍,[0] 视频源地址,[1]图片url
+    public static String[] parserMiaopaiHtml(Document doc)
+    {
+        Element video=doc.select("video").first();
+        Element img=doc.select("div.video_img").first();
+        String[] arr=new String[2];
+        if(video!=null)
+        {
+            arr[0]=video.attr("src");
+        }
+        if(img!=null)
+        {
+            arr[1]=img.attr("data-url");
+        }
+        return arr;
     }
 }

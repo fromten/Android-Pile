@@ -47,4 +47,33 @@ public class StringRequest {
         }
         return result;
     }
+    public static  String request(String httpUrl) {
+        if(httpUrl==null)
+            return null;
+        BufferedReader reader = null;
+        String result = null;
+        StringBuffer sbf = new StringBuffer();
+        try {
+            URL url = new URL(httpUrl);
+            HttpURLConnection connection = (HttpURLConnection) url
+                    .openConnection();
+            connection.setReadTimeout(8000);
+            connection.setConnectTimeout(5000);
+            connection.setRequestMethod("GET");
+            // 填入apikey到HTTP header
+            connection.connect();
+            InputStream is = connection.getInputStream();
+            reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            String strRead = null;
+            while ((strRead = reader.readLine()) != null) {
+                sbf.append(strRead);
+                sbf.append("\r\n");
+            }
+            reader.close();
+            result = sbf.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 }

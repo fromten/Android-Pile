@@ -2,8 +2,6 @@ package learn.example.pile.ui;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
@@ -69,6 +67,7 @@ public class JokeListFragment extends RecyclerViewFragment implements JokeReques
     @Override
     public void onDestroy() {
         mJokeDataBase.close();
+        mJokeListAdapter=null;
         super.onDestroy();
     }
     @Override

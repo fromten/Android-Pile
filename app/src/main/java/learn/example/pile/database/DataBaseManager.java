@@ -5,11 +5,11 @@ import android.content.Context;
 /**
  * Created on 2016/5/15.
  */
-public class DataBaseManager {
+public class DatabaseManager {
 
-    public static JokeDataBase openJokeDataBase(Context context)
+    public static JokeDatabase openJokeDatabase(Context context)
     {
-        return new JokeDataBase(context);
+        return new JokeDatabase(context);
     }
 
 }

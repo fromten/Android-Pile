@@ -27,8 +27,6 @@ public class StringRequest {
             URL url = new URL(httpUrl);
             HttpURLConnection connection = (HttpURLConnection) url
                     .openConnection();
-            connection.setReadTimeout(8000);
-            connection.setConnectTimeout(5000);
             connection.setRequestMethod("GET");
             // 填入apikey到HTTP header
             connection.setRequestProperty("apikey", MyURI.API_KEY);
@@ -57,8 +55,8 @@ public class StringRequest {
             URL url = new URL(httpUrl);
             HttpURLConnection connection = (HttpURLConnection) url
                     .openConnection();
-            connection.setReadTimeout(8000);
-            connection.setConnectTimeout(5000);
+            connection.setReadTimeout(10*1000);
+            connection.setConnectTimeout(10*1000);
             connection.setRequestMethod("GET");
             // 填入apikey到HTTP header
             connection.connect();

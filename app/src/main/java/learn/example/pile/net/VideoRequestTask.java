@@ -34,12 +34,10 @@ public class VideoRequestTask extends AsyncTask<String,Void,List<BaseVideoData>>
             result=parserData(data);
             for(BaseVideoData item:result)
             {
-                String[] arr=getHtmlWithImgUrl(item.getHtmlUrl());
-                if(arr!=null)
-                {
-                    item.setVideoUrl(arr[0]);
-                    item.setImgUrl(arr[1]);
-                }
+                String[] arr=getVideoWithImgUrl(item.getHtmlUrl());
+                if (arr==null) continue;//没有可获得的数据时继续循环
+                if(arr[0]!=null) item.setVideoUrl(arr[0]);//设置视频Url
+                if(arr[1]!=null) item.setImgUrl(arr[1]);//设置图片Url
             }
         }catch (JsonSyntaxException exception)
         {
@@ -47,25 +45,25 @@ public class VideoRequestTask extends AsyncTask<String,Void,List<BaseVideoData>>
         }
         return result;
     }
-    private String[] getHtmlWithImgUrl(String url)
+    //如果成功返回一个数组,str[0] 是视频源地址,str[1] 是图片源url
+    private String[] getVideoWithImgUrl(String url)
     {
-        try {
-            Log.e("task",url);
-            Document document=Jsoup.connect(url).get();
+        if(!url.contains("weibo.com")&&!url.contains("miaopai.com"))
+            return null;//遇到不是微博,秒拍视频链接时,return null
+        Log.e("task",url);
+        String res=StringRequest.request(url);
+        Document document=Jsoup.parse(res);
             //如果来源是微博或秒拍,提取视频文件真正地址
             if(url.contains("weibo.com"))
-            {   String[] result= UrlCheck.parserWeiboHtml(document);
-                Log.d("task",result[0]+" img"+result[1]);
+            {String[] result= UrlCheck.parserWeiboHtml(document);
+                Log.d("task",result[0]+" img "+result[1]);
                 return result;
             }else if(url.contains("miaopai.com"))
             {
                 String[] result= UrlCheck.parserMiaopaiHtml(document);
-                Log.d("task",result[0]+" img"+result[1]);
+                Log.d("task",result[0]+" img "+result[1]);
                 return result;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         return null;
     }
     private List<BaseVideoData> parserData(VideoJsonData data)

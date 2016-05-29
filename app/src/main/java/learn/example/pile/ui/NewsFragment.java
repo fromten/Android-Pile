@@ -68,19 +68,18 @@ public class NewsFragment extends RecyclerViewFragment implements NewsRequestTas
     public void taskFail(String msg) {
         Log.i(TAG,msg);
         setRefreshing(false);
-        if(mNewsListAdapter.getItemSize()==0)
+        if(mNewsListAdapter.getSelfItemSize()==0)
             setEmptyViewText("数据飞走了");
     }
 
     @Override
-    public void pullUpRefresh(RecyclerView recyclerView) {
-         correctReqData();
+    public void pullUpRefresh() {
+
     }
 
     @Override
-    public void onRefresh() {
-        mNewsListAdapter.clearItem();
-         correctReqData();
+    public void pullDownRefresh() {
+
     }
 
     @Override
@@ -106,7 +105,7 @@ public class NewsFragment extends RecyclerViewFragment implements NewsRequestTas
             requestNews();
         }else
         {
-            if(mNewsListAdapter.getItemSize()==0)
+            if(mNewsListAdapter.getSelfItemSize()==0)
                 setEmptyViewText("网络请求失败");
             Log.i(TAG,"Internet is disconnect");
             setRefreshing(false);

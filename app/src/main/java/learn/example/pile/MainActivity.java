@@ -1,5 +1,8 @@
 package learn.example.pile;
 
+import android.graphics.Rect;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -7,24 +10,21 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 
+import com.bumptech.glide.Glide;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.IOException;
-import java.io.StringReader;
-
 import learn.example.joke.R;
-import learn.example.pile.net.StringRequest;
-import learn.example.pile.ui.NewsFragment;
+import learn.example.pile.net.UrlRequestManager;
+import learn.example.pile.ui.JokeListFragment;
 import learn.example.pile.ui.VideoFragment;
 
 
 public class MainActivity extends AppCompatActivity {
-    private String URL="http://www.miaopai.com/show/4kU9dsswDerxmthxDsSPWg__.htm";
+    private String URL="http://www.wandoujia.com/eyepetizer/detail.html?vid=5868";
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
     private String TAG="MainActivity";
@@ -32,12 +32,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-       // initView();
-       getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, new VideoFragment()).commit();
+        // initView();
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, new JokeListFragment()).commit();
 //        new Thread(){
 //            @Override
 //            public void run() {
-//                requestData();
+//                Glide.get(getApplicationContext()).clearDiskCache();
 //            }
 //        }.start();
     }
@@ -47,8 +47,8 @@ public class MainActivity extends AppCompatActivity {
             Document doc= Jsoup.connect(URL).get();
             Log.e(TAG,doc.toString());
             Element element=doc.select("video").first();
-            Element img=doc.select("div.video_img").first();
-            Log.e(TAG,img.attr("data-url"));
+            Element img=doc.select("#content-container").first();
+            Log.e(TAG,img.attr("style"));
             Log.e(TAG,element.attr("src"));
         } catch (IOException e) {
             e.printStackTrace();

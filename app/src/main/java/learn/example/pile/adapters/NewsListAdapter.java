@@ -29,7 +29,7 @@ public class NewsListAdapter extends FooterAdapter<NewsListAdapter.NewsViewHolde
     }
 
     @Override
-    public int getItemSize() {
+    public int getSelfItemSize() {
         return mItems.size();
     }
     public BaseNewsData getItem(int position)
@@ -47,19 +47,18 @@ public class NewsListAdapter extends FooterAdapter<NewsListAdapter.NewsViewHolde
         mItems.addAll(datas);
         notifyItemInserted(mItems.size());
     }
-
     @Override
-    public NewsViewHolder onCreateItemHolder(ViewGroup parent) {
+    public NewsViewHolder createSelfViewHolder(ViewGroup parent, int type) {
         View view= LayoutInflater.from(mContext).inflate(R.layout.fragment_news_adpter_view,parent,false);
         return new NewsViewHolder(view);
     }
 
     @Override
-    public void onBindItemHolder(NewsViewHolder holder, int position) {
-          BaseNewsData data=mItems.get(position);
-          holder.describe.setText(data.getNewsDesc());
-          holder.title.setText(data.getNewsTitle());
-          Glide.with(mContext).load(data.getNewsIMgUrl()).into(holder.img);
+    public void bindSelfViewHolder(NewsViewHolder holder, int position) {
+        BaseNewsData data=mItems.get(position);
+        holder.describe.setText(data.getNewsDesc());
+        holder.title.setText(data.getNewsTitle());
+        Glide.with(mContext).load(data.getNewsIMgUrl()).into(holder.img);
     }
 
     public static class NewsViewHolder extends RecyclerView.ViewHolder{

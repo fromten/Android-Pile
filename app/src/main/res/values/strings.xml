@@ -3,5 +3,7 @@
     <string name="tab_joke">笑话</string>
     <string name="tab_pic">图片</string>
     <string name="tab_setting">设置</string>
+    <string name="video_playcomplete">视频播放结束</string>
+    <string name="gif">gif</string>
     <item name="link" type="id"/>
 </resources>

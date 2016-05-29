@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 /**
  * Created on 2016/5/15.
  */
-public class JokeDataBaseHelper extends SQLiteOpenHelper {
+public class JokeDatabaseHelper extends SQLiteOpenHelper {
 
 
     public static final String JOKE_JSONDATA_COLUMN="jokejson";
@@ -17,7 +17,7 @@ public class JokeDataBaseHelper extends SQLiteOpenHelper {
                           +JOKE_JSONDATA_COLUMN+SPACE+"TEXT)";
     public static final int VERSION=1;
     public static final String DATABASE_NAME="jokedata.db";
-    public JokeDataBaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+    public JokeDatabaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, DATABASE_NAME, factory, VERSION);
     }
     @Override

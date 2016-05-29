@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/fragment_joke_cardview_margin"
+    android:layout_marginBottom="@dimen/fragment_joke_cardview_margin"
+    android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|start"
+            android:paddingLeft="20dp"
+            android:paddingStart="20dp"
+            android:textSize="15sp"
+            android:maxLines="1"
+            android:textColor="@color/deepblack"
+            android:id="@+id/joke_title"
+            android:drawableBottom="@drawable/border_bottom_line" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="start|bottom"
+            android:paddingStart="5dp"
+            android:paddingLeft="5dp"
+            android:id="@+id/joke_content"/>
+</LinearLayout>

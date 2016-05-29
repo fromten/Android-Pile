@@ -27,7 +27,8 @@ public class VideoFragment extends RecyclerViewFragment implements VideoRequestT
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         mVideoListAdapter=new VideoListAdapter();
         setRecyclerAdapter(mVideoListAdapter);
-        requestNetData(10,2);
+        requestNetData(5,3);
+        Log.e(TAG,"onCreate");
     }
 
     @Override
@@ -42,14 +43,16 @@ public class VideoFragment extends RecyclerViewFragment implements VideoRequestT
 
     @Override
     public void onDestroy() {
-        if(mRequestTask!=null)
+        if(mRequestTask!=null) {
             mRequestTask.setTaskListener(null);
-        mRequestTask.cancel(true);
+            mRequestTask.cancel(true);
+        }
         super.onDestroy();
     }
 
     public void requestNetData(int reqnum,int page)
     {
+        super.setRefreshing(true);
         mRequestTask=new VideoRequestTask();
         mRequestTask.setTaskListener(this);
         try {
@@ -59,26 +62,26 @@ public class VideoFragment extends RecyclerViewFragment implements VideoRequestT
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        Log.e(TAG,"requestNetData method error ");
     }
 
     @Override
     public void taskComplete(List<BaseVideoData> data) {
          mVideoListAdapter.addItemAll(data);
+         setRefreshing(false);
     }
 
     @Override
     public void taskError(String msg) {
+        setRefreshing(false);
+    }
+
+    @Override
+    public void pullUpRefresh() {
 
     }
 
     @Override
-    public void onRefresh() {
-
-    }
-
-    @Override
-    public void pullUpRefresh(RecyclerView recyclerView) {
+    public void pullDownRefresh() {
 
     }
 }

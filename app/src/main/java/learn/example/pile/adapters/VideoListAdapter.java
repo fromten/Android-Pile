@@ -1,6 +1,7 @@
 package learn.example.pile.adapters;
 
-import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,11 +16,12 @@ import java.util.List;
 
 import learn.example.joke.R;
 import learn.example.pile.jsonobject.BaseVideoData;
+import learn.example.pile.VideoActivity;
 
 /**
  * Created on 2016/5/25.
  */
-public class VideoListAdapter extends FooterAdapter<VideoListAdapter.VideoViewHolder> implements View.OnClickListener {
+public class VideoListAdapter extends FooterAdapter<VideoListAdapter.VideoViewHolder> implements View.OnClickListener{
 
     private List<BaseVideoData> mList;
 
@@ -37,37 +39,46 @@ public class VideoListAdapter extends FooterAdapter<VideoListAdapter.VideoViewHo
         mList.clear();
         notifyDataSetChanged();
     }
+
     @Override
-    public int getItemSize() {
+    public int getSelfItemSize() {
         return mList.size();
     }
 
     @Override
-    public VideoViewHolder onCreateItemHolder(ViewGroup parent) {
+    public VideoViewHolder createSelfViewHolder(ViewGroup parent, int type) {
         View v= LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_video_adpter_view,parent,false);
         return new VideoViewHolder(v);
     }
 
     @Override
-    public void onBindItemHolder(VideoViewHolder holder, int position) {
-          BaseVideoData item=mList.get(position);
-          holder.desc.setText(item.getDesc());
-          if(item.getImgUrl()!=null)
-          {
-              Glide.with(holder.itemView.getContext()).load(item.getImgUrl()).into(holder.videoImg);
-          }else
-          {
-              holder.videoImg.setImageBitmap(null);
-          }
-
-
-          holder.videoPlay.setOnClickListener(this);
+    public void bindSelfViewHolder(VideoViewHolder holder, int position) {
+        BaseVideoData item=mList.get(position);
+        holder.desc.setText(item.getDesc());
+        if(item.getImgUrl()!=null)
+        {
+            Glide.with(holder.itemView.getContext()).load(item.getImgUrl()).into(holder.videoImg);
+        }else
+        {
+            holder.videoImg.setImageBitmap(null);
+        }
+        if(item.getVideoUrl()!=null)
+        {
+            holder.videoPlay.setTag(item.getVideoUrl());
+        }else {
+            holder.videoPlay.setTag(null);
+        }
+        holder.videoPlay.setOnClickListener(this);
     }
-
-
     @Override
     public void onClick(View v) {
-
+         String url= (String) v.getTag();
+        if(url!=null)
+        {
+            Intent intent=new Intent(v.getContext(), VideoActivity.class);
+            intent.setData(Uri.parse(url));
+            v.getContext().startActivity(intent);
+        }
     }
 
     public static class VideoViewHolder extends RecyclerView.ViewHolder

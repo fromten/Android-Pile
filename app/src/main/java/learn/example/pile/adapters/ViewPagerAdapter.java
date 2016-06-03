@@ -4,19 +4,22 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import learn.example.pile.ui.JokeListFragment;
-import learn.example.pile.ui.NewsFragment;
-import learn.example.pile.ui.SettingFragment;
+import learn.example.pile.fragment.JokeListFragment;
+import learn.example.pile.fragment.NewsListFragment;
+import learn.example.pile.fragment.SettingFragment;
+import learn.example.pile.fragment.VideoListFragment;
 
 /**
  * Created on 2016/5/6.
  */
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
-    private final String[] title={"笑话","新闻","设置"};
+    private final String[] title={"新闻","视频","笑话"};
     public ViewPagerAdapter(FragmentManager fm) {
         super(fm);
     }
+
+
 
     @Override
     public CharSequence getPageTitle(int position) {
@@ -28,13 +31,13 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
         Fragment fragment=null;
         switch (position)
         {
-            case 0:fragment=new JokeListFragment();break;
-            case 1:fragment=new NewsFragment();break;
-            case 2:fragment=new SettingFragment();break;
+
+            case 0:fragment=new NewsListFragment();break;
+            case 1:fragment=new VideoListFragment();break;
+            case 2:fragment=new JokeListFragment();break;
         }
        return fragment;
     }
-
 
     @Override
     public int getCount() {

@@ -33,7 +33,6 @@ public abstract class FooterAdapter<T extends RecyclerView.ViewHolder> extends R
             if(holder instanceof FooterViewHolder){
                 if(getSelfItemSize()==0)
                 { holder.itemView.setVisibility(View.INVISIBLE);//当前没有数据时隐藏
-
                 } else
                 {
                     holder.itemView.setVisibility(View.VISIBLE);

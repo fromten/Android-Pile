@@ -1,11 +1,10 @@
 package learn.example.pile.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
-import android.text.Spannable;
-import android.text.Spanned;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,20 +12,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
 import learn.example.joke.R;
-import learn.example.pile.jsonobject.BaseJokeData;
+import learn.example.pile.PhotoActivity;
+import learn.example.pile.WebViewActivity;
 import learn.example.pile.jsonobject.JokeJsonData;
 import learn.example.pile.util.UrlCheck;
 
 /**
  * Created on 2016/5/23.
  */
-public class JokeListAdapter extends FooterAdapter {
-
+public class JokeListAdapter extends FooterAdapter implements View.OnClickListener {
 
 
     private static final int TEXT_TYPE=1;
@@ -92,23 +90,38 @@ public class JokeListAdapter extends FooterAdapter {
     private void setTextJoke(JokeTextHolder holder,int position){
         JokeJsonData.JokeResBody.JokeItem item=mItems.get(position);
         holder.content.setText(Html.fromHtml(item.getText()));
-        holder.title.setText(item.getTitle()+"\t"+item.getCreateTime());
+        String html="<p>"+item.getTitle()+"<small>"+item.getCreateTime().substring(0,10)+"</small></p>";
+        holder.title.setText(Html.fromHtml(html));
     }
 
     private void setImgJoke(JokeImgHolder holder,int position){
         JokeJsonData.JokeResBody.JokeItem item=mItems.get(position);
-        String url=UrlCheck.fixUrl(item.getImg());
+        String url= UrlCheck.fixUrl(item.getImg());
         if(url!=null)
         {
-            String type=UrlCheck.isGifImg(url)?"gif":null;
+            String type=UrlCheck.isGifImg(url)?" gif ":null;
             holder.imgtype.setText(type);
             Glide.with(mContext).load(url)
                     .asBitmap()
                     .dontAnimate()
                     .centerCrop()
+                    .error(R.mipmap.img_error)
                     .into(holder.img);
+            holder.img.setTag(R.id.link,url);
+            holder.img.setOnClickListener(this);
         }
-        holder.title.setText(item.getTitle()+"\t"+item.getCreateTime());
+        String time="<small>  "+item.getCreateTime().substring(0,10)+"</small>";
+        String html="<p>"+item.getTitle()+time+"</p>";
+        holder.title.setText(Html.fromHtml(html));
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        String url= (String) v.getTag(R.id.link);
+        Intent intent=new Intent(mContext, PhotoActivity.class);
+        intent.putExtra(PhotoActivity.KEY_PHOTOACTIVITY_IMG_URL,url);
+        mContext.startActivity(intent);
     }
 
     public static class JokeTextHolder extends RecyclerView.ViewHolder

@@ -1,6 +1,7 @@
 package learn.example.pile.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +14,9 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
 import learn.example.joke.R;
-import learn.example.pile.jsonobject.BaseNewsData;
+import learn.example.pile.MainActivity;
+import learn.example.pile.WebViewActivity;
+import learn.example.pile.jsonobject.NewsJsonData;
 
 
 /**
@@ -21,8 +24,9 @@ import learn.example.pile.jsonobject.BaseNewsData;
  */
 public class NewsListAdapter extends FooterAdapter<NewsListAdapter.NewsViewHolder> {
 
-    private List<BaseNewsData> mItems;
-   private Context mContext;
+    private List<NewsJsonData.NewsItem> mItems;
+    private Context mContext;
+
     public NewsListAdapter(Context context) {
         mItems = new ArrayList<>();
         this.mContext=context;
@@ -32,9 +36,13 @@ public class NewsListAdapter extends FooterAdapter<NewsListAdapter.NewsViewHolde
     public int getSelfItemSize() {
         return mItems.size();
     }
-    public BaseNewsData getItem(int position)
+    public NewsJsonData.NewsItem getItem(int position)
     {
         return mItems.get(position);
+    }
+    public List<NewsJsonData.NewsItem> getAllItem()
+    {
+        return mItems;
     }
     public void clearItem()
     {
@@ -42,10 +50,10 @@ public class NewsListAdapter extends FooterAdapter<NewsListAdapter.NewsViewHolde
         notifyDataSetChanged();
     }
 
-    public void addAllItem(List<BaseNewsData> datas)
+    public void addAllItem(List<NewsJsonData.NewsItem> datas)
     {
         mItems.addAll(datas);
-        notifyItemInserted(mItems.size());
+        notifyDataSetChanged();
     }
     @Override
     public NewsViewHolder createSelfViewHolder(ViewGroup parent, int type) {
@@ -54,11 +62,20 @@ public class NewsListAdapter extends FooterAdapter<NewsListAdapter.NewsViewHolde
     }
 
     @Override
-    public void bindSelfViewHolder(NewsViewHolder holder, int position) {
-        BaseNewsData data=mItems.get(position);
-        holder.describe.setText(data.getNewsDesc());
-        holder.title.setText(data.getNewsTitle());
-        Glide.with(mContext).load(data.getNewsIMgUrl()).into(holder.img);
+    public void bindSelfViewHolder(final NewsViewHolder holder, final int position) {
+        NewsJsonData.NewsItem item=mItems.get(position);
+        holder.describe.setText(item.getNewsDes());
+        holder.title.setText(item.getTitle());
+        Glide.with(mContext).load(item.getImageUrl()).into(holder.img);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(mContext,WebViewActivity.class);
+                intent.putExtra(WebViewActivity.KEY_URL,mItems.get(position).getNewsUrl());
+                mContext.startActivity(intent);
+            }
+        });
     }
 
     public static class NewsViewHolder extends RecyclerView.ViewHolder{

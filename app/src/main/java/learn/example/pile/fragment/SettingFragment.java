@@ -1,10 +1,12 @@
-package learn.example.pile.ui;
+package learn.example.pile.fragment;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.text.Html;
+import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +16,13 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.disklrucache.DiskLruCache;
 import com.bumptech.glide.load.engine.cache.DiskCache;
+import com.bumptech.glide.load.engine.cache.DiskLruCacheFactory;
 
 import java.io.File;
 import java.io.IOException;
 
 import learn.example.joke.R;
+import learn.example.pile.AppGlideModule;
 
 /**
  * Created on 2016/5/6.
@@ -73,22 +77,19 @@ public class SettingFragment extends Fragment {
     public void onResume() {
         super.onResume();
         //转换成字符串,在取小数点后一位;
-        String size= String.valueOf(readDiskCacheSize()/1024.0/1024.0);
-        int index=size.indexOf(".");
-        size=size.substring(0,index+2)+" mb";
-        picCache.setText(size);
+        String size= readDiskCacheSize();
+        String html="<p>磁盘缓存大小:      <b><font color='#00bbaa'>"+size+"</b></p>";
+        picCache.setText(Html.fromHtml(html));
     }
 
-    public long readDiskCacheSize()
+    public String readDiskCacheSize()
     {
-        File file=Glide.getPhotoCacheDir(getContext());
-        long size=0;
-        try {
-            DiskLruCache cache=DiskLruCache.open(file,1,1,DiskCache.Factory.DEFAULT_DISK_CACHE_SIZE);
-            size=cache.size();
-        } catch (IOException e) {
-            e.printStackTrace();
+        File file=  new File(AppGlideModule.diskCacheFilePath);
+        long size = 0;
+        for (File cf:file.listFiles())
+        {
+            size+=cf.length();
         }
-        return size;
+        return Formatter.formatFileSize(getContext(),size);
     }
 }

@@ -25,7 +25,6 @@ public class VolumeProgressView extends View {
 
     private AudioManager mAudioManager;
 
-    private String TAG="AudioProgressView";
     public VolumeProgressView(Context context) {
         super(context);
         initView();

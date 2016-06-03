@@ -9,20 +9,20 @@ import com.android.volley.toolbox.Volley;
 /**
  * Created on 2016/5/29.
  */
-public class UrlRequestManager {
-    private  static UrlRequestManager mManager;
+public class NetRequestQueue {
+    private  static NetRequestQueue mManager;
     private RequestQueue mRequestQueue;
     private Context mc;
-    private UrlRequestManager(Context context)
+    private NetRequestQueue(Context context)
     {
         mc=context;
         mRequestQueue=getRequestQueue();
     }
-    public static synchronized UrlRequestManager getInstance(Context context)
+    public static synchronized NetRequestQueue getInstance(Context context)
     {
              if(mManager==null)
              {
-                 mManager=new UrlRequestManager(context.getApplicationContext());
+                 mManager=new NetRequestQueue(context.getApplicationContext());
              }
         return mManager;
     }

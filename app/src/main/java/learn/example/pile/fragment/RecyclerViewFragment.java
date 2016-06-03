@@ -1,4 +1,4 @@
-package learn.example.pile.ui;
+package learn.example.pile.fragment;
 
 import android.content.Context;
 import android.content.res.Configuration;
@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import learn.example.joke.R;
+import learn.example.pile.ui.RecyclerPullUPImpl;
 
 /**
  * Created on 2016/5/22.
@@ -30,24 +31,40 @@ public abstract class  RecyclerViewFragment extends Fragment implements Recycler
 
     private RecyclerView mRecyclerView;
     private TextView mEmptyView;
-    private SwipeRefreshLayout mRefreshView;
+    private SwipeRefreshLayout mPullDownRefresh;
+    private RecyclerPullUPImpl mPullUpRefresh;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v= inflater.inflate(R.layout.fragment_root,container,false);
-        mRefreshView= (SwipeRefreshLayout) v.findViewById(R.id.swiper_refresh_view);
+        mPullDownRefresh= (SwipeRefreshLayout) v.findViewById(R.id.swiper_refresh_view);
         mRecyclerView= (RecyclerView) v.findViewById(R.id.recycler_view);
         mEmptyView= (TextView) v.findViewById(R.id.empty_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRecyclerView.addOnScrollListener(new RecyclerPullUPImpl(this));//添加上拉刷新监听
-        mRefreshView.setOnRefreshListener(this);//设置下拉监听
-        mRecyclerView.setOnTouchListener(new OnItemClickImpl());//View点击监听
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL_LIST));
+        initView();
         return v;
     }
+    public void  initView()
+    {
+        mPullUpRefresh=new RecyclerPullUPImpl(this);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.addOnScrollListener(mPullUpRefresh);//添加上拉刷新监听
+        mRecyclerView.addItemDecoration(getDividerItemDecoration());
+        mPullDownRefresh.setOnRefreshListener(this);//设置下拉监听
+    }
+
     public final void setRecyclerAdapter(RecyclerView.Adapter adapter)
     {
         mRecyclerView.setAdapter(adapter);
     }
+
+
+    //设置RecyclerView分割线
+    public DividerItemDecoration getDividerItemDecoration()
+    {
+        return new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL_LIST);
+    }
+
+
+
     public final RecyclerView getRecyclerView()
     {
         return mRecyclerView;
@@ -61,23 +78,34 @@ public abstract class  RecyclerViewFragment extends Fragment implements Recycler
     }
 
 
-    public final SwipeRefreshLayout getRefreshView() {
-        return mRefreshView;
+    public final SwipeRefreshLayout getPullDownRefreshView() {
+        return mPullDownRefresh;
     }
 
 
     //设置是否刷新
-    public void setRefreshing(final boolean refreshing){
-        //解决无法显示刷新进度栏的问题
-        mRefreshView.post(new Runnable() {
+    public void stopRefresh(){
+        mPullDownRefresh.post(new Runnable() {
             @Override
             public void run() {
-                if(mRefreshView!=null)
-                mRefreshView.setRefreshing(refreshing);
+                if(mPullDownRefresh!=null)
+                    mPullDownRefresh.setRefreshing(false);
             }
         });
+        mPullUpRefresh.setInRefreshing(false);
     }
 
+    public void startRefresh(){
+        //解决无法显示刷新进度栏的问题
+        mPullDownRefresh.post(new Runnable() {
+            @Override
+            public void run() {
+                if(mPullDownRefresh!=null)
+                    mPullDownRefresh.setRefreshing(true);
+            }
+        });
+        mPullUpRefresh.setInRefreshing(true);
+    }
 
     @Override
     public final void pullUpRefresh(RecyclerView recyclerView) {
@@ -93,18 +121,14 @@ public abstract class  RecyclerViewFragment extends Fragment implements Recycler
     public abstract void pullUpRefresh();
 
     public abstract void pullDownRefresh();
-    //元素点击
-    public void onItemClick(RecyclerView recyclerView,View view,int position)
-    {
 
-    }
     @Override
     public void onDestroy() {
         mRecyclerView=null;
         mEmptyView=null;
-        if(mRefreshView.isRefreshing())
-            mRefreshView.setRefreshing(false);
-        mRefreshView=null;
+        if(mPullDownRefresh.isRefreshing())
+            mPullDownRefresh.setRefreshing(false);
+        mPullDownRefresh=null;
         super.onDestroy();
     }
 
@@ -117,33 +141,6 @@ public abstract class  RecyclerViewFragment extends Fragment implements Recycler
         ConnectivityManager manager= (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info=manager.getActiveNetworkInfo();
         return info!=null&&info.isConnected();
-    }
-    public  class OnItemClickImpl implements View.OnTouchListener{
-        private float mDownX;
-        private float mDownY;
-        private boolean isPress;
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            int action=event.getAction();
-            if(action==MotionEvent.ACTION_DOWN)
-            {
-                isPress=true;
-                mDownX=event.getX();
-                mDownY=event.getY();
-            }else if(action==MotionEvent.ACTION_MOVE)
-            {
-                isPress=false;
-            }else if(action==MotionEvent.ACTION_UP)
-            {
-                if(isPress)
-                {
-                   View view= mRecyclerView.findChildViewUnder(mDownX,mDownY);
-                    int position=mRecyclerView.getChildAdapterPosition(view);
-                    onItemClick(mRecyclerView,view,position);
-                }
-            }
-            return false;
-        }
     }
 
     public static class  DividerItemDecoration extends RecyclerView.ItemDecoration {
@@ -161,11 +158,16 @@ public abstract class  RecyclerViewFragment extends Fragment implements Recycler
             private int mOrientation;
 
             public DividerItemDecoration(Context context, int orientation) {
-                final TypedArray a = context.obtainStyledAttributes(ATTRS);
+                final TypedArray a = context.obtainStyledAttributes(new int[]{android.R.attr.listDivider});
                 mDivider = a.getDrawable(0);
                 a.recycle();
                 setOrientation(orientation);
             }
+
+            public DividerItemDecoration(Context context, int orientation,Drawable drawable) {
+                    mDivider =drawable;
+                    setOrientation(orientation);
+           }
 
             public void setOrientation(int orientation) {
                 if (orientation != HORIZONTAL_LIST && orientation != VERTICAL_LIST) {

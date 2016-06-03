@@ -11,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
@@ -29,6 +31,7 @@ MediaPlayer.OnErrorListener,MediaPlayer.OnPreparedListener{
     private VolumeProgressView mVolumeProgressView;
     private TextView  mLogView;
     private static final String SAVE_PLAYPOS_KEY="SAVE_PLAYPOS_KEY";
+    public static final String KEY_VIDEO_URL="KEY_VIDEO_URL";
     private Bundle  saveState;
     private String TAG="VideoActivity";
     @Override
@@ -40,7 +43,7 @@ MediaPlayer.OnErrorListener,MediaPlayer.OnPreparedListener{
         Intent intent=getIntent();
         if(intent!=null)
         {
-            Uri uri=intent.getData();
+            Uri uri=Uri.parse(intent.getStringExtra(KEY_VIDEO_URL));
             mLogView.setText("加载中....");
             mVideoView.setVideoURI(uri);
         }else {
@@ -54,8 +57,11 @@ MediaPlayer.OnErrorListener,MediaPlayer.OnPreparedListener{
         mVideoView= (VideoView) findViewById(R.id.video_view);
         mVolumeProgressView= (VolumeProgressView) findViewById(R.id.video_volume);
         mLogView= (TextView) findViewById(R.id.video_logmsg);
-        mVolumeProgressView.setRectColor(getResources().getColor(R.color.weakblack));
+        mVolumeProgressView.setRectColor(getResources().getColor(R.color.grey));
         mMediaController=new MediaController(this);
+        FrameLayout.LayoutParams layoutParams=new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(0,0,0,20);
+        mMediaController.setLayoutParams(layoutParams);
         mVideoView.setMediaController(mMediaController);
         mVideoView.setOnPreparedListener(this);
         mVideoView.setOnCompletionListener(this);
@@ -78,7 +84,7 @@ MediaPlayer.OnErrorListener,MediaPlayer.OnPreparedListener{
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        //保证现在的播放位置
+        //保存现在的播放位置
         outState.putInt(SAVE_PLAYPOS_KEY,mVideoView.getCurrentPosition());
         super.onSaveInstanceState(outState);
     }
@@ -114,6 +120,7 @@ MediaPlayer.OnErrorListener,MediaPlayer.OnPreparedListener{
         return true;
     }
 
+    //监听,控制播放的音量
     private View.OnTouchListener touchListener=new View.OnTouchListener() {
         private float mDownY;
         private boolean inPress;
@@ -129,7 +136,7 @@ MediaPlayer.OnErrorListener,MediaPlayer.OnPreparedListener{
             }else if(action==MotionEvent.ACTION_MOVE)
             {   //移动增加或减少音量
                 float y=event.getY();
-                if(Math.abs(mDownY-y)>120)
+                if(Math.abs(mDownY-y)>90)
                 {
                     if(mVolumeProgressView.getVisibility()!=View.VISIBLE)
                         mVolumeProgressView.setVisibility(View.VISIBLE);
@@ -142,6 +149,7 @@ MediaPlayer.OnErrorListener,MediaPlayer.OnPreparedListener{
                     }
                     inPress=false;
                     inMove=true;
+                    mDownY=event.getY();
                 }
             }else if(action==MotionEvent.ACTION_UP)
             {   inMove=false;
@@ -155,7 +163,7 @@ MediaPlayer.OnErrorListener,MediaPlayer.OnPreparedListener{
                             if(!inMove)
                                 mVolumeProgressView.setVisibility(View.INVISIBLE);
                         }
-                    },3000);
+                    },3000);//三秒后移除音量进度栏
                 }
             }
             return true;

@@ -1,5 +1,10 @@
 package learn.example.pile.jsonobject;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 /**
@@ -25,42 +30,26 @@ public class VideoJsonData {
      * who : lxxself
      */
 
-    private List<ResultsBean> results;
+    @SerializedName("results")
+    private List<VideoItem> videoItemList;
 
     public boolean isError() {
         return error;
     }
 
-    public void setError(boolean error) {
-        this.error = error;
+    public List<VideoItem> getVideoItemList() {
+        return videoItemList;
     }
 
-    public List<ResultsBean> getResults() {
-        return results;
-    }
+    public static class VideoItem implements Parcelable {
 
-    public void setResults(List<ResultsBean> results) {
-        this.results = results;
-    }
-
-    public static class ResultsBean {
-        private String _id;
         private String createdAt;
         private String desc;
         private String publishedAt;
-        private String source;
-        private String type;
-        private String url;
-        private boolean used;
-        private String who;
-
-        public String get_id() {
-            return _id;
-        }
-
-        public void set_id(String _id) {
-            this._id = _id;
-        }
+        @SerializedName("url")
+        private String srcUrl;//源来源地址
+        private String fileUrl;//视频文件实际地址
+        private String imgUrl; //视频图片Url地址
 
         public String getCreatedAt() {
             return createdAt;
@@ -86,44 +75,71 @@ public class VideoJsonData {
             this.publishedAt = publishedAt;
         }
 
-        public String getSource() {
-            return source;
+        public String getSrcUrl() {
+            return srcUrl;
         }
 
-        public void setSource(String source) {
-            this.source = source;
+        public void setSrcUrl(String srcUrl) {
+            this.srcUrl = srcUrl;
         }
 
-        public String getType() {
-            return type;
+        public String getFileUrl() {
+            return fileUrl;
         }
 
-        public void setType(String type) {
-            this.type = type;
+        public void setFileUrl(String fileUrl) {
+            this.fileUrl = fileUrl;
         }
 
-        public String getUrl() {
-            return url;
+        public String getImgUrl() {
+            return imgUrl;
         }
 
-        public void setUrl(String url) {
-            this.url = url;
+        public void setImgUrl(String imgUrl) {
+            this.imgUrl = imgUrl;
         }
 
-        public boolean isUsed() {
-            return used;
+
+        public boolean equals(VideoItem item) {
+            return this.getSrcUrl().equals(item.getSrcUrl())||this==item;
         }
 
-        public void setUsed(boolean used) {
-            this.used = used;
+        @Override
+        public int describeContents() {
+            return 0;
         }
 
-        public String getWho() {
-            return who;
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(this.createdAt);
+            dest.writeString(this.desc);
+            dest.writeString(this.publishedAt);
+            dest.writeString(this.srcUrl);
+            dest.writeString(this.fileUrl);
+            dest.writeString(this.imgUrl);
         }
 
-        public void setWho(String who) {
-            this.who = who;
+        public VideoItem() {
         }
+
+        protected VideoItem(Parcel in) {
+            this.createdAt = in.readString();
+            this.desc = in.readString();
+            this.publishedAt = in.readString();
+            this.srcUrl = in.readString();
+            this.fileUrl = in.readString();
+            this.imgUrl = in.readString();
+        }
+
+        public static final Parcelable.Creator<VideoItem> CREATOR = new Parcelable.Creator<VideoItem>() {
+            @Override
+            public VideoItem createFromParcel(Parcel source) {
+                return new VideoItem(source);
+            }
+            @Override
+            public VideoItem[] newArray(int size) {
+                return new VideoItem[size];
+            }
+        };
     }
 }

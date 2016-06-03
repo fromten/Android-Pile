@@ -1,73 +1,93 @@
 package learn.example.pile;
 
-import android.graphics.Rect;
-import android.media.MediaPlayer;
-import android.net.Uri;
+import android.Manifest;
+import android.annotation.TargetApi;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
-
-import com.bumptech.glide.Glide;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-
-import java.io.IOException;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import learn.example.joke.R;
-import learn.example.pile.net.UrlRequestManager;
-import learn.example.pile.ui.JokeListFragment;
-import learn.example.pile.ui.VideoFragment;
+import learn.example.pile.adapters.ViewPagerAdapter;
+import learn.example.pile.fragment.SettingFragment;
 
 
 public class MainActivity extends AppCompatActivity {
-    private String URL="http://www.wandoujia.com/eyepetizer/detail.html?vid=5868";
-    private TabLayout mTabLayout;
-    private ViewPager mViewPager;
-    private String TAG="MainActivity";
+
+    private int permissionResultCode=99;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mayRequirePermission();
         setContentView(R.layout.activity_main);
-        // initView();
-        getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, new JokeListFragment()).commit();
-//        new Thread(){
-//            @Override
-//            public void run() {
-//                Glide.get(getApplicationContext()).clearDiskCache();
-//            }
-//        }.start();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.main_show,new ViewPagerFragment()).commit();
     }
-    public void requestData()
+
+    @TargetApi(value = 23)
+    public void mayRequirePermission()
     {
-        try {
-            Document doc= Jsoup.connect(URL).get();
-            Log.e(TAG,doc.toString());
-            Element element=doc.select("video").first();
-            Element img=doc.select("#content-container").first();
-            Log.e(TAG,img.attr("style"));
-            Log.e(TAG,element.attr("src"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+       if (Build.VERSION.SDK_INT==23)
+       {
+           if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)
+           {
+               if (shouldShowRequestPermissionRationale(
+                       Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+               } else {
+                   requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},permissionResultCode);
+               }
+           }
+       }
     }
+
+
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu,menu);
         return true;
     }
 
-//    private void initView()
-//    {
-//        mTabLayout= (TabLayout) findViewById(R.id.tab_layout);
-//        mViewPager= (ViewPager) findViewById(R.id.page_layout);
-//        mViewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager()));
-//        mTabLayout.setTabMode(TabLayout.MODE_FIXED);
-//        mTabLayout.setupWithViewPager(mViewPager);
-//    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId()==R.id.menu_setting)
+        {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.main_show, new SettingFragment())
+                    .addToBackStack(null)
+                    .commit();
+        }
+        return true;
+    }
+
+    public static class ViewPagerFragment extends Fragment {
+        private TabLayout mTabLayout;
+        private ViewPager mViewPager;
+
+        @Nullable
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            return inflater.inflate(R.layout.view_page,container,false);
+        }
+        @Override
+        public void onViewCreated(View view, Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
+            mTabLayout= (TabLayout)view.findViewById(R.id.tab_layout);
+            mViewPager= (ViewPager) view.findViewById(R.id.page_layout);
+            mViewPager.setAdapter(new ViewPagerAdapter(getFragmentManager()));
+            mTabLayout.setupWithViewPager(mViewPager);
+        }
+
+    }
 
 
 }

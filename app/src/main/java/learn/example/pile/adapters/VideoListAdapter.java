@@ -1,7 +1,6 @@
 package learn.example.pile.adapters;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,68 +14,86 @@ import java.util.ArrayList;
 import java.util.List;
 
 import learn.example.joke.R;
-import learn.example.pile.jsonobject.BaseVideoData;
+import learn.example.pile.MainActivity;
+import learn.example.pile.WebViewActivity;
 import learn.example.pile.VideoActivity;
+import learn.example.pile.jsonobject.VideoJsonData;
 
 /**
  * Created on 2016/5/25.
  */
 public class VideoListAdapter extends FooterAdapter<VideoListAdapter.VideoViewHolder> implements View.OnClickListener{
 
-    private List<BaseVideoData> mList;
+    private List<VideoJsonData.VideoItem> mItemList;
 
-    public VideoListAdapter() {
-        mList=new ArrayList<>();
+    public VideoListAdapter(List<VideoJsonData.VideoItem> data) {
+        mItemList=data;
+    }
+    public VideoListAdapter()
+    {
+        mItemList=new ArrayList<>();
+    }
 
-    }
-    public void addItemAll(List<BaseVideoData> items)
+    public List<VideoJsonData.VideoItem> getItemList()
     {
-        mList.addAll(items);
-        notifyItemInserted(mList.size());
+        return mItemList;
     }
-    public void clear()
+    public VideoJsonData.VideoItem getItem(int position)
     {
-        mList.clear();
+        return mItemList.get(position);
+    }
+    public void addAllItem(List<VideoJsonData.VideoItem> all)
+    {
+        mItemList.addAll(all);
+        notifyItemInserted(getSelfItemSize());
+    }
+
+    public void clearAll()
+    {
+        mItemList.clear();
         notifyDataSetChanged();
     }
 
+
     @Override
     public int getSelfItemSize() {
-        return mList.size();
+        return mItemList.size();
     }
 
     @Override
     public VideoViewHolder createSelfViewHolder(ViewGroup parent, int type) {
         View v= LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_video_adpter_view,parent,false);
+
         return new VideoViewHolder(v);
     }
 
     @Override
     public void bindSelfViewHolder(VideoViewHolder holder, int position) {
-        BaseVideoData item=mList.get(position);
+        VideoJsonData.VideoItem item=mItemList.get(position);
         holder.desc.setText(item.getDesc());
         if(item.getImgUrl()!=null)
         {
-            Glide.with(holder.itemView.getContext()).load(item.getImgUrl()).into(holder.videoImg);
+            Glide.with(holder.itemView.getContext()).load(item.getImgUrl()).dontAnimate().into(holder.videoImg);
         }else
         {
             holder.videoImg.setImageBitmap(null);
         }
-        if(item.getVideoUrl()!=null)
-        {
-            holder.videoPlay.setTag(item.getVideoUrl());
-        }else {
-            holder.videoPlay.setTag(null);
-        }
+        holder.videoPlay.setTag(position);
         holder.videoPlay.setOnClickListener(this);
     }
     @Override
     public void onClick(View v) {
-         String url= (String) v.getTag();
-        if(url!=null)
-        {
-            Intent intent=new Intent(v.getContext(), VideoActivity.class);
-            intent.setData(Uri.parse(url));
+         int position = (int) v.getTag();
+        if(position>=0)
+        {   Intent intent;
+            VideoJsonData.VideoItem item=mItemList.get(position);
+            boolean haveFileUrl=item.getFileUrl()!=null;//是否存在视频文件
+
+            //根据haveFileUrl去打开一个网页播放或启动视频播放
+            intent=haveFileUrl?new Intent(v.getContext(),VideoActivity.class):new Intent(v.getContext(),WebViewActivity.class);
+            String url=haveFileUrl?item.getFileUrl():item.getSrcUrl();
+            String key=haveFileUrl?VideoActivity.KEY_VIDEO_URL:WebViewActivity.KEY_URL;
+            intent.putExtra(key,url);
             v.getContext().startActivity(intent);
         }
     }

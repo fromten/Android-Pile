@@ -11,14 +11,14 @@ import learn.example.joke.R;
 /**
  * Created on 2016/5/7.
  */
-public class NewsActivity extends AppCompatActivity  {
+public class WebViewActivity extends AppCompatActivity  {
 
-    public static final String LINK_KEY="link";
     private WebView mWebView;
+    public static final String KEY_URL="KEY_URL";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_news);
+        setContentView(R.layout.activity_web);
         mWebView= (WebView) findViewById(R.id.news_webview);
         mWebView.getSettings().setDomStorageEnabled(true);
         mWebView.getSettings().setJavaScriptEnabled(true);
@@ -32,10 +32,9 @@ public class NewsActivity extends AppCompatActivity  {
         Intent intent=getIntent();
         if(intent!=null)
         {
-            String url=intent.getStringExtra(LINK_KEY);
-            if(url!=null)
-            mWebView.loadUrl(url);
+            String url=intent.getStringExtra(KEY_URL);
+           if(url!=null)
+             mWebView.loadUrl(url);
         }
-
     }
 }

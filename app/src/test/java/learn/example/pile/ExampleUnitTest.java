@@ -2,14 +2,13 @@ package learn.example.joke;
 
 
 
-import com.google.gson.Gson;
+import android.text.format.Formatter;
+
+import com.google.gson.JsonIOException;
 
 import org.junit.Test;
 
 
-import learn.example.pile.MyURI;
-import learn.example.pile.jsonobject.JokeJsonData;
-import learn.example.pile.net.StringRequest;
 import learn.example.pile.util.UrlCheck;
 
 
@@ -20,12 +19,12 @@ public class ExampleUnitTest {
 
     @Test
     public void addition_isCorrect() {
-        String res=StringRequest.request(MyURI.IMAGE_JOKE_REQUEST_URL,"");
-        System.out.println(res);
+        String url="http://wwevd.com/.gifsdsd.giff";
+        System.out.println(url.endsWith("gif"));
     }
 
     public void getException() throws Exception {
-         throw new Exception();
+         throw new JsonIOException("msg");
     }
 
 

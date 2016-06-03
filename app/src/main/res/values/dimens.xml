@@ -3,4 +3,5 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fragment_joke_cardview_margin">5dp</dimen>
+    <dimen name="setting_margin">20dp</dimen>
 </resources>

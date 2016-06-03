@@ -1,9 +1,11 @@
-package learn.example.pile.ui;
+package learn.example.pile.fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 
 import com.android.volley.RequestQueue;
@@ -13,13 +15,14 @@ import com.android.volley.VolleyError;
 import java.util.ArrayList;
 import java.util.List;
 
+import learn.example.joke.R;
 import learn.example.pile.MyURI;
 import learn.example.pile.adapters.JokeListAdapter;
 import learn.example.pile.database.JokeDatabase;
 import learn.example.pile.jsonobject.JokeJsonData;
 import learn.example.pile.net.GsonRequest;
 import learn.example.pile.database.DatabaseManager;
-import learn.example.pile.net.UrlRequestManager;
+import learn.example.pile.net.NetRequestQueue;
 
 /**
  * Created on 2016/5/5.
@@ -32,9 +35,9 @@ public class JokeListFragment extends RecyclerViewFragment implements Response.E
     private JokeDatabase mJokeDataBase;
 
     private RequestQueue mRequestQueue;
-    public final static String JOKE_HISTORY_PAGE_KEY="JOKE_HISTORY_PAGE_KEY";//最后页数KEY
+    public final static String KEY_JOKE_PAGE ="KEY_JOKE_PAGE";//最后页数KEY
 
-    private final static String JOKE_SAVE_STATE_KEY="JOKE_SAVE_STATE_KEY";//保存状态KEY
+    private final static String KEY_JOKE_SAVE_STATE ="KEY_JOKE_SAVE_STATE";//保存状态KEY
 
     private int currentDataBasePage=0;//现在页数
 
@@ -43,16 +46,23 @@ public class JokeListFragment extends RecyclerViewFragment implements Response.E
     public void onViewCreated(View view, Bundle savedInstanceState) {
         mJokeListAdapter=new JokeListAdapter(getContext());
         setRecyclerAdapter(mJokeListAdapter);
-        mRequestQueue=UrlRequestManager.getInstance(getContext()).getRequestQueue();
+        mRequestQueue= NetRequestQueue.getInstance(getContext()).getRequestQueue();
         if(savedInstanceState!=null)
         {
-            List<JokeJsonData.JokeResBody.JokeItem> datas=savedInstanceState.getParcelableArrayList(JOKE_SAVE_STATE_KEY);
+            List<JokeJsonData.JokeResBody.JokeItem> datas=savedInstanceState.getParcelableArrayList(KEY_JOKE_SAVE_STATE);
              if(datas!=null)
               mJokeListAdapter.addAllItem(datas);
         }else{
             correctRequestData();
         }
 
+    }
+
+
+    @Override
+    public DividerItemDecoration getDividerItemDecoration() {
+        Drawable drawable= ContextCompat.getDrawable(getContext(),R.drawable.joke_divider);
+        return new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL_LIST,drawable);
     }
 
     @Override
@@ -63,32 +73,33 @@ public class JokeListFragment extends RecyclerViewFragment implements Response.E
         }
         mJokeListAdapter=null;
         mRequestQueue.cancelAll(TAG);
+        mRequestQueue=null;
         super.onDestroy();
     }
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelableArrayList(JOKE_SAVE_STATE_KEY, (ArrayList<? extends Parcelable>) mJokeListAdapter.getAllItem());
+        outState.putParcelableArrayList(KEY_JOKE_SAVE_STATE, (ArrayList<? extends Parcelable>) mJokeListAdapter.getAllItem());
         super.onSaveInstanceState(outState);
     }
 
     @Override
-    public void onErrorResponse(VolleyError error) {
+    public synchronized void onErrorResponse(VolleyError error) {
         error.printStackTrace();
-        setRefreshing(false);
+        stopRefresh();
     }
     @Override
-    public void onResponse(JokeJsonData response) {
+    public synchronized void onResponse(JokeJsonData response) {
           if(response!=null&&response.getResCode()==0)
           {
               mJokeListAdapter.addAllItem(response.getResBody().getJokeContentList());
               saveLastHistoryPage(response.getResBody().getCurrentPage());//保存请求页数
               saveToDatabase(response.getResBody().getJokeContentList());//保存到数据库
           }
-         setRefreshing(false);
+         stopRefresh();
     }
 
     public void correctRequestData()
-    {   setRefreshing(true);
+    {   startRefresh();
         if(checkNetState())//如果网络可用请求网络数据
         {
             int page=readLastHistoryPage()+1;
@@ -97,7 +108,7 @@ public class JokeListFragment extends RecyclerViewFragment implements Response.E
         }else//否则加载本地数据库
         {
             loadLocalData();
-            setRefreshing(false);
+            stopRefresh();
         }
     }
 
@@ -157,14 +168,14 @@ public class JokeListFragment extends RecyclerViewFragment implements Response.E
     public void saveLastHistoryPage(int page)
     {
         SharedPreferences p=getActivity().getPreferences(Context.MODE_PRIVATE);
-        p.edit().putInt(JOKE_HISTORY_PAGE_KEY,page).apply();
+        p.edit().putInt(KEY_JOKE_PAGE,page).apply();
     }
 
     //读取最后历史页数
     public int readLastHistoryPage()
     {
         SharedPreferences p=getActivity().getPreferences(Context.MODE_PRIVATE);
-        return p.getInt(JOKE_HISTORY_PAGE_KEY,1);
+        return p.getInt(KEY_JOKE_PAGE,1);
     }
 
 

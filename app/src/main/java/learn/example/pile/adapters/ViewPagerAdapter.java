@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import learn.example.pile.fragment.JokeListFragment;
 import learn.example.pile.fragment.NewsListFragment;
-import learn.example.pile.fragment.SettingFragment;
+import learn.example.pile.fragment.ReadListFragment;
 import learn.example.pile.fragment.VideoListFragment;
 
 /**
@@ -14,7 +14,7 @@ import learn.example.pile.fragment.VideoListFragment;
  */
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
-    private final String[] title={"新闻","视频","笑话"};
+    private final String[] title={"新闻","视频","笑话","学习"};
     public ViewPagerAdapter(FragmentManager fm) {
         super(fm);
     }
@@ -31,10 +31,10 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
         Fragment fragment=null;
         switch (position)
         {
-
             case 0:fragment=new NewsListFragment();break;
             case 1:fragment=new VideoListFragment();break;
             case 2:fragment=new JokeListFragment();break;
+            case 3:fragment=new ReadListFragment();break;
         }
        return fragment;
     }

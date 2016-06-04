@@ -9,22 +9,22 @@ import com.android.volley.toolbox.Volley;
 /**
  * Created on 2016/5/29.
  */
-public class NetRequestQueue {
-    private  static NetRequestQueue mManager;
+public class VolleyRequestQueue {
+    private static VolleyRequestQueue mInstance;
     private RequestQueue mRequestQueue;
     private Context mc;
-    private NetRequestQueue(Context context)
+    private VolleyRequestQueue(Context context)
     {
         mc=context;
         mRequestQueue=getRequestQueue();
     }
-    public static synchronized NetRequestQueue getInstance(Context context)
+    public static synchronized VolleyRequestQueue getInstance(Context context)
     {
-             if(mManager==null)
+             if(mInstance==null)
              {
-                 mManager=new NetRequestQueue(context.getApplicationContext());
+                 mInstance=new VolleyRequestQueue(context.getApplicationContext());
              }
-        return mManager;
+        return mInstance;
     }
     public RequestQueue getRequestQueue()
     {
@@ -34,6 +34,7 @@ public class NetRequestQueue {
         }
         return mRequestQueue;
     }
+
     public <T> void addToRequestQueue(Request<T> req) {
         getRequestQueue().add(req);
     }

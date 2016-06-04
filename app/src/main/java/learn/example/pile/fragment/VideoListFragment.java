@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
@@ -21,37 +20,35 @@ import learn.example.pile.MyURI;
 import learn.example.pile.adapters.VideoListAdapter;
 import learn.example.pile.jsonobject.VideoJsonData;
 import learn.example.pile.net.GsonRequest;
-import learn.example.pile.net.NetRequestQueue;
-import learn.example.pile.net.ParseHtmlManager;
+import learn.example.pile.net.VolleyRequestQueue;
+import learn.example.pile.net.VideoHtmlParser;
 
 /**
  * Created on 2016/5/25.
  */
 public class VideoListFragment extends RecyclerViewFragment implements Response.ErrorListener,Response.Listener<VideoJsonData>
-                                                                    ,ParseHtmlManager.ParserCompleteListener{
+                                                                    ,VideoHtmlParser.ParserCompleteListener{
 
     private VideoListAdapter mVideoListAdapter;
-    private RequestQueue volleyRequestQueue;
-    private ParseHtmlManager mParseHtmlManager;
+    private VideoHtmlParser mVideoHtmlParser;
     private static final String TAG="VideoListFragment";
 
-    public static final String KEY_VIDEO_PAGE="KEY_VIDEO_PAGE";
-    public static final String KEY_STATE_SAVE="KEY_VIDEO_PAGE";
+    public static final String KEY_VIDEO_HIRSTORY_PAGE ="KEYVIDEOHIRSTORYPAGE";
+    public static final String KEY_VIDEO_STATE_SAVE="KEYVIDEOSTATESAVE";
     private static final int MAXREQNUM=5;
     private int currentPage;
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         mVideoListAdapter=new VideoListAdapter();
         setRecyclerAdapter(mVideoListAdapter);
-        volleyRequestQueue= NetRequestQueue.getInstance(getContext()).getRequestQueue();
         currentPage=readPage();
-        mParseHtmlManager=new ParseHtmlManager(this);
+        mVideoHtmlParser =new VideoHtmlParser(this);
         if (savedInstanceState!=null)
         {
-            List<VideoJsonData.VideoItem> list=savedInstanceState.getParcelableArrayList(KEY_STATE_SAVE);
+            List<VideoJsonData.VideoItem> list=savedInstanceState.getParcelableArrayList(KEY_VIDEO_STATE_SAVE);
             mVideoListAdapter.addAllItem(list);
         }else {
-            requestNetData(MAXREQNUM,currentPage);
+            requestData(MAXREQNUM,currentPage);
         }
 
     }
@@ -59,15 +56,15 @@ public class VideoListFragment extends RecyclerViewFragment implements Response.
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-         outState.putParcelableArrayList(KEY_STATE_SAVE, (ArrayList<? extends Parcelable>) mVideoListAdapter.getItemList());
+         outState.putParcelableArrayList(KEY_VIDEO_STATE_SAVE, (ArrayList<? extends Parcelable>) mVideoListAdapter.getItemList());
         super.onSaveInstanceState(outState);
     }
 
     @Override
     public void onDestroy() {
-        volleyRequestQueue.cancelAll(TAG);
+        VolleyRequestQueue.getInstance(getContext()).cancelAll(TAG);
         savePage(currentPage);
-        mParseHtmlManager.destroy();
+        mVideoHtmlParser.destroy();
         super.onDestroy();
     }
 
@@ -79,7 +76,7 @@ public class VideoListFragment extends RecyclerViewFragment implements Response.
                mVideoListAdapter.addAllItem(response.getVideoItemList());
                savePage(currentPage);//保存页数
                currentPage++;//再把当前页数增加
-               mParseHtmlManager.addParse(response);//执行解析获得视频和图片地址
+               mVideoHtmlParser.addParse(response);//执行解析获得视频和图片地址
         }
         stopRefresh();
     }
@@ -88,10 +85,12 @@ public class VideoListFragment extends RecyclerViewFragment implements Response.
     //请求失败
     @Override
     public void onErrorResponse(VolleyError error) {
-          stopRefresh();
-         Toast.makeText(getContext(),"网络请求失败",Toast.LENGTH_SHORT).show();
+        stopRefresh();
+        if (mVideoListAdapter.getSelfItemSize()==0)
+        {
+            setEmptyViewText("数据飞走了");
+        }
     }
-
 
     //解析完成
     @Override
@@ -117,13 +116,13 @@ public class VideoListFragment extends RecyclerViewFragment implements Response.
 
     @Override
     public void pullUpRefresh() {
-            requestNetData(MAXREQNUM,currentPage);
+            requestData(MAXREQNUM,currentPage);
     }
 
     @Override
     public void pullDownRefresh() {
           mVideoListAdapter.clearAll();
-          requestNetData(MAXREQNUM,currentPage);
+          requestData(MAXREQNUM,currentPage);
     }
 
 
@@ -132,16 +131,17 @@ public class VideoListFragment extends RecyclerViewFragment implements Response.
      * @param reqnum: 请求个数
      * @param page:请求页数
      */
-    public void requestNetData(int reqnum,int page)
+    public void requestData(int reqnum, int page)
     {
         startRefresh();
+        setEmptyViewText(null);
         try {
             String type=URLEncoder.encode("休息视频","utf-8");
-            String url= MyURI.VIDEO_DATA_REQUEST_URL+type+"/"+reqnum+"/"+page;
+            String url= MyURI.GANK_DATA_REQUEST_URL +type+"/"+reqnum+"/"+page;
             GsonRequest<VideoJsonData> request=new GsonRequest<>
-                    (url,VideoJsonData.class,this,this);
+                    (url,VideoJsonData.class,this,this,false);
             request.setTag(TAG);
-            volleyRequestQueue.add(request);
+            VolleyRequestQueue.getInstance(getContext()).addToRequestQueue(request);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -151,13 +151,13 @@ public class VideoListFragment extends RecyclerViewFragment implements Response.
     public void savePage(int page)
     {
         SharedPreferences sp=getActivity().getPreferences(Context.MODE_PRIVATE);
-        sp.edit().putInt(KEY_VIDEO_PAGE,page).apply();
+        sp.edit().putInt(KEY_VIDEO_HIRSTORY_PAGE,page).apply();
     }
     //读取页数
     public int readPage()
     {
         SharedPreferences sp=getActivity().getPreferences(Context.MODE_PRIVATE);
-        return sp.getInt(KEY_VIDEO_PAGE,1);
+        return sp.getInt(KEY_VIDEO_HIRSTORY_PAGE,1);
     }
 
 

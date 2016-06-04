@@ -2,7 +2,6 @@ package learn.example.pile.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -103,7 +102,6 @@ public class JokeListAdapter extends FooterAdapter implements View.OnClickListen
             holder.imgtype.setText(type);
             Glide.with(mContext).load(url)
                     .asBitmap()
-                    .dontAnimate()
                     .centerCrop()
                     .error(R.mipmap.img_error)
                     .into(holder.img);

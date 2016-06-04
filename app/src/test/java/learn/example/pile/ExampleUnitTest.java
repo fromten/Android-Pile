@@ -1,4 +1,4 @@
-package learn.example.joke;
+package learn.example.pile;
 
 
 
@@ -8,6 +8,8 @@ import com.google.gson.JsonIOException;
 
 import org.junit.Test;
 
+
+import java.io.ByteArrayInputStream;
 
 import learn.example.pile.util.UrlCheck;
 
@@ -19,8 +21,7 @@ public class ExampleUnitTest {
 
     @Test
     public void addition_isCorrect() {
-        String url="http://wwevd.com/.gifsdsd.giff";
-        System.out.println(url.endsWith("gif"));
+
     }
 
     public void getException() throws Exception {

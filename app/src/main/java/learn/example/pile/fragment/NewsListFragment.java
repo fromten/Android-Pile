@@ -3,11 +3,8 @@ package learn.example.pile.fragment;
 
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.View;
 
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
@@ -18,7 +15,7 @@ import learn.example.pile.MyURI;
 import learn.example.pile.adapters.NewsListAdapter;
 import learn.example.pile.jsonobject.NewsJsonData;
 import learn.example.pile.net.GsonRequest;
-import learn.example.pile.net.NetRequestQueue;
+import learn.example.pile.net.VolleyRequestQueue;
 
 /**
  * Created on 2016/5/7.
@@ -28,21 +25,18 @@ public class NewsListFragment extends RecyclerViewFragment implements Response.L
 
 
     private NewsListAdapter mNewsListAdapter;
-    private RequestQueue mRequestQueue;
     private String TAG="NewsListFragment";
     public static final String KEY_NEWS_SAVE_STATE="KEY_NEWS_SAVE_STATE";
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         mNewsListAdapter=new NewsListAdapter(getContext());
         setRecyclerAdapter(mNewsListAdapter);
-        mRequestQueue= NetRequestQueue.getInstance(getContext()).getRequestQueue();
         if (savedInstanceState!=null)
         {
             List<NewsJsonData.NewsItem> savedata=savedInstanceState.getParcelableArrayList(KEY_NEWS_SAVE_STATE);
             mNewsListAdapter.addAllItem(savedata);
         }else {
-            correctReqData();
+            requestData();
         }
     }
 
@@ -54,8 +48,7 @@ public class NewsListFragment extends RecyclerViewFragment implements Response.L
 
     @Override
     public void onDestroy() {
-        mRequestQueue.cancelAll(TAG);
-        mRequestQueue=null;
+        VolleyRequestQueue.getInstance(getContext()).cancelAll(TAG);
         mNewsListAdapter=null;
         super.onDestroy();
     }
@@ -71,43 +64,37 @@ public class NewsListFragment extends RecyclerViewFragment implements Response.L
 
     @Override
     public void onErrorResponse(VolleyError error) {
-        Log.e(TAG,error.getMessage());
         stopRefresh();
+        if (mNewsListAdapter.getSelfItemSize()==0)
+        {
+            setEmptyViewText("数据飞走了");
+        }
     }
 
     @Override
     public void pullUpRefresh() {
-        correctReqData();
+        requestData();
     }
 
     @Override
     public void pullDownRefresh() {
         mNewsListAdapter.clearItem();
-        correctReqData();
+        requestData();
     }
 
 
-    public void correctReqData()
+    public void requestData()
     {
         startRefresh();
-        if(checkNetState())
-        {
-            requestNews();
-        }else
-        {
-            if(mNewsListAdapter.getSelfItemSize()==0)
-            {
-                setEmptyViewText("网络请求失败");
-            }
-            stopRefresh();
-        }
+        setEmptyViewText(null);
+        requestNews();
     }
     public void requestNews()
     {
         GsonRequest<NewsJsonData> request=new GsonRequest<>
-                (MyURI.NEW_DATA_REQUEST_URL,NewsJsonData.class,this,this);
+                (MyURI.NEW_DATA_REQUEST_URL,NewsJsonData.class,this,this,true);
         request.setTag(TAG);
-        mRequestQueue.add(request);
+        VolleyRequestQueue.getInstance(getContext()).addToRequestQueue(request);
     }
 
 

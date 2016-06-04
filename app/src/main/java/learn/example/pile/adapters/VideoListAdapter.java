@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import learn.example.joke.R;
-import learn.example.pile.MainActivity;
 import learn.example.pile.WebViewActivity;
 import learn.example.pile.VideoActivity;
 import learn.example.pile.jsonobject.VideoJsonData;
@@ -63,7 +62,6 @@ public class VideoListAdapter extends FooterAdapter<VideoListAdapter.VideoViewHo
     @Override
     public VideoViewHolder createSelfViewHolder(ViewGroup parent, int type) {
         View v= LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_video_adpter_view,parent,false);
-
         return new VideoViewHolder(v);
     }
 

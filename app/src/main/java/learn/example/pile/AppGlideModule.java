@@ -4,13 +4,14 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Environment;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.GlideBuilder;
 import com.bumptech.glide.load.engine.cache.DiskLruCacheFactory;
 import com.bumptech.glide.module.GlideModule;
 
 import java.io.File;
+
+import learn.example.pile.util.AppCheck;
 
 /**
  * Created on 2016/6/3.
@@ -33,9 +34,8 @@ public class AppGlideModule implements GlideModule {
     }
     public File getFile(Context context)
     {
-        String state = Environment.getExternalStorageState();
         File file;
-        if (state.equals(Environment.MEDIA_MOUNTED))
+        if (AppCheck.checkExternalStorageState())
         {
             if (Build.VERSION.SDK_INT>=23&&context.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)!=PackageManager.PERMISSION_GRANTED)
             {

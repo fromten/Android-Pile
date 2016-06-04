@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.concurrent.CountDownLatch;
 
 import learn.example.pile.jsonobject.VideoJsonData;
 import learn.example.pile.util.VideoParser;

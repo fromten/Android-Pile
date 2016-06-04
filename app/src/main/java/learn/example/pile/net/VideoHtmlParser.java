@@ -13,11 +13,11 @@ import learn.example.pile.jsonobject.VideoJsonData;
 /**
  * Created on 2016/6/2.
  */
-public class ParseHtmlManager {
+public class VideoHtmlParser {
     private ExecutorService mService;
     private ParserCompleteListener mListener;
 
-    public ParseHtmlManager(@NonNull  ParserCompleteListener listener)
+    public VideoHtmlParser(@NonNull  ParserCompleteListener listener)
     {
         mService= Executors.newFixedThreadPool(2);
         mListener=listener;

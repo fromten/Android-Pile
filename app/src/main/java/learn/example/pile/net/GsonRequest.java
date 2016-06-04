@@ -1,6 +1,5 @@
 package learn.example.pile.net;
 
-import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -12,7 +11,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +26,7 @@ public class GsonRequest<T> extends Request<T> {
     private Gson mGson;
 
     private Class<T> mClass;
-
+    private boolean enableHeader;
     private String TAG="GsonRequest";
     public GsonRequest(int method, String url, Class<T> clazz, Response.Listener<T> listener,
                        Response.ErrorListener errorListener) {
@@ -39,8 +37,9 @@ public class GsonRequest<T> extends Request<T> {
     }
 
     public GsonRequest(String url, Class<T> clazz, Response.Listener<T> listener,
-                       Response.ErrorListener errorListener) {
+                       Response.ErrorListener errorListener,boolean addHeader) {
         this(Method.GET, url, clazz, listener, errorListener);
+        this.enableHeader=addHeader;
     }
 
     @Override
@@ -65,6 +64,10 @@ public class GsonRequest<T> extends Request<T> {
 
     @Override
     public Map<String, String> getHeaders() throws AuthFailureError {
+        if (!enableHeader)
+        {
+            return super.getHeaders();
+        }
         Map<String,String> map=new HashMap<>();
         map.put("apikey", MyURI.API_KEY);
         return map;

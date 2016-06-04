@@ -2,7 +2,6 @@ package learn.example.pile.ui;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 /**
  * Created on 2016/5/23.

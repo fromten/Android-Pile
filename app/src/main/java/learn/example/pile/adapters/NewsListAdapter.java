@@ -14,7 +14,6 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
 import learn.example.joke.R;
-import learn.example.pile.MainActivity;
 import learn.example.pile.WebViewActivity;
 import learn.example.pile.jsonobject.NewsJsonData;
 

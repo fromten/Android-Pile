@@ -14,12 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.disklrucache.DiskLruCache;
-import com.bumptech.glide.load.engine.cache.DiskCache;
-import com.bumptech.glide.load.engine.cache.DiskLruCacheFactory;
 
 import java.io.File;
-import java.io.IOException;
 
 import learn.example.joke.R;
 import learn.example.pile.AppGlideModule;

@@ -1,7 +1,6 @@
 package learn.example.pile.fragment;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Rect;
@@ -13,9 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -45,24 +42,35 @@ public abstract class  RecyclerViewFragment extends Fragment implements Recycler
     public void  initView()
     {
         mPullUpRefresh=new RecyclerPullUPImpl(this);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.setLayoutManager(getLayoutManager());//设置布局
         mRecyclerView.addOnScrollListener(mPullUpRefresh);//添加上拉刷新监听
-        mRecyclerView.addItemDecoration(getDividerItemDecoration());
+        mRecyclerView.addItemDecoration(getDividerItemDecoration());//设置装饰器
         mPullDownRefresh.setOnRefreshListener(this);//设置下拉监听
     }
 
+
+    /**
+     *
+     * @param adapter 设置RecyclerViewAdapter
+     */
     public final void setRecyclerAdapter(RecyclerView.Adapter adapter)
     {
         mRecyclerView.setAdapter(adapter);
     }
 
 
-    //设置RecyclerView分割线
+    //RecyclerView分割线装饰器,默认使用 android.R.attr.listDivider
     public DividerItemDecoration getDividerItemDecoration()
     {
         return new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL_LIST);
     }
 
+
+    //RecyclerView布局,默认是垂直线性布局
+    public RecyclerView.LayoutManager getLayoutManager()
+    {
+        return new LinearLayoutManager(getContext());
+    }
 
 
     public final RecyclerView getRecyclerView()
@@ -71,17 +79,20 @@ public abstract class  RecyclerViewFragment extends Fragment implements Recycler
     }
 
 
+    /**
+     *
+     * @param charSequence:设置空文本显示,可以设置Null显示文本
+     */
     public void setEmptyViewText(CharSequence charSequence)
     {
-        mEmptyView.setVisibility(View.VISIBLE);
         mEmptyView.setText(charSequence);
     }
+
 
 
     public final SwipeRefreshLayout getPullDownRefreshView() {
         return mPullDownRefresh;
     }
-
 
     //设置是否刷新
     public void stopRefresh(){
@@ -145,9 +156,6 @@ public abstract class  RecyclerViewFragment extends Fragment implements Recycler
 
     public static class  DividerItemDecoration extends RecyclerView.ItemDecoration {
 
-            private static final int[] ATTRS = new int[]{
-                    android.R.attr.listDivider
-            };
 
             public static final int HORIZONTAL_LIST = LinearLayoutManager.HORIZONTAL;
 
@@ -218,8 +226,6 @@ public abstract class  RecyclerViewFragment extends Fragment implements Recycler
                     mDivider.draw(c);
                 }
             }
-
-
         @Override
         public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
             if (mOrientation == VERTICAL_LIST) {

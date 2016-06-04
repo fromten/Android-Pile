@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -18,38 +19,58 @@ import android.view.ViewGroup;
 import learn.example.joke.R;
 import learn.example.pile.adapters.ViewPagerAdapter;
 import learn.example.pile.fragment.SettingFragment;
+import learn.example.pile.util.AppCheck;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    private int permissionResultCode=99;
+    private final int permissionResultCode=99;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mayRequirePermission();
         setContentView(R.layout.activity_main);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.main_show,new ViewPagerFragment()).commit();
+        initView();
     }
+
+    public void initView()
+    {
+        //如果版本大于23和外部存储可以用时需要请求权限
+        if (Build.VERSION.SDK_INT>=23&& AppCheck.checkExternalStorageState())
+        {
+            maybeRequirePermission();
+        }else {
+            showView();
+        }
+    }
+
 
     @TargetApi(value = 23)
-    public void mayRequirePermission()
+    public void maybeRequirePermission()
     {
-       if (Build.VERSION.SDK_INT==23)
-       {
-           if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)
-           {
-               if (shouldShowRequestPermissionRationale(
-                       Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-               } else {
-                   requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},permissionResultCode);
-               }
-           }
-       }
+        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                //no do something
+            } else {
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, permissionResultCode);
+            }
+        }else {
+            showView();
+        }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode==permissionResultCode)
+        {
+            showView();
+        }
+    }
 
-
+    public void showView()
+    {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.main_show,new ViewPagerFragment()).commitAllowingStateLoss();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -86,7 +107,6 @@ public class MainActivity extends AppCompatActivity {
             mViewPager.setAdapter(new ViewPagerAdapter(getFragmentManager()));
             mTabLayout.setupWithViewPager(mViewPager);
         }
-
     }
 
 

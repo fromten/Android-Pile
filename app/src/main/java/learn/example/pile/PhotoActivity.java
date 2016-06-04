@@ -27,9 +27,9 @@ public class PhotoActivity extends AppCompatActivity{
         if (intent!=null)
         {
             String url=intent.getStringExtra(KEY_PHOTOACTIVITY_IMG_URL);
-            Glide.with(this).load(url).fitCenter()
+            Glide.with(this).load(url)
                     .dontAnimate()
-                    .dontTransform()
+                    .fitCenter()
                     .skipMemoryCache(true)
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .error(R.mipmap.img_error)

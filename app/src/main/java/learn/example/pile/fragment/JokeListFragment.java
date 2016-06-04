@@ -8,7 +8,6 @@ import android.os.Parcelable;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
@@ -22,7 +21,7 @@ import learn.example.pile.database.JokeDatabase;
 import learn.example.pile.jsonobject.JokeJsonData;
 import learn.example.pile.net.GsonRequest;
 import learn.example.pile.database.DatabaseManager;
-import learn.example.pile.net.NetRequestQueue;
+import learn.example.pile.net.VolleyRequestQueue;
 
 /**
  * Created on 2016/5/5.
@@ -34,19 +33,17 @@ public class JokeListFragment extends RecyclerViewFragment implements Response.E
 
     private JokeDatabase mJokeDataBase;
 
-    private RequestQueue mRequestQueue;
-    public final static String KEY_JOKE_PAGE ="KEY_JOKE_PAGE";//最后页数KEY
+    public final static String KEY_JOKE_HISTORY_PAGE ="KEYJOKEHISTORYPAGE";//最后页数KEY
 
-    private final static String KEY_JOKE_SAVE_STATE ="KEY_JOKE_SAVE_STATE";//保存状态KEY
+    public final static String KEY_JOKE_SAVE_STATE ="KEYJOKESAVESTATE";//保存状态KEY
 
     private int currentDataBasePage=0;//现在页数
 
-    private String TAG="JokeListFragment";
+    private final String TAG="JokeListFragment";
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         mJokeListAdapter=new JokeListAdapter(getContext());
         setRecyclerAdapter(mJokeListAdapter);
-        mRequestQueue= NetRequestQueue.getInstance(getContext()).getRequestQueue();
         if(savedInstanceState!=null)
         {
             List<JokeJsonData.JokeResBody.JokeItem> datas=savedInstanceState.getParcelableArrayList(KEY_JOKE_SAVE_STATE);
@@ -58,22 +55,21 @@ public class JokeListFragment extends RecyclerViewFragment implements Response.E
 
     }
 
-
     @Override
     public DividerItemDecoration getDividerItemDecoration() {
         Drawable drawable= ContextCompat.getDrawable(getContext(),R.drawable.joke_divider);
         return new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL_LIST,drawable);
     }
 
+
     @Override
     public void onDestroy() {
+        mJokeListAdapter=null;
         if(mJokeDataBase!=null)
         {
             mJokeDataBase.close();
         }
-        mJokeListAdapter=null;
-        mRequestQueue.cancelAll(TAG);
-        mRequestQueue=null;
+        VolleyRequestQueue.getInstance(getContext()).cancelAll(TAG);
         super.onDestroy();
     }
     @Override
@@ -83,12 +79,15 @@ public class JokeListFragment extends RecyclerViewFragment implements Response.E
     }
 
     @Override
-    public synchronized void onErrorResponse(VolleyError error) {
-        error.printStackTrace();
-        stopRefresh();
+    public  void onErrorResponse(VolleyError error) {
+         stopRefresh();
+        if (mJokeListAdapter.getSelfItemSize()==0)
+        {
+            setEmptyViewText("数据飞走了");
+        }
     }
     @Override
-    public synchronized void onResponse(JokeJsonData response) {
+    public  void onResponse(JokeJsonData response) {
           if(response!=null&&response.getResCode()==0)
           {
               mJokeListAdapter.addAllItem(response.getResBody().getJokeContentList());
@@ -100,6 +99,7 @@ public class JokeListFragment extends RecyclerViewFragment implements Response.E
 
     public void correctRequestData()
     {   startRefresh();
+        setEmptyViewText(null);
         if(checkNetState())//如果网络可用请求网络数据
         {
             int page=readLastHistoryPage()+1;
@@ -151,31 +151,31 @@ public class JokeListFragment extends RecyclerViewFragment implements Response.E
     public void requestImgJoke(int page)
     {
          String imgurl=MyURI.IMAGE_JOKE_REQUEST_URL+"?page="+page;
-         GsonRequest reqImg=new GsonRequest(imgurl,JokeJsonData.class,this,this);
+         GsonRequest<JokeJsonData> reqImg=new GsonRequest<>(imgurl,JokeJsonData.class,this,this,true);
          reqImg.setTag(TAG);
-         mRequestQueue.add(reqImg);
+         VolleyRequestQueue.getInstance(getContext()).addToRequestQueue(reqImg);
     }
 
     public void requestTextJoke(int page)
     {
         String url=MyURI.TEXT_JOKE_REQUEST_URL+"?page="+page;
-        GsonRequest request=new GsonRequest(url,JokeJsonData.class,this,this);
-        request.setTag(TAG);
-        mRequestQueue.add(request);
+        GsonRequest<JokeJsonData> requestText=new GsonRequest<>(url,JokeJsonData.class,this,this,true);
+        requestText.setTag(TAG);
+        VolleyRequestQueue.getInstance(getContext()).addToRequestQueue(requestText);
     }
 
     //保存最后历史页数
     public void saveLastHistoryPage(int page)
     {
         SharedPreferences p=getActivity().getPreferences(Context.MODE_PRIVATE);
-        p.edit().putInt(KEY_JOKE_PAGE,page).apply();
+        p.edit().putInt(KEY_JOKE_HISTORY_PAGE,page).apply();
     }
 
     //读取最后历史页数
     public int readLastHistoryPage()
     {
         SharedPreferences p=getActivity().getPreferences(Context.MODE_PRIVATE);
-        return p.getInt(KEY_JOKE_PAGE,1);
+        return p.getInt(KEY_JOKE_HISTORY_PAGE,1);
     }
 
 

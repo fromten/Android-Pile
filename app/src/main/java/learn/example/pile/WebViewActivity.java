@@ -25,9 +25,8 @@ public class WebViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_web);
         initView();
         Intent intent = getIntent();
-        if (intent != null) {
-            String url = intent.getStringExtra(KEY_URL);
-            if (url != null)
+        String url;
+        if (intent != null&&(url=intent.getStringExtra(KEY_URL))!=null) {
                 mWebView.loadUrl(url);
         }
     }
@@ -63,5 +62,23 @@ public class WebViewActivity extends AppCompatActivity {
                }
             }
         });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mWebView.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mWebView.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        mWebView.destroy();
+        super.onDestroy();
     }
 }

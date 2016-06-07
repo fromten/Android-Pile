@@ -25,9 +25,7 @@ public class VideoListAdapter extends FooterAdapter<VideoListAdapter.VideoViewHo
 
     private List<VideoJsonData.VideoItem> mItemList;
 
-    public VideoListAdapter(List<VideoJsonData.VideoItem> data) {
-        mItemList=data;
-    }
+
     public VideoListAdapter()
     {
         mItemList=new ArrayList<>();
@@ -71,7 +69,7 @@ public class VideoListAdapter extends FooterAdapter<VideoListAdapter.VideoViewHo
         holder.desc.setText(item.getDesc());
         if(item.getImgUrl()!=null)
         {
-            Glide.with(holder.itemView.getContext()).load(item.getImgUrl()).dontAnimate().into(holder.videoImg);
+            Glide.with(holder.itemView.getContext()).load(item.getImgUrl()).dontAnimate().centerCrop().into(holder.videoImg);
         }else
         {
             holder.videoImg.setImageBitmap(null);

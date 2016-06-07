@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     {
         if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                //no do something
+                //Do nothing
             } else {
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, permissionResultCode);
             }

@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/fragment_joke_cardview_margin"
-        android:layout_marginBottom="@dimen/fragment_joke_cardview_margin"
-        android:orientation="vertical">
+        android:layout_marginBottom="@dimen/fragment_joke_cardview_margin">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -16,25 +15,20 @@
             android:maxLines="1"
             android:id="@+id/joke_title"
             android:drawableBottom="@drawable/border_bottom_line" />
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="5dp"
-            android:orientation="vertical">
-            <ImageButton
-                android:layout_width="230dp"
-                android:layout_height="170dp"
-                android:background="@color/none"
-                android:id="@+id/joke_img"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textSize="15sp"
-                android:textColor="@android:color/white"
-                android:background="@color/colorPrimaryDark"
-                android:id="@+id/joke_imgtype"
-                android:layout_gravity="right|bottom" />
-        </FrameLayout>
-</LinearLayout>
+    <ImageView
+        android:layout_width="230dp"
+        android:layout_height="170dp"
+        android:id="@+id/joke_img"
+        android:layout_below="@+id/joke_title"
+        android:layout_centerHorizontal="true" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:id="@+id/joke_imgtype"
+        android:textColor="@android:color/white"
+        android:background="@color/colorPrimary"
+        android:layout_alignBottom="@+id/joke_img"
+        android:layout_alignRight="@+id/joke_img"
+        android:layout_alignEnd="@+id/joke_img"/>
+</RelativeLayout>

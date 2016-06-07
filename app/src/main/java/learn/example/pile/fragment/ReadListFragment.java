@@ -34,14 +34,14 @@ public class ReadListFragment extends RecyclerViewFragment implements Response.E
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
           mAdapter=new ReadListAdapter();
-         setRecyclerAdapter(mAdapter);
+          setRecyclerAdapter(mAdapter);
           currentPage=readLastHistoryPage();
           if (savedInstanceState!=null)
           {
               List<GankCommonJson.ResultsBean> saveData=savedInstanceState.getParcelableArrayList(KEY_READ_SAVE_STATE);
               mAdapter.addAllItem(saveData);
           }else
-          {
+          {   startRefresh();
               requestData(MAX_REQNUM,currentPage);
           }
 
@@ -68,13 +68,14 @@ public class ReadListFragment extends RecyclerViewFragment implements Response.E
     @Override
     public void pullDownRefresh() {
          mAdapter.clearItems();
-        requestData(MAX_REQNUM,readLastHistoryPage());
+         startRefresh();
+         requestData(MAX_REQNUM,readLastHistoryPage());
     }
 
 
     @Override
     public void onErrorResponse(VolleyError error) {
-        stopRefresh();
+        refreshFail();
         if (mAdapter.getList().isEmpty())
         {
             setEmptyViewText("数据飞走了");
@@ -86,14 +87,13 @@ public class ReadListFragment extends RecyclerViewFragment implements Response.E
          if (response!=null&&!response.isError())
          {
              mAdapter.addAllItem(response.getResults());
-             saveLastHistoryPage(currentPage+1);
+             saveLastHistoryPage(++currentPage);
          }
-         stopRefresh();
+         refreshComplete();
     }
 
     public void requestData(int num, int page)
     {
-        startRefresh();
         setEmptyViewText(null);
         String type="Android";
         String url= MyURI.GANK_DATA_REQUEST_URL+type+"/"+num+"/"+page;

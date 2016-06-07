@@ -36,6 +36,7 @@ public class NewsListFragment extends RecyclerViewFragment implements Response.L
             List<NewsJsonData.NewsItem> savedata=savedInstanceState.getParcelableArrayList(KEY_NEWS_SAVE_STATE);
             mNewsListAdapter.addAllItem(savedata);
         }else {
+            startRefresh();
             requestData();
         }
     }
@@ -59,16 +60,16 @@ public class NewsListFragment extends RecyclerViewFragment implements Response.L
          {
              mNewsListAdapter.addAllItem(response.getNewsItemList());
          }
-         stopRefresh();
+         refreshComplete();
     }
 
     @Override
     public void onErrorResponse(VolleyError error) {
-        stopRefresh();
         if (mNewsListAdapter.getSelfItemSize()==0)
         {
             setEmptyViewText("数据飞走了");
         }
+        refreshFail();
     }
 
     @Override
@@ -85,7 +86,6 @@ public class NewsListFragment extends RecyclerViewFragment implements Response.L
 
     public void requestData()
     {
-        startRefresh();
         setEmptyViewText(null);
         requestNews();
     }

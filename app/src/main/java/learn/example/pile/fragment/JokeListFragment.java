@@ -6,12 +6,14 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import learn.example.joke.R;
@@ -40,6 +42,7 @@ public class JokeListFragment extends RecyclerViewFragment implements Response.E
     private int currentDataBasePage=0;//现在页数
 
     private final String TAG="JokeListFragment";
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         mJokeListAdapter=new JokeListAdapter(getContext());
@@ -50,9 +53,9 @@ public class JokeListFragment extends RecyclerViewFragment implements Response.E
              if(datas!=null)
               mJokeListAdapter.addAllItem(datas);
         }else{
+            startRefresh();
             correctRequestData();
         }
-
     }
 
     @Override
@@ -80,7 +83,7 @@ public class JokeListFragment extends RecyclerViewFragment implements Response.E
 
     @Override
     public  void onErrorResponse(VolleyError error) {
-         stopRefresh();
+        refreshFail();
         if (mJokeListAdapter.getSelfItemSize()==0)
         {
             setEmptyViewText("数据飞走了");
@@ -94,31 +97,32 @@ public class JokeListFragment extends RecyclerViewFragment implements Response.E
               saveLastHistoryPage(response.getResBody().getCurrentPage());//保存请求页数
               saveToDatabase(response.getResBody().getJokeContentList());//保存到数据库
           }
-         stopRefresh();
+         refreshComplete();
     }
 
     public void correctRequestData()
-    {   startRefresh();
+    {
         setEmptyViewText(null);
-        if(checkNetState())//如果网络可用请求网络数据
+        if (checkNetState())
         {
             int page=readLastHistoryPage()+1;
             requestImgJoke(page);//加载文本
             requestTextJoke(page);//加载图片
-        }else//否则加载本地数据库
-        {
+        }else {
             loadLocalData();
-            stopRefresh();
+            refreshComplete();
         }
+
     }
 
     @Override
     public void pullUpRefresh() {
-        correctRequestData();
+         correctRequestData();
     }
 
     @Override
     public void pullDownRefresh() {
+        startRefresh();
         mJokeListAdapter.clearItem();
         correctRequestData();
     }
@@ -135,7 +139,6 @@ public class JokeListFragment extends RecyclerViewFragment implements Response.E
             mJokeListAdapter.addAllItem(mJokeDataBase.readJoke(currentDataBasePage,10));
             currentDataBasePage=currentDataBasePage+10;
         }
-
     }
     public void saveToDatabase(List<JokeJsonData.JokeResBody.JokeItem> data)
     {

@@ -46,8 +46,4 @@ public class ParserHtmlThread implements Runnable{
             mItem.setImgUrl(imgUrl);
             EventBus.getDefault().post(mItem);
         }
-
-    public interface ParserListener{
-        void parserComplete(String... value);
-    }
 }

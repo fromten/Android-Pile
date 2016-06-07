@@ -48,6 +48,7 @@ public class VideoListFragment extends RecyclerViewFragment implements Response.
             List<VideoJsonData.VideoItem> list=savedInstanceState.getParcelableArrayList(KEY_VIDEO_STATE_SAVE);
             mVideoListAdapter.addAllItem(list);
         }else {
+            startRefresh();
             requestData(MAXREQNUM,currentPage);
         }
 
@@ -78,18 +79,18 @@ public class VideoListFragment extends RecyclerViewFragment implements Response.
                currentPage++;//再把当前页数增加
                mVideoHtmlParser.addParse(response);//执行解析获得视频和图片地址
         }
-        stopRefresh();
+        refreshComplete();
     }
 
 
     //请求失败
     @Override
     public void onErrorResponse(VolleyError error) {
-        stopRefresh();
         if (mVideoListAdapter.getSelfItemSize()==0)
         {
             setEmptyViewText("数据飞走了");
         }
+        refreshFail();
     }
 
     //解析完成
@@ -121,6 +122,7 @@ public class VideoListFragment extends RecyclerViewFragment implements Response.
 
     @Override
     public void pullDownRefresh() {
+          startRefresh();
           mVideoListAdapter.clearAll();
           requestData(MAXREQNUM,currentPage);
     }
@@ -133,7 +135,6 @@ public class VideoListFragment extends RecyclerViewFragment implements Response.
      */
     public void requestData(int reqnum, int page)
     {
-        startRefresh();
         setEmptyViewText(null);
         try {
             String type=URLEncoder.encode("休息视频","utf-8");

@@ -108,7 +108,7 @@ public class JokeListAdapter extends FooterAdapter implements View.OnClickListen
             holder.img.setTag(R.id.link,url);
             holder.img.setOnClickListener(this);
         }
-        String time="<small>  "+item.getCreateTime().substring(0,10)+"</small>";
+        String time="<sub>  "+item.getCreateTime().substring(0,10)+"</sub>";
         String html="<p>"+item.getTitle()+time+"</p>";
         holder.title.setText(Html.fromHtml(html));
     }

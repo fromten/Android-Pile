@@ -11,26 +11,32 @@ import java.net.URL;
  * Created on 2016/6/1.
  */
 public class StringRequest {
-    public static  String request (String url)
-    {
+    public static  String request (String url){
+        BufferedReader in = null;
+        StringBuilder builder=new StringBuilder();
         try {
             URL u=new URL(url);
             HttpURLConnection connection= (HttpURLConnection) u.openConnection();
             connection.setRequestMethod("GET");
+            connection.setConnectTimeout(10*1000);
             connection.connect();
-            BufferedReader in=new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            StringBuilder builder=new StringBuilder();
+            in=new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String str;
             while ((str=in.readLine())!=null)
             {
                 builder.append(str);
             }
-            return builder.toString();
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        }finally {
+            try {
+                in.close();
+            } catch (IOException|NullPointerException e) {
+                e.printStackTrace();
+            }
         }
-        return null;
+        return builder.toString();
     }
 }

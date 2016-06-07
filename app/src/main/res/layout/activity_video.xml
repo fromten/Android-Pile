@@ -23,4 +23,11 @@
         android:clickable="false"
         android:visibility="invisible"
         android:layout_gravity="end|center_vertical"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="159dp"
+        android:text="New Text"
+        android:id="@+id/textView"
+        android:layout_gravity="center_horizontal|bottom" />
 </FrameLayout>

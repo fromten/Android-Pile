@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import learn.example.joke.R;
+import learn.example.pile.adapters.FooterAdapter;
 import learn.example.pile.ui.RecyclerPullUPImpl;
 
 /**
@@ -30,6 +31,28 @@ public abstract class  RecyclerViewFragment extends Fragment implements Recycler
     private TextView mEmptyView;
     private SwipeRefreshLayout mPullDownRefresh;
     private RecyclerPullUPImpl mPullUpRefresh;
+
+    private Runnable startRefreshRunnable =new Runnable() {
+        @Override
+        public void run() {
+            mPullDownRefresh.setRefreshing(true);
+        }
+    };
+    private Runnable stopRefreshRunnable =new Runnable() {
+        @Override
+        public void run() {
+            mPullDownRefresh.setRefreshing(false);
+        }
+    };
+
+    private View.OnClickListener footerClick=new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            ((TextView)v).setText("重新加载中...");
+            mPullUpRefresh.setInRefreshing(false);
+            mPullUpRefresh.onScrollStateChanged(mRecyclerView, RecyclerView.SCROLL_STATE_IDLE);
+        }
+    };
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v= inflater.inflate(R.layout.fragment_root,container,false);
@@ -94,28 +117,34 @@ public abstract class  RecyclerViewFragment extends Fragment implements Recycler
         return mPullDownRefresh;
     }
 
-    //设置是否刷新
-    public void stopRefresh(){
-        mPullDownRefresh.post(new Runnable() {
-            @Override
-            public void run() {
-                if(mPullDownRefresh!=null)
-                    mPullDownRefresh.setRefreshing(false);
-            }
-        });
-        mPullUpRefresh.setInRefreshing(false);
+    //刷新完成
+    public void refreshComplete(){
+         stopPullDownRefreshing();
+         mPullUpRefresh.setInRefreshing(false);
     }
 
+    //刷新失败
+    public void refreshFail()
+    {
+        stopPullDownRefreshing();
+        int count=mRecyclerView.getAdapter().getItemCount();
+        FooterAdapter.FooterViewHolder holder= (FooterAdapter.FooterViewHolder) mRecyclerView.findViewHolderForAdapterPosition(count-1);
+        final TextView footerView= (TextView) holder.itemView;
+        footerView.setText("加载失败,点击重新加载");
+        footerView.setOnClickListener(footerClick);
+    }
+    //开始刷新
     public void startRefresh(){
-        //解决无法显示刷新进度栏的问题
-        mPullDownRefresh.post(new Runnable() {
-            @Override
-            public void run() {
-                if(mPullDownRefresh!=null)
-                    mPullDownRefresh.setRefreshing(true);
-            }
-        });
+        startPullDownRefreshing();
         mPullUpRefresh.setInRefreshing(true);
+    }
+    private void startPullDownRefreshing()
+    {
+        mPullDownRefresh.post(startRefreshRunnable);
+    }
+    private void stopPullDownRefreshing()
+    {
+        mPullDownRefresh.postDelayed(stopRefreshRunnable,800);
     }
 
     @Override
@@ -140,6 +169,9 @@ public abstract class  RecyclerViewFragment extends Fragment implements Recycler
         if(mPullDownRefresh.isRefreshing())
             mPullDownRefresh.setRefreshing(false);
         mPullDownRefresh=null;
+        startRefreshRunnable =null;
+        stopRefreshRunnable =null;
+        footerClick=null;
         super.onDestroy();
     }
 

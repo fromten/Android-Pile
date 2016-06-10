@@ -8,6 +8,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +18,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+
 import learn.example.joke.R;
 import learn.example.pile.adapters.ViewPagerAdapter;
 import learn.example.pile.fragment.SettingFragment;
@@ -37,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         //如果版本大于23和外部存储可以用时需要请求权限
         if (Build.VERSION.SDK_INT>=23&& AppCheck.checkExternalStorageState())
         {
-            maybeRequirePermission();
+            requirePermission();
         }else {
             showView();
         }
@@ -45,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     @TargetApi(value = 23)
-    public void maybeRequirePermission()
+    public void requirePermission()
     {
         if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
@@ -68,10 +72,14 @@ public class MainActivity extends AppCompatActivity {
 
     public void showView()
     {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.main_show,new ViewPagerFragment()).commitAllowingStateLoss();
+        FragmentManager manager=getSupportFragmentManager();
+        Fragment fragment=manager.findFragmentByTag(ViewPagerFragment.TAG);
+        if (fragment==null)
+        {
+            fragment=new ViewPagerFragment();
+            manager.beginTransaction().add(R.id.main_show,fragment,ViewPagerFragment.TAG).commitAllowingStateLoss();
+        }
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu,menu);
@@ -84,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
         {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.main_show, new SettingFragment())
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .addToBackStack(null)
                     .commit();
         }
@@ -93,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
     public static class ViewPagerFragment extends Fragment {
         private TabLayout mTabLayout;
         private ViewPager mViewPager;
-
+        public static final String  TAG="ViewPagerFragment";
         @Nullable
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

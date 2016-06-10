@@ -39,10 +39,14 @@ public class VideoListAdapter extends FooterAdapter<VideoListAdapter.VideoViewHo
     {
         return mItemList.get(position);
     }
-    public void addAllItem(List<VideoJsonData.VideoItem> all)
+    public void addAllItem(List<VideoJsonData.VideoItem> list)
     {
-        mItemList.addAll(all);
-        notifyItemInserted(getSelfItemSize());
+        if (list==null||list.isEmpty())
+        {
+            return;
+        }
+        mItemList.addAll(list);
+        notifyItemInserted(getItemSize());
     }
 
     public void clearAll()
@@ -51,9 +55,8 @@ public class VideoListAdapter extends FooterAdapter<VideoListAdapter.VideoViewHo
         notifyDataSetChanged();
     }
 
-
     @Override
-    public int getSelfItemSize() {
+    public int getItemSize() {
         return mItemList.size();
     }
 
@@ -84,7 +87,6 @@ public class VideoListAdapter extends FooterAdapter<VideoListAdapter.VideoViewHo
         {   Intent intent;
             VideoJsonData.VideoItem item=mItemList.get(position);
             boolean haveFileUrl=item.getFileUrl()!=null;//是否存在视频文件
-
             //根据haveFileUrl去打开一个网页播放或启动视频播放
             intent=haveFileUrl?new Intent(v.getContext(),VideoActivity.class):new Intent(v.getContext(),WebViewActivity.class);
             String url=haveFileUrl?item.getFileUrl():item.getSrcUrl();

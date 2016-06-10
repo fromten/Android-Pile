@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.view.View;
-import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -66,6 +65,7 @@ public class VideoListFragment extends RecyclerViewFragment implements Response.
         VolleyRequestQueue.getInstance(getContext()).cancelAll(TAG);
         savePage(currentPage);
         mVideoHtmlParser.destroy();
+        mVideoListAdapter=null;
         super.onDestroy();
     }
 
@@ -86,7 +86,7 @@ public class VideoListFragment extends RecyclerViewFragment implements Response.
     //请求失败
     @Override
     public void onErrorResponse(VolleyError error) {
-        if (mVideoListAdapter.getSelfItemSize()==0)
+        if (mVideoListAdapter.getItemSize()==0)
         {
             setEmptyViewText("数据飞走了");
         }
@@ -96,7 +96,7 @@ public class VideoListFragment extends RecyclerViewFragment implements Response.
     //解析完成
     @Override
     public  void ParserComplete(VideoJsonData.VideoItem item) {
-        int len=mVideoListAdapter.getSelfItemSize();
+        int len=mVideoListAdapter.getItemSize();
         if (item==null||len<0)
         {
             return;

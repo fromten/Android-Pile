@@ -26,7 +26,7 @@ MediaPlayer.OnErrorListener,MediaPlayer.OnPreparedListener{
     private MediaController mMediaController;
     private VolumeProgressView mVolumeProgressView;
     private TextView  mLogView;
-    private static final String SAVE_PLAYPOS_KEY="SAVE_PLAYPOS_KEY";
+    private static final String KEY_SAVE_STATE_POSITION ="KEY_SAVE_STATE_POSITION";
     public static final String KEY_VIDEO_URL="KEY_VIDEO_URL";
     private Bundle  saveState;
     private String TAG="VideoActivity";
@@ -81,7 +81,7 @@ MediaPlayer.OnErrorListener,MediaPlayer.OnPreparedListener{
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         //保存现在的播放位置
-        outState.putInt(SAVE_PLAYPOS_KEY,mVideoView.getCurrentPosition());
+        outState.putInt(KEY_SAVE_STATE_POSITION,mVideoView.getCurrentPosition());
         super.onSaveInstanceState(outState);
     }
 
@@ -99,7 +99,7 @@ MediaPlayer.OnErrorListener,MediaPlayer.OnPreparedListener{
         //跳到旋转之前的播放位置
         if(saveState!=null)
         {
-            int playOldPos=saveState.getInt(SAVE_PLAYPOS_KEY);
+            int playOldPos=saveState.getInt(KEY_SAVE_STATE_POSITION);
             mVideoView.seekTo(playOldPos);
         }
         mVideoView.start();

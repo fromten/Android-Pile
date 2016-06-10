@@ -32,13 +32,10 @@ public class NewsListAdapter extends FooterAdapter<NewsListAdapter.NewsViewHolde
     }
 
     @Override
-    public int getSelfItemSize() {
+    public int getItemSize() {
         return mItems.size();
     }
-    public NewsJsonData.NewsItem getItem(int position)
-    {
-        return mItems.get(position);
-    }
+
     public List<NewsJsonData.NewsItem> getAllItem()
     {
         return mItems;
@@ -49,9 +46,14 @@ public class NewsListAdapter extends FooterAdapter<NewsListAdapter.NewsViewHolde
         notifyDataSetChanged();
     }
 
-    public void addAllItem(List<NewsJsonData.NewsItem> datas)
+    public void addAllItem(List<NewsJsonData.NewsItem> list)
     {
-        mItems.addAll(datas);
+
+        if (list==null||list.isEmpty())
+        {
+            return;
+        }
+        mItems.addAll(list);
         notifyDataSetChanged();
     }
     @Override

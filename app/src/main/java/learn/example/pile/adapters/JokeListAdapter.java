@@ -36,9 +36,14 @@ public class JokeListAdapter extends FooterAdapter implements View.OnClickListen
     }
 
 
-    public void addAllItem(List<JokeJsonData.JokeResBody.JokeItem> items)
+    public void addAllItem(List<JokeJsonData.JokeResBody.JokeItem> list)
     {
-        mItems.addAll(items);
+        if (list==null||list.isEmpty())
+        {
+            return;
+        }
+
+        mItems.addAll(list);
         notifyItemInserted(mItems.size());
     }
 
@@ -52,7 +57,7 @@ public class JokeListAdapter extends FooterAdapter implements View.OnClickListen
         return mItems;
     }
     @Override
-    public int getSelfItemSize() {
+    public int getItemSize() {
         return mItems.size();
     }
     @Override
@@ -108,7 +113,7 @@ public class JokeListAdapter extends FooterAdapter implements View.OnClickListen
             holder.img.setTag(R.id.link,url);
             holder.img.setOnClickListener(this);
         }
-        String time="<sub>  "+item.getCreateTime().substring(0,10)+"</sub>";
+        String time="<small>  "+item.getCreateTime().substring(0,10)+"</small>";
         String html="<p>"+item.getTitle()+time+"</p>";
         holder.title.setText(Html.fromHtml(html));
     }

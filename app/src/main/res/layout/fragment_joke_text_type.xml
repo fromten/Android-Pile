@@ -23,7 +23,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_gravity="start|bottom"
-            android:paddingStart="5dp"
-            android:paddingLeft="5dp"
+            android:paddingStart="@dimen/normal_padding"
+            android:paddingLeft="@dimen/normal_padding"
+            android:paddingEnd="@dimen/normal_padding"
+            android:paddingRight="@dimen/normal_padding"
             android:id="@+id/joke_content"/>
 </LinearLayout>

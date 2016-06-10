@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import learn.example.joke.R;
-import learn.example.pile.adapters.FooterAdapter;
 import learn.example.pile.ui.RecyclerPullUPImpl;
 
 /**
@@ -35,22 +34,15 @@ public abstract class  RecyclerViewFragment extends Fragment implements Recycler
     private Runnable startRefreshRunnable =new Runnable() {
         @Override
         public void run() {
+            if (mPullDownRefresh!=null)
             mPullDownRefresh.setRefreshing(true);
         }
     };
     private Runnable stopRefreshRunnable =new Runnable() {
         @Override
         public void run() {
+            if (mPullDownRefresh!=null)
             mPullDownRefresh.setRefreshing(false);
-        }
-    };
-
-    private View.OnClickListener footerClick=new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            ((TextView)v).setText("重新加载中...");
-            mPullUpRefresh.setInRefreshing(false);
-            mPullUpRefresh.onScrollStateChanged(mRecyclerView, RecyclerView.SCROLL_STATE_IDLE);
         }
     };
     @Override
@@ -64,7 +56,7 @@ public abstract class  RecyclerViewFragment extends Fragment implements Recycler
     }
     public void  initView()
     {
-        mPullUpRefresh=new RecyclerPullUPImpl(this);
+        mPullUpRefresh=new RecyclerPullUPImpl(mRecyclerView,this);
         mRecyclerView.setLayoutManager(getLayoutManager());//设置布局
         mRecyclerView.addOnScrollListener(mPullUpRefresh);//添加上拉刷新监听
         mRecyclerView.addItemDecoration(getDividerItemDecoration());//设置装饰器
@@ -83,14 +75,14 @@ public abstract class  RecyclerViewFragment extends Fragment implements Recycler
 
 
     //RecyclerView分割线装饰器,默认使用 android.R.attr.listDivider
-    public DividerItemDecoration getDividerItemDecoration()
+    protected DividerItemDecoration getDividerItemDecoration()
     {
         return new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL_LIST);
     }
 
 
     //RecyclerView布局,默认是垂直线性布局
-    public RecyclerView.LayoutManager getLayoutManager()
+    protected RecyclerView.LayoutManager getLayoutManager()
     {
         return new LinearLayoutManager(getContext());
     }
@@ -118,33 +110,29 @@ public abstract class  RecyclerViewFragment extends Fragment implements Recycler
     }
 
     //刷新完成
-    public void refreshComplete(){
+    public final void refreshComplete(){
          stopPullDownRefreshing();
-         mPullUpRefresh.setInRefreshing(false);
+         mPullUpRefresh.loadSuccess();
     }
 
     //刷新失败
-    public void refreshFail()
+    public final void refreshFail()
     {
         stopPullDownRefreshing();
-        int count=mRecyclerView.getAdapter().getItemCount();
-        FooterAdapter.FooterViewHolder holder= (FooterAdapter.FooterViewHolder) mRecyclerView.findViewHolderForAdapterPosition(count-1);
-        final TextView footerView= (TextView) holder.itemView;
-        footerView.setText("加载失败,点击重新加载");
-        footerView.setOnClickListener(footerClick);
+        mPullUpRefresh.loadFail();
     }
-    //开始刷新
-    public void startRefresh(){
+    //开始下拉刷新,下拉刷新触发后,禁止上拉触发刷新
+    public final void startRefresh(){
         startPullDownRefreshing();
-        mPullUpRefresh.setInRefreshing(true);
+        mPullUpRefresh.setInLoading();
     }
-    private void startPullDownRefreshing()
+    private  void startPullDownRefreshing()
     {
         mPullDownRefresh.post(startRefreshRunnable);
     }
-    private void stopPullDownRefreshing()
+    private  void stopPullDownRefreshing()
     {
-        mPullDownRefresh.postDelayed(stopRefreshRunnable,800);
+        mPullDownRefresh.postDelayed(stopRefreshRunnable,500);
     }
 
     @Override
@@ -168,10 +156,9 @@ public abstract class  RecyclerViewFragment extends Fragment implements Recycler
         mEmptyView=null;
         if(mPullDownRefresh.isRefreshing())
             mPullDownRefresh.setRefreshing(false);
-        mPullDownRefresh=null;
         startRefreshRunnable =null;
         stopRefreshRunnable =null;
-        footerClick=null;
+        mPullDownRefresh=null;
         super.onDestroy();
     }
 
@@ -180,8 +167,7 @@ public abstract class  RecyclerViewFragment extends Fragment implements Recycler
     //检查网络是否可用
     public boolean checkNetState()
     {
-        Context context=getActivity();
-        ConnectivityManager manager= (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager manager= (ConnectivityManager) getContext().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info=manager.getActiveNetworkInfo();
         return info!=null&&info.isConnected();
     }

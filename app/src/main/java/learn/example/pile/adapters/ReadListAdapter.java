@@ -26,7 +26,7 @@ public class ReadListAdapter extends FooterAdapter<ReadListAdapter.ReadViewHolde
     }
 
     @Override
-    public int getSelfItemSize() {
+    public int getItemSize() {
         return mItemList.size();
     }
 
@@ -44,10 +44,15 @@ public class ReadListAdapter extends FooterAdapter<ReadListAdapter.ReadViewHolde
         holder.desc.setText(item.getDesc());
     }
 
-    public void addAllItem(List<GankCommonJson.ResultsBean> items)
+    public void addAllItem(List<GankCommonJson.ResultsBean> list)
     {
-        mItemList.addAll(items);
-        notifyItemInserted(getSelfItemSize());
+        if (list==null||list.isEmpty())
+        {
+            return;
+        }
+
+        mItemList.addAll(list);
+        notifyItemInserted(getItemSize());
     }
 
     public void clearItems()

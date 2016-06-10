@@ -65,7 +65,7 @@ public class NewsListFragment extends RecyclerViewFragment implements Response.L
 
     @Override
     public void onErrorResponse(VolleyError error) {
-        if (mNewsListAdapter.getSelfItemSize()==0)
+        if (mNewsListAdapter.getItemSize()==0)
         {
             setEmptyViewText("数据飞走了");
         }

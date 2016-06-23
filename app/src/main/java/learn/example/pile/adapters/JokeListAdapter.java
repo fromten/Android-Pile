@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import learn.example.joke.R;
 import learn.example.pile.PhotoActivity;
-import learn.example.pile.WebViewActivity;
 import learn.example.pile.jsonobject.JokeJsonData;
+import learn.example.pile.util.ActivityLauncher;
 import learn.example.pile.util.UrlCheck;
 
 /**
@@ -36,9 +36,14 @@ public class JokeListAdapter extends FooterAdapter implements View.OnClickListen
     }
 
 
-    public void addAllItem(List<JokeJsonData.JokeResBody.JokeItem> items)
+    public void addAllItem(List<JokeJsonData.JokeResBody.JokeItem> list)
     {
-        mItems.addAll(items);
+        if (list==null||list.isEmpty())
+        {
+            return;
+        }
+
+        mItems.addAll(list);
         notifyItemInserted(mItems.size());
     }
 
@@ -52,7 +57,7 @@ public class JokeListAdapter extends FooterAdapter implements View.OnClickListen
         return mItems;
     }
     @Override
-    public int getSelfItemSize() {
+    public int getItemSize() {
         return mItems.size();
     }
     @Override
@@ -108,7 +113,7 @@ public class JokeListAdapter extends FooterAdapter implements View.OnClickListen
             holder.img.setTag(R.id.link,url);
             holder.img.setOnClickListener(this);
         }
-        String time="<sub>  "+item.getCreateTime().substring(0,10)+"</sub>";
+        String time="<small>  "+item.getCreateTime().substring(0,10)+"</small>";
         String html="<p>"+item.getTitle()+time+"</p>";
         holder.title.setText(Html.fromHtml(html));
     }
@@ -117,9 +122,7 @@ public class JokeListAdapter extends FooterAdapter implements View.OnClickListen
     @Override
     public void onClick(View v) {
         String url= (String) v.getTag(R.id.link);
-        Intent intent=new Intent(mContext, PhotoActivity.class);
-        intent.putExtra(PhotoActivity.KEY_PHOTOACTIVITY_IMG_URL,url);
-        mContext.startActivity(intent);
+        ActivityLauncher.startPhotoActivity(v.getContext(),url);
     }
 
     public static class JokeTextHolder extends RecyclerView.ViewHolder

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="learn.example.joke">
    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -9,6 +10,7 @@
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
     <application
         android:allowBackup="true"
+        android:name="learn.example.pile.PileApplication"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
@@ -24,6 +26,7 @@
             </intent-filter>
         </activity>
         <activity android:name="learn.example.pile.WebViewActivity"
+                  android:process="learn.example.pile.PileApplication.WebActivity"
             android:label=" "/>
         <activity android:name="learn.example.pile.VideoActivity"
             android:label="视频"/>

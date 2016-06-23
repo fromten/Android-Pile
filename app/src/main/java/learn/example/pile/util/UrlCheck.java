@@ -7,9 +7,9 @@ public class UrlCheck {
 
     public static boolean isGifImg(String url)
     {
-
         return url.endsWith(".gif");
     }
+
     //坑爹的数据源
     public static String fixUrl(String url)
     {

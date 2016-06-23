@@ -1,10 +1,13 @@
 package learn.example.pile.adapters;
 
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import learn.example.joke.R;
 
 /**
  * Created on 2016/5/23.
@@ -16,10 +19,8 @@ public abstract class FooterAdapter<T extends RecyclerView.ViewHolder> extends R
     @Override
     public final RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_FOOTER) {
-            TextView textView = new TextView(parent.getContext());
-            textView.setGravity(Gravity.CENTER);
-            textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            return new FooterViewHolder(textView);
+            View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_footer,parent,false);
+            return new FooterViewHolder(view);
         } else {
             return createSelfViewHolder(parent, viewType);
         }
@@ -28,12 +29,10 @@ public abstract class FooterAdapter<T extends RecyclerView.ViewHolder> extends R
     @Override
     public final void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof FooterViewHolder) {
-            if (getSelfItemSize() == 0) {
-                holder.itemView.setVisibility(View.INVISIBLE);//当前没有数据时隐藏
-            } else {
-                holder.itemView.setVisibility(View.VISIBLE);
-                ((FooterViewHolder) holder).getTextView().setText("加载数据中...");
-            }
+           if (getItemSize()==0)
+           {
+               holder.itemView.setVisibility(View.GONE);
+           }
         } else {
             T t = (T) holder;
             bindSelfViewHolder(t, position);
@@ -44,7 +43,7 @@ public abstract class FooterAdapter<T extends RecyclerView.ViewHolder> extends R
 
     @Override
     public final int getItemCount() {
-        return getSelfItemSize() + 1;
+        return getItemSize() + 1;
     }
 
     @Override
@@ -58,19 +57,19 @@ public abstract class FooterAdapter<T extends RecyclerView.ViewHolder> extends R
         return 0;
     }
 
-    public abstract int getSelfItemSize();
+    public abstract int getItemSize();
 
     public abstract T createSelfViewHolder(ViewGroup parent, int type);
 
     public abstract void bindSelfViewHolder(T holder, int position);
 
     public static class FooterViewHolder extends RecyclerView.ViewHolder {
+        public ProgressBar mProgressBar;
+        public TextView mTextView;
         public FooterViewHolder(View itemView) {
             super(itemView);
-        }
-        public TextView getTextView()
-        {
-            return (TextView) itemView;
+            mProgressBar= (ProgressBar) itemView.findViewById(R.id.footer_progress);
+            mTextView= (TextView) itemView.findViewById(R.id.footer_text);
         }
     }
 }

@@ -27,7 +27,6 @@ public class GsonRequest<T> extends Request<T> {
 
     private Class<T> mClass;
     private boolean enableHeader;
-    private String TAG="GsonRequest";
     public GsonRequest(int method, String url, Class<T> clazz, Response.Listener<T> listener,
                        Response.ErrorListener errorListener) {
         super(method, url, errorListener);

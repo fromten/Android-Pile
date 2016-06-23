@@ -16,6 +16,7 @@ import java.util.List;
 import learn.example.joke.R;
 import learn.example.pile.WebViewActivity;
 import learn.example.pile.jsonobject.NewsJsonData;
+import learn.example.pile.util.ActivityLauncher;
 
 
 /**
@@ -26,19 +27,25 @@ public class NewsListAdapter extends FooterAdapter<NewsListAdapter.NewsViewHolde
     private List<NewsJsonData.NewsItem> mItems;
     private Context mContext;
 
+    private View.OnClickListener mViewClick=new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            String url= (String) v.getTag();
+            ActivityLauncher.startInternalWebActivity(v.getContext(),url);
+        }
+    };
+
+
     public NewsListAdapter(Context context) {
         mItems = new ArrayList<>();
         this.mContext=context;
     }
 
     @Override
-    public int getSelfItemSize() {
+    public int getItemSize() {
         return mItems.size();
     }
-    public NewsJsonData.NewsItem getItem(int position)
-    {
-        return mItems.get(position);
-    }
+
     public List<NewsJsonData.NewsItem> getAllItem()
     {
         return mItems;
@@ -49,14 +56,20 @@ public class NewsListAdapter extends FooterAdapter<NewsListAdapter.NewsViewHolde
         notifyDataSetChanged();
     }
 
-    public void addAllItem(List<NewsJsonData.NewsItem> datas)
+    public void addAllItem(List<NewsJsonData.NewsItem> list)
     {
-        mItems.addAll(datas);
+
+        if (list==null||list.isEmpty())
+        {
+            return;
+        }
+        mItems.addAll(list);
         notifyDataSetChanged();
     }
     @Override
     public NewsViewHolder createSelfViewHolder(ViewGroup parent, int type) {
         View view= LayoutInflater.from(mContext).inflate(R.layout.fragment_news_adpter_view,parent,false);
+        view.setOnClickListener(mViewClick);
         return new NewsViewHolder(view);
     }
 
@@ -66,15 +79,7 @@ public class NewsListAdapter extends FooterAdapter<NewsListAdapter.NewsViewHolde
         holder.describe.setText(item.getNewsDes());
         holder.title.setText(item.getTitle());
         Glide.with(mContext).load(item.getImageUrl()).into(holder.img);
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(mContext,WebViewActivity.class);
-                intent.putExtra(WebViewActivity.KEY_URL,mItems.get(position).getNewsUrl());
-                mContext.startActivity(intent);
-            }
-        });
+        holder.itemView.setTag(item.getNewsUrl());
     }
 
     public static class NewsViewHolder extends RecyclerView.ViewHolder{

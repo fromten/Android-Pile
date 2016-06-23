@@ -57,6 +57,7 @@ public class ReadListFragment extends RecyclerViewFragment implements Response.E
     @Override
     public void onDestroy() {
         VolleyRequestQueue.getInstance(getContext()).cancelAll(TAG);
+        mAdapter=null;
         super.onDestroy();
     }
 

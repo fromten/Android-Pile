@@ -20,7 +20,7 @@
         android:layout_below="@+id/video_desc"
         android:layout_centerHorizontal="true"
         android:background="@android:color/black"/>
-    <ImageView
+    <android.widget.ImageView
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="center"

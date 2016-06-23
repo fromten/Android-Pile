@@ -10,6 +10,7 @@ import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -76,6 +77,7 @@ public class SettingFragment extends Fragment {
         String size= readDiskCacheSize();
         String html="<p>磁盘缓存大小:      <b><font color='#00bbaa'>"+size+"</b></p>";
         picCache.setText(Html.fromHtml(html));
+
     }
 
     public String readDiskCacheSize()

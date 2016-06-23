@@ -47,9 +47,9 @@ public class VideoJsonData {
         private String desc;
         private String publishedAt;
         @SerializedName("url")
-        private String srcUrl;//源来源地址
+        private String srcUrl;//源来源Html地址
         private String fileUrl;//视频文件实际地址
-        private String imgUrl; //视频图片Url地址
+        private String imgUrl; //图片Url地址
 
         public String getCreatedAt() {
             return createdAt;

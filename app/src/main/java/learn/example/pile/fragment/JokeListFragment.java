@@ -6,14 +6,12 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.View;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import learn.example.joke.R;
@@ -84,7 +82,7 @@ public class JokeListFragment extends RecyclerViewFragment implements Response.E
     @Override
     public  void onErrorResponse(VolleyError error) {
         refreshFail();
-        if (mJokeListAdapter.getSelfItemSize()==0)
+        if (mJokeListAdapter.getItemSize()==0)
         {
             setEmptyViewText("数据飞走了");
         }

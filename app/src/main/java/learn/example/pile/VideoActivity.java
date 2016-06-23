@@ -19,14 +19,14 @@ import learn.example.pile.ui.VolumeProgressView;
 /**
  * Created on 2016/5/26.
  */
-public class VideoActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener,
+public class VideoActivity extends BaseActivity implements MediaPlayer.OnCompletionListener,
 MediaPlayer.OnErrorListener,MediaPlayer.OnPreparedListener{
 
     private VideoView mVideoView;
     private MediaController mMediaController;
     private VolumeProgressView mVolumeProgressView;
     private TextView  mLogView;
-    private static final String SAVE_PLAYPOS_KEY="SAVE_PLAYPOS_KEY";
+    private static final String KEY_SAVE_STATE_POSITION ="KEY_SAVE_STATE_POSITION";
     public static final String KEY_VIDEO_URL="KEY_VIDEO_URL";
     private Bundle  saveState;
     private String TAG="VideoActivity";
@@ -81,7 +81,7 @@ MediaPlayer.OnErrorListener,MediaPlayer.OnPreparedListener{
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         //保存现在的播放位置
-        outState.putInt(SAVE_PLAYPOS_KEY,mVideoView.getCurrentPosition());
+        outState.putInt(KEY_SAVE_STATE_POSITION,mVideoView.getCurrentPosition());
         super.onSaveInstanceState(outState);
     }
 
@@ -99,7 +99,7 @@ MediaPlayer.OnErrorListener,MediaPlayer.OnPreparedListener{
         //跳到旋转之前的播放位置
         if(saveState!=null)
         {
-            int playOldPos=saveState.getInt(SAVE_PLAYPOS_KEY);
+            int playOldPos=saveState.getInt(KEY_SAVE_STATE_POSITION);
             mVideoView.seekTo(playOldPos);
         }
         mVideoView.start();
@@ -118,9 +118,11 @@ MediaPlayer.OnErrorListener,MediaPlayer.OnPreparedListener{
 
     //监听,控制播放的音量
     private View.OnTouchListener touchListener=new View.OnTouchListener() {
-        private float mDownY;
-        private boolean inPress;
-        private boolean inMove;
+
+
+        private float mDownY; //按下的y坐标
+        private boolean inPress;//是否按下
+        private boolean inMove;//是否移动
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             int action=event.getAction();
@@ -134,6 +136,7 @@ MediaPlayer.OnErrorListener,MediaPlayer.OnPreparedListener{
                 float y=event.getY();
                 if(Math.abs(mDownY-y)>90)
                 {
+                    //如果不可见,则显示
                     if(mVolumeProgressView.getVisibility()!=View.VISIBLE)
                         mVolumeProgressView.setVisibility(View.VISIBLE);
                     int value=mVolumeProgressView.getCurrentValue();

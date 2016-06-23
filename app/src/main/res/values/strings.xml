@@ -5,6 +5,13 @@
     <string name="tab_setting">设置</string>
     <string name="video_playcomplete">视频播放结束</string>
     <string name="gif">gif</string>
-    <string name="gitrepositories">源码地址:https://github.com/fromten/Android-Pile</string>
+
+    <string name="git_rep">源码地址:https://github.com/fromten/Android-Pile</string>
     <item name="link" type="id"/>
+
+
+
+   <array name="setting_keys">
+       <item></item>
+   </array>
 </resources>

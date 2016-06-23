@@ -10,6 +10,7 @@ import org.junit.Test;
 
 
 import java.io.ByteArrayInputStream;
+import java.io.Serializable;
 
 import learn.example.pile.util.UrlCheck;
 
@@ -23,7 +24,6 @@ public class ExampleUnitTest {
     public void addition_isCorrect() {
 
     }
-
     public void getException() throws Exception {
          throw new JsonIOException("msg");
     }

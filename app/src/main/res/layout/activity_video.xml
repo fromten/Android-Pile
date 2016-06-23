@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/black"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <VideoView
         android:id="@+id/video_view"
         android:layout_width="match_parent"
@@ -12,9 +12,10 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
         android:clickable="false"
+        android:focusable="false"
         android:textColor="@color/colorPrimaryDark"
+        android:layout_gravity="left|start|center_vertical"
         android:id="@+id/video_logmsg"/>
     <learn.example.pile.ui.VolumeProgressView
         android:layout_width="20dp"
@@ -22,5 +23,5 @@
         android:id="@+id/video_volume"
         android:clickable="false"
         android:visibility="invisible"
-        android:layout_gravity="end|center_vertical"/>
+        android:layout_gravity="right|center_vertical"/>
 </FrameLayout>

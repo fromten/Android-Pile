@@ -15,10 +15,10 @@ import learn.example.pile.util.UrlCheck;
 /**
  * Created on 2016/6/1.
  */
-public class PhotoActivity extends AppCompatActivity{
+public class PhotoActivity extends BaseActivity{
 
     private ImageView mImageView;
-    public static final String KEY_PHOTOACTIVITY_IMG_URL="PhotoActivity_IMG_URL_KEY";
+    public static final String KEY_IMG_URL ="PhotoActivity_IMG_URL_KEY";
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,7 +27,7 @@ public class PhotoActivity extends AppCompatActivity{
         Intent intent=getIntent();
         if (intent!=null)
         {
-            String url=intent.getStringExtra(KEY_PHOTOACTIVITY_IMG_URL);
+            String url=intent.getStringExtra(KEY_IMG_URL);
             if (UrlCheck.isGifImg(url))
             {
                 loadGif(url);

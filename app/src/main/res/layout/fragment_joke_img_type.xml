@@ -15,7 +15,7 @@
             android:maxLines="1"
             android:id="@+id/joke_title"
             android:drawableBottom="@drawable/border_bottom_line" />
-    <ImageView
+    <android.widget.ImageView
         android:layout_width="230dp"
         android:layout_height="170dp"
         android:id="@+id/joke_img"

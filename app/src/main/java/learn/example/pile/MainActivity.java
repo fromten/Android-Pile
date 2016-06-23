@@ -77,7 +77,9 @@ public class MainActivity extends AppCompatActivity {
         if (fragment==null)
         {
             fragment=new ViewPagerFragment();
-            manager.beginTransaction().add(R.id.main_show,fragment,ViewPagerFragment.TAG).commitAllowingStateLoss();
+            manager.beginTransaction()
+                    .add(R.id.main_show,fragment,ViewPagerFragment.TAG)
+                    .commitAllowingStateLoss();
         }
     }
     @Override
@@ -85,6 +87,8 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.main_menu,menu);
         return true;
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

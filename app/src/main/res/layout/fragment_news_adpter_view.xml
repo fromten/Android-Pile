@@ -18,18 +18,15 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_marginTop="5dp"
-        android:text="Medium Text"
         android:textColor="@android:color/black"
         android:id="@+id/news_title"
         android:layout_toRightOf="@+id/news_img"
         android:layout_toEndOf="@+id/news_img" />
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:maxLines="3"
-        android:text="Small Text"
         android:id="@+id/news_descr"
         android:layout_below="@+id/news_title"
         android:layout_margin="5dp"

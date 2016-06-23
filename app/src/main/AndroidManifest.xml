@@ -26,6 +26,7 @@
             </intent-filter>
         </activity>
         <activity android:name="learn.example.pile.WebViewActivity"
+                  android:process="learn.example.pile.PileApplication.WebActivity"
             android:label=" "/>
         <activity android:name="learn.example.pile.VideoActivity"
             android:label="视频"/>

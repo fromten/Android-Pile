@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import learn.example.joke.R;
 import learn.example.pile.PhotoActivity;
-import learn.example.pile.WebViewActivity;
 import learn.example.pile.jsonobject.JokeJsonData;
+import learn.example.pile.util.ActivityLauncher;
 import learn.example.pile.util.UrlCheck;
 
 /**
@@ -122,9 +122,7 @@ public class JokeListAdapter extends FooterAdapter implements View.OnClickListen
     @Override
     public void onClick(View v) {
         String url= (String) v.getTag(R.id.link);
-        Intent intent=new Intent(mContext, PhotoActivity.class);
-        intent.putExtra(PhotoActivity.KEY_PHOTOACTIVITY_IMG_URL,url);
-        mContext.startActivity(intent);
+        ActivityLauncher.startPhotoActivity(v.getContext(),url);
     }
 
     public static class JokeTextHolder extends RecyclerView.ViewHolder

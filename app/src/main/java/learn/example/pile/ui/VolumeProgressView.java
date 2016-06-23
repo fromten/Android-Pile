@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.media.AudioManager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 /**
@@ -66,6 +67,7 @@ public class VolumeProgressView extends View {
             int t=mRect[i-1].bottom;
             int b=t+space;
             mRect[i].set(0,t,width,b);
+            Log.d("volume",mRect[i].toString());
         }
     }
 

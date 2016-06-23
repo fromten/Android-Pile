@@ -19,7 +19,7 @@ import learn.example.pile.ui.VolumeProgressView;
 /**
  * Created on 2016/5/26.
  */
-public class VideoActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener,
+public class VideoActivity extends BaseActivity implements MediaPlayer.OnCompletionListener,
 MediaPlayer.OnErrorListener,MediaPlayer.OnPreparedListener{
 
     private VideoView mVideoView;
@@ -118,9 +118,11 @@ MediaPlayer.OnErrorListener,MediaPlayer.OnPreparedListener{
 
     //监听,控制播放的音量
     private View.OnTouchListener touchListener=new View.OnTouchListener() {
-        private float mDownY;
-        private boolean inPress;
-        private boolean inMove;
+
+
+        private float mDownY; //按下的y坐标
+        private boolean inPress;//是否按下
+        private boolean inMove;//是否移动
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             int action=event.getAction();
@@ -134,6 +136,7 @@ MediaPlayer.OnErrorListener,MediaPlayer.OnPreparedListener{
                 float y=event.getY();
                 if(Math.abs(mDownY-y)>90)
                 {
+                    //如果不可见,则显示
                     if(mVolumeProgressView.getVisibility()!=View.VISIBLE)
                         mVolumeProgressView.setVisibility(View.VISIBLE);
                     int value=mVolumeProgressView.getCurrentValue();

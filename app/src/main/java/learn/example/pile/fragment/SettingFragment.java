@@ -77,6 +77,7 @@ public class SettingFragment extends Fragment {
         String size= readDiskCacheSize();
         String html="<p>磁盘缓存大小:      <b><font color='#00bbaa'>"+size+"</b></p>";
         picCache.setText(Html.fromHtml(html));
+
     }
 
     public String readDiskCacheSize()

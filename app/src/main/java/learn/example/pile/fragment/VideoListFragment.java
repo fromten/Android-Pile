@@ -63,6 +63,7 @@ public class VideoListFragment extends RecyclerViewFragment implements Response.
     @Override
     public void onDestroy() {
         VolleyRequestQueue.getInstance(getContext()).cancelAll(TAG);
+
         savePage(currentPage);
         mVideoHtmlParser.destroy();
         mVideoListAdapter=null;

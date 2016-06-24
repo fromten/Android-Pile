@@ -25,7 +25,7 @@ import learn.example.pile.AppGlideModule;
  * Created on 2016/5/6.
  */
 public class SettingFragment extends Fragment {
-
+    public static final String TAG = "SettingFragment";
     private TextView picCache;
     @Nullable
     @Override

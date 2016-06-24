@@ -133,7 +133,7 @@ public abstract class  RecyclerViewFragment extends Fragment implements Recycler
     }
     private  void stopPullDownRefreshing()
     {
-        mPullDownRefresh.postDelayed(stopRefreshRunnable,500);
+        mPullDownRefresh.postDelayed(stopRefreshRunnable,300);
     }
 
     @Override
@@ -153,6 +153,7 @@ public abstract class  RecyclerViewFragment extends Fragment implements Recycler
 
     @Override
     public void onDestroy() {
+        mRecyclerView.removeOnScrollListener(mPullUpRefresh);
         mRecyclerView=null;
         mEmptyView=null;
         if(mPullDownRefresh.isRefreshing())
@@ -160,6 +161,7 @@ public abstract class  RecyclerViewFragment extends Fragment implements Recycler
         startRefreshRunnable =null;
         stopRefreshRunnable =null;
         mPullDownRefresh=null;
+        mPullUpRefresh=null;
         super.onDestroy();
     }
 

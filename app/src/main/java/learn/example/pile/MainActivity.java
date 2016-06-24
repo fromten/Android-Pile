@@ -3,6 +3,7 @@ package learn.example.pile;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,6 +14,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,7 +28,7 @@ import learn.example.pile.fragment.SettingFragment;
 import learn.example.pile.util.AppCheck;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private final int permissionResultCode=99;
     @Override
@@ -94,13 +96,22 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId()==R.id.menu_setting)
         {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.main_show, new SettingFragment())
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .addToBackStack(null)
-                    .commit();
+            //判断当前的SettingFragment是否显示
+            if (getSupportFragmentManager().findFragmentByTag(SettingFragment.TAG)==null)
+            {
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.main_show, new SettingFragment(),SettingFragment.TAG)
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                        .addToBackStack(null)
+                        .commit();
+            }
         }
         return true;
+    }
+
+    @Override
+    public void enableActionBarHome() {
+        //do nothing
     }
 
     public static class ViewPagerFragment extends Fragment {

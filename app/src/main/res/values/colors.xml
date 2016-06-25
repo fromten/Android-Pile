@@ -8,8 +8,9 @@
     <color name="grey">#F0F0F0</color>
     <color name="deepgrey">#DcDcDc</color>
     <color name="blue">#0000FF</color>
+    <color name="link_color">#08b7af</color>
     <color name="white">#ffffff</color>
     <color name="none">#00000000</color>
     <color name="orange">#f7642c</color>
-    <color name="weakorange">#70f7642c</color>
+    <color name="weakorange">#9ff7642c</color>
 </resources>

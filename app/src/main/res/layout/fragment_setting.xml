@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:padding="20dp"
-    android:background="@android:color/white"
-    android:layout_height="match_parent">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:padding="20dp"
+              android:clickable="true"
+              android:background="@android:color/white"
+              android:layout_height="match_parent">
 
     <TextView
         android:layout_width="wrap_content"
@@ -19,6 +21,26 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/pic_cache"
-        android:layout_margin="@dimen/setting_margin" />
+        android:id="@+id/img_cache"
+        android:layout_margin="@dimen/setting_margin"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/setting_margin">
+        <Spinner
+            android:layout_width="131dp"
+            android:layout_height="match_parent"
+            android:id="@+id/mode_spinner"
+            android:entries="@array/setting_spinner"
+            android:spinnerMode="dropdown"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@color/none"
+            android:text="确定"
+            android:textColor="@android:color/holo_red_dark"
+            android:id="@+id/spinner_button"
+            android:layout_gravity="right|end"/>
+    </FrameLayout>
 </LinearLayout>

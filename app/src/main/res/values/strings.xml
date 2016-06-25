@@ -8,10 +8,12 @@
 
     <string name="git_rep">源码地址:https://github.com/fromten/Android-Pile</string>
     <item name="link" type="id"/>
+  
+    
+    <array name="setting_spinner">
+        <item>视频</item>
+        <item>笑话</item>
+        <item>学习</item>
+    </array>
 
-
-
-   <array name="setting_keys">
-       <item></item>
-   </array>
 </resources>

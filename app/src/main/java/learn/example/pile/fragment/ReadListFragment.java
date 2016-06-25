@@ -18,6 +18,7 @@ import learn.example.pile.adapters.ReadListAdapter;
 import learn.example.pile.jsonobject.GankCommonJson;
 import learn.example.pile.net.GsonRequest;
 import learn.example.pile.net.VolleyRequestQueue;
+import learn.example.pile.util.AccessAppDataHelper;
 
 /**
  * Created on 2016/6/3.
@@ -25,21 +26,27 @@ import learn.example.pile.net.VolleyRequestQueue;
 public class ReadListFragment extends RecyclerViewFragment implements Response.ErrorListener,Response.Listener<GankCommonJson>{
 
     public static final String KEY_READ_SAVE_STATE="KEYREADSAVESTATE";
-    public static final String KEY_READ_SAVE_PAGE="KEYREADSAVEPAGE";
 
     private ReadListAdapter mAdapter;
     private static final String TAG="ReadListFragment";
+
+    //最大请求个数
     private final int MAX_REQNUM=15;
+
+    //现在页数
     private int currentPage;
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
           mAdapter=new ReadListAdapter();
           setRecyclerAdapter(mAdapter);
-          currentPage=readLastHistoryPage();
+
+          //读取保存的页数
+          currentPage=AccessAppDataHelper.readInteger(getActivity(),AccessAppDataHelper.KEY_READ_PAGE);
           if (savedInstanceState!=null)
           {
               List<GankCommonJson.ResultsBean> saveData=savedInstanceState.getParcelableArrayList(KEY_READ_SAVE_STATE);
               mAdapter.addAllItem(saveData);
+
           }else
           {   startRefresh();
               requestData(MAX_REQNUM,currentPage);
@@ -63,14 +70,19 @@ public class ReadListFragment extends RecyclerViewFragment implements Response.E
 
     @Override
     public void pullUpRefresh() {
-          requestData(MAX_REQNUM,readLastHistoryPage());
+
+          int page=AccessAppDataHelper.readInteger(getActivity(),AccessAppDataHelper.KEY_READ_PAGE);
+          requestData(MAX_REQNUM,page);
+
     }
 
     @Override
     public void pullDownRefresh() {
          mAdapter.clearItems();
          startRefresh();
-         requestData(MAX_REQNUM,readLastHistoryPage());
+
+         int page=AccessAppDataHelper.readInteger(getActivity(),AccessAppDataHelper.KEY_READ_PAGE);
+         requestData(MAX_REQNUM,page);
     }
 
 
@@ -88,11 +100,16 @@ public class ReadListFragment extends RecyclerViewFragment implements Response.E
          if (response!=null&&!response.isError())
          {
              mAdapter.addAllItem(response.getResults());
-             saveLastHistoryPage(++currentPage);
+             AccessAppDataHelper.saveInteger(getActivity(),AccessAppDataHelper.KEY_READ_PAGE,++currentPage);
          }
          refreshComplete();
     }
 
+    /**
+     * 请求网络数据
+     * @param num 请求个数
+     * @param page 请求页数
+     */
     public void requestData(int num, int page)
     {
         setEmptyViewText(null);
@@ -103,17 +120,4 @@ public class ReadListFragment extends RecyclerViewFragment implements Response.E
         VolleyRequestQueue.getInstance(getContext()).addToRequestQueue(request);
     }
 
-
-    public void saveLastHistoryPage(int page)
-    {
-        SharedPreferences p=getActivity().getPreferences(Context.MODE_PRIVATE);
-        p.edit().putInt(KEY_READ_SAVE_PAGE,page).apply();
-    }
-
-    //读取最后历史页数
-    public int readLastHistoryPage()
-    {
-        SharedPreferences p=getActivity().getPreferences(Context.MODE_PRIVATE);
-        return p.getInt(KEY_READ_SAVE_PAGE,1);
-    }
 }

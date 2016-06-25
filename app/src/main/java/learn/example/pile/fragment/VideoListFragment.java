@@ -21,6 +21,7 @@ import learn.example.pile.jsonobject.VideoJsonData;
 import learn.example.pile.net.GsonRequest;
 import learn.example.pile.net.VolleyRequestQueue;
 import learn.example.pile.net.VideoHtmlParser;
+import learn.example.pile.util.AccessAppDataHelper;
 
 /**
  * Created on 2016/5/25.
@@ -32,15 +33,16 @@ public class VideoListFragment extends RecyclerViewFragment implements Response.
     private VideoHtmlParser mVideoHtmlParser;
     private static final String TAG="VideoListFragment";
 
-    public static final String KEY_VIDEO_HIRSTORY_PAGE ="KEYVIDEOHIRSTORYPAGE";
     public static final String KEY_VIDEO_STATE_SAVE="KEYVIDEOSTATESAVE";
+
+
     private static final int MAXREQNUM=5;
     private int currentPage;
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         mVideoListAdapter=new VideoListAdapter();
         setRecyclerAdapter(mVideoListAdapter);
-        currentPage=readPage();
+        currentPage=AccessAppDataHelper.readInteger(getActivity(),AccessAppDataHelper.KEY_VIDEO_PAGE);
         mVideoHtmlParser =new VideoHtmlParser(this);
         if (savedInstanceState!=null)
         {
@@ -63,8 +65,7 @@ public class VideoListFragment extends RecyclerViewFragment implements Response.
     @Override
     public void onDestroy() {
         VolleyRequestQueue.getInstance(getContext()).cancelAll(TAG);
-
-        savePage(currentPage);
+        AccessAppDataHelper.saveInteger(getActivity(),AccessAppDataHelper.KEY_VIDEO_PAGE,currentPage);
         mVideoHtmlParser.destroy();
         mVideoListAdapter=null;
         super.onDestroy();
@@ -76,7 +77,7 @@ public class VideoListFragment extends RecyclerViewFragment implements Response.
         if(response!=null&&!response.isError())
         {
                mVideoListAdapter.addAllItem(response.getVideoItemList());
-               savePage(currentPage);//保存页数
+               AccessAppDataHelper.saveInteger(getActivity(),AccessAppDataHelper.KEY_VIDEO_PAGE,currentPage);
                currentPage++;//再把当前页数增加
                mVideoHtmlParser.addParse(response);//执行解析获得视频和图片地址
         }
@@ -147,19 +148,6 @@ public class VideoListFragment extends RecyclerViewFragment implements Response.
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-    }
-
-    //保存页数
-    public void savePage(int page)
-    {
-        SharedPreferences sp=getActivity().getPreferences(Context.MODE_PRIVATE);
-        sp.edit().putInt(KEY_VIDEO_HIRSTORY_PAGE,page).apply();
-    }
-    //读取页数
-    public int readPage()
-    {
-        SharedPreferences sp=getActivity().getPreferences(Context.MODE_PRIVATE);
-        return sp.getInt(KEY_VIDEO_HIRSTORY_PAGE,1);
     }
 
 

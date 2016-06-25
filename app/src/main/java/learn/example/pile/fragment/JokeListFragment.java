@@ -22,6 +22,7 @@ import learn.example.pile.jsonobject.JokeJsonData;
 import learn.example.pile.net.GsonRequest;
 import learn.example.pile.database.DatabaseManager;
 import learn.example.pile.net.VolleyRequestQueue;
+import learn.example.pile.util.AccessAppDataHelper;
 
 /**
  * Created on 2016/5/5.
@@ -32,8 +33,6 @@ public class JokeListFragment extends RecyclerViewFragment implements Response.E
     private JokeListAdapter mJokeListAdapter;
 
     private JokeDatabase mJokeDataBase;
-
-    public final static String KEY_JOKE_HISTORY_PAGE ="KEYJOKEHISTORYPAGE";//最后页数KEY
 
     public final static String KEY_JOKE_SAVE_STATE ="KEYJOKESAVESTATE";//保存状态KEY
 
@@ -92,9 +91,15 @@ public class JokeListFragment extends RecyclerViewFragment implements Response.E
           if(response!=null&&response.getResCode()==0)
           {
               mJokeListAdapter.addAllItem(response.getResBody().getJokeContentList());
-              saveLastHistoryPage(response.getResBody().getCurrentPage());//保存请求页数
-              saveToDatabase(response.getResBody().getJokeContentList());//保存到数据库
+
+              //将页数保存到内部数据中
+              int page=response.getResBody().getCurrentPage();
+              AccessAppDataHelper.saveInteger(getActivity(),AccessAppDataHelper.KEY_JOKE_PAGE,page);
+
+              //将数据保存到数据库
+              saveToDatabase(response.getResBody().getJokeContentList());
           }
+
          refreshComplete();
     }
 
@@ -103,7 +108,8 @@ public class JokeListFragment extends RecyclerViewFragment implements Response.E
         setEmptyViewText(null);
         if (checkNetState())
         {
-            int page=readLastHistoryPage()+1;
+            //读取页数
+            int page=AccessAppDataHelper.readInteger(getActivity(),AccessAppDataHelper.KEY_JOKE_PAGE)+1;
             requestImgJoke(page);//加载文本
             requestTextJoke(page);//加载图片
         }else {
@@ -165,19 +171,9 @@ public class JokeListFragment extends RecyclerViewFragment implements Response.E
         VolleyRequestQueue.getInstance(getContext()).addToRequestQueue(requestText);
     }
 
-    //保存最后历史页数
-    public void saveLastHistoryPage(int page)
-    {
-        SharedPreferences p=getActivity().getPreferences(Context.MODE_PRIVATE);
-        p.edit().putInt(KEY_JOKE_HISTORY_PAGE,page).apply();
-    }
 
-    //读取最后历史页数
-    public int readLastHistoryPage()
-    {
-        SharedPreferences p=getActivity().getPreferences(Context.MODE_PRIVATE);
-        return p.getInt(KEY_JOKE_HISTORY_PAGE,1);
-    }
+
+
 
 
 }

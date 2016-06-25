@@ -51,7 +51,7 @@ public class BaseActivity extends AppCompatActivity {
 
     /**
      *
-     * @return 虚假的状态栏,只会在Api==19时调用
+     * @return 状态栏,只会在Api==19时调用
      */
     @TargetApi(value = 19)
      public View createStatusView()
@@ -70,7 +70,7 @@ public class BaseActivity extends AppCompatActivity {
     /**
      * 启用动作栏,Home按钮,子类可以覆盖此方法去禁用显示Home按钮
      */
-    public void enableActionBarHome()
+    protected void enableActionBarHome()
     {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -85,6 +85,11 @@ public class BaseActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
+    /**
+     * 将需要的布局放入根布局中
+     * @param layoutId
+     */
     @Override
     public void setContentView(int layoutId) {
         LayoutInflater.from(this).inflate(layoutId, mRootLayout);

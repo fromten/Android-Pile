@@ -17,6 +17,7 @@ import learn.example.pile.jsonobject.JokeJsonData;
  */
 public class JokeDatabase {
     private SQLiteDatabase mDB;
+
     JokeDatabase(Context context)
     {
         JokeDatabaseHelper mDBHelper = new JokeDatabaseHelper(context, JokeDatabaseHelper.DATABASE_NAME, null, JokeDatabaseHelper.VERSION);

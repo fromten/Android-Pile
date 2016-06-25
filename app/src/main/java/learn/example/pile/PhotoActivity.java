@@ -41,7 +41,6 @@ public class PhotoActivity extends BaseActivity{
         Glide.with(this).load(url)
                 .asGif()
                 .dontAnimate()
-                .skipMemoryCache(true)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .error(R.mipmap.img_error)
                 .fitCenter()

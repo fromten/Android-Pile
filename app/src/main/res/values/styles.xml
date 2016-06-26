@@ -8,5 +8,7 @@
         <item name="android:textColorLink">@color/link_color</item>
     </style>
     <style name="AppTheme" parent="BaseAppTheme"/>
-    
+    <style name="ChatTextStyle" parent="Base.TextAppearance.AppCompat.Small">
+        <item name="android:background">@drawable/chat_textwrap</item>
+    </style>
 </resources>

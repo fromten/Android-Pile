@@ -2,6 +2,7 @@ package learn.example.pile;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
@@ -94,7 +95,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId()==R.id.menu_setting)
+        if(item.getItemId()==R.id.menu_user_setting)
         {
             //判断当前的SettingFragment是否显示
             if (getSupportFragmentManager().findFragmentByTag(SettingFragment.TAG)==null)
@@ -105,6 +106,9 @@ public class MainActivity extends BaseActivity {
                         .addToBackStack(null)
                         .commit();
             }
+        }else if (item.getItemId()==R.id.menu_machine)
+        {
+            startActivity(new Intent(this,ChatActivity.class));
         }
         return true;
     }

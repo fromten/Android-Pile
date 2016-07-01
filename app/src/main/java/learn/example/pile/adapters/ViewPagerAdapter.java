@@ -14,7 +14,7 @@ import learn.example.pile.fragment.VideoListFragment;
  */
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
-    private final String[] title={"新闻","视频","笑话","学习"};
+    private final String[] title={"新闻","视频","笑话","阅读"};
     public ViewPagerAdapter(FragmentManager fm) {
         super(fm);
     }

@@ -3,11 +3,7 @@ package learn.example.pile.ui;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
-
-import learn.example.pile.adapters.FooterAdapter;
 
 /**
  * Created on 2016/5/23.

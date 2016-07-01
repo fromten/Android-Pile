@@ -23,65 +23,14 @@ import learn.example.pile.util.UrlCheck;
 /**
  * Created on 2016/5/23.
  */
-public class JokeListAdapter extends FooterAdapter implements View.OnClickListener {
+public class JokeListAdapter extends SaveStateAbleAdapter<RecyclerView.ViewHolder,JokeJsonData.JokeResBody.JokeItem> implements View.OnClickListener {
 
 
     private static final int TEXT_TYPE=1;
     private static final int IMG_TYPE=2;
-    private List<JokeJsonData.JokeResBody.JokeItem> mItems;
-    private Context mContext;
-    public JokeListAdapter(Context context){
-        mItems=new ArrayList<>();
-        mContext=context;
-    }
-
-
-    public void addAllItem(List<JokeJsonData.JokeResBody.JokeItem> list)
-    {
-        if (list==null||list.isEmpty())
-        {
-            return;
-        }
-
-        mItems.addAll(list);
-        notifyItemInserted(mItems.size());
-    }
-
-    public void clearItem(){
-        mItems.clear();
-        notifyDataSetChanged();
-    }
-
-
-    public List<JokeJsonData.JokeResBody.JokeItem> getAllItem(){
-        return mItems;
-    }
-    @Override
-    public int getItemSize() {
-        return mItems.size();
-    }
-    @Override
-    public int getSelfViewType(int position) {
-        return mItems.get(position).getType()==1?TEXT_TYPE:IMG_TYPE;
-    }
 
     @Override
-    public RecyclerView.ViewHolder createSelfViewHolder(ViewGroup parent, int type) {
-        RecyclerView.ViewHolder holder = null;
-        View view;
-        if(type==TEXT_TYPE)
-        {
-            view=LayoutInflater.from(mContext).inflate(R.layout.fragment_joke_text_type,parent,false) ;
-            holder=new JokeTextHolder(view);
-        }else if (type==IMG_TYPE){
-            view=LayoutInflater.from(mContext).inflate(R.layout.fragment_joke_img_type,parent,false);
-            holder=new JokeImgHolder(view);
-        }
-        return holder;
-    }
-
-    @Override
-    public void bindSelfViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void updaterItemView(RecyclerView.ViewHolder holder, int position) {
         if(holder instanceof JokeTextHolder)
         {
             setTextJoke((JokeTextHolder) holder,position);
@@ -91,24 +40,54 @@ public class JokeListAdapter extends FooterAdapter implements View.OnClickListen
         }
     }
 
+    @Override
+    public RecyclerView.ViewHolder getItemViewHolder(ViewGroup parent, int type) {
+        RecyclerView.ViewHolder holder = null;
+        View view;
+        if(type==TEXT_TYPE)
+        {
+            view=LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_joke_text_type,parent,false) ;
+            holder=new JokeTextHolder(view);
+        }else if (type==IMG_TYPE){
+            view=LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_joke_img_type,parent,false);
+            holder=new JokeImgHolder(view);
+        }
+        return holder;
+    }
+
+    @Override
+    public int getViewType(int position) {
+        JokeJsonData.JokeResBody.JokeItem item=getItem(position);
+        int type;
+        switch (item.getType())
+        {
+            case 1:type=TEXT_TYPE;break;
+            case 2:type=IMG_TYPE;break;
+            default:type=super.getViewType(position);
+        }
+        return type;
+    }
+
+
+
     private void setTextJoke(JokeTextHolder holder,int position){
-        JokeJsonData.JokeResBody.JokeItem item=mItems.get(position);
+        JokeJsonData.JokeResBody.JokeItem item=getItem(position);
         holder.content.setText(Html.fromHtml(item.getText()));
         String html="<p>"+item.getTitle()+"<small>"+item.getCreateTime().substring(0,10)+"</small></p>";
         holder.title.setText(Html.fromHtml(html));
     }
 
     private void setImgJoke(JokeImgHolder holder,int position){
-        JokeJsonData.JokeResBody.JokeItem item=mItems.get(position);
+        JokeJsonData.JokeResBody.JokeItem item=getItem(position);
         String url= UrlCheck.fixUrl(item.getImg());
+        Context context=holder.itemView.getContext();
         if(url!=null)
         {
             String type=UrlCheck.isGifImg(url)?" gif ":null;
             holder.imgtype.setText(type);
-            Glide.with(mContext).load(url)
+            Glide.with(context).load(url)
                     .asBitmap()
                     .centerCrop()
-                    .error(R.mipmap.img_error)
                     .into(holder.img);
             holder.img.setTag(R.id.link,url);
             holder.img.setOnClickListener(this);

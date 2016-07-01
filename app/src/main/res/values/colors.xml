@@ -6,7 +6,8 @@
     <color name="colorAccent">#e94310</color>
     <color name="deepblack">#3D3D3D</color>
     <color name="grey">#e7e7e7</color>
-    <color name="deepgrey">#cfcfcf</color>
+    <color name="grey_light">#cfcfcf</color>
+    <color name="grey_dark">#a9a7a7</color>
     <color name="blue">#0000FF</color>
     <color name="link_color">#08b7af</color>
     <color name="white">#ffffff</color>

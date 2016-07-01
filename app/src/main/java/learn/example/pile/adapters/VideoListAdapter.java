@@ -23,54 +23,12 @@ import learn.example.pile.util.ActivityLauncher;
 /**
  * Created on 2016/5/25.
  */
-public class VideoListAdapter extends FooterAdapter<VideoListAdapter.VideoViewHolder> implements View.OnClickListener{
+public class VideoListAdapter extends SaveStateAbleAdapter<VideoListAdapter.VideoViewHolder,VideoJsonData.VideoItem> implements View.OnClickListener{
 
-    private List<VideoJsonData.VideoItem> mItemList;
-
-
-    public VideoListAdapter()
-    {
-        mItemList=new ArrayList<>();
-    }
-
-    public List<VideoJsonData.VideoItem> getItemList()
-    {
-        return mItemList;
-    }
-    public VideoJsonData.VideoItem getItem(int position)
-    {
-        return mItemList.get(position);
-    }
-    public void addAllItem(List<VideoJsonData.VideoItem> list)
-    {
-        if (list==null||list.isEmpty())
-        {
-            return;
-        }
-        mItemList.addAll(list);
-        notifyItemInserted(getItemSize());
-    }
-
-    public void clearAll()
-    {
-        mItemList.clear();
-        notifyDataSetChanged();
-    }
 
     @Override
-    public int getItemSize() {
-        return mItemList.size();
-    }
-
-    @Override
-    public VideoViewHolder createSelfViewHolder(ViewGroup parent, int type) {
-        View v= LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_video_adpter_view,parent,false);
-        return new VideoViewHolder(v);
-    }
-
-    @Override
-    public void bindSelfViewHolder(VideoViewHolder holder, int position) {
-        VideoJsonData.VideoItem item=mItemList.get(position);
+    public void updaterItemView(VideoViewHolder holder, int position) {
+        VideoJsonData.VideoItem item=getItem(position);
         holder.desc.setText(item.getDesc());
         if(item.getImgUrl()!=null)
         {
@@ -82,12 +40,19 @@ public class VideoListAdapter extends FooterAdapter<VideoListAdapter.VideoViewHo
         holder.videoPlay.setTag(position);
         holder.videoPlay.setOnClickListener(this);
     }
+
+    @Override
+    public VideoViewHolder getItemViewHolder(ViewGroup parent, int type) {
+        View v= LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_video_adpter_view,parent,false);
+        return new VideoViewHolder(v);
+    }
+
     @Override
     public void onClick(View v) {
          int position = (int) v.getTag();
         if(position>=0)
         {
-            VideoJsonData.VideoItem item=mItemList.get(position);
+            VideoJsonData.VideoItem item=getItem(position);
             String fileUrl=item.getFileUrl();//是否存在视频文件
             if (fileUrl!=null&&!fileUrl.isEmpty())
             {   //如果有视频实际地址,打开视频播放器

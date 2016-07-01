@@ -10,6 +10,8 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/net" />
+            <option value="$PROJECT_DIR$/uidesign" />
             <option value="$PROJECT_DIR$/volley" />
           </set>
         </option>
@@ -17,6 +19,8 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/net" />
+            <option value="$PROJECT_DIR$/uidesign" />
             <option value="$PROJECT_DIR$/volley" />
           </set>
         </option>

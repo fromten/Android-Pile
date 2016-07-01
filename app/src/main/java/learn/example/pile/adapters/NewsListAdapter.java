@@ -2,6 +2,7 @@ package learn.example.pile.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.AppLaunchChecker;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,63 +23,32 @@ import learn.example.pile.util.ActivityLauncher;
 /**
  * Created on 2016/5/24.
  */
-public class NewsListAdapter extends FooterAdapter<NewsListAdapter.NewsViewHolder> {
+public class NewsListAdapter extends SaveStateAbleAdapter<NewsListAdapter.NewsViewHolder,NewsJsonData.NewsItem> {
 
-    private List<NewsJsonData.NewsItem> mItems;
-    private Context mContext;
-
-    private View.OnClickListener mViewClick=new View.OnClickListener() {
+    private View.OnClickListener mItemClick=new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             String url= (String) v.getTag();
-            ActivityLauncher.startInternalWebActivity(v.getContext(),url);
+            if (url!=null)
+            {
+                ActivityLauncher.startInternalWebActivity(v.getContext(),url);
+            }
         }
     };
 
-
-    public NewsListAdapter(Context context) {
-        mItems = new ArrayList<>();
-        this.mContext=context;
-    }
-
     @Override
-    public int getItemSize() {
-        return mItems.size();
-    }
-
-    public List<NewsJsonData.NewsItem> getAllItem()
-    {
-        return mItems;
-    }
-    public void clearItem()
-    {
-        mItems.clear();
-        notifyDataSetChanged();
-    }
-
-    public void addAllItem(List<NewsJsonData.NewsItem> list)
-    {
-
-        if (list==null||list.isEmpty())
-        {
-            return;
-        }
-        mItems.addAll(list);
-        notifyDataSetChanged();
-    }
-    @Override
-    public NewsViewHolder createSelfViewHolder(ViewGroup parent, int type) {
-        View view= LayoutInflater.from(mContext).inflate(R.layout.fragment_news_adpter_view,parent,false);
-        view.setOnClickListener(mViewClick);
+    public NewsViewHolder getItemViewHolder(ViewGroup parent, int type) {
+        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_news_adpter_view,parent,false);
+        view.setOnClickListener(mItemClick);
         return new NewsViewHolder(view);
     }
 
     @Override
-    public void bindSelfViewHolder(final NewsViewHolder holder, final int position) {
-        NewsJsonData.NewsItem item=mItems.get(position);
+    public void updaterItemView(NewsViewHolder holder, int position) {
+        NewsJsonData.NewsItem item=getItem(position);
         holder.describe.setText(item.getNewsDes());
         holder.title.setText(item.getTitle());
-        Glide.with(mContext).load(item.getImageUrl()).into(holder.img);
+        Glide.with(holder.itemView.getContext()).load(item.getImageUrl()).into(holder.img);
         holder.itemView.setTag(item.getNewsUrl());
     }
 
@@ -86,7 +56,6 @@ public class NewsListAdapter extends FooterAdapter<NewsListAdapter.NewsViewHolde
         public TextView title;
         public TextView describe;
         public ImageView img;
-
         public NewsViewHolder(View itemView) {
             super(itemView);
             title= (TextView) itemView.findViewById(R.id.news_title);

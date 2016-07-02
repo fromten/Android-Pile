@@ -3,7 +3,8 @@
   一个简单的App.
 ##  
  <image  src="https://github.com/fromten/Android-Pile/blob/master/phone_screen2.png" width=300 height=500/>
- <!--<image  src="https://github.com/fromten/Android-Pile/blob/master/img2.png" width=300 height=500/>-->
+ 
+ 
 ##感谢Api提供者:
 
 <a href='http://apistore.baidu.com/' >百度ApiStore</a>

@@ -19,6 +19,7 @@
         android:layout_width="230dp"
         android:layout_height="170dp"
         android:id="@+id/joke_img"
+        android:background="@color/grey_dark"
         android:layout_below="@+id/joke_title"
         android:layout_centerHorizontal="true" />
     <TextView
@@ -27,7 +28,7 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:id="@+id/joke_imgtype"
         android:textColor="@android:color/white"
-        android:background="@color/colorPrimary"
+        android:background="@color/blue"
         android:layout_alignBottom="@+id/joke_img"
         android:layout_alignRight="@+id/joke_img"
         android:layout_alignEnd="@+id/joke_img"/>

@@ -5,7 +5,6 @@ package learn.example.pile;
  */
 public class MyURI {
 
-
     public static final String TEXT_JOKE_REQUEST_URL="http://apis.baidu.com/showapi_open_bus/showapi_joke/joke_text";
     public static final String IMAGE_JOKE_REQUEST_URL="http://apis.baidu.com/showapi_open_bus/showapi_joke/joke_pic";
    // public static final String IMAGE_JOKE_REQUEST_URL2="http://api.avatardata.cn/Joke/NewstImg";

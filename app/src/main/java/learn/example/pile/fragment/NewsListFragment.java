@@ -2,100 +2,71 @@ package learn.example.pile.fragment;
 
 
 import android.os.Bundle;
-import android.os.Parcelable;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import learn.example.pile.MyURI;
+import learn.example.net.Service;
 import learn.example.pile.adapters.NewsListAdapter;
 import learn.example.pile.jsonobject.NewsJsonData;
-import learn.example.pile.net.GsonRequest;
-import learn.example.pile.net.VolleyRequestQueue;
+import learn.example.pile.net.NewsService;
+import learn.example.uidesign.CommonRecyclerView;
 
 /**
  * Created on 2016/5/7.
  */
-public class NewsListFragment extends RecyclerViewFragment implements Response.Listener<NewsJsonData>,
- Response.ErrorListener{
+public class NewsListFragment extends BaseListFragment implements Service.ServiceListener<NewsJsonData>{
 
 
     private NewsListAdapter mNewsListAdapter;
-    private String TAG="NewsListFragment";
-    public static final String KEY_NEWS_SAVE_STATE="KEY_NEWS_SAVE_STATE";
+    private NewsService mService;
+
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        mNewsListAdapter=new NewsListAdapter(getContext());
-        setRecyclerAdapter(mNewsListAdapter);
-        if (savedInstanceState!=null)
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mNewsListAdapter=new NewsListAdapter();
+        setAdapter(mNewsListAdapter);
+        setLayoutManager(new LinearLayoutManager(getContext()));
+        mService=new NewsService(this);
+        if (savedInstanceState==null)
         {
-            List<NewsJsonData.NewsItem> savedata=savedInstanceState.getParcelableArrayList(KEY_NEWS_SAVE_STATE);
-            mNewsListAdapter.addAllItem(savedata);
-        }else {
-            startRefresh();
-            requestData();
+            showRefreshProgressbar();
+            mService.getNews();
         }
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelableArrayList(KEY_NEWS_SAVE_STATE, (ArrayList<? extends Parcelable>) mNewsListAdapter.getAllItem());
-        super.onSaveInstanceState(outState);
+    public void onStart() {
+        super.onStart();
+        mService.setListener(this);
     }
 
     @Override
-    public void onDestroy() {
-        VolleyRequestQueue.getInstance(getContext()).cancelAll(TAG);
-        mNewsListAdapter=null;
-        super.onDestroy();
+    public void onStop() {
+        super.onStop();
+        mService.removeListener(this);
     }
 
     @Override
-    public void onResponse(NewsJsonData response) {
-         if(response!=null&&response.getErrNum()<=0)
-         {
-             mNewsListAdapter.addAllItem(response.getNewsItemList());
-         }
-         refreshComplete();
+    public void onSuccess(NewsJsonData data) {
+         mNewsListAdapter.addAll(data.getNewsItemList());
+         hideRefreshProgressbar();
     }
 
     @Override
-    public void onErrorResponse(VolleyError error) {
-        if (mNewsListAdapter.getItemSize()==0)
-        {
-            setEmptyViewText("数据飞走了");
-        }
-        refreshFail();
+    public void onFailure(String msg) {
+        notifyLoadError();
+        hideRefreshProgressbar();
     }
 
     @Override
-    public void pullUpRefresh() {
-        requestData();
+    public void refresh(CommonRecyclerView recyclerView) {
+        mNewsListAdapter.clear();
+        mService.getNews();
     }
 
     @Override
-    public void pullDownRefresh() {
-        mNewsListAdapter.clearItem();
-        requestData();
+    public void loadMore(CommonRecyclerView recyclerView) {
+        mService.getNews();
     }
-
-
-    public void requestData()
-    {
-        setEmptyViewText(null);
-        requestNews();
-    }
-    public void requestNews()
-    {
-        GsonRequest<NewsJsonData> request=new GsonRequest<>
-                (MyURI.NEW_DATA_REQUEST_URL,NewsJsonData.class,this,this,true);
-        request.setTag(TAG);
-        VolleyRequestQueue.getInstance(getContext()).addToRequestQueue(request);
-    }
-
-
 }

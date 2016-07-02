@@ -1,4 +1,4 @@
-package learn.example.pile.ui;
+package learn.example.uidesign;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -15,12 +15,11 @@ import android.view.View;
  */
 public class VolumeProgressView extends View {
     private Paint mPaint;
-    private int VOLUMEVALUE;
+    private int VOLUME_MAX_VALUE;
     private Rect[] mRect;
     private int currentValue;
     private int rectColor;//格子的颜色
-    private int borderColor;//格子四条边的颜色
-
+    private int borderColor;//格子四边的颜色
 
 
     private AudioManager mAudioManager;
@@ -43,11 +42,11 @@ public class VolumeProgressView extends View {
         int audiomax = mAudioManager.getStreamMaxVolume( AudioManager.STREAM_MUSIC );
         int current = mAudioManager.getStreamVolume( AudioManager.STREAM_MUSIC );
 
-        VOLUMEVALUE =audiomax;
+        VOLUME_MAX_VALUE =audiomax;
         currentValue=current;
 
-        mRect=new Rect[VOLUMEVALUE];
-        for(int i = 0; i< VOLUMEVALUE; ++i){
+        mRect=new Rect[VOLUME_MAX_VALUE];
+        for(int i = 0; i< VOLUME_MAX_VALUE; ++i){
             mRect[i]=new Rect(0,0,0,0);
         }
 
@@ -60,7 +59,7 @@ public class VolumeProgressView extends View {
         int len=mRect.length;
         int width=right-left;
         int height=bottom-top;
-        int space=height/ VOLUMEVALUE;
+        int space=height/ VOLUME_MAX_VALUE;
         mRect[0].set(0,0,width,space);
         for(int i=1;i<len;++i)
         {
@@ -75,7 +74,7 @@ public class VolumeProgressView extends View {
     protected void onDraw(Canvas canvas) {
          mPaint.setStrokeWidth(8);
          int len=mRect.length;
-         int drawNum= VOLUMEVALUE -currentValue;//要绘制的格子个数
+         int drawNum= VOLUME_MAX_VALUE -currentValue;//要绘制的格子个数
         for(int i=0;i<len;++i)
         {
             //绘制实心的格子
@@ -99,10 +98,10 @@ public class VolumeProgressView extends View {
 
     public void setCurrentValue(int currentValue) {
         int value=currentValue;
-        if(currentValue>= VOLUMEVALUE)
+        if(currentValue>= VOLUME_MAX_VALUE)
         {
-           value= VOLUMEVALUE;
-        }else if(currentValue<=0)
+           value= VOLUME_MAX_VALUE;
+        }else if(currentValue<0)
         {
             value=0;
         }

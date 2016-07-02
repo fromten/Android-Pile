@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,7 @@ import android.widget.TextView;
 import android.widget.VideoView;
 
 import learn.example.joke.R;
-import learn.example.pile.ui.VolumeProgressView;
+import learn.example.uidesign.VolumeProgressView;
 
 /**
  * Created on 2016/5/26.

@@ -19,9 +19,8 @@ import learn.example.pile.util.ActivityLauncher;
 /**
  * Created on 2016/6/4.
  */
-public class ReadListAdapter extends FooterAdapter<ReadListAdapter.ReadViewHolder>{
+public class ReadListAdapter extends SaveStateAbleAdapter<ReadListAdapter.ReadViewHolder,GankCommonJson.ResultsBean>{
     private static final String TAG = "ReadListAdapter";
-    private List<GankCommonJson.ResultsBean> mItemList;
 
     private View.OnClickListener mViewClick=new View.OnClickListener() {
         @Override
@@ -32,49 +31,21 @@ public class ReadListAdapter extends FooterAdapter<ReadListAdapter.ReadViewHolde
         }
     };
 
-    public ReadListAdapter() {
-        this.mItemList = new ArrayList<>();
+    @Override
+    public void updaterItemView(ReadViewHolder holder, int position) {
+        GankCommonJson.ResultsBean item=getItem(position);
+        holder.itemView.setTag(item.getUrl());
+        holder.desc.setText(item.getDesc());
     }
 
     @Override
-    public int getItemSize() {
-        return mItemList.size();
-    }
-
-    @Override
-    public ReadViewHolder createSelfViewHolder(ViewGroup parent, int type) {
+    public ReadViewHolder getItemViewHolder(ViewGroup parent, int type) {
         View view=LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_read_adpter_view,parent,false);
         view.setOnClickListener(mViewClick);
         return new ReadViewHolder(view);
     }
 
-    @Override
-    public void bindSelfViewHolder(ReadViewHolder holder, int position) {
-        GankCommonJson.ResultsBean item=mItemList.get(position);
-        holder.itemView.setTag(item.getUrl());
-        holder.desc.setText(item.getDesc());
-    }
 
-    public void addAllItem(List<GankCommonJson.ResultsBean> list)
-    {
-        if (list==null||list.isEmpty())
-        {
-            return;
-        }
-        mItemList.addAll(list);
-        notifyItemInserted(getItemSize());
-    }
-
-    public void clearItems()
-    {
-        mItemList.clear();
-        notifyDataSetChanged();
-    }
-
-    public List<GankCommonJson.ResultsBean> getList()
-    {
-        return mItemList;
-    }
 
     public static class ReadViewHolder extends RecyclerView.ViewHolder{
         public TextView desc;

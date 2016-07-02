@@ -51,7 +51,11 @@ public class BaseActivity extends AppCompatActivity {
 
     /**
      *
+<<<<<<< HEAD
      * @return 虚假的状态栏,只会在Api==19时调用
+=======
+     * @return 状态栏,只会在Api==19时调用
+>>>>>>> master
      */
     @TargetApi(value = 19)
      public View createStatusView()
@@ -70,7 +74,11 @@ public class BaseActivity extends AppCompatActivity {
     /**
      * 启用动作栏,Home按钮,子类可以覆盖此方法去禁用显示Home按钮
      */
+<<<<<<< HEAD
     public void enableActionBarHome()
+=======
+    protected void enableActionBarHome()
+>>>>>>> master
     {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -85,6 +93,35 @@ public class BaseActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void setContentView(int layoutId) {
+        LayoutInflater.from(this).inflate(layoutId, mRootLayout);
+    }
+
+    @Override
+    public void setContentView(View view) {
+        throw new RuntimeException("you can call this method to use setContentView(int layoutId) instead)");
+    }
+
+    @Override
+    public void setContentView(View view, ViewGroup.LayoutParams params) {
+        throw new RuntimeException("you can call this method to use setContentView(int layoutId) instead)");
+    }
+
+    public Toolbar getToolBar()
+    {
+        return mToolbar;
+    }
+
+    public View getStatusBar()
+    {
+        return mStatusView;
+    }
+
+    /**
+     * 将需要的布局放入根布局中
+     * @param layoutId
+     */
     @Override
     public void setContentView(int layoutId) {
         LayoutInflater.from(this).inflate(layoutId, mRootLayout);

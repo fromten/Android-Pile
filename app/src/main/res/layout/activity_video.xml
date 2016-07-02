@@ -17,7 +17,7 @@
         android:textColor="@color/colorPrimaryDark"
         android:layout_gravity="left|start|center_vertical"
         android:id="@+id/video_logmsg"/>
-    <learn.example.pile.ui.VolumeProgressView
+    <learn.example.uidesign.VolumeProgressView
         android:layout_width="20dp"
         android:layout_height="200dp"
         android:id="@+id/video_volume"

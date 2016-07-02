@@ -2,6 +2,8 @@ package learn.example.pile;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
@@ -12,7 +14,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -94,7 +95,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId()==R.id.menu_setting)
+        if(item.getItemId()==R.id.menu_user_setting)
         {
             //判断当前的SettingFragment是否显示
             if (getSupportFragmentManager().findFragmentByTag(SettingFragment.TAG)==null)
@@ -105,6 +106,21 @@ public class MainActivity extends BaseActivity {
                         .addToBackStack(null)
                         .commit();
             }
+        }else if (item.getItemId()==R.id.menu_machine)
+        {
+<<<<<<< HEAD
+            //判断当前的SettingFragment是否显示
+            if (getSupportFragmentManager().findFragmentByTag(SettingFragment.TAG)==null)
+            {
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.main_show, new SettingFragment(),SettingFragment.TAG)
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                        .addToBackStack(null)
+                        .commit();
+            }
+=======
+            startActivity(new Intent(this,ChatActivity.class));
+>>>>>>> master
         }
         return true;
     }

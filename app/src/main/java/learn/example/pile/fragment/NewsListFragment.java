@@ -2,24 +2,14 @@ package learn.example.pile.fragment;
 
 
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import learn.example.net.Service;
-import learn.example.pile.MyURI;
 import learn.example.pile.adapters.NewsListAdapter;
 import learn.example.pile.jsonobject.NewsJsonData;
-import learn.example.pile.net.GsonRequest;
 import learn.example.pile.net.NewsService;
-import learn.example.pile.net.VolleyRequestQueue;
 import learn.example.uidesign.CommonRecyclerView;
 
 /**

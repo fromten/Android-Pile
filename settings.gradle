@@ -1,1 +1,1 @@
-include ':app', ':volley', ':net', ':uidesign'
+include ':app', ':net', ':uidesign'

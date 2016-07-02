@@ -15,10 +15,10 @@ public class AccessAppDataHelper {
     public static String KEY_READ_PAGE="KEY_READ_PAGE";
 
 
-    public static int readInteger(Activity activity,String key)
+    public static int readInteger(Activity activity,String key,int defValue)
     {
        SharedPreferences preferences=activity.getPreferences(Context.MODE_PRIVATE);
-       return preferences.getInt(key,1);
+       return preferences.getInt(key,defValue);
     }
 
     public static void saveInteger(Activity activity,String key,int data)

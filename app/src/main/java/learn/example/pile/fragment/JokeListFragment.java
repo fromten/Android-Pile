@@ -1,29 +1,16 @@
 package learn.example.pile.fragment;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-
-import java.util.ArrayList;
 import java.util.List;
 
-import learn.example.joke.R;
-import learn.example.pile.MyURI;
 import learn.example.pile.adapters.JokeListAdapter;
 import learn.example.pile.database.JokeDatabase;
 import learn.example.pile.jsonobject.JokeJsonData;
-import learn.example.pile.net.GsonRequest;
 import learn.example.pile.database.DatabaseManager;
 import learn.example.pile.net.JokeService;
-import learn.example.pile.net.VolleyRequestQueue;
 import learn.example.pile.util.AccessAppDataHelper;
 import learn.example.uidesign.CommonRecyclerView;
 
@@ -47,7 +34,7 @@ public class JokeListFragment extends BaseListFragment implements JokeService.Se
          mJokeListAdapter=new JokeListAdapter();
          setAdapter(mJokeListAdapter);
          setLayoutManager(new LinearLayoutManager(getContext()));
-         currentDataBasePage=AccessAppDataHelper.readInteger(getActivity(),AccessAppDataHelper.KEY_JOKE_PAGE);
+         currentDataBasePage=AccessAppDataHelper.readInteger(getActivity(),AccessAppDataHelper.KEY_JOKE_PAGE,1);
           mJokeService=new JokeService(this);
          if (savedInstanceState==null)
          {

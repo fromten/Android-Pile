@@ -60,7 +60,7 @@ public abstract class SaveStateAbleAdapter<VH extends RecyclerView.ViewHolder,D 
         return mDataList;
     }
 
-    public List<? extends Parcelable> saveState()
+    public List<D> saveState()
     {
         return mDataList;
     }

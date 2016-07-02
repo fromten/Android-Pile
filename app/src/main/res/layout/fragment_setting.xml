@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/git_rep"
+        android:text="@string/setting_show1"
         android:clickable="false"
         android:id="@+id/gitres"
         android:autoLink="web"

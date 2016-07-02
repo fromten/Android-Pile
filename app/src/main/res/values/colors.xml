@@ -5,11 +5,12 @@
     <color name="colorPrimaryDeepDark">#ce4703</color>
     <color name="colorAccent">#e94310</color>
     <color name="deepblack">#3D3D3D</color>
+    <color name="white_dark">#f6f6f6</color>
     <color name="grey">#e7e7e7</color>
     <color name="grey_light">#cfcfcf</color>
     <color name="grey_dark">#a9a7a7</color>
     <color name="blue">#0000FF</color>
-    <color name="link_color">#08b7af</color>
+    <color name="link_color">#4c5050</color>
     <color name="white">#ffffff</color>
     <color name="none">#00000000</color>
     <color name="orange">#f7642c</color>

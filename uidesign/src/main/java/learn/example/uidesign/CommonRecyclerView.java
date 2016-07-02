@@ -45,6 +45,12 @@ public class CommonRecyclerView extends FrameLayout implements SwipeRefreshLayou
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mScrollListener=new ScrollListenerImpl();
         mRecyclerView.addOnScrollListener(mScrollListener);
+
+    }
+
+    public void addItemDecoration(RecyclerView.ItemDecoration itemDecoration)
+    {
+        mRecyclerView.addItemDecoration(itemDecoration);
     }
 
 
@@ -72,7 +78,12 @@ public class CommonRecyclerView extends FrameLayout implements SwipeRefreshLayou
 
     public void setLayoutManager(RecyclerView.LayoutManager layoutManager)
     {
+        if (layoutManager instanceof LinearLayoutManager)
+        {
+            addItemDecoration(new DividerItemDecoration(getContext(),((LinearLayoutManager) layoutManager).getOrientation()));
+        }
         mRecyclerView.setLayoutManager(layoutManager);
+
     }
 
     public View getFooterView()
@@ -168,7 +179,13 @@ public class CommonRecyclerView extends FrameLayout implements SwipeRefreshLayou
             loadMoreInRuning=false;
             if (mActionHandle!=null)
             {
-                mActionHandle.adapterDataChanged(CommonRecyclerView.this,mRecyclerView.getAdapter().getItemCount());
+                post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mActionHandle.adapterDataChanged(CommonRecyclerView.this,mRecyclerView.getAdapter().getItemCount());
+                    }
+                });
+
             }
         }
 

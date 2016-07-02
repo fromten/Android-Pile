@@ -8,7 +8,8 @@
     <string name="video_playcomplete">视频播放结束</string>
     <string name="gif">gif</string>
 
-    <string name="git_rep">源码地址:https://github.com/fromten/Android-Pile</string>
+    <string name="git_rep">https://github.com/fromten/Android-Pile</string>
+    <string name="setting_show1">源码地址:https://github.com/fromten/Android-Pile</string>
     <item name="link" type="id"/>
   
     

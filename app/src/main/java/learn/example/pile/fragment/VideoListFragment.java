@@ -55,7 +55,7 @@ public class VideoListFragment extends BaseListFragment implements GankVideoServ
 
     @Override
     public void onDestroy() {
-        AccessAppDataHelper.saveInteger(getActivity(),AccessAppDataHelper.KEY_READ_PAGE,currentPage);
+        AccessAppDataHelper.saveInteger(getActivity(),AccessAppDataHelper.KEY_VIDEO_PAGE,currentPage);
         super.onDestroy();
     }
 

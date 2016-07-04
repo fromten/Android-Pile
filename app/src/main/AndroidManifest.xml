@@ -30,10 +30,11 @@
         <activity android:name="learn.example.pile.VideoActivity"
             android:label="视频"/>
         <activity android:name="learn.example.pile.PhotoActivity"
+                  android:theme="@style/Theme.AppCompat.NoActionBar"
             android:label="图片"/>
         <activity android:name="learn.example.pile.ChatActivity"
                   android:label="机器聊天"
-                  android:windowSoftInputMode="adjustResize">
+                  android:windowSoftInputMode="adjustPan|adjustResize">
         </activity>
     </application>
 

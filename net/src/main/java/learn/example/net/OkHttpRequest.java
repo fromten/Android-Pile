@@ -72,6 +72,14 @@ public class OkHttpRequest {
             }
         });
     }
+
+
+    public Response syncRequest(Request request) throws IOException {
+        return mOkHttpClient.newCall(request).execute();
+    }
+
+
+
     private  <T>void deliverSuccessResult(final T data, final RequestCallback<T> callBack)
     {
       mHandler.post(new Runnable() {

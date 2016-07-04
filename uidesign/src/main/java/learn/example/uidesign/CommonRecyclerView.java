@@ -174,18 +174,10 @@ public class CommonRecyclerView extends FrameLayout implements SwipeRefreshLayou
     public class AdapterDataObserver extends RecyclerView.AdapterDataObserver{
         @Override
         public void onChanged() {
-            if (mSwipeRefreshLayout.isRefreshing())
-                 setSwipeRefreshing(false);
             loadMoreInRuning=false;
             if (mActionHandle!=null)
             {
-                post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mActionHandle.adapterDataChanged(CommonRecyclerView.this,mRecyclerView.getAdapter().getItemCount());
-                    }
-                });
-
+                mActionHandle.adapterDataChanged(CommonRecyclerView.this,mRecyclerView.getAdapter().getItemCount());
             }
         }
 

@@ -2,6 +2,7 @@ package learn.example.pile.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -101,7 +102,8 @@ public class JokeListAdapter extends SaveStateAbleAdapter<RecyclerView.ViewHolde
     @Override
     public void onClick(View v) {
         String url= (String) v.getTag(R.id.link);
-        ActivityLauncher.startPhotoActivity(v.getContext(),url);
+        Bundle anim=ActivityLauncher.openAnimation(v.getContext());
+        ActivityLauncher.startPhotoActivity(v.getContext(),url,anim);
     }
 
     public static class JokeTextHolder extends RecyclerView.ViewHolder

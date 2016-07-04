@@ -2,6 +2,7 @@ package learn.example.pile.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.AppLaunchChecker;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -31,7 +32,8 @@ public class NewsListAdapter extends SaveStateAbleAdapter<NewsListAdapter.NewsVi
             String url= (String) v.getTag();
             if (url!=null)
             {
-                ActivityLauncher.startInternalWebActivity(v.getContext(),url);
+                Bundle anim=ActivityLauncher.slideAnimation(v.getContext());
+                ActivityLauncher.startInternalWebActivity(v.getContext(),url,anim);
             }
         }
     };

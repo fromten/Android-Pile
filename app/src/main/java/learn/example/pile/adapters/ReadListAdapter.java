@@ -1,6 +1,7 @@
 package learn.example.pile.adapters;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,7 +28,8 @@ public class ReadListAdapter extends SaveStateAbleAdapter<ReadListAdapter.ReadVi
         public void onClick(View v) {
             Log.i(TAG, v.getContext().toString());
             String url= (String) v.getTag();
-            ActivityLauncher.startInternalWebActivity(v.getContext(),url);
+            Bundle anim=ActivityLauncher.slideAnimation(v.getContext());
+            ActivityLauncher.startInternalWebActivity(v.getContext(),url,anim);
         }
     };
 

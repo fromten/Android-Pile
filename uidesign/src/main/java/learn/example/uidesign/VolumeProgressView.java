@@ -66,7 +66,6 @@ public class VolumeProgressView extends View {
             int t=mRect[i-1].bottom;
             int b=t+space;
             mRect[i].set(0,t,width,b);
-            Log.d("volume",mRect[i].toString());
         }
     }
 

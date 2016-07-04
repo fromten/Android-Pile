@@ -2,6 +2,7 @@ package learn.example.pile.adapters;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,12 +55,13 @@ public class VideoListAdapter extends SaveStateAbleAdapter<VideoListAdapter.Vide
         {
             VideoJsonData.VideoItem item=getItem(position);
             String fileUrl=item.getFileUrl();//是否存在视频文件
+            Bundle anim=ActivityLauncher.slideAnimation(v.getContext());
             if (fileUrl!=null&&!fileUrl.isEmpty())
             {   //如果有视频实际地址,打开视频播放器
-                ActivityLauncher.startVideoActivity(v.getContext(),fileUrl);
+                ActivityLauncher.startVideoActivity(v.getContext(),fileUrl,anim);
             }else {
                 //没有则,打开web浏览器
-                ActivityLauncher.startInternalWebActivity(v.getContext(),item.getSrcUrl());
+                ActivityLauncher.startInternalWebActivity(v.getContext(),item.getSrcUrl(),anim);
             }
         }
     }

@@ -9,6 +9,7 @@ import com.bumptech.glide.GlideBuilder;
 import com.bumptech.glide.load.engine.cache.DiskLruCacheFactory;
 import com.bumptech.glide.module.GlideModule;
 
+
 import java.io.File;
 
 import learn.example.pile.util.AppCheck;
@@ -29,7 +30,6 @@ public class AppGlideModule implements GlideModule {
 
     @Override
     public void registerComponents(Context context, Glide glide) {
-
 
     }
     public File getFile(Context context)

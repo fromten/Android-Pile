@@ -21,7 +21,7 @@ import learn.example.uidesign.CommonRecyclerView;
 /**
  * Created on 2016/6/29.
  */
-public class BaseListFragment extends Fragment implements CommonRecyclerView.ActionHandle {
+public abstract class BaseListFragment extends Fragment implements CommonRecyclerView.ActionHandle {
 
 
      private static final String KEY_ADAPTER_SAVE_STATE = "Key_Adapter_Save_State";
@@ -112,14 +112,10 @@ public class BaseListFragment extends Fragment implements CommonRecyclerView.Act
     }
 
     @Override
-    public void refresh(CommonRecyclerView recyclerView){
-
-    };
+    public abstract void refresh(CommonRecyclerView recyclerView);
 
     @Override
-    public void loadMore(CommonRecyclerView recyclerView){
-
-    };
+    public abstract void loadMore(CommonRecyclerView recyclerView);
 
 
 

@@ -10,17 +10,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 import learn.example.joke.R;
-import learn.example.net.OkHttpRequest;
 import learn.example.pile.adapters.ChatListAdapter;
 import learn.example.pile.jsonobject.TuringMachineJson;
-import learn.example.pile.net.GsonRequest;
 import learn.example.pile.net.TuringMachineService;
 import learn.example.pile.object.ChatInfo;
 
@@ -30,8 +23,6 @@ import learn.example.pile.object.ChatInfo;
 public class ChatActivity extends BaseActivity implements TuringMachineService.ServiceListener<TuringMachineJson>, View.OnClickListener{
 
     private static final String TAG = "ChatActivity";
-
-
 
     private ListView mListView;
     private EditText mMsgEdit;

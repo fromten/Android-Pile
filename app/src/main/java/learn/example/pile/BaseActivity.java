@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
@@ -28,7 +29,7 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.toolbar);
-        toolbarCompat();
+        statusBarCompat();
         mRootLayout= (LinearLayout) findViewById(R.id.root_linelayout);
         mToolbar= (Toolbar) findViewById(R.id.tool_bar);
         mToolbar.setTitleTextColor(Color.WHITE);
@@ -36,7 +37,7 @@ public class BaseActivity extends AppCompatActivity {
         enableActionBarHome();
     }
 
-    public void toolbarCompat()
+    public void statusBarCompat()
     {
         if (Build.VERSION.SDK_INT==Build.VERSION_CODES.KITKAT)
         {
@@ -49,12 +50,29 @@ public class BaseActivity extends AppCompatActivity {
     }
 
 
+    public void setActionBarBackgroundColor(int color)
+    {
+        if (mToolbar!=null)
+        mToolbar.setBackgroundColor(color);
+    }
+
+    public void setStatusBarColor(int color)
+    {
+        if (mStatusView!=null)
+        {
+            mStatusView.setBackgroundColor(color);
+        }else if (Build.VERSION.SDK_INT>=21){
+            getWindow().setStatusBarColor(color);
+        }
+    }
+
+
     /**
      *
      * @return 状态栏,只会在Api==19时调用
      */
     @TargetApi(value = 19)
-     public View createStatusView()
+     private View createStatusView()
      {
          int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
          int statusBarHeight =getResources().getDimensionPixelSize(resourceId);

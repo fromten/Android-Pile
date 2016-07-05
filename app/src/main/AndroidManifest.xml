@@ -34,7 +34,7 @@
             android:label="图片"/>
         <activity android:name="learn.example.pile.ChatActivity"
                   android:label="机器聊天"
-                  android:windowSoftInputMode="adjustPan|adjustResize">
+                  android:windowSoftInputMode="adjustResize">
         </activity>
     </application>
 

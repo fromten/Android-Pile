@@ -4,6 +4,7 @@ package learn.example.pile;
 
 import android.text.format.Formatter;
 
+import com.bumptech.glide.load.model.GlideUrl;
 import com.google.gson.JsonIOException;
 
 import org.junit.Test;

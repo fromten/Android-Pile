@@ -1,39 +1,16 @@
 package learn.example.pile;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.disklrucache.DiskLruCache;
-import com.bumptech.glide.load.data.DataFetcher;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.cache.DiskLruCacheFactory;
-import com.bumptech.glide.load.model.ModelCache;
-import com.bumptech.glide.load.model.ModelLoader;
-import com.bumptech.glide.load.model.stream.StreamModelLoader;
-import com.bumptech.glide.load.resource.gif.GifDrawable;
-import com.bumptech.glide.load.resource.gif.GifDrawableResource;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.target.Target;
-
-import java.io.InputStream;
 
 import learn.example.joke.R;
 import learn.example.net.PhotoProgressTask;
 import learn.example.pile.util.UrlCheck;
-import okhttp3.Request;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
@@ -96,6 +73,7 @@ public class PhotoActivity extends AppCompatActivity{
 //        });
 //        Request request=new Request.Builder().url(url).build();
 //        mPhotoProgressTask.execute(request);
+
     }
     public void loadImage(String url)
     {

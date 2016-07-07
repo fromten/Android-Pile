@@ -34,7 +34,7 @@ public class BaseActivity extends AppCompatActivity {
         mToolbar= (Toolbar) findViewById(R.id.tool_bar);
         mToolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(mToolbar);
-        enableActionBarHome();
+        onEnableActionBarHome();
     }
 
     public void statusBarCompat()
@@ -88,7 +88,7 @@ public class BaseActivity extends AppCompatActivity {
     /**
      * 启用动作栏,Home按钮,子类可以覆盖此方法去禁用显示Home按钮
      */
-    protected void enableActionBarHome()
+    protected void onEnableActionBarHome()
     {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -136,6 +136,14 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     public void finish() {
         super.finish();
+        onPerformExitAnim();
+    }
+
+    /**
+     * 退出动画,子类可以覆盖此方法
+     */
+    protected void onPerformExitAnim()
+    {
         overridePendingTransition(0,android.R.anim.slide_out_right);//添加一个右边退出动画
     }
 }

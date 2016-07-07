@@ -48,6 +48,16 @@ public class CommonRecyclerView extends FrameLayout implements SwipeRefreshLayou
 
     }
 
+    public void setSwipeRefreshColorRes(int... colorRes)
+    {
+        mSwipeRefreshLayout.setColorSchemeResources(colorRes);
+    }
+
+    public void setSwipeRefreshColor(int... color)
+    {
+        mSwipeRefreshLayout.setColorSchemeColors(color);
+    }
+
     public void addItemDecoration(RecyclerView.ItemDecoration itemDecoration)
     {
         mRecyclerView.addItemDecoration(itemDecoration);

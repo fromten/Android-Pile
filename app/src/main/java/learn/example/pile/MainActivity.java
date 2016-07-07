@@ -112,7 +112,12 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    public void enableActionBarHome() {
+    public void onEnableActionBarHome() {
+        //do nothing
+    }
+
+    @Override
+    protected void onPerformExitAnim() {
         //do nothing
     }
 

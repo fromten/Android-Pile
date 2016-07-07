@@ -50,6 +50,7 @@ public abstract class BaseListFragment extends Fragment implements CommonRecycle
          View view=inflater.inflate(R.layout.fragment_base,container,false);
          mCommonRecyclerView= (CommonRecyclerView) view;
          mCommonRecyclerView.setActionHandler(this);
+         mCommonRecyclerView.setSwipeRefreshColorRes(R.color.colorPrimary);
          return mCommonRecyclerView;
     }
 

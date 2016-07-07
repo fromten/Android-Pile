@@ -19,6 +19,7 @@ public class StringRequest {
             HttpURLConnection connection= (HttpURLConnection) u.openConnection();
             connection.setRequestMethod("GET");
             connection.setConnectTimeout(10*1000);
+            connection.addRequestProperty("User-Agent","Mozilla/5.0 (Linux; U; Android 2.1-update1; de-de; HTC Desire 1.19.161.5 Build/ERE27) AppleWebKit/530.17 (KHTML, like Gecko) Version/4.0 Mobile Safari/530.17");
             connection.connect();
             in=new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String str;

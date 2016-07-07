@@ -11,4 +11,17 @@
     <style name="ChatTextStyle" parent="Base.TextAppearance.AppCompat.Small">
         <item name="android:background">@drawable/chat_textwrap</item>
     </style>
+    
+    <style name="TitleText" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:padding">4dp</item>
+    </style>
+    <style name="SummaryText" parent="TextAppearance.AppCompat.Small">
+        <item name="android:padding">4dp</item>
+    </style>
+    <style name="SmallText" parent="TextAppearance.AppCompat.Small">
+    </style>
+    <style name="ContentText" parent="TextAppearance.AppCompat.Small">
+        <item name="android:padding">4dp</item>
+    </style>
 </resources>

@@ -40,7 +40,7 @@ public class ActivityLauncher {
     public static void startVideoActivity(@NonNull Context context, @NonNull String url,Bundle bundle)
     {
         Intent intent=new Intent(context, VideoActivity.class);
-        intent.putExtra(VideoActivity.KEY_VIDEO_URL,url);
+        intent.setData(Uri.parse(url));
         ActivityCompat.startActivity((Activity) context,intent,bundle);
     }
 

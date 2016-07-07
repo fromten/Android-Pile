@@ -1,1 +1,1 @@
-include ':app', ':net', ':uidesign'
+include ':app', ':net', ':ui'

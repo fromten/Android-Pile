@@ -83,7 +83,6 @@ public class CommonRecyclerView extends FrameLayout implements SwipeRefreshLayou
             addItemDecoration(new DividerItemDecoration(getContext(),((LinearLayoutManager) layoutManager).getOrientation()));
         }
         mRecyclerView.setLayoutManager(layoutManager);
-
     }
 
     public View getFooterView()
@@ -105,6 +104,11 @@ public class CommonRecyclerView extends FrameLayout implements SwipeRefreshLayou
     public void cancelLoadMore()
     {
         loadMoreInRuning=false;
+    }
+
+    public boolean isRefreshing()
+    {
+        return mSwipeRefreshLayout.isRefreshing();
     }
 
     @Override

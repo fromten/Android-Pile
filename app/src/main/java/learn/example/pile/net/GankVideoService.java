@@ -13,6 +13,8 @@ import okhttp3.Request;
  * Created on 2016/7/2.
  */
 public class GankVideoService extends Service<VideoJsonData> {
+
+
     public GankVideoService(ServiceListener<VideoJsonData> listener) {
         super(listener);
     }

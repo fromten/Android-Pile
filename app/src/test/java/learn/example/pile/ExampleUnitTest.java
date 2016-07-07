@@ -2,18 +2,19 @@ package learn.example.pile;
 
 
 
-import android.text.format.Formatter;
 
-import com.bumptech.glide.load.model.GlideUrl;
-import com.google.gson.JsonIOException;
 
 import org.junit.Test;
 
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.Serializable;
 
+import learn.example.net.OkHttpRequest;
+import learn.example.pile.net.StringRequest;
 import learn.example.pile.util.UrlCheck;
+import learn.example.pile.util.VideoParser;
 
 
 /**
@@ -23,11 +24,11 @@ public class ExampleUnitTest {
 
     @Test
     public void addition_isCorrect() {
+            String html= StringRequest.request("http://www.miaopai.com/show/1BOODZOgVQpB9kbTn9XcOw__.htm");
+            System.out.print(VideoParser.match(html,"video","src"));
 
     }
-    public void getException() throws Exception {
-         throw new JsonIOException("msg");
-    }
+
 
 
 }

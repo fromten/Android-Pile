@@ -58,7 +58,7 @@ public class ChatActivity extends BaseActivity implements TuringMachineService.S
 
     @Override
     public void onSuccess(TuringMachineJson data) {
-        ChatInfo info=new ChatInfo(ChatInfo.TYPE_LEFT,data.getText());
+        ChatInfo info=new ChatInfo(ChatInfo.GRAVITY_LEFT,data.getText());
         mChatListAdapter.addItem(info);
         mListView.smoothScrollToPosition(mChatListAdapter.getCount()-1);
     }
@@ -74,7 +74,7 @@ public class ChatActivity extends BaseActivity implements TuringMachineService.S
         if (!editText.isEmpty())
         {
             //将要发送的消息添加的List
-            ChatInfo info=new ChatInfo(ChatInfo.TYPE_Right,editText);
+            ChatInfo info=new ChatInfo(ChatInfo.GRAVITY_RIGHT,editText);
             mChatListAdapter.addItem(info);
             mMsgEdit.setText(null);
 

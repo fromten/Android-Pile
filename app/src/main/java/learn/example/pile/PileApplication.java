@@ -2,8 +2,6 @@ package learn.example.pile;
 
 import android.app.Application;
 
-import com.facebook.stetho.Stetho;
-import com.squareup.leakcanary.LeakCanary;
 
 /**
  * Created on 2016/6/9.

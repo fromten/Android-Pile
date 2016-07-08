@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
@@ -107,6 +106,8 @@ public class BaseActivity extends AppCompatActivity {
     /**
      * 将需要的布局放入根布局中
      * @param layoutId
+     * @see #setContentView(View view)
+     * @see #setContentView(View view, ViewGroup.LayoutParams params)
      */
     @Override
     public void setContentView(int layoutId) {
@@ -115,12 +116,12 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     public void setContentView(View view) {
-        throw new RuntimeException("you can call this method to use setContentView(int layoutId) instead)");
+        mRootLayout.addView(view);
     }
 
     @Override
     public void setContentView(View view, ViewGroup.LayoutParams params) {
-        throw new RuntimeException("you can call this method to use setContentView(int layoutId) instead)");
+        mRootLayout.addView(view,params);
     }
 
     public Toolbar getToolBar()

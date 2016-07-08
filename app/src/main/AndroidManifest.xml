@@ -16,8 +16,7 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="learn.example.pile.AppGlideModule"
-            android:value="GlideModule"
-            />
+            android:value="GlideModule"/>
         <activity android:name="learn.example.pile.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,7 +33,7 @@
             android:label="图片"/>
         <activity android:name="learn.example.pile.ChatActivity"
                   android:label="机器聊天"
-                  android:windowSoftInputMode="adjustResize">
+                  android:windowSoftInputMode="adjustUnspecified|adjustResize">
         </activity>
     </application>
 

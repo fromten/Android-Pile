@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Process;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -78,8 +79,8 @@ public class WebViewActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         mWebView.destroy();
+        Process.killProcess(Process.myPid());
         super.onDestroy();
-        System.exit(0);
     }
 
 

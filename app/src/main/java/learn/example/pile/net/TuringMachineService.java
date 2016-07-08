@@ -57,17 +57,11 @@ public class TuringMachineService extends Service<TuringMachineJson>{
      */
     private  RequestBody getRequestBody(String info)
     {
-        try {
-            String encodeInfo= URLEncoder.encode(info,"UTF-8");
-            JsonObject object=new JsonObject();
-            object.addProperty("key",APi_KEY);
-            object.addProperty("info",encodeInfo);
-            object.addProperty("userid",USER_ID);
-            return RequestBody.create(MediaType.parse("text"),object.toString());
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return null;
+        JsonObject object=new JsonObject();
+        object.addProperty("key",APi_KEY);
+        object.addProperty("info",info);
+        object.addProperty("userid",USER_ID);
+        return RequestBody.create(MediaType.parse("text"),object.toString());
     }
 
 }

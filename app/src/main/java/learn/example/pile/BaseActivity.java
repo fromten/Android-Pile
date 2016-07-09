@@ -145,6 +145,6 @@ public class BaseActivity extends AppCompatActivity {
      */
     protected void onPerformExitAnim()
     {
-        overridePendingTransition(0,android.R.anim.slide_out_right);//添加一个右边退出动画
+        overridePendingTransition(R.anim.anim_slide_out_right,R.anim.anim_slide_in_left);//添加一个右边退出动画
     }
 }

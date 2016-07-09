@@ -63,7 +63,7 @@ public class ChatListAdapter extends BaseAdapter {
         }
         ChatInfo msg=mList.get(position);
 
-        int gravity=msg.getType()==ChatInfo.TYPE_LEFT?Gravity.START:Gravity.END;
+        int gravity=msg.getType()==ChatInfo.GRAVITY_LEFT?Gravity.START:Gravity.END;
         FrameLayout.LayoutParams layoutParams= (FrameLayout.LayoutParams) holder.mChatText.getLayoutParams();
         layoutParams.gravity=gravity;
         holder.mChatText.setLayoutParams(layoutParams);

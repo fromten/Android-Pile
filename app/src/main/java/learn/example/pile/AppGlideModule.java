@@ -9,9 +9,10 @@ import com.bumptech.glide.GlideBuilder;
 import com.bumptech.glide.load.engine.cache.DiskLruCacheFactory;
 import com.bumptech.glide.module.GlideModule;
 
+
 import java.io.File;
 
-import learn.example.pile.util.AppCheck;
+import learn.example.pile.util.AppInfo;
 
 /**
  * Created on 2016/6/3.
@@ -30,12 +31,11 @@ public class AppGlideModule implements GlideModule {
     @Override
     public void registerComponents(Context context, Glide glide) {
 
-
     }
     public File getFile(Context context)
     {
         File file;
-        if (AppCheck.checkExternalStorageState())
+        if (AppInfo.checkExternalStorageState())
         {
             if (Build.VERSION.SDK_INT>=23&&context.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)!=PackageManager.PERMISSION_GRANTED)
             {

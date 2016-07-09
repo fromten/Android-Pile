@@ -60,10 +60,7 @@ public class JokeListFragment extends BaseListFragment implements JokeService.Se
 
         mJokeListAdapter.addAll(data.getResBody().getJokeContentList());
 
-
-        int page=data.getResBody().getCurrentPage();
-        currentDataBasePage=page+1;
-
+         ++currentDataBasePage;
         //将数据保存到数据库
         saveToDatabase(data.getResBody().getJokeContentList());
 
@@ -78,12 +75,23 @@ public class JokeListFragment extends BaseListFragment implements JokeService.Se
     @Override
     public void refresh(CommonRecyclerView recyclerView) {
          mJokeListAdapter.clear();
-         mJokeService.getTextJoke(currentDataBasePage);
+         requestData();
     }
 
     @Override
     public void loadMore(CommonRecyclerView recyclerView) {
-        mJokeService.getTextJoke(currentDataBasePage);
+        requestData();
+    }
+
+    public void requestData()
+    {
+        if (currentDataBasePage%2==0)
+        {
+            mJokeService.getTextJoke(currentDataBasePage);
+        }else {
+            mJokeService.getImageJoke(currentDataBasePage);
+        }
+
     }
 
     public void loadLocalData()

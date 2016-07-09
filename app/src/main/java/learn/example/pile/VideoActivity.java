@@ -35,14 +35,13 @@ MediaPlayer.OnErrorListener,MediaPlayer.OnPreparedListener{
         setContentView(R.layout.activity_video);
         initView();
         saveState=savedInstanceState;
-        Intent intent=getIntent();
-        if(intent!=null)
+        Uri uri=getIntent().getData();
+        if (uri!=null)
         {
-            Uri uri=Uri.parse(intent.getStringExtra(KEY_VIDEO_URL));
             mLogView.setText("加载中....");
             mVideoView.setVideoURI(uri);
         }else {
-            mLogView.setText("无效的对象");
+            mLogView.setText("无效的地址");
         }
     }
 
@@ -54,9 +53,6 @@ MediaPlayer.OnErrorListener,MediaPlayer.OnPreparedListener{
         mLogView= (TextView) findViewById(R.id.video_logmsg);
         mVolumeProgressView.setRectColor(getResources().getColor(R.color.grey));
         mMediaController=new MediaController(this);
-        FrameLayout.LayoutParams layoutParams=new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins(0,0,0,20);
-        mMediaController.setLayoutParams(layoutParams);
         mVideoView.setMediaController(mMediaController);
         mVideoView.setOnPreparedListener(this);
         mVideoView.setOnCompletionListener(this);

@@ -2,9 +2,6 @@ package learn.example.pile.net;
 
 import android.support.annotation.NonNull;
 
-import org.greenrobot.eventbus.EventBus;
-
-
 import learn.example.pile.jsonobject.VideoJsonData;
 import learn.example.pile.util.VideoParser;
 
@@ -18,7 +15,7 @@ public class ParserHtmlThread implements Runnable{
         private String srcUrl;
         public ParserHtmlThread(@NonNull VideoJsonData.VideoItem item) {
             mItem=item;
-            srcUrl=item.getSrcUrl();
+            srcUrl=item.getHtmlUrl();
             fromWeibo=srcUrl.contains("weibo.com");
             fromMiaopai=srcUrl.contains("miaopai.com");
         }
@@ -44,6 +41,5 @@ public class ParserHtmlThread implements Runnable{
             }
             mItem.setFileUrl(fileUrl);
             mItem.setImgUrl(imgUrl);
-            EventBus.getDefault().post(mItem);
         }
 }

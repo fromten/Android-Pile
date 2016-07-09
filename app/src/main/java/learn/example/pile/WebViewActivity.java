@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Process;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -19,31 +20,27 @@ public class WebViewActivity extends BaseActivity {
 
     private WebView mWebView;
     private ProgressBar mProgressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web);
         initView();
-        Intent intent = getIntent();
-        if (intent!=null)
-        {
-            Uri uri=intent.getData();
-            if (uri!=null)
-            {
-                mWebView.loadUrl(uri.toString());
-            }
+        Uri uri = getIntent().getData();
+        if (uri != null) {
+            mWebView.loadUrl(uri.toString());
         }
+
     }
 
 
-
-    public void initView()
-    {
-        mProgressBar= (ProgressBar) findViewById(R.id.web_progress);
-        mWebView= (WebView) findViewById(R.id.web_view);
+    public void initView() {
+        mProgressBar = (ProgressBar) findViewById(R.id.web_progress);
+        mWebView = (WebView) findViewById(R.id.web_view);
         mWebView.getSettings().setDomStorageEnabled(true);
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setBuiltInZoomControls(true);
+        mWebView.getSettings().getUserAgentString();
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -52,20 +49,17 @@ public class WebViewActivity extends BaseActivity {
             }
         });
 
-        mWebView.setWebChromeClient(new WebChromeClient(){
+        mWebView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
-               if (newProgress>=100)
-               {
-                   mProgressBar.setVisibility(View.GONE);
-               }else
-               {
-                   if (mProgressBar.getVisibility()!=View.VISIBLE)
-                   {
-                       mProgressBar.setVisibility(View.VISIBLE);
-                   }
-                   mProgressBar.setProgress(newProgress);
-               }
+                if (newProgress >= 100) {
+                    mProgressBar.setVisibility(View.GONE);
+                } else {
+                    if (mProgressBar.getVisibility() != View.VISIBLE) {
+                        mProgressBar.setVisibility(View.VISIBLE);
+                    }
+                    mProgressBar.setProgress(newProgress);
+                }
             }
         });
     }
@@ -84,19 +78,17 @@ public class WebViewActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        mWebView.removeAllViews();
         mWebView.destroy();
+        Process.killProcess(Process.myPid());
         super.onDestroy();
-        System.exit(0);
     }
 
 
     @Override
     public void onBackPressed() {
-        if (mWebView.canGoBack())
-        {
+        if (mWebView.canGoBack()) {
             mWebView.goBack();
-        }else {
+        } else {
             super.onBackPressed();
         }
     }

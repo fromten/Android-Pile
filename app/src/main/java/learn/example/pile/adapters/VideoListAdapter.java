@@ -1,7 +1,6 @@
 package learn.example.pile.adapters;
 
-import android.content.Intent;
-import android.net.Uri;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,12 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import learn.example.joke.R;
-import learn.example.pile.WebViewActivity;
-import learn.example.pile.VideoActivity;
 import learn.example.pile.jsonobject.VideoJsonData;
 import learn.example.pile.util.ActivityLauncher;
 
@@ -54,12 +48,13 @@ public class VideoListAdapter extends SaveStateAbleAdapter<VideoListAdapter.Vide
         {
             VideoJsonData.VideoItem item=getItem(position);
             String fileUrl=item.getFileUrl();//是否存在视频文件
+            Bundle anim=ActivityLauncher.slideAnimation(v.getContext());
             if (fileUrl!=null&&!fileUrl.isEmpty())
             {   //如果有视频实际地址,打开视频播放器
-                ActivityLauncher.startVideoActivity(v.getContext(),fileUrl);
+                ActivityLauncher.startVideoActivity(v.getContext(),fileUrl,anim);
             }else {
                 //没有则,打开web浏览器
-                ActivityLauncher.startInternalWebActivity(v.getContext(),item.getSrcUrl());
+                ActivityLauncher.startInternalWebActivity(v.getContext(),item.getHtmlUrl(),anim);
             }
         }
     }
@@ -72,8 +67,8 @@ public class VideoListAdapter extends SaveStateAbleAdapter<VideoListAdapter.Vide
         public VideoViewHolder(View view) {
             super(view);
             this.desc = (TextView) view.findViewById(R.id.video_desc);
-            this.videoImg = (ImageView) view.findViewById(R.id.video_img);;
-            this.videoPlay = (ImageView) view.findViewById(R.id.video_play);;
+            this.videoImg = (ImageView) view.findViewById(R.id.video_img);
+            this.videoPlay = (ImageView) view.findViewById(R.id.video_play);
         }
     }
 }

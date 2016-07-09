@@ -1,10 +1,6 @@
 package learn.example.pile.adapters;
 
-import android.text.style.ClickableSpan;
-import android.text.style.DynamicDrawableSpan;
-import android.text.style.ReplacementSpan;
-import android.text.style.StyleSpan;
-import android.text.style.TextAppearanceSpan;
+
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,11 +63,10 @@ public class ChatListAdapter extends BaseAdapter {
         }
         ChatInfo msg=mList.get(position);
 
-        int gravity=msg.getType()==ChatInfo.TYPE_LEFT?Gravity.START:Gravity.END;
+        int gravity=msg.getType()==ChatInfo.GRAVITY_LEFT?Gravity.START:Gravity.END;
         FrameLayout.LayoutParams layoutParams= (FrameLayout.LayoutParams) holder.mChatText.getLayoutParams();
         layoutParams.gravity=gravity;
         holder.mChatText.setLayoutParams(layoutParams);
-        StyleSpan span=new StyleSpan(R.style.ChatTextStyle);
         holder.mChatText.setText(msg.getMsg());
         return convertView;
     }

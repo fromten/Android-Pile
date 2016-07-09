@@ -26,7 +26,7 @@ import android.view.ViewGroup;
 import learn.example.joke.R;
 import learn.example.pile.adapters.ViewPagerAdapter;
 import learn.example.pile.fragment.SettingFragment;
-import learn.example.pile.util.AppCheck;
+import learn.example.pile.util.AppInfo;
 
 
 public class MainActivity extends BaseActivity {
@@ -42,7 +42,7 @@ public class MainActivity extends BaseActivity {
     public void initView()
     {
         //如果版本大于23和外部存储可以用时需要请求权限
-        if (Build.VERSION.SDK_INT>=23&& AppCheck.checkExternalStorageState())
+        if (Build.VERSION.SDK_INT>=23&& AppInfo.checkExternalStorageState())
         {
             requirePermission();
         }else {
@@ -126,7 +126,12 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    public void enableActionBarHome() {
+    public void onEnableActionBarHome() {
+        //do nothing
+    }
+
+    @Override
+    protected void onPerformExitAnim() {
         //do nothing
     }
 

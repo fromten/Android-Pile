@@ -1,6 +1,6 @@
 package learn.example.pile.adapters;
 
-import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,11 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import learn.example.joke.R;
-import learn.example.pile.WebViewActivity;
 import learn.example.pile.jsonobject.GankCommonJson;
 import learn.example.pile.util.ActivityLauncher;
 
@@ -27,7 +24,8 @@ public class ReadListAdapter extends SaveStateAbleAdapter<ReadListAdapter.ReadVi
         public void onClick(View v) {
             Log.i(TAG, v.getContext().toString());
             String url= (String) v.getTag();
-            ActivityLauncher.startInternalWebActivity(v.getContext(),url);
+            Bundle anim=ActivityLauncher.slideAnimation(v.getContext());
+            ActivityLauncher.startInternalWebActivity(v.getContext(),url,anim);
         }
     };
 
@@ -36,6 +34,7 @@ public class ReadListAdapter extends SaveStateAbleAdapter<ReadListAdapter.ReadVi
         GankCommonJson.ResultsBean item=getItem(position);
         holder.itemView.setTag(item.getUrl());
         holder.desc.setText(item.getDesc());
+        holder.pushTime.setText(item.getPublishedAt().substring(0,10));
     }
 
     @Override
@@ -49,9 +48,11 @@ public class ReadListAdapter extends SaveStateAbleAdapter<ReadListAdapter.ReadVi
 
     public static class ReadViewHolder extends RecyclerView.ViewHolder{
         public TextView desc;
+        public TextView pushTime;
         public ReadViewHolder(View itemView) {
             super(itemView);
-            this.desc = (TextView) itemView;
+            this.desc = (TextView) itemView.findViewById(R.id.read_desc);
+            this.pushTime= (TextView) itemView.findViewById(R.id.time);
         }
     }
 }

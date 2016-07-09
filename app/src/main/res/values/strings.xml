@@ -7,16 +7,17 @@
     <string name="send">发送</string>
     <string name="video_playcomplete">视频播放结束</string>
     <string name="gif">gif</string>
+    <string name="edit_input">输入发送的消息</string>
 
     <string name="git_rep">https://github.com/fromten/Android-Pile</string>
     <string name="setting_show1">源码地址:https://github.com/fromten/Android-Pile</string>
+
     <item name="link" type="id"/>
-  
-    
+
     <array name="setting_spinner">
         <item>视频</item>
         <item>笑话</item>
-        <item>学习</item>
+        <item>阅读</item>
     </array>
 
 </resources>

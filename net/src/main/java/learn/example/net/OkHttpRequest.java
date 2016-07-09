@@ -3,6 +3,7 @@ package learn.example.net;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
@@ -11,6 +12,7 @@ import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.Dispatcher;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -72,6 +74,24 @@ public class OkHttpRequest {
             }
         });
     }
+
+
+    public Response syncRequest(Request request) throws IOException {
+        return mOkHttpClient.newCall(request).execute();
+    }
+
+    public String syncStringRequest(String url) throws IOException {
+        Request req=new Request.Builder().url(url).build();
+        Response response=mOkHttpClient.newCall(req).execute();
+        if (response.isSuccessful())
+        {
+           return response.body().string();
+        }
+        return null;
+    }
+
+
+
     private  <T>void deliverSuccessResult(final T data, final RequestCallback<T> callBack)
     {
       mHandler.post(new Runnable() {

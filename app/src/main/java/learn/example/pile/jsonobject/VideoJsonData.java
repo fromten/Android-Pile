@@ -47,7 +47,7 @@ public class VideoJsonData {
         private String desc;
         private String publishedAt;
         @SerializedName("url")
-        private String srcUrl;//源来源Html地址
+        private String htmlUrl;//源来源Html地址
         private String fileUrl;//视频文件实际地址
         private String imgUrl; //图片Url地址
 
@@ -75,12 +75,12 @@ public class VideoJsonData {
             this.publishedAt = publishedAt;
         }
 
-        public String getSrcUrl() {
-            return srcUrl;
+        public String getHtmlUrl() {
+            return htmlUrl;
         }
 
-        public void setSrcUrl(String srcUrl) {
-            this.srcUrl = srcUrl;
+        public void setHtmlUrl(String htmlUrl) {
+            this.htmlUrl = htmlUrl;
         }
 
         public String getFileUrl() {
@@ -100,10 +100,6 @@ public class VideoJsonData {
         }
 
 
-        public boolean equals(VideoItem item) {
-            return this.getSrcUrl().equals(item.getSrcUrl())||this==item;
-        }
-
         @Override
         public int describeContents() {
             return 0;
@@ -114,7 +110,7 @@ public class VideoJsonData {
             dest.writeString(this.createdAt);
             dest.writeString(this.desc);
             dest.writeString(this.publishedAt);
-            dest.writeString(this.srcUrl);
+            dest.writeString(this.htmlUrl);
             dest.writeString(this.fileUrl);
             dest.writeString(this.imgUrl);
         }
@@ -126,7 +122,7 @@ public class VideoJsonData {
             this.createdAt = in.readString();
             this.desc = in.readString();
             this.publishedAt = in.readString();
-            this.srcUrl = in.readString();
+            this.htmlUrl = in.readString();
             this.fileUrl = in.readString();
             this.imgUrl = in.readString();
         }

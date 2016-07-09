@@ -13,6 +13,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import learn.example.joke.R;
 import learn.example.pile.adapters.SaveStateAbleAdapter;
@@ -21,7 +22,7 @@ import learn.example.uidesign.CommonRecyclerView;
 /**
  * Created on 2016/6/29.
  */
-public class BaseListFragment extends Fragment implements CommonRecyclerView.ActionHandle {
+public abstract class BaseListFragment extends Fragment implements CommonRecyclerView.ActionHandle {
 
 
      private static final String KEY_ADAPTER_SAVE_STATE = "Key_Adapter_Save_State";
@@ -49,6 +50,7 @@ public class BaseListFragment extends Fragment implements CommonRecyclerView.Act
          View view=inflater.inflate(R.layout.fragment_base,container,false);
          mCommonRecyclerView= (CommonRecyclerView) view;
          mCommonRecyclerView.setActionHandler(this);
+         mCommonRecyclerView.setSwipeRefreshColorRes(R.color.colorPrimary);
          return mCommonRecyclerView;
     }
 
@@ -58,7 +60,9 @@ public class BaseListFragment extends Fragment implements CommonRecyclerView.Act
         {
             if (mAdapter instanceof SaveStateAbleAdapter)
             {
-                ((SaveStateAbleAdapter) mAdapter).addAll(savedInstanceState.getParcelableArrayList(KEY_ADAPTER_SAVE_STATE));
+                List<? extends Parcelable> list=savedInstanceState.getParcelableArrayList(KEY_ADAPTER_SAVE_STATE);
+                adapterDataChanged(mCommonRecyclerView,list==null?0:list.size());
+                ((SaveStateAbleAdapter) mAdapter).addAll(list);
             }
         }
         super.onViewStateRestored(savedInstanceState);
@@ -66,12 +70,14 @@ public class BaseListFragment extends Fragment implements CommonRecyclerView.Act
 
     public void setAdapter(CommonRecyclerView.FooterViewAdapter adapter)
     {
+         setEmptyViewText("加载中...");
          mAdapter=adapter;
          mCommonRecyclerView.setAdapter(adapter);
     }
 
     public void setAdapter(SaveStateAbleAdapter adapter)
     {
+        setEmptyViewText("加载中...");
         mAdapter=adapter;
         mCommonRecyclerView.setAdapter(adapter);
     }
@@ -112,14 +118,10 @@ public class BaseListFragment extends Fragment implements CommonRecyclerView.Act
     }
 
     @Override
-    public void refresh(CommonRecyclerView recyclerView){
-
-    };
+    public abstract void refresh(CommonRecyclerView recyclerView);
 
     @Override
-    public void loadMore(CommonRecyclerView recyclerView){
-
-    };
+    public abstract void loadMore(CommonRecyclerView recyclerView);
 
 
 
@@ -160,9 +162,9 @@ public class BaseListFragment extends Fragment implements CommonRecyclerView.Act
 
     @Override
     public void adapterDataChanged(CommonRecyclerView recyclerView, int itemCount) {
-        if (itemCount<=1)//如果当前数据不大于一个,说明是空数据
+        if (itemCount<=1&&!mCommonRecyclerView.isRefreshing())//如果当前数据不大于一个,说明是空数据
         {
-            setEmptyViewText("数据飞走了!");
+            setEmptyViewText("连接失败!");
         }else {
             setEmptyViewText(null);
         }

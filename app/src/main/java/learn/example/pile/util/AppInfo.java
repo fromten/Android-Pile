@@ -1,12 +1,11 @@
 package learn.example.pile.util;
 
-import android.content.Context;
 import android.os.Environment;
 
 /**
  * Created on 2016/6/4.
  */
-public class AppCheck {
+public class AppInfo {
 
 
     /**
@@ -18,7 +17,6 @@ public class AppCheck {
         String state = Environment.getExternalStorageState();
         return state.equals(Environment.MEDIA_MOUNTED);
     }
-
 
 
 }

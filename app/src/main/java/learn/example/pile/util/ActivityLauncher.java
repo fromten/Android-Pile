@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 
+import learn.example.joke.R;
 import learn.example.pile.PhotoActivity;
 import learn.example.pile.VideoActivity;
 import learn.example.pile.WebViewActivity;
@@ -23,11 +24,11 @@ public class ActivityLauncher {
      * @param context
      * @param url
      */
-    public static void startInternalWebActivity(@NonNull Context context,@NonNull String url)
+    public static void startInternalWebActivity(@NonNull Context context,@NonNull String url,Bundle bundle)
     {
         Intent intent=new Intent(context, WebViewActivity.class);
         intent.setData(Uri.parse(url));
-        ActivityCompat.startActivity((Activity) context,intent,slideAnimation(context));
+        ActivityCompat.startActivity((Activity) context,intent,bundle);
     }
 
 
@@ -36,11 +37,11 @@ public class ActivityLauncher {
      * @param context
      * @param url
      */
-    public static void startVideoActivity(@NonNull Context context, @NonNull String url)
+    public static void startVideoActivity(@NonNull Context context, @NonNull String url,Bundle bundle)
     {
         Intent intent=new Intent(context, VideoActivity.class);
-        intent.putExtra(VideoActivity.KEY_VIDEO_URL,url);
-        ActivityCompat.startActivity((Activity) context,intent,slideAnimation(context));
+        intent.setData(Uri.parse(url));
+        ActivityCompat.startActivity((Activity) context,intent,bundle);
     }
 
 
@@ -50,23 +51,34 @@ public class ActivityLauncher {
      * @param url
      */
 
-    public static void startPhotoActivity(@NonNull Context context, @NonNull String url)
+    public static void startPhotoActivity(@NonNull Context context, @NonNull String url,Bundle bundle)
     {
         Intent intent=new Intent(context, PhotoActivity.class);
         intent.putExtra(PhotoActivity.KEY_IMG_URL,url);
-        ActivityCompat.startActivity((Activity) context,intent,slideAnimation(context));
+        ActivityCompat.startActivity((Activity) context,intent,bundle);
     }
 
 
 
     /**
-     *
+     *  左边进入动画
      * @param context
-     * @return 左边进入动画
+     * @return bundle to perform animation
      */
     public static Bundle slideAnimation(Context context)
     {
-        return ActivityOptionsCompat.makeCustomAnimation(context,android.R.anim.slide_in_left,android.R.anim.fade_out).toBundle();
+        return ActivityOptionsCompat.makeCustomAnimation(context,R.anim.anim_slide_in_right,R.anim.anim_slide_out_left).toBundle();
+    }
+
+
+    /**
+     * 重中心打开动画
+     * @param context
+     * @return
+     */
+    public static Bundle openAnimation(Context context)
+    {
+        return ActivityOptionsCompat.makeCustomAnimation(context, R.anim.anim_center_open,0).toBundle();
     }
 
 }

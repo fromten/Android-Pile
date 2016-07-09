@@ -48,6 +48,16 @@ public class CommonRecyclerView extends FrameLayout implements SwipeRefreshLayou
 
     }
 
+    public void setSwipeRefreshColorRes(int... colorRes)
+    {
+        mSwipeRefreshLayout.setColorSchemeResources(colorRes);
+    }
+
+    public void setSwipeRefreshColor(int... color)
+    {
+        mSwipeRefreshLayout.setColorSchemeColors(color);
+    }
+
     public void addItemDecoration(RecyclerView.ItemDecoration itemDecoration)
     {
         mRecyclerView.addItemDecoration(itemDecoration);
@@ -83,7 +93,6 @@ public class CommonRecyclerView extends FrameLayout implements SwipeRefreshLayou
             addItemDecoration(new DividerItemDecoration(getContext(),((LinearLayoutManager) layoutManager).getOrientation()));
         }
         mRecyclerView.setLayoutManager(layoutManager);
-
     }
 
     public View getFooterView()
@@ -105,6 +114,11 @@ public class CommonRecyclerView extends FrameLayout implements SwipeRefreshLayou
     public void cancelLoadMore()
     {
         loadMoreInRuning=false;
+    }
+
+    public boolean isRefreshing()
+    {
+        return mSwipeRefreshLayout.isRefreshing();
     }
 
     @Override
@@ -174,18 +188,10 @@ public class CommonRecyclerView extends FrameLayout implements SwipeRefreshLayou
     public class AdapterDataObserver extends RecyclerView.AdapterDataObserver{
         @Override
         public void onChanged() {
-            if (mSwipeRefreshLayout.isRefreshing())
-                 setSwipeRefreshing(false);
             loadMoreInRuning=false;
             if (mActionHandle!=null)
             {
-                post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mActionHandle.adapterDataChanged(CommonRecyclerView.this,mRecyclerView.getAdapter().getItemCount());
-                    }
-                });
-
+                mActionHandle.adapterDataChanged(CommonRecyclerView.this,mRecyclerView.getAdapter().getItemCount());
             }
         }
 

@@ -8,7 +8,7 @@ import java.util.List;
 
 import learn.example.pile.adapters.JokeListAdapter;
 import learn.example.pile.database.JokeDatabase;
-import learn.example.pile.jsonobject.JokeJsonData;
+import learn.example.pile.jsonbean.JokeJsonData;
 import learn.example.pile.database.DatabaseManager;
 import learn.example.pile.net.JokeService;
 import learn.example.pile.util.AccessAppDataHelper;

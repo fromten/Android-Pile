@@ -10,7 +10,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
-import learn.example.pile.jsonobject.JokeJsonData;
+import learn.example.pile.jsonbean.JokeJsonData;
 
 /**
  * Created on 2016/5/22.

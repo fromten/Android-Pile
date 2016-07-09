@@ -1,16 +1,10 @@
 package learn.example.pile.net;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 import learn.example.net.OkHttpRequest;
 import learn.example.net.Service;
-import learn.example.pile.jsonobject.TuringMachineJson;
+import learn.example.pile.jsonbean.TuringMachineJson;
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;

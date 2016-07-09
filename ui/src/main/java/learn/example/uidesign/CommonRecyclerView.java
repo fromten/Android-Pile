@@ -88,10 +88,6 @@ public class CommonRecyclerView extends FrameLayout implements SwipeRefreshLayou
 
     public void setLayoutManager(RecyclerView.LayoutManager layoutManager)
     {
-        if (layoutManager instanceof LinearLayoutManager)
-        {
-            addItemDecoration(new DividerItemDecoration(getContext(),((LinearLayoutManager) layoutManager).getOrientation()));
-        }
         mRecyclerView.setLayoutManager(layoutManager);
     }
 

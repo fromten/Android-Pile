@@ -11,6 +11,7 @@ import android.support.v4.app.ActivityOptionsCompat;
 
 import learn.example.joke.R;
 import learn.example.pile.PhotoActivity;
+import learn.example.pile.ReaderActivity;
 import learn.example.pile.VideoActivity;
 import learn.example.pile.WebViewActivity;
 
@@ -58,6 +59,13 @@ public class ActivityLauncher {
         ActivityCompat.startActivity((Activity) context,intent,bundle);
     }
 
+
+    public static void startReaderActivity(@NonNull Context context, @NonNull int id,Bundle bundle)
+    {
+        Intent intent=new Intent(context, ReaderActivity.class);
+        intent.putExtra(ReaderActivity.KEY_CONTENT_ID,id);
+        ActivityCompat.startActivity((Activity) context,intent,bundle);
+    }
 
 
     /**

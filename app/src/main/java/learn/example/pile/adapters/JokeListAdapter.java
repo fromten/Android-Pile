@@ -1,7 +1,6 @@
 package learn.example.pile.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -13,11 +12,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import java.util.ArrayList;
-import java.util.List;
 import learn.example.joke.R;
-import learn.example.pile.PhotoActivity;
-import learn.example.pile.jsonobject.JokeJsonData;
+import learn.example.pile.jsonbean.JokeJsonData;
 import learn.example.pile.util.ActivityLauncher;
 import learn.example.pile.util.UrlCheck;
 

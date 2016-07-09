@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import learn.example.joke.R;
-import learn.example.pile.jsonobject.VideoJsonData;
+import learn.example.pile.jsonbean.VideoJsonData;
 import learn.example.pile.util.ActivityLauncher;
 
 /**

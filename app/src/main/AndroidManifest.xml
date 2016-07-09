@@ -35,6 +35,8 @@
                   android:label="机器聊天"
                   android:windowSoftInputMode="adjustUnspecified|adjustResize">
         </activity>
+        <activity android:name="learn.example.pile.ReaderActivity"
+                  android:label="阅读"/>
     </application>
 
 </manifest>

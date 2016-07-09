@@ -18,6 +18,7 @@ import java.util.List;
 import learn.example.joke.R;
 import learn.example.pile.adapters.SaveStateAbleAdapter;
 import learn.example.uidesign.CommonRecyclerView;
+import learn.example.uidesign.DividerItemDecoration;
 
 /**
  * Created on 2016/6/29.
@@ -51,6 +52,7 @@ public abstract class BaseListFragment extends Fragment implements CommonRecycle
          mCommonRecyclerView= (CommonRecyclerView) view;
          mCommonRecyclerView.setActionHandler(this);
          mCommonRecyclerView.setSwipeRefreshColorRes(R.color.colorPrimary);
+         addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL_LIST));
          return mCommonRecyclerView;
     }
 
@@ -68,19 +70,6 @@ public abstract class BaseListFragment extends Fragment implements CommonRecycle
         super.onViewStateRestored(savedInstanceState);
     }
 
-    public void setAdapter(CommonRecyclerView.FooterViewAdapter adapter)
-    {
-         setEmptyViewText("加载中...");
-         mAdapter=adapter;
-         mCommonRecyclerView.setAdapter(adapter);
-    }
-
-    public void setAdapter(SaveStateAbleAdapter adapter)
-    {
-        setEmptyViewText("加载中...");
-        mAdapter=adapter;
-        mCommonRecyclerView.setAdapter(adapter);
-    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -90,6 +79,48 @@ public abstract class BaseListFragment extends Fragment implements CommonRecycle
         }
         super.onSaveInstanceState(outState);
     }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mCommonRecyclerView.isRefreshing())
+        {
+            hideRefreshProgressbar();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        mFooterTextClick=null;
+        mCommonRecyclerView.removeAllViews();
+        mErrorRunnable=null;
+        mAdapter=null;
+        super.onDestroy();
+    }
+
+
+    public void setAdapter(CommonRecyclerView.FooterViewAdapter adapter)
+    {
+        setEmptyViewText("加载中...");
+        mAdapter=adapter;
+        mCommonRecyclerView.setAdapter(adapter);
+    }
+
+    public void addItemDecoration(RecyclerView.ItemDecoration itemDecoration)
+    {
+        mCommonRecyclerView.addItemDecoration(itemDecoration);
+    }
+
+    public void setAdapter(SaveStateAbleAdapter adapter)
+    {
+        setEmptyViewText("加载中...");
+        mAdapter=adapter;
+        mCommonRecyclerView.setAdapter(adapter);
+    }
+
+
+
+
 
     public void setLayoutManager(RecyclerView.LayoutManager manager)
     {
@@ -151,14 +182,7 @@ public abstract class BaseListFragment extends Fragment implements CommonRecycle
         }
     }
 
-    @Override
-    public void onDestroy() {
-        mFooterTextClick=null;
-        mCommonRecyclerView.removeAllViews();
-        mErrorRunnable=null;
-        mAdapter=null;
-        super.onDestroy();
-    }
+
 
     @Override
     public void adapterDataChanged(CommonRecyclerView recyclerView, int itemCount) {

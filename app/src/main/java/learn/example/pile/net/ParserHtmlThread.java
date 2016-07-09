@@ -2,7 +2,7 @@ package learn.example.pile.net;
 
 import android.support.annotation.NonNull;
 
-import learn.example.pile.jsonobject.VideoJsonData;
+import learn.example.pile.jsonbean.VideoJsonData;
 import learn.example.pile.util.VideoParser;
 
 /**

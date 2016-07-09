@@ -8,7 +8,7 @@ import android.view.View;
 
 import learn.example.net.Service;
 import learn.example.pile.adapters.NewsListAdapter;
-import learn.example.pile.jsonobject.NewsJsonData;
+import learn.example.pile.jsonbean.NewsJsonData;
 import learn.example.pile.net.NewsService;
 import learn.example.uidesign.CommonRecyclerView;
 

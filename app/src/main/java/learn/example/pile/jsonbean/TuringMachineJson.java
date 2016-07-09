@@ -1,4 +1,4 @@
-package learn.example.pile.jsonobject;
+package learn.example.pile.jsonbean;
 
 /**
  * Created on 2016/6/26.

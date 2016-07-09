@@ -1,12 +1,8 @@
 package learn.example.pile.net;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
 import learn.example.net.OkHttpRequest;
 import learn.example.net.Service;
-import learn.example.pile.MyURI;
-import learn.example.pile.jsonobject.VideoJsonData;
+import learn.example.pile.jsonbean.VideoJsonData;
 import okhttp3.Request;
 
 /**

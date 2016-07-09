@@ -34,14 +34,11 @@ import learn.example.pile.util.AccessAppDataHelper;
  */
 public class SettingFragment extends Fragment {
     public static final String TAG = "SettingFragment";
-<<<<<<< HEAD
     private TextView picCache;
-=======
     private TextView mImgCache;
     private Spinner mSpinner;
     private Button mSpinnerButton;
 
->>>>>>> master
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

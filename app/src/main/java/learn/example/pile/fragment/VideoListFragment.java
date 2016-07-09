@@ -3,20 +3,15 @@ package learn.example.pile.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 
-import java.util.Arrays;
 import java.util.List;
 
 import learn.example.pile.adapters.VideoListAdapter;
-import learn.example.pile.jsonobject.VideoJsonData;
+import learn.example.pile.jsonbean.VideoJsonData;
 import learn.example.pile.net.GankVideoService;
-import learn.example.pile.observer.VideoUrlParseObserver;
 import learn.example.pile.util.AccessAppDataHelper;
 import learn.example.uidesign.CommonRecyclerView;
-import rx.Subscriber;
 
 /**
  * Created on 2016/5/25.
@@ -51,20 +46,10 @@ public class VideoListFragment extends BaseListFragment implements GankVideoServ
         mService.setListener(this);
     }
 
-    @Override
-<<<<<<< HEAD
-    public void onDestroy() {
-        VolleyRequestQueue.getInstance(getContext()).cancelAll(TAG);
 
-        savePage(currentPage);
-        mVideoHtmlParser.destroy();
-        mVideoListAdapter=null;
-        super.onDestroy();
-=======
     public void onStop() {
         super.onStop();
         mService.removeListener(this);
->>>>>>> master
     }
 
     @Override

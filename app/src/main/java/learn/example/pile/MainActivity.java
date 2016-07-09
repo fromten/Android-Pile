@@ -108,7 +108,6 @@ public class MainActivity extends BaseActivity {
             }
         }else if (item.getItemId()==R.id.menu_machine)
         {
-<<<<<<< HEAD
             //判断当前的SettingFragment是否显示
             if (getSupportFragmentManager().findFragmentByTag(SettingFragment.TAG)==null)
             {
@@ -118,9 +117,7 @@ public class MainActivity extends BaseActivity {
                         .addToBackStack(null)
                         .commit();
             }
-=======
             startActivity(new Intent(this,ChatActivity.class));
->>>>>>> master
         }
         return true;
     }

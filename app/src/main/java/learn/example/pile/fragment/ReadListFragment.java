@@ -65,6 +65,7 @@ public class ReadListFragment extends BaseListFragment implements Service.Servic
 
     @Override
     public void onFailure(String msg) {
+        notifyLoadError();
         hideRefreshProgressbar();
     }
 

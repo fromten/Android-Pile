@@ -18,7 +18,7 @@ public class NewsService extends Service<NewsJsonData> {
     public void getNews()
     {
         Request request=new Request.Builder().url(MyURI.NEW_DATA_REQUEST_URL).addHeader("apikey", MyURI.API_KEY).build();
-        OkHttpRequest.getInstance().newGsonRequest(NewsJsonData.class,request, new OkHttpRequest.RequestCallback<NewsJsonData>() {
+        OkHttpRequest.getInstanceUnsafe().newGsonRequest(NewsJsonData.class,request, new OkHttpRequest.RequestCallback<NewsJsonData>() {
             @Override
             public void onSuccess(NewsJsonData res) {
                 if (res.getErrNum()==0)

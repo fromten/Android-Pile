@@ -27,7 +27,7 @@ public class GankVideoService extends Service<VideoJsonData> {
             failure("video url encode error");
         }else {
             Request request=new Request.Builder().url(url).build();
-            OkHttpRequest.getInstance().newGsonRequest(VideoJsonData.class, request, new OkHttpRequest.RequestCallback<VideoJsonData>() {
+            OkHttpRequest.getInstanceUnsafe().newGsonRequest(VideoJsonData.class, request, new OkHttpRequest.RequestCallback<VideoJsonData>() {
                 @Override
                 public void onSuccess(VideoJsonData res) {
                     if (res.isError())

@@ -1,5 +1,6 @@
 package learn.example.net;
 
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -8,8 +9,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 
+import java.io.File;
 import java.io.IOException;
 
+import okhttp3.Cache;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Dispatcher;
@@ -26,17 +29,34 @@ public class OkHttpRequest {
     private Handler mHandler;
     private static OkHttpRequest mInstance;
     private Gson mGson;
-    private OkHttpRequest() {
-        mOkHttpClient=new OkHttpClient();
+
+
+    public static final int CACHE_SIZE=30*1024*1024;// 30 MIB
+    public static final String CAHDE_DIRECTORY="com.app.okhttp3_cache";
+
+    private OkHttpRequest(Context context) {
+        File file=new File(context.getCacheDir(),CAHDE_DIRECTORY);
+        Cache cache=new Cache(file,CACHE_SIZE);
+        mOkHttpClient=new OkHttpClient.Builder().cache(cache).build();
         mHandler=new Handler(Looper.getMainLooper());
         mGson=new Gson();
+
     }
 
-    public synchronized static OkHttpRequest getInstance()
+    public synchronized static OkHttpRequest getInstanceUnsafe()
     {
         if (mInstance==null)
         {
-            mInstance=new OkHttpRequest();
+            throw new NullPointerException("Class no init,to use getInstance(Context context)");
+        }
+        return mInstance;
+    }
+
+    public synchronized static OkHttpRequest getInstance(Context context)
+    {
+        if (mInstance==null)
+        {
+            mInstance=new OkHttpRequest(context);
         }
         return mInstance;
     }

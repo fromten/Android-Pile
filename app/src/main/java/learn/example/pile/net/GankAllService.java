@@ -1,5 +1,7 @@
 package learn.example.pile.net;
 
+import android.content.Context;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -36,7 +38,7 @@ public class GankAllService extends Service<GankCommonJson> {
         if (request==null){
             throw  new NullPointerException("No can perform request,Request must is valid object");
         }else{
-            OkHttpRequest.getInstance().newGsonRequest(GankCommonJson.class, request, new OkHttpRequest.RequestCallback<GankCommonJson>() {
+            OkHttpRequest.getInstanceUnsafe().newGsonRequest(GankCommonJson.class, request, new OkHttpRequest.RequestCallback<GankCommonJson>() {
                 @Override
                 public void onSuccess(GankCommonJson res) {
                     if (res.isError())

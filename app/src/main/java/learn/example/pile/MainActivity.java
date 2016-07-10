@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 
 
 import learn.example.joke.R;
+import learn.example.net.OkHttpRequest;
 import learn.example.pile.adapters.ViewPagerAdapter;
 import learn.example.pile.fragment.SettingFragment;
 import learn.example.pile.util.AppInfo;
@@ -41,6 +42,11 @@ public class MainActivity extends BaseActivity {
 
     public void initView()
     {
+
+        //初始化okhttp
+        OkHttpRequest.getInstance(this);
+
+
         //如果版本大于23和外部存储可以用时需要请求权限
         if (Build.VERSION.SDK_INT>=23&& AppInfo.checkExternalStorageState())
         {

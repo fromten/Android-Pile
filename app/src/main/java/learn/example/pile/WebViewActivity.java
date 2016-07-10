@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Process;
+import android.text.TextUtils;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -18,6 +19,9 @@ import learn.example.joke.R;
  */
 public class WebViewActivity extends BaseActivity {
 
+
+
+
     private WebView mWebView;
     private ProgressBar mProgressBar;
 
@@ -26,10 +30,9 @@ public class WebViewActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web);
         initView();
-        Uri uri = getIntent().getData();
-        if (uri != null) {
-            mWebView.loadUrl(uri.toString());
-        }
+
+        Uri uri=getIntent().getData();
+        mWebView.loadUrl(uri.toString());
 
     }
 
@@ -40,7 +43,6 @@ public class WebViewActivity extends BaseActivity {
         mWebView.getSettings().setDomStorageEnabled(true);
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setBuiltInZoomControls(true);
-        mWebView.getSettings().getUserAgentString();
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {

@@ -1,5 +1,7 @@
 package learn.example.pile.net;
 
+import android.content.Context;
+
 import com.google.gson.JsonObject;
 
 import learn.example.net.OkHttpRequest;
@@ -25,12 +27,9 @@ public class TuringMachineService extends Service<TuringMachineJson>{
     public void getMessage(String question)
     {
         RequestBody body=getRequestBody(question);
-        if (body == null) {
-            failure("url encode fail,request TuringMachineService question="+question);
-        }else {
 
             Request req=new Request.Builder().url(URL).post(body).build();
-            OkHttpRequest.getInstance().newGsonRequest(TuringMachineJson.class, req, new OkHttpRequest.RequestCallback<TuringMachineJson>() {
+            OkHttpRequest.getInstanceUnsafe().newGsonRequest(TuringMachineJson.class, req, new OkHttpRequest.RequestCallback<TuringMachineJson>() {
                 @Override
                 public void onSuccess(TuringMachineJson res) {
                     success(res);
@@ -41,7 +40,6 @@ public class TuringMachineService extends Service<TuringMachineJson>{
                      failure(msg);
                 }
             });
-        }
     }
 
     /**

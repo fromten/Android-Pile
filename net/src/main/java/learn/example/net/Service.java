@@ -11,6 +11,8 @@ public class Service<T> {
         mListener = listener;
     }
 
+
+
     public void setListener(ServiceListener<T> listener) {
         mListener = listener;
     }

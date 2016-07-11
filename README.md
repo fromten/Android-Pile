@@ -10,7 +10,9 @@
 <a href='http://apistore.baidu.com/' >百度ApiStore</a>
 </br>
 <a href='http://gank.io/api' >干货集中营</a>
-
+</br>
+<a href='https://github.com/izzyleung/ZhihuDailyPurify/wiki/' >Zhihu.Inc</a>
+ 
 ##使用到的库
 <ul>
 <li>Glide</li>

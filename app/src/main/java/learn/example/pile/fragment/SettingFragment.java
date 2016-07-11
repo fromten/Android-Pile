@@ -34,6 +34,7 @@ import learn.example.pile.util.AccessAppDataHelper;
  */
 public class SettingFragment extends Fragment {
     public static final String TAG = "SettingFragment";
+    private TextView picCache;
     private TextView mImgCache;
     private Spinner mSpinner;
     private Button mSpinnerButton;
@@ -51,14 +52,10 @@ public class SettingFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         setCacheSizeString(readGlideDiskCacheSize());
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
+
 
 
     /**
@@ -144,7 +141,7 @@ public class SettingFragment extends Fragment {
                 case "视频":
                     AccessAppDataHelper.saveInteger(getActivity(), AccessAppDataHelper.KEY_VIDEO_PAGE, 1);
                     break;
-                case "学习":
+                case "阅读":
                     AccessAppDataHelper.saveInteger(getActivity(), AccessAppDataHelper.KEY_READ_PAGE, 1);
                     break;
             }

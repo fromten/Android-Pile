@@ -3,54 +3,26 @@ package learn.example.pile.net;
 import learn.example.net.OkHttpRequest;
 import learn.example.net.Service;
 import learn.example.pile.MyURI;
-import learn.example.pile.jsonobject.JokeJsonData;
-import okhttp3.OkHttpClient;
+import learn.example.pile.jsonbean.JokeJsonData;
 import okhttp3.Request;
 
 /**
  * Created on 2016/7/1.
  */
-public class JokeService extends Service<JokeJsonData> {
-    public JokeService(ServiceListener<JokeJsonData> listener) {
-        super(listener);
-    }
+public class JokeService extends GsonService {
 
-    public void getImageJoke(int page)
+    private static final String TAG = "JokeService";
+
+    public void getImageJoke(int page,IService.Callback<JokeJsonData> callback)
     {
         String url=MyURI.IMAGE_JOKE_REQUEST_URL+"?page="+page;
-        final Request req=new Request.Builder().url(url).addHeader("apikey", MyURI.API_KEY).build();
-        OkHttpRequest.getInstance().newGsonRequest(JokeJsonData.class,req, new OkHttpRequest.RequestCallback<JokeJsonData>() {
-            @Override
-            public void onSuccess(JokeJsonData res) {
-                if (res.getResCode()==0)
-                {
-                    success(res);
-                }else {
-                    failure("image joke request error");
-                }
-
-            }
-
-            @Override
-            public void onFailure(String msg) {
-                 failure(msg);
-            }
-        });
+        Request req=new Request.Builder().url(url).addHeader("apikey", MyURI.API_KEY).build();
+        newRequest(TAG,JokeJsonData.class,req,callback);
     }
-    public void getTextJoke(int page)
+    public void getTextJoke(int page,IService.Callback<JokeJsonData> callback)
     {
         String url=MyURI.TEXT_JOKE_REQUEST_URL+"?page="+page;
         Request req=new Request.Builder().url(url).addHeader("apikey", MyURI.API_KEY).build();
-        OkHttpRequest.getInstance().newGsonRequest(JokeJsonData.class,req, new OkHttpRequest.RequestCallback<JokeJsonData>() {
-            @Override
-            public void onSuccess(JokeJsonData res) {
-                success(res);
-            }
-
-            @Override
-            public void onFailure(String msg) {
-                failure(msg);
-            }
-        });
+        newRequest(TAG,JokeJsonData.class,req,callback);
     }
 }

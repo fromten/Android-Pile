@@ -4,22 +4,22 @@ package learn.example.pile.object;
  * Created on 2016/6/26.
  */
 public class ChatInfo {
-    public static final int TYPE_LEFT=1;
-    public static final int TYPE_Right=2;
-    private int type;
+    public static final int GRAVITY_LEFT=1;
+    public static final int GRAVITY_RIGHT=2;
+    private int gravity;
     private String msg;
 
-    public ChatInfo(int type, String msg) {
-        this.type = type;
+    public ChatInfo(int gravity, String msg) {
+        this.gravity = gravity;
         this.msg = msg;
     }
 
     public int getType() {
-        return type;
+        return gravity;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public void setType(int gravity) {
+        this.gravity = gravity;
     }
 
     public String getMsg() {

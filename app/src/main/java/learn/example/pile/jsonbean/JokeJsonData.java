@@ -1,4 +1,4 @@
-package learn.example.pile.jsonobject;
+package learn.example.pile.jsonbean;
 
 import android.os.Parcel;
 import android.os.Parcelable;

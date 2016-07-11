@@ -9,7 +9,6 @@ import android.widget.ProgressBar;
 import com.bumptech.glide.Glide;
 
 import learn.example.joke.R;
-import learn.example.net.PhotoProgressTask;
 import learn.example.pile.util.UrlCheck;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
@@ -22,7 +21,6 @@ public class PhotoActivity extends AppCompatActivity{
     private PhotoView mImageView;
     private static final String TAG = "PhotoActivity";
     public static final String KEY_IMG_URL ="PhotoActivity_IMG_URL_KEY";
-    private PhotoProgressTask mPhotoProgressTask;
     private ProgressBar mProgressBar;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

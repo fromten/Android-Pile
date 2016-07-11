@@ -3,83 +3,77 @@ package learn.example.pile.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
-import learn.example.pile.adapters.ReadListAdapter;
-import learn.example.pile.jsonobject.GankCommonJson;
-import learn.example.pile.net.GankAllService;
-import learn.example.pile.net.GankVideoService;
-import learn.example.pile.util.AccessAppDataHelper;
+import learn.example.net.Service;
+import learn.example.pile.adapters.ZhiHuMsgListAdapter;
+import learn.example.pile.jsonbean.ZhihuStories;
+import learn.example.pile.net.IService;
+import learn.example.pile.net.ZhihuStoryService;
+import learn.example.pile.object.Zhihu;
 import learn.example.uidesign.CommonRecyclerView;
 
 /**
  * Created on 2016/6/3.
  */
-public class ReadListFragment extends BaseListFragment implements GankVideoService.ServiceListener<GankCommonJson>{
+public class ReadListFragment extends BaseListFragment implements IService.Callback<ZhihuStories> {
 
 
 
-    private ReadListAdapter mAdapter;
+    private ZhiHuMsgListAdapter mAdapter;
     private static final String TAG="ReadListFragment";
 
-    //最大请求个数
-    private final int MAX_REQNUM=15;
-    //现在页数
-    private int currentPage=0;
-    private GankAllService mService;
+    private ZhihuStoryService mService;
+    private String date;
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        mAdapter = new ReadListAdapter();
+        mAdapter = new ZhiHuMsgListAdapter();
         setAdapter(mAdapter);
         setLayoutManager(new LinearLayoutManager(getContext()));
-        mService=new GankAllService(this);
-        //读取保存的页数
-        currentPage = AccessAppDataHelper.readInteger(getActivity(), AccessAppDataHelper.KEY_READ_PAGE,1);
+        mService=new ZhihuStoryService();
         if (savedInstanceState==null)
         {
             showRefreshProgressbar();
-            mService.getAndroidPostList(currentPage,MAX_REQNUM);
+            mService.getStories(this);
         }
     }
 
+    //覆盖父类方法,取消显示装饰器
     @Override
-    public void onStart() {
-        super.onStart();
-        mService.setListener(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        mService.removeListener(this);
+    public void addItemDecoration(RecyclerView.ItemDecoration itemDecoration) {
+         //no show ItemDecoration
     }
 
     @Override
     public void onDestroy() {
-        AccessAppDataHelper.saveInteger(getActivity(),AccessAppDataHelper.KEY_READ_PAGE,currentPage);
+        mService.cancelAll();
         super.onDestroy();
     }
 
     @Override
-    public void onSuccess(GankCommonJson data) {
+    public void onSuccess(ZhihuStories data) {
+        date=data.getDate();
+        mAdapter.addAll(Zhihu.valueOf(data));
         hideRefreshProgressbar();
-        mAdapter.addAll(data.getResults());
-        currentPage++;
     }
 
     @Override
     public void onFailure(String msg) {
+        Log.d(TAG,msg );
+        notifyLoadError();
         hideRefreshProgressbar();
     }
 
     @Override
     public void refresh(CommonRecyclerView recyclerView) {
         mAdapter.clear();
-        mService.getAndroidPostList(currentPage,MAX_REQNUM);
+        mService.getStories(this);
     }
 
     @Override
     public void loadMore(CommonRecyclerView recyclerView) {
-        mService.getAndroidPostList(currentPage,MAX_REQNUM);
+        mService.getStoriesAtTime(date,this);
     }
 }

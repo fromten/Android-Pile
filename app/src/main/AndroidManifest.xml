@@ -16,8 +16,7 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="learn.example.pile.AppGlideModule"
-            android:value="GlideModule"
-            />
+            android:value="GlideModule"/>
         <activity android:name="learn.example.pile.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,7 +25,7 @@
         </activity>
         <activity android:name="learn.example.pile.WebViewActivity"
                   android:process="learn.example.pile.PileApplication.WebActivity"
-            android:label=" "/>
+                 android:label=" "/>
         <activity android:name="learn.example.pile.VideoActivity"
             android:label="视频"/>
         <activity android:name="learn.example.pile.PhotoActivity"
@@ -34,8 +33,10 @@
             android:label="图片"/>
         <activity android:name="learn.example.pile.ChatActivity"
                   android:label="机器聊天"
-                  android:windowSoftInputMode="adjustResize">
+                  android:windowSoftInputMode="adjustUnspecified|adjustResize">
         </activity>
+        <activity android:name="learn.example.pile.ReaderActivity"
+                  android:label="阅读"/>
     </application>
 
 </manifest>

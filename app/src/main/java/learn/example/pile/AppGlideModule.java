@@ -12,7 +12,7 @@ import com.bumptech.glide.module.GlideModule;
 
 import java.io.File;
 
-import learn.example.pile.util.AppCheck;
+import learn.example.pile.util.AppInfo;
 
 /**
  * Created on 2016/6/3.
@@ -35,7 +35,7 @@ public class AppGlideModule implements GlideModule {
     public File getFile(Context context)
     {
         File file;
-        if (AppCheck.checkExternalStorageState())
+        if (AppInfo.checkExternalStorageState())
         {
             if (Build.VERSION.SDK_INT>=23&&context.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)!=PackageManager.PERMISSION_GRANTED)
             {

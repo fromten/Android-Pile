@@ -10,7 +10,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 
 import learn.example.joke.R;
+import learn.example.pile.ChatActivity;
 import learn.example.pile.PhotoActivity;
+import learn.example.pile.ReaderActivity;
 import learn.example.pile.VideoActivity;
 import learn.example.pile.WebViewActivity;
 
@@ -59,17 +61,36 @@ public class ActivityLauncher {
     }
 
 
+    public static void startReaderActivity(@NonNull Context context, @NonNull int id,Bundle bundle)
+    {
+        Intent intent=new Intent(context, ReaderActivity.class);
+        intent.putExtra(ReaderActivity.KEY_CONTENT_ID,id);
+        ActivityCompat.startActivity((Activity) context,intent,bundle);
+    }
+
+    public static void startChatActivity(@NonNull Context context,Bundle bundle)
+    {
+        Intent intent=new Intent(context, ChatActivity.class);
+        ActivityCompat.startActivity((Activity) context,intent,bundle);
+    }
+
 
     /**
-     *
+     *  左边进入动画
      * @param context
-     * @return 左边进入动画
+     * @return bundle to perform animation
      */
     public static Bundle slideAnimation(Context context)
     {
-        return ActivityOptionsCompat.makeCustomAnimation(context,android.R.anim.slide_in_left,android.R.anim.fade_out).toBundle();
+        return ActivityOptionsCompat.makeCustomAnimation(context,R.anim.anim_slide_in_right,R.anim.anim_slide_out_left).toBundle();
     }
 
+
+    /**
+     * 重中心打开动画
+     * @param context
+     * @return
+     */
     public static Bundle openAnimation(Context context)
     {
         return ActivityOptionsCompat.makeCustomAnimation(context, R.anim.anim_center_open,0).toBundle();

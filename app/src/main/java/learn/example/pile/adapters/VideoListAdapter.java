@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import learn.example.joke.R;
-import learn.example.pile.jsonobject.VideoJsonData;
+import learn.example.pile.jsonbean.VideoJsonData;
 import learn.example.pile.util.ActivityLauncher;
 
 /**
@@ -67,8 +67,8 @@ public class VideoListAdapter extends SaveStateAbleAdapter<VideoListAdapter.Vide
         public VideoViewHolder(View view) {
             super(view);
             this.desc = (TextView) view.findViewById(R.id.video_desc);
-            this.videoImg = (ImageView) view.findViewById(R.id.video_img);;
-            this.videoPlay = (ImageView) view.findViewById(R.id.video_play);;
+            this.videoImg = (ImageView) view.findViewById(R.id.video_img);
+            this.videoPlay = (ImageView) view.findViewById(R.id.video_play);
         }
     }
 }

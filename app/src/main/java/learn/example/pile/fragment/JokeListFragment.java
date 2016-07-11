@@ -8,8 +8,9 @@ import java.util.List;
 
 import learn.example.pile.adapters.JokeListAdapter;
 import learn.example.pile.database.JokeDatabase;
-import learn.example.pile.jsonobject.JokeJsonData;
+import learn.example.pile.jsonbean.JokeJsonData;
 import learn.example.pile.database.DatabaseManager;
+import learn.example.pile.net.IService;
 import learn.example.pile.net.JokeService;
 import learn.example.pile.util.AccessAppDataHelper;
 import learn.example.uidesign.CommonRecyclerView;
@@ -17,7 +18,7 @@ import learn.example.uidesign.CommonRecyclerView;
 /**
  * Created on 2016/5/5.
  */
-public class JokeListFragment extends BaseListFragment implements JokeService.ServiceListener<JokeJsonData>{
+public class JokeListFragment extends BaseListFragment implements IService.Callback<JokeJsonData> {
 
     private JokeListAdapter mJokeListAdapter;
 
@@ -35,17 +36,18 @@ public class JokeListFragment extends BaseListFragment implements JokeService.Se
          setAdapter(mJokeListAdapter);
          setLayoutManager(new LinearLayoutManager(getContext()));
          currentDataBasePage=AccessAppDataHelper.readInteger(getActivity(),AccessAppDataHelper.KEY_JOKE_PAGE,1);
-          mJokeService=new JokeService(this);
+          mJokeService=new JokeService();
          if (savedInstanceState==null)
          {
              showRefreshProgressbar();
-             mJokeService.getImageJoke(currentDataBasePage);
-             mJokeService.getTextJoke(currentDataBasePage);
+             mJokeService.getImageJoke(currentDataBasePage,this);
+             mJokeService.getTextJoke(currentDataBasePage,this);
          }
     }
 
     @Override
     public void onDestroy() {
+        mJokeService.cancelAll();
         AccessAppDataHelper.saveInteger(getActivity(),AccessAppDataHelper.KEY_JOKE_PAGE,currentDataBasePage);
         mJokeListAdapter=null;
         if(mJokeDataBase!=null)
@@ -57,6 +59,7 @@ public class JokeListFragment extends BaseListFragment implements JokeService.Se
 
     @Override
     public void onSuccess(JokeJsonData data) {
+        if (data==null)return;
 
         mJokeListAdapter.addAll(data.getResBody().getJokeContentList());
 
@@ -69,6 +72,7 @@ public class JokeListFragment extends BaseListFragment implements JokeService.Se
 
     @Override
     public void onFailure(String msg) {
+         notifyLoadError();
          hideRefreshProgressbar();
     }
 
@@ -87,9 +91,9 @@ public class JokeListFragment extends BaseListFragment implements JokeService.Se
     {
         if (currentDataBasePage%2==0)
         {
-            mJokeService.getTextJoke(currentDataBasePage);
+            mJokeService.getTextJoke(currentDataBasePage,this);
         }else {
-            mJokeService.getImageJoke(currentDataBasePage);
+            mJokeService.getImageJoke(currentDataBasePage,this);
         }
 
     }

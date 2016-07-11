@@ -87,7 +87,7 @@ public abstract class SaveStateAbleAdapter<VH extends RecyclerView.ViewHolder,D 
     }
 
     @Override
-    public final int getItemSize() {
+    public int getItemSize() {
         return mDataList.size();
     }
 

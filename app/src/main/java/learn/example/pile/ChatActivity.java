@@ -13,14 +13,15 @@ import android.widget.ListView;
 
 import learn.example.joke.R;
 import learn.example.pile.adapters.ChatListAdapter;
-import learn.example.pile.jsonobject.TuringMachineJson;
+import learn.example.pile.jsonbean.TuringMachineJson;
+import learn.example.pile.net.IService;
 import learn.example.pile.net.TuringMachineService;
 import learn.example.pile.object.ChatInfo;
 
 /**
  * Created on 2016/6/26.
  */
-public class ChatActivity extends BaseActivity implements TuringMachineService.ServiceListener<TuringMachineJson>, View.OnClickListener{
+public class ChatActivity extends BaseActivity implements IService.Callback<TuringMachineJson>, View.OnClickListener{
 
     private static final String TAG = "ChatActivity";
 
@@ -40,25 +41,19 @@ public class ChatActivity extends BaseActivity implements TuringMachineService.S
         mChatListAdapter=new ChatListAdapter();
         mListView.setAdapter(mChatListAdapter);
 
-        mService=new TuringMachineService(this);
+        mService=new TuringMachineService();
     }
 
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        mService.setListener(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mService.removeListener(this);
+    protected void onDestroy() {
+        mService.cancelAll();
+        super.onDestroy();
     }
 
     @Override
     public void onSuccess(TuringMachineJson data) {
-        ChatInfo info=new ChatInfo(ChatInfo.TYPE_LEFT,data.getText());
+        ChatInfo info=new ChatInfo(ChatInfo.GRAVITY_LEFT,data.getText());
         mChatListAdapter.addItem(info);
         mListView.smoothScrollToPosition(mChatListAdapter.getCount()-1);
     }
@@ -74,11 +69,11 @@ public class ChatActivity extends BaseActivity implements TuringMachineService.S
         if (!editText.isEmpty())
         {
             //将要发送的消息添加的List
-            ChatInfo info=new ChatInfo(ChatInfo.TYPE_Right,editText);
+            ChatInfo info=new ChatInfo(ChatInfo.GRAVITY_RIGHT,editText);
             mChatListAdapter.addItem(info);
             mMsgEdit.setText(null);
 
-            mService.getMessage(editText);
+            mService.getMessage(editText,this);
         }
         mListView.smoothScrollToPosition(mChatListAdapter.getCount()-1);
         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);

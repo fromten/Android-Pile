@@ -3,25 +3,21 @@ package learn.example.pile.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 
-import java.util.Arrays;
 import java.util.List;
 
 import learn.example.pile.adapters.VideoListAdapter;
-import learn.example.pile.jsonobject.VideoJsonData;
+import learn.example.pile.jsonbean.VideoJsonData;
 import learn.example.pile.net.GankVideoService;
-import learn.example.pile.observer.VideoUrlParseObserver;
+import learn.example.pile.net.IService;
 import learn.example.pile.util.AccessAppDataHelper;
 import learn.example.uidesign.CommonRecyclerView;
-import rx.Subscriber;
 
 /**
  * Created on 2016/5/25.
  */
-public class VideoListFragment extends BaseListFragment implements GankVideoService.ServiceListener<VideoJsonData>{
+public class VideoListFragment extends BaseListFragment implements IService.Callback<VideoJsonData> {
 
     private VideoListAdapter mAdapter;
     private static final String TAG="VideoListFragment";
@@ -36,29 +32,20 @@ public class VideoListFragment extends BaseListFragment implements GankVideoServ
         setAdapter(mAdapter);
         setLayoutManager(new LinearLayoutManager(getContext()));
         currentPage=AccessAppDataHelper.readInteger(getActivity(),AccessAppDataHelper.KEY_VIDEO_PAGE,1);
-        mService=new GankVideoService(this);
+        mService=new GankVideoService();
         if (savedInstanceState==null)
         {
             showRefreshProgressbar();
-            mService.getVideo(currentPage, MAX_REQNUM);
+            mService.getVideo(currentPage, MAX_REQNUM,this);
         }
     }
 
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        mService.setListener(this);
-    }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        mService.removeListener(this);
-    }
 
     @Override
     public void onDestroy() {
+        mService.cancelAll();
         AccessAppDataHelper.saveInteger(getActivity(),AccessAppDataHelper.KEY_VIDEO_PAGE,currentPage);
         super.onDestroy();
     }
@@ -68,33 +55,25 @@ public class VideoListFragment extends BaseListFragment implements GankVideoServ
         hideRefreshProgressbar();
         mAdapter.addAll(data.getVideoItemList());
         currentPage++;
-
     }
 
-    public String[] getUrls(List<VideoJsonData.VideoItem> list )
-    {
-        int len=list.size();
-        String[] arr=new String[len];
-        for (int i = 0; i <len ; i++) {
-            arr[i]=list.get(i).getHtmlUrl();
-        }
-        return arr;
-    }
+
 
     @Override
     public void onFailure(String msg) {
+        notifyLoadError();
         hideRefreshProgressbar();
     }
 
     @Override
     public void refresh(CommonRecyclerView recyclerView) {
         mAdapter.clear();
-        mService.getVideo(currentPage, MAX_REQNUM);
+        mService.getVideo(currentPage, MAX_REQNUM,this);
     }
 
     @Override
     public void loadMore(CommonRecyclerView recyclerView) {
-        mService.getVideo(currentPage,MAX_REQNUM);
+        mService.getVideo(currentPage,MAX_REQNUM,this);
     }
 
 //    private Subscriber<String[]> mSubscriber=new Subscriber<String[]>() {

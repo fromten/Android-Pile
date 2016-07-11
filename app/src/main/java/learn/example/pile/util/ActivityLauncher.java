@@ -10,6 +10,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 
 import learn.example.joke.R;
+import learn.example.pile.ChatActivity;
 import learn.example.pile.PhotoActivity;
 import learn.example.pile.ReaderActivity;
 import learn.example.pile.VideoActivity;
@@ -64,6 +65,12 @@ public class ActivityLauncher {
     {
         Intent intent=new Intent(context, ReaderActivity.class);
         intent.putExtra(ReaderActivity.KEY_CONTENT_ID,id);
+        ActivityCompat.startActivity((Activity) context,intent,bundle);
+    }
+
+    public static void startChatActivity(@NonNull Context context,Bundle bundle)
+    {
+        Intent intent=new Intent(context, ChatActivity.class);
         ActivityCompat.startActivity((Activity) context,intent,bundle);
     }
 

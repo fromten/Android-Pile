@@ -27,6 +27,7 @@ import learn.example.joke.R;
 import learn.example.net.OkHttpRequest;
 import learn.example.pile.adapters.ViewPagerAdapter;
 import learn.example.pile.fragment.SettingFragment;
+import learn.example.pile.util.ActivityLauncher;
 import learn.example.pile.util.AppInfo;
 
 
@@ -114,16 +115,7 @@ public class MainActivity extends BaseActivity {
             }
         }else if (item.getItemId()==R.id.menu_machine)
         {
-            //判断当前的SettingFragment是否显示
-            if (getSupportFragmentManager().findFragmentByTag(SettingFragment.TAG)==null)
-            {
-                getSupportFragmentManager().beginTransaction()
-                        .add(R.id.main_show, new SettingFragment(),SettingFragment.TAG)
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                        .addToBackStack(null)
-                        .commit();
-            }
-            startActivity(new Intent(this,ChatActivity.class));
+            ActivityLauncher.startChatActivity(this,null);
         }
         return true;
     }

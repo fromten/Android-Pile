@@ -25,10 +25,9 @@
         <item name="android:padding">4dp</item>
     </style>
 
-    <style name="CircleProgress" parent="Widget.AppCompat.ProgressBar">
-        <item name="android:indeterminate">true</item>
+    <style name="CircleProgress" parent="Base.Widget.AppCompat.ProgressBar">
         <item name="android:clickable">false</item>
         <item name="android:focusable">false</item>
-        <item name="android:indeterminateDrawable">@drawable/circle_progress</item>
+        <item name="android:background">@drawable/circle_progress</item>
     </style>
 </resources>

@@ -24,23 +24,24 @@ import okhttp3.Response;
 /**
  * Created on 2016/7/1.
  */
-public class OkHttpRequest {
-    private OkHttpClient mOkHttpClient;
+public class OkHttpRequest{
     private Handler mHandler;
+    private OkHttpClient mOkhttpClient;
+
     private static OkHttpRequest mInstance;
+
     private Gson mGson;
-
-
     public static final int CACHE_SIZE=30*1024*1024;// 30 MIB
     public static final String CAHDE_DIRECTORY="com.app.okhttp3_cache";
+
+
 
     private OkHttpRequest(Context context) {
         File file=new File(context.getCacheDir(),CAHDE_DIRECTORY);
         Cache cache=new Cache(file,CACHE_SIZE);
-        mOkHttpClient=new OkHttpClient.Builder().cache(cache).build();
+        mOkhttpClient=new OkHttpClient.Builder().cache(cache).build();
         mHandler=new Handler(Looper.getMainLooper());
         mGson=new Gson();
-
     }
 
     public synchronized static OkHttpRequest getInstanceUnsafe()
@@ -61,53 +62,65 @@ public class OkHttpRequest {
         return mInstance;
     }
 
-    public <T> void newGsonRequest(final Class<T> type,Request request, final RequestCallback<T> callback){
-        mOkHttpClient.newCall(request).enqueue(new Callback() {
+    public <T> Call newGsonRequest(final Class<T> clazz, Request request, final RequestCallback<T> callback)
+    {
+        Call call=mOkhttpClient.newCall(request);
+        call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                 deliverFailureResult("request fail "+call.request().toString(),callback);
+                deliverFailureResult(call.request().toString(),callback);
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                try {
-                    T bean=mGson.fromJson(response.body().string(),type);
-                    deliverSuccessResult(bean,callback);
-                }catch (JsonSyntaxException e)
+                if (response.isSuccessful())
                 {
-                    deliverFailureResult(e.getCause().toString(),callback);
+                    try {
+                        T ser=mGson.fromJson(response.body().string(),clazz);
+                        deliverSuccessResult(ser,callback);
+                    }catch (JsonSyntaxException e)
+                    {
+                        deliverFailureResult(call.request().toString(),callback);
+                    }
+                }else {
+                    deliverFailureResult(call.request().toString(),callback);
                 }
             }
         });
+        return call;
     }
-    public void newStringRequest(Request request, final RequestCallback<String> callback)
+
+    public Call newStringRequest(Request request, final RequestCallback<String> callback)
     {
-        mOkHttpClient.newCall(request).enqueue(new Callback() {
+        Call call=mOkhttpClient.newCall(request);
+        call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                deliverFailureResult("Request fail "+call.request().toString(),callback);
+                deliverFailureResult(call.request().toString(),callback);
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-               deliverSuccessResult(response.body().string(),callback);
+                if (response.isSuccessful())
+                {
+                    deliverSuccessResult(response.body().string(),callback);
+                }else {
+                    deliverFailureResult(call.request().toString(),callback);
+                }
             }
         });
+        return call;
     }
 
 
-    public Response syncRequest(Request request) throws IOException {
-        return mOkHttpClient.newCall(request).execute();
+    public Call newCall(String url)
+    {
+        return newCall(new Request.Builder().url(url).build());
     }
 
-    public String syncStringRequest(String url) throws IOException {
-        Request req=new Request.Builder().url(url).build();
-        Response response=mOkHttpClient.newCall(req).execute();
-        if (response.isSuccessful())
-        {
-           return response.body().string();
-        }
-        return null;
+    public Call newCall(Request request)
+    {
+        return mOkhttpClient.newCall(request);
     }
 
 
@@ -121,6 +134,7 @@ public class OkHttpRequest {
           }
       });
     }
+
     private void deliverFailureResult(final String msg, final RequestCallback callBack)
     {
         mHandler.post(new Runnable() {

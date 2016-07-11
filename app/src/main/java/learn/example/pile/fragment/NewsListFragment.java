@@ -9,13 +9,14 @@ import android.view.View;
 import learn.example.net.Service;
 import learn.example.pile.adapters.NewsListAdapter;
 import learn.example.pile.jsonbean.NewsJsonData;
+import learn.example.pile.net.GsonService;
 import learn.example.pile.net.NewsService;
 import learn.example.uidesign.CommonRecyclerView;
 
 /**
  * Created on 2016/5/7.
  */
-public class NewsListFragment extends BaseListFragment implements Service.ServiceListener<NewsJsonData>{
+public class NewsListFragment extends BaseListFragment implements GsonService.Callback<NewsJsonData>{
 
 
     private NewsListAdapter mNewsListAdapter;
@@ -27,24 +28,18 @@ public class NewsListFragment extends BaseListFragment implements Service.Servic
         mNewsListAdapter=new NewsListAdapter();
         setAdapter(mNewsListAdapter);
         setLayoutManager(new LinearLayoutManager(getContext()));
-        mService=new NewsService(this);
+        mService=new NewsService();
         if (savedInstanceState==null)
         {
             showRefreshProgressbar();
-            mService.getNews();
+            mService.getNews(this);
         }
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        mService.setListener(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        mService.removeListener(this);
+    public void onDestroy() {
+        mService.cancelAll();
+        super.onDestroy();
     }
 
     @Override
@@ -62,11 +57,11 @@ public class NewsListFragment extends BaseListFragment implements Service.Servic
     @Override
     public void refresh(CommonRecyclerView recyclerView) {
         mNewsListAdapter.clear();
-        mService.getNews();
+        mService.getNews(this);
     }
 
     @Override
     public void loadMore(CommonRecyclerView recyclerView) {
-        mService.getNews();
+        mService.getNews(this);
     }
 }

@@ -2,6 +2,8 @@ package learn.example.pile;
 
 import android.app.Application;
 
+import com.squareup.leakcanary.LeakCanary;
+
 import learn.example.net.OkHttpRequest;
 
 
@@ -13,7 +15,7 @@ public class PileApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        //LeakCanary.install(this);
+        LeakCanary.install(this);
        // Stetho.initializeWithDefaults(this);
 
     }

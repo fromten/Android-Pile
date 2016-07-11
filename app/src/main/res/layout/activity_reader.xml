@@ -28,6 +28,4 @@
         style="@style/CircleProgress"
         android:layout_centerInParent="true"/>
 
-
-
 </RelativeLayout>

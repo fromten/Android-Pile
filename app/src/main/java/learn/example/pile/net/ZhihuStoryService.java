@@ -13,39 +13,26 @@ import okhttp3.Request;
 /**
  * Created on 2016/7/9.
  */
-public class ZhihuStoryService extends Service<ZhihuStories> {
+public class ZhihuStoryService extends GsonService {
 
+    private static final String TAG = "ZhihuStoryService";
 
-    public ZhihuStoryService(ServiceListener<ZhihuStories> listener) {
-        super(listener);
-    }
-
-    public void getStories()
+    public void getStories(Callback<ZhihuStories> callback)
     {
-        performRequest(Zhihu.STORY_URL);
+        performRequest(Zhihu.STORY_URL,callback);
     }
 
-    public void getStoriesAtTime(String date)
+    public void getStoriesAtTime(String date,Callback<ZhihuStories> callback)
     {
-        performRequest(Zhihu.STORY_URL_AT_TIME+date);
+        performRequest(Zhihu.STORY_URL_AT_TIME+date,callback);
     }
 
 
 
-    private void performRequest(String url)
+    private void performRequest(String url,Callback<ZhihuStories> callback)
     {
         Request req=new Request.Builder().url(url).build();
-        OkHttpRequest.getInstanceUnsafe().newGsonRequest(ZhihuStories.class, req, new OkHttpRequest.RequestCallback<ZhihuStories>() {
-            @Override
-            public void onSuccess(ZhihuStories res) {
-                 success(res);
-            }
-
-            @Override
-            public void onFailure(String msg) {
-                failure(msg);
-            }
-        });
+        newRequest(TAG,ZhihuStories.class,req,callback);
     }
 
 

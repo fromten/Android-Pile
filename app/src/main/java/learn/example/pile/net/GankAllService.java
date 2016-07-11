@@ -1,7 +1,5 @@
 package learn.example.pile.net;
 
-import android.content.Context;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -14,46 +12,29 @@ import okhttp3.Request;
 /**
  * Created on 2016/7/2.
  */
-public class GankAllService extends Service<GankCommonJson> {
-    public GankAllService(ServiceListener<GankCommonJson> listener) {
-        super(listener);
-    }
+public class GankAllService extends GsonService{
+    private static final String TAG = "GankAllService";
 
-    public void getAndroidPostList(int page,int num)
+    public void getAndroidPostList(int page,int num,Callback<GankAllService> callback)
     {
         String url=generateUrl("Android",page,num);
         if (url==null)
         {
-            failure("request gank android  url encode error");
+            callback.onFailure("request gank android  url encode error");
         }else {
             Request req=new Request.Builder().url(url).build();
-            performRequest(req);
+            performRequest(req,callback);
         }
     }
 
 
 
-    private void performRequest(Request request)
+    private void performRequest(Request request,Callback<GankAllService> callback)
     {
         if (request==null){
             throw  new NullPointerException("No can perform request,Request must is valid object");
         }else{
-            OkHttpRequest.getInstanceUnsafe().newGsonRequest(GankCommonJson.class, request, new OkHttpRequest.RequestCallback<GankCommonJson>() {
-                @Override
-                public void onSuccess(GankCommonJson res) {
-                    if (res.isError())
-                    {
-                        failure("Gank data request fail");
-                    }else {
-                        success(res);
-                    }
-                }
-
-                @Override
-                public void onFailure(String msg) {
-                    failure(msg);
-                }
-            });
+           newRequest(TAG,GankAllService.class,request,callback);
         }
     }
 

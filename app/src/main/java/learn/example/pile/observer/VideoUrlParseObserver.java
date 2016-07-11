@@ -59,7 +59,7 @@ public class VideoUrlParseObserver{
        boolean fromMiaopai=srcUrl.contains("miaopai.com");
         String[] result=new String[2];
         try {
-            Response res=OkHttpRequest.getInstanceUnsafe().syncRequest(generateRequest(srcUrl));
+            Response res=OkHttpRequest.getInstanceUnsafe().newCall(generateRequest(srcUrl)).execute();
             if (res.isSuccessful()) {
                 String html=res.body().string();
                 if (!TextUtils.isEmpty(html))

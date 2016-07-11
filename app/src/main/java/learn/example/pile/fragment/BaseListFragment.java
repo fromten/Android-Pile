@@ -157,7 +157,7 @@ public abstract class BaseListFragment extends Fragment implements CommonRecycle
 
 
     public void notifyLoadError(){
-         mCommonRecyclerView.post(mErrorRunnable);
+         mCommonRecyclerView.postDelayed(mErrorRunnable,500);
     }
 
     /**
@@ -168,6 +168,12 @@ public abstract class BaseListFragment extends Fragment implements CommonRecycle
     {
         mCommonRecyclerView.cancelLoadMore();
         mLoadMoreView=mCommonRecyclerView.getFooterView();
+
+        if (mLoadMoreView==null)
+        {
+            return;
+        }
+
         View view= mLoadMoreView.findViewById(R.id.footer_text);
         if (view!=null)
         {

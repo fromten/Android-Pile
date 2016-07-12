@@ -18,13 +18,17 @@ public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() {
 
-        System.out.print(linkTag("www.qq.."));
-        System.out.print(scriptTag("www.qq.."));
+        System.out.print(getMyCss());
     }
 
-    public String linkTag(String css)
+    public String getMyCss()
     {
-        return "<link rel='stylesheet' type='text/css' href='"+css+"'>";
+        String str="<style type='text/css'>\n" +
+                ".headline .img-place-holder {\n" +
+                "  height: 200px;\n" +
+                "}"+
+                "\n</style>";
+        return str;
     }
 
     public String scriptTag(String js)

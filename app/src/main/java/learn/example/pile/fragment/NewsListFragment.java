@@ -44,14 +44,13 @@ public class NewsListFragment extends BaseListFragment implements GsonService.Ca
 
     @Override
     public void onSuccess(NewsJsonData data) {
+         notifyLoadSuccess();
          mNewsListAdapter.addAll(data.getNewsItemList());
-         hideRefreshProgressbar();
     }
 
     @Override
     public void onFailure(String msg) {
         notifyLoadError();
-        hideRefreshProgressbar();
     }
 
     @Override

@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.nio.charset.Charset;
 
@@ -38,7 +39,7 @@ public class ZhiHuMsgListAdapter extends SaveStateAbleAdapter<ZhiHuMsgListAdapte
     public void updaterItemView(ZhihuListViewHolder holder, int position) {
         Zhihu.Story story=getItem(position);
 
-        Glide.with(holder.itemView.getContext()).load(story.getImageUrls()[0]).fitCenter().into(holder.image);
+        Glide.with(holder.itemView.getContext()).load(story.getImageUrls()[0]).diskCacheStrategy(DiskCacheStrategy.SOURCE).fitCenter().into(holder.image);
         holder.title.setText(story.getTitle());
         holder.pushDate.setText(story.getDate());
         holder.itemView.setTag(story.getId());

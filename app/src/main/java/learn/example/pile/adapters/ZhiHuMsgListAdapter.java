@@ -11,8 +11,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
-import java.nio.charset.Charset;
-
 import learn.example.joke.R;
 import learn.example.pile.object.Zhihu;
 import learn.example.pile.util.ActivityLauncher;
@@ -47,7 +45,7 @@ public class ZhiHuMsgListAdapter extends SaveStateAbleAdapter<ZhiHuMsgListAdapte
 
     @Override
     public ZhihuListViewHolder getItemViewHolder(ViewGroup parent, int type) {
-        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_read_adpter_view,parent,false);
+        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.adpter_read,parent,false);
         ZhihuListViewHolder holder=new ZhihuListViewHolder(view);
         view.setOnClickListener(viewClick);
         return holder;

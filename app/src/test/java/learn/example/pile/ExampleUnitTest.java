@@ -6,8 +6,7 @@ package learn.example.pile;
 
 import org.junit.Test;
 
-
-
+import learn.example.pile.util.TimeUtil;
 
 
 /**
@@ -18,7 +17,7 @@ public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() {
 
-        System.out.print(getMyCss());
+        System.out.print(TimeUtil.formatYMD(1413600071));
     }
 
     public String getMyCss()

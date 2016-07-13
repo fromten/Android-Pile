@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
+import learn.example.pile.fragment.CommentFragment;
 import learn.example.pile.fragment.JokeListFragment;
 import learn.example.pile.fragment.NewsListFragment;
 import learn.example.pile.fragment.ReadListFragment;

@@ -37,7 +37,7 @@ public class VideoListAdapter extends SaveStateAbleAdapter<VideoListAdapter.Vide
 
     @Override
     public VideoViewHolder getItemViewHolder(ViewGroup parent, int type) {
-        View v= LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_video_adpter_view,parent,false);
+        View v= LayoutInflater.from(parent.getContext()).inflate(R.layout.adpter_video,parent,false);
         return new VideoViewHolder(v);
     }
 

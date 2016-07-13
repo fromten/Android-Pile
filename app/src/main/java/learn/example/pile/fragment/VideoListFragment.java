@@ -52,8 +52,13 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
 
     @Override
     public void onSuccess(VideoJsonData data) {
-        notifyLoadSuccess();
+        if (data==null||data.isError()||data.getVideoItemList()==null||data.getVideoItemList().isEmpty())
+        {
+            notifyLoadError();
+            return;
+        }
 
+        notifyLoadSuccess();
         hideRefreshProgressbar();
         mAdapter.addAll(data.getVideoItemList());
         currentPage++;

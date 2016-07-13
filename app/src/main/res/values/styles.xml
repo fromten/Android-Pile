@@ -23,6 +23,7 @@
     </style>
     <style name="ContentText" parent="TextAppearance.AppCompat.Small">
         <item name="android:padding">4dp</item>
+        <item name="android:textColor">@color/black_light</item>
     </style>
 
     <style name="CircleProgress" parent="Base.Widget.AppCompat.ProgressBar">

@@ -14,6 +14,13 @@ import okhttp3.Request;
 public class GsonService implements IService{
     private HashMap<String,Call> map=new HashMap<>();
 
+    public <T> void newRequest(final String tag, Class<T> clazz, String url, final IService.Callback<T> callback)
+    {
+        Request request=new Request.Builder().url(url).build();
+        newRequest(tag,clazz,request,callback);
+    }
+
+
     public <T> void newRequest(final String tag, Class<T> clazz, Request request, final IService.Callback<T> callback)
     {
        final Call call=OkHttpRequest.getInstanceUnsafe().newGsonRequest(clazz, request, new OkHttpRequest.RequestCallback<T>() {
@@ -29,7 +36,7 @@ public class GsonService implements IService{
                remove(tag);
            }
        });
-       addToMap(tag,call);
+        addToMap(tag,call);
     }
 
     protected void addToMap(String tag,Call call)

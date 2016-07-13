@@ -120,8 +120,6 @@ public abstract class BaseListFragment extends Fragment implements CommonRecycle
 
 
 
-
-
     public void setLayoutManager(RecyclerView.LayoutManager manager)
     {
         mCommonRecyclerView.setLayoutManager(manager);
@@ -137,7 +135,7 @@ public abstract class BaseListFragment extends Fragment implements CommonRecycle
     }
 
 
-    private void setEmptyViewText(CharSequence charSequence)
+    public void setEmptyViewText(CharSequence charSequence)
     {
         if (mEmptyView==null)
         {
@@ -178,6 +176,7 @@ public abstract class BaseListFragment extends Fragment implements CommonRecycle
      */
     public void notifyLoadSuccess()
     {
+
         if(mCommonRecyclerView.isRefreshing())
         {
             hideRefreshProgressbar();

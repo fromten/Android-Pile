@@ -1,7 +1,8 @@
 package learn.example.pile;
 
 
-import android.gesture.GestureUtils;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -9,13 +10,13 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
@@ -54,7 +55,7 @@ public class ReaderActivity extends AppCompatActivity implements IService.Callba
     private ReadContentFragment mReadContentFragment;
     private CommentFragment mCommentFragment;
 
-    private TouchDirectionEvent mTouchDirectionEvent;
+    private MoveEvent mMoveEventHandle;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,35 +87,37 @@ public class ReaderActivity extends AppCompatActivity implements IService.Callba
 
     private void setTouchHandle()
     {
-        mTouchDirectionEvent=new TouchDirectionEvent();
+        mMoveEventHandle=new MoveEvent();
         //管理屏幕手势移动方向
-        mTouchDirectionEvent.setListener(new TouchDirectionEvent.MoveDirectionListener() {
+        mMoveEventHandle.setListener(new MoveEvent.MoveListener() {
             @Override
-            public boolean toRight(int offset) {
-                if (offset>=200)
-                {
-                    onBackPressed();
-                    return true;
-                }
-                return false;
-            }
+            public boolean onMove(float x, float dx, float y, float dy) {
 
-            @Override
-            public boolean toLeft(int offset) {
-                if (offset>=200)
+                int offsetY= (int) (y-dy);
+                if (offsetY<=40)
                 {
-                    showCommentFragment();
-                    return true;
+                    int offsetX= (int) (x-dx);
+                   if (Math.abs(offsetX)>=200)
+                   {
+                       if (offsetX>0)
+                       {
+                           onBackPressed();
+                       }else {
+                           showCommentFragment();
+                       }
+                       return true;
+                   }
                 }
                 return false;
             }
         });
+
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.reader_menu,menu);
+        mToolbar.inflateMenu(R.menu.reader_menu);
         return true;
     }
 
@@ -145,7 +148,8 @@ public class ReaderActivity extends AppCompatActivity implements IService.Callba
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        mTouchDirectionEvent.onTouchEvent(ev);
+        //监听Activity屏幕,左右移动,
+        mMoveEventHandle.onTouchEvent(ev);
         return super.dispatchTouchEvent(ev);
     }
 
@@ -156,11 +160,17 @@ public class ReaderActivity extends AppCompatActivity implements IService.Callba
     {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        //设置箭头为黑色
+        final Drawable upArrow = getResources().getDrawable(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+        upArrow.setColorFilter(getResources().getColor(R.color.black_light), PorterDuff.Mode.SRC_ATOP);
+        getSupportActionBar().setHomeAsUpIndicator(upArrow);;
     }
 
     /**
      * 显示评论Fragment
-     * 如果Fragment已经创建过,并当前是隐藏时,会显示它
+     * 如果Fragment已经创建过,并当前是隐藏时,显示它
+     *
      */
     public void  showCommentFragment()
     {
@@ -229,7 +239,6 @@ public class ReaderActivity extends AppCompatActivity implements IService.Callba
                 mImageView.setImageDrawable(resource);
                 mImgSource.setText(imgSource);
                 showMenuItem();
-
             }
         });
 
@@ -246,17 +255,22 @@ public class ReaderActivity extends AppCompatActivity implements IService.Callba
     }
 
 
-    private static class TouchDirectionEvent {
+    private static class MoveEvent {
         private boolean inPress;
         private float downX;
         private float downY;
 
-        private MoveDirectionListener mListener;
-        public interface MoveDirectionListener {
-            //返回值代表是否拦截接下来事件
-
-            boolean toRight(int offset);
-            boolean toLeft(int offset);
+        private MoveListener mListener;
+        public interface MoveListener {
+            /**
+             *
+             * @param x 当前x
+             * @param dx 按下的x
+             * @param y 当前y
+             * @param dy 按下的y
+             * @return 是否拦截接下来事件
+             */
+            boolean onMove(float x,float dx,float y,float dy);
         }
 
         public boolean onTouchEvent(MotionEvent event) {
@@ -275,39 +289,26 @@ public class ReaderActivity extends AppCompatActivity implements IService.Callba
                 if (inPress) {
                     float x=event.getX();
                     float y=event.getY();
-                    if (Math.abs(y-downY)>=80)
-                    {
-                        inPress=false;
-                        return true;
-                    }
-
-                    int offsetX= (int) (x-downX);
-                    if (offsetX>=0)
-                    {
-                        inPress=!mListener.toRight(offsetX);
-                    }else {
-                        inPress=!mListener.toLeft(Math.abs(offsetX));
-                    }
+                    inPress=!mListener.onMove(x,downX,y,downY);
                 }
             }
             return true;
         }
 
-        public MoveDirectionListener getListener() {
+        public MoveListener getListener() {
             return mListener;
         }
 
-        public void setListener(MoveDirectionListener listener) {
+        public void setListener(MoveListener listener) {
             mListener = listener;
         }
     }
 
 
 
-     private static class ReadContentFragment extends Fragment implements IService.Callback<ZhihuNewsContent> {
+     private class ReadContentFragment extends Fragment implements IService.Callback<ZhihuNewsContent> {
 
         private WebView mWebView;
-        private ReaderActivity.HtmlHelper mHtmlHelper;
 
         @Nullable
         @Override
@@ -325,6 +326,8 @@ public class ReaderActivity extends AppCompatActivity implements IService.Callba
             mWebView.getSettings().setBuiltInZoomControls(true);
             mWebView.getSettings().setDisplayZoomControls(false);
             mWebView.getSettings().setLoadsImagesAutomatically(true);
+            mWebView.getSettings().setJavaScriptEnabled(true);
+            mWebView.addJavascriptInterface(new HtmlCommentClick(),"ReaderActivity");
         }
 
          /**
@@ -333,10 +336,8 @@ public class ReaderActivity extends AppCompatActivity implements IService.Callba
           */
         @Override
         public void onSuccess(ZhihuNewsContent data) {
-            if (mHtmlHelper==null)
-            {
-                mHtmlHelper=new ReaderActivity.HtmlHelper();
-            }
+
+            ReaderActivity.HtmlHelper mHtmlHelper=new ReaderActivity.HtmlHelper();
             String html=mHtmlHelper.generateHtml(data.getBody(),data.getCss(),data.getJs());
             mWebView.loadDataWithBaseURL(null,html,"text/html","UTF-8",null);
         }
@@ -349,8 +350,44 @@ public class ReaderActivity extends AppCompatActivity implements IService.Callba
         public void onFailure(String message) {
 
         }
-    }
 
+         @Override
+         public void onPause() {
+             super.onPause();
+             mWebView.onPause();
+         }
+
+         @Override
+         public void onResume() {
+             super.onStart();
+             mWebView.onResume();
+         }
+
+         @Override
+         public void onDestroy() {
+             mWebView.removeAllViews();
+             mWebView.destroy();
+             super.onDestroy();
+         }
+     }
+
+    private class HtmlCommentClick{
+        public HtmlCommentClick() {
+        }
+
+        @JavascriptInterface()
+        public void showCommentFragment()
+        {
+            //正确的姿势使用这个方法
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ReaderActivity.this.showCommentFragment();
+                }
+            });
+
+        }
+    }
 
 
 
@@ -358,12 +395,20 @@ public class ReaderActivity extends AppCompatActivity implements IService.Callba
 
         private StringBuilder mBuilder=new StringBuilder();
 
+        /**
+         * 生成完整的Html页面
+         * @param body
+         * @param css
+         * @param js
+         * @return Html
+         */
         public String generateHtml(String body,List<String> css, List<String> js)
         {
             mBuilder.append("<html lang='zh-CN'>");
             mBuilder.append(toHeadTag(css,js));
             mBuilder.append("<body>");
             mBuilder.append(body);
+            mBuilder.append(getMyJs());//插入一段代码
             mBuilder.append("</body>");
             mBuilder.append("</html>");
             return mBuilder.toString();
@@ -400,6 +445,29 @@ public class ReaderActivity extends AppCompatActivity implements IService.Callba
                     "}"+
                     "</style>";
             return str;
+        }
+
+        /**
+         * 替换知乎页面的评论点击
+         * 调用
+         * @see ReaderActivity.showCommentFragment();
+         * @return javascript text
+         */
+        public String getMyJs()
+        {
+            String script="<script type=\"text/javascript\">\n" +
+                    "\n" +
+                    "var aTag=document.getElementsByTagName('a');\n" +
+                    "aTag=aTag[aTag.length-1];\n" +
+                    "aTag.removeAttribute('href');" +
+                    "aTag.setAttribute('onClick',\"showAndroidComment()\");\n" +
+                    "\n" +
+                    "function showAndroidComment()\n" +
+                    "{\n" +
+                    "  ReaderActivity.showCommentFragment();\n" +
+                    "}\n" +
+                    "</script>";
+            return script;
         }
 
 

@@ -36,6 +36,7 @@
                   android:windowSoftInputMode="adjustUnspecified|adjustResize">
         </activity>
         <activity android:name="learn.example.pile.ReaderActivity"
+                  android:theme="@style/ReaderTheme"
                   android:label="阅读"/>
     </application>
 

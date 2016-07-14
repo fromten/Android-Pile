@@ -189,7 +189,11 @@ public abstract class BaseListFragment extends Fragment implements CommonRecycle
      */
     private void loadError()
     {
-        
+        if (mCommonRecyclerView==null)
+        {
+            return;
+        }
+
         if (mCommonRecyclerView.isRefreshing())
         {
             hideRefreshProgressbar();

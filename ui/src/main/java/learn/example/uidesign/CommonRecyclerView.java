@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 
 /**
@@ -266,10 +267,28 @@ public class CommonRecyclerView extends FrameLayout implements SwipeRefreshLayou
         {
             return LayoutInflater.from(parent.getContext()).inflate(R.layout.footerview,parent,false);
         }
+
+        public void updateFooterView(RecyclerView.ViewHolder holder,int position){
+            if (getItemSize()<=0)
+            {
+                holder.itemView.setVisibility(View.INVISIBLE);
+            }else {
+                View view= holder.itemView.findViewById(R.id.footer_text);
+                if (view!=null)
+                {
+                    TextView textView= (TextView) view;
+                    textView.setText(null);
+                }
+                holder.itemView.setVisibility(View.VISIBLE);
+            }
+        }
+
+
+
         public abstract int getItemSize();
         public abstract void updaterItemView(VH  holder, int position);
         public abstract VH getItemViewHolder(ViewGroup parent,int type);
-        public abstract void updateFooterView(RecyclerView.ViewHolder holder,int position);
+
     }
 
 

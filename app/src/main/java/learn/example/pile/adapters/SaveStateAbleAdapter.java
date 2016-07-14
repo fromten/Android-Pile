@@ -65,26 +65,8 @@ public abstract class SaveStateAbleAdapter<VH extends RecyclerView.ViewHolder,D 
         return mDataList;
     }
 
-    @Override
-    public void updateFooterView(RecyclerView.ViewHolder holder, int position) {
-          if (mDataList.isEmpty())
-          {
-              holder.itemView.setVisibility(View.INVISIBLE);
-          }else {
-              View view= holder.itemView.findViewById(R.id.footer_text);
-             if (view!=null)
-             {
-                 TextView textView= (TextView) view;
-                 textView.setText(null);
-             }
-              holder.itemView.setVisibility(View.VISIBLE);
-          }
-    }
 
-    @Override
-    protected final View onCreateFooterView(ViewGroup parent) {
-        return super.onCreateFooterView(parent);
-    }
+
 
     @Override
     public int getItemSize() {

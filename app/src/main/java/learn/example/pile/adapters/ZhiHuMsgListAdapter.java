@@ -9,8 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-
-import java.nio.charset.Charset;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import learn.example.joke.R;
 import learn.example.pile.object.Zhihu;
@@ -38,7 +37,7 @@ public class ZhiHuMsgListAdapter extends SaveStateAbleAdapter<ZhiHuMsgListAdapte
     public void updaterItemView(ZhihuListViewHolder holder, int position) {
         Zhihu.Story story=getItem(position);
 
-        Glide.with(holder.itemView.getContext()).load(story.getImageUrls()[0]).fitCenter().into(holder.image);
+        Glide.with(holder.itemView.getContext()).load(story.getImageUrls()[0]).diskCacheStrategy(DiskCacheStrategy.SOURCE).fitCenter().into(holder.image);
         holder.title.setText(story.getTitle());
         holder.pushDate.setText(story.getDate());
         holder.itemView.setTag(story.getId());
@@ -46,7 +45,7 @@ public class ZhiHuMsgListAdapter extends SaveStateAbleAdapter<ZhiHuMsgListAdapte
 
     @Override
     public ZhihuListViewHolder getItemViewHolder(ViewGroup parent, int type) {
-        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_read_adpter_view,parent,false);
+        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.adpter_read,parent,false);
         ZhihuListViewHolder holder=new ZhihuListViewHolder(view);
         view.setOnClickListener(viewClick);
         return holder;

@@ -59,7 +59,13 @@ public class JokeListFragment extends BaseListFragment implements IService.Callb
 
     @Override
     public void onSuccess(JokeJsonData data) {
-        if (data==null)return;
+        if (data==null||data.getResCode()!=0)
+        {
+            notifyLoadError();
+            return;
+        }
+
+        notifyLoadSuccess();
 
         mJokeListAdapter.addAll(data.getResBody().getJokeContentList());
 
@@ -67,13 +73,12 @@ public class JokeListFragment extends BaseListFragment implements IService.Callb
         //将数据保存到数据库
         saveToDatabase(data.getResBody().getJokeContentList());
 
-        hideRefreshProgressbar();
+
     }
 
     @Override
     public void onFailure(String msg) {
          notifyLoadError();
-         hideRefreshProgressbar();
     }
 
     @Override

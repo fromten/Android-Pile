@@ -34,7 +34,7 @@ public class NewsListAdapter extends SaveStateAbleAdapter<NewsListAdapter.NewsVi
 
     @Override
     public NewsViewHolder getItemViewHolder(ViewGroup parent, int type) {
-        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_news_adpter_view,parent,false);
+        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.adpter_news,parent,false);
         view.setOnClickListener(mItemClick);
         return new NewsViewHolder(view);
     }

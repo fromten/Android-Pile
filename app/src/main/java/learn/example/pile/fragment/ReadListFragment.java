@@ -54,6 +54,8 @@ public class ReadListFragment extends BaseListFragment implements IService.Callb
 
     @Override
     public void onSuccess(ZhihuStories data) {
+        notifyLoadSuccess();
+
         date=data.getDate();
         mAdapter.addAll(Zhihu.valueOf(data));
         hideRefreshProgressbar();
@@ -63,7 +65,6 @@ public class ReadListFragment extends BaseListFragment implements IService.Callb
     public void onFailure(String msg) {
         Log.d(TAG,msg );
         notifyLoadError();
-        hideRefreshProgressbar();
     }
 
     @Override

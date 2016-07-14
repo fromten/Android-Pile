@@ -52,6 +52,13 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
 
     @Override
     public void onSuccess(VideoJsonData data) {
+        if (data==null||data.isError()||data.getVideoItemList()==null||data.getVideoItemList().isEmpty())
+        {
+            notifyLoadError();
+            return;
+        }
+
+        notifyLoadSuccess();
         hideRefreshProgressbar();
         mAdapter.addAll(data.getVideoItemList());
         currentPage++;
@@ -62,7 +69,6 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
     @Override
     public void onFailure(String msg) {
         notifyLoadError();
-        hideRefreshProgressbar();
     }
 
     @Override

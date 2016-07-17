@@ -25,7 +25,7 @@ import com.bumptech.glide.Glide;
 
 import java.io.File;
 
-import learn.example.joke.R;
+import learn.example.pile.R;
 import learn.example.pile.AppGlideModule;
 import learn.example.pile.util.AccessAppDataHelper;
 

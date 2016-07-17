@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import learn.example.joke.R;
+import learn.example.pile.R;
 import learn.example.pile.jsonbean.VideoJsonData;
 import learn.example.pile.util.ActivityLauncher;
 
@@ -21,7 +21,13 @@ public class VideoListAdapter extends SaveStateAbleAdapter<VideoListAdapter.Vide
 
 
     @Override
-    public void updaterItemView(VideoViewHolder holder, int position) {
+    public VideoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v= LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_video,parent,false);
+        return new VideoViewHolder(v);
+    }
+
+    @Override
+    public void onBindViewHolder(VideoViewHolder holder, int position) {
         VideoJsonData.VideoItem item=getItem(position);
         holder.desc.setText(item.getDesc());
         if(item.getImgUrl()!=null)
@@ -33,12 +39,6 @@ public class VideoListAdapter extends SaveStateAbleAdapter<VideoListAdapter.Vide
         }
         holder.videoPlay.setTag(position);
         holder.videoPlay.setOnClickListener(this);
-    }
-
-    @Override
-    public VideoViewHolder getItemViewHolder(ViewGroup parent, int type) {
-        View v= LayoutInflater.from(parent.getContext()).inflate(R.layout.adpter_video,parent,false);
-        return new VideoViewHolder(v);
     }
 
     @Override

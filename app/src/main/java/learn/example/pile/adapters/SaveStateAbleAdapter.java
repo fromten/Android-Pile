@@ -2,20 +2,15 @@ package learn.example.pile.adapters;
 
 import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import learn.example.joke.R;
-import learn.example.uidesign.CommonRecyclerView;
-
 /**
  * Created on 2016/6/29.
  */
-public abstract class SaveStateAbleAdapter<VH extends RecyclerView.ViewHolder,D extends Parcelable> extends CommonRecyclerView.FooterViewAdapter<VH> {
+public abstract class SaveStateAbleAdapter<VH extends RecyclerView.ViewHolder,D extends Parcelable> extends RecyclerView.Adapter<VH> {
     private List<D> mDataList;
 
     public SaveStateAbleAdapter() {
@@ -26,13 +21,13 @@ public abstract class SaveStateAbleAdapter<VH extends RecyclerView.ViewHolder,D 
     {
         if (item==null)return;
         mDataList.add(item);
-        notifyItemInserted(getItemSize());
+        notifyItemInserted(getItemCount());
     }
     public void addAll(List<D> items)
     {
         if (items==null||items.isEmpty())return;
         mDataList.addAll(items);
-        notifyItemInserted(getItemSize());
+        notifyItemInserted(getItemCount());
     }
 
     public boolean removeItem(D item)
@@ -55,7 +50,7 @@ public abstract class SaveStateAbleAdapter<VH extends RecyclerView.ViewHolder,D 
         return mDataList.get(position);
     }
 
-    public List<D> getAll()
+    public List<D> getList()
     {
         return mDataList;
     }
@@ -66,11 +61,14 @@ public abstract class SaveStateAbleAdapter<VH extends RecyclerView.ViewHolder,D 
     }
 
 
-
+    @Override
+    public abstract VH onCreateViewHolder(ViewGroup parent, int viewType);
 
     @Override
-    public int getItemSize() {
+    public abstract void onBindViewHolder(VH holder, int position);
+
+    @Override
+    public int getItemCount() {
         return mDataList.size();
     }
-
 }

@@ -15,8 +15,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
-import learn.example.joke.R;
-
 /**
  * Created on 2016/6/23.
  */

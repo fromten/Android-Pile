@@ -11,7 +11,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 
-import learn.example.joke.R;
 import learn.example.pile.adapters.ChatListAdapter;
 import learn.example.pile.jsonbean.TuringMachineJson;
 import learn.example.pile.net.IService;

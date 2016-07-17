@@ -1,18 +1,14 @@
 package learn.example.pile;
 
-import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
 
-import learn.example.joke.R;
 import learn.example.uidesign.VolumeProgressView;
 
 /**

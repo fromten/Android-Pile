@@ -12,7 +12,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import learn.example.joke.R;
+import learn.example.pile.R;
 import learn.example.pile.object.ChatInfo;
 
 /**

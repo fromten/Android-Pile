@@ -2,17 +2,14 @@ package learn.example.pile.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.View;
-
-import java.util.List;
 
 import learn.example.pile.adapters.VideoListAdapter;
 import learn.example.pile.jsonbean.VideoJsonData;
 import learn.example.pile.net.GankVideoService;
 import learn.example.pile.net.IService;
 import learn.example.pile.util.AccessAppDataHelper;
-import learn.example.uidesign.CommonRecyclerView;
 
 /**
  * Created on 2016/5/25.
@@ -20,7 +17,6 @@ import learn.example.uidesign.CommonRecyclerView;
 public class VideoListFragment extends BaseListFragment implements IService.Callback<VideoJsonData> {
 
     private VideoListAdapter mAdapter;
-    private static final String TAG="VideoListFragment";
 
 
     private static final int MAX_REQNUM =5;
@@ -28,14 +24,14 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
     private GankVideoService mService;
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view,savedInstanceState);
         mAdapter=new VideoListAdapter();
         setAdapter(mAdapter);
-        setLayoutManager(new LinearLayoutManager(getContext()));
         currentPage=AccessAppDataHelper.readInteger(getActivity(),AccessAppDataHelper.KEY_VIDEO_PAGE,1);
         mService=new GankVideoService();
         if (savedInstanceState==null)
         {
-            showRefreshProgressbar();
+            setRefreshing(true);
             mService.getVideo(currentPage, MAX_REQNUM,this);
         }
     }
@@ -52,33 +48,34 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
 
     @Override
     public void onSuccess(VideoJsonData data) {
+        Log.d("TAG", "onSuccess");
         if (data==null||data.isError()||data.getVideoItemList()==null||data.getVideoItemList().isEmpty())
         {
-            notifyLoadError();
+            Log.d("TAG", "notifyError");
+            notifyError();
             return;
         }
-
-        notifyLoadSuccess();
-        hideRefreshProgressbar();
         mAdapter.addAll(data.getVideoItemList());
         currentPage++;
+        notifySuccess();
     }
 
 
 
     @Override
     public void onFailure(String msg) {
-        notifyLoadError();
+        Log.d("TAG",msg);
+         notifyError();
     }
 
     @Override
-    public void refresh(CommonRecyclerView recyclerView) {
+    public void onRefresh() {
         mAdapter.clear();
         mService.getVideo(currentPage, MAX_REQNUM,this);
     }
 
     @Override
-    public void loadMore(CommonRecyclerView recyclerView) {
+    public void onLoadMore() {
         mService.getVideo(currentPage,MAX_REQNUM,this);
     }
 

@@ -28,7 +28,6 @@ import com.bumptech.glide.request.target.ImageViewTarget;
 
 import java.util.List;
 
-import learn.example.joke.R;
 import learn.example.pile.fragment.CommentFragment;
 import learn.example.pile.jsonbean.ZhihuNewsContent;
 import learn.example.pile.net.IService;
@@ -94,10 +93,10 @@ public class ReaderActivity extends AppCompatActivity implements IService.Callba
             public boolean onMove(float x, float dx, float y, float dy) {
 
                 int offsetY= (int) (y-dy);
-                if (offsetY<=40)
+                if (Math.abs(offsetY)<=30)
                 {
                     int offsetX= (int) (x-dx);
-                   if (Math.abs(offsetX)>=200)
+                    if (Math.abs(offsetX)>=200)
                    {
                        if (offsetX>0)
                        {
@@ -198,14 +197,10 @@ public class ReaderActivity extends AppCompatActivity implements IService.Callba
      */
     @Override
     public void onBackPressed() {
-        if (mCommentFragment!=null) {
-            if (mCommentFragment.isVisible()) {
+        if (mCommentFragment!=null&&mCommentFragment.isVisible()) {
                 getSupportFragmentManager().beginTransaction()
                         .setCustomAnimations(R.anim.anim_slide_out_right,R.anim.anim_slide_in_left)
                         .hide(mCommentFragment).commit();
-            } else {
-                super.onBackPressed();
-            }
         }else {
             super.onBackPressed();
         }

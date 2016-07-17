@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
-import learn.example.joke.R;
+import learn.example.pile.R;
 import learn.example.pile.object.Zhihu;
 import learn.example.pile.util.ActivityLauncher;
 
@@ -20,7 +20,6 @@ import learn.example.pile.util.ActivityLauncher;
  */
 public class ZhiHuMsgListAdapter extends SaveStateAbleAdapter<ZhiHuMsgListAdapter.ZhihuListViewHolder,Zhihu.Story> {
 
-    private String formatDate;
 
     private View.OnClickListener viewClick=new View.OnClickListener() {
         @Override
@@ -32,23 +31,22 @@ public class ZhiHuMsgListAdapter extends SaveStateAbleAdapter<ZhiHuMsgListAdapte
     };
 
 
+    @Override
+    public ZhihuListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.adpter_read,parent,false);
+        ZhihuListViewHolder holder=new ZhihuListViewHolder(view);
+        view.setOnClickListener(viewClick);
+        return holder;
+    }
 
     @Override
-    public void updaterItemView(ZhihuListViewHolder holder, int position) {
+    public void onBindViewHolder(ZhihuListViewHolder holder, int position) {
         Zhihu.Story story=getItem(position);
 
         Glide.with(holder.itemView.getContext()).load(story.getImageUrls()[0]).diskCacheStrategy(DiskCacheStrategy.SOURCE).fitCenter().into(holder.image);
         holder.title.setText(story.getTitle());
         holder.pushDate.setText(story.getDate());
         holder.itemView.setTag(story.getId());
-    }
-
-    @Override
-    public ZhihuListViewHolder getItemViewHolder(ViewGroup parent, int type) {
-        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.adpter_read,parent,false);
-        ZhihuListViewHolder holder=new ZhihuListViewHolder(view);
-        view.setOnClickListener(viewClick);
-        return holder;
     }
 
     public static class ZhihuListViewHolder extends RecyclerView.ViewHolder{

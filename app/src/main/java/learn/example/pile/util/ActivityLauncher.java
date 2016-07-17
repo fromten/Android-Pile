@@ -9,7 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 
-import learn.example.joke.R;
+import learn.example.pile.R;
 import learn.example.pile.ChatActivity;
 import learn.example.pile.PhotoActivity;
 import learn.example.pile.ReaderActivity;

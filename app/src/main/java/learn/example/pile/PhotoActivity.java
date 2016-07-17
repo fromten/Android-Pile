@@ -8,7 +8,6 @@ import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
 
-import learn.example.joke.R;
 import learn.example.pile.util.UrlCheck;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;

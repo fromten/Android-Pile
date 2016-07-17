@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import learn.example.joke.R;
+import learn.example.pile.R;
 import learn.example.pile.jsonbean.JokeJsonData;
 import learn.example.pile.util.ActivityLauncher;
 import learn.example.pile.util.UrlCheck;
@@ -27,7 +27,35 @@ public class JokeListAdapter extends SaveStateAbleAdapter<RecyclerView.ViewHolde
     private static final int IMG_TYPE=2;
 
     @Override
-    public void updaterItemView(RecyclerView.ViewHolder holder, int position) {
+    public int getItemViewType(int position) {
+        JokeJsonData.JokeResBody.JokeItem item=getItem(position);
+        int type;
+        switch (item.getType())
+        {
+            case 1:type=TEXT_TYPE;break;
+            case 2:type=IMG_TYPE;break;
+            default:type=0;break;
+        }
+        return type;
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        RecyclerView.ViewHolder holder = null;
+        View view;
+        if(viewType==TEXT_TYPE)
+        {
+            view=LayoutInflater.from(parent.getContext()).inflate(R.layout.adpter_joke_text_type,parent,false) ;
+            holder=new JokeTextHolder(view);
+        }else if (viewType==IMG_TYPE){
+            view=LayoutInflater.from(parent.getContext()).inflate(R.layout.adpter_joke_img_type,parent,false);
+            holder=new JokeImgHolder(view);
+        }
+        return holder;
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if(holder instanceof JokeTextHolder)
         {
             setTextJoke((JokeTextHolder) holder,position);
@@ -37,37 +65,7 @@ public class JokeListAdapter extends SaveStateAbleAdapter<RecyclerView.ViewHolde
         }
     }
 
-    @Override
-    public RecyclerView.ViewHolder getItemViewHolder(ViewGroup parent, int type) {
-        RecyclerView.ViewHolder holder = null;
-        View view;
-        if(type==TEXT_TYPE)
-        {
-            view=LayoutInflater.from(parent.getContext()).inflate(R.layout.adpter_joke_text_type,parent,false) ;
-            holder=new JokeTextHolder(view);
-        }else if (type==IMG_TYPE){
-            view=LayoutInflater.from(parent.getContext()).inflate(R.layout.adpter_joke_img_type,parent,false);
-            holder=new JokeImgHolder(view);
-        }
-        return holder;
-    }
-
-    @Override
-    public int getViewType(int position) {
-        JokeJsonData.JokeResBody.JokeItem item=getItem(position);
-        int type;
-        switch (item.getType())
-        {
-            case 1:type=TEXT_TYPE;break;
-            case 2:type=IMG_TYPE;break;
-            default:type=super.getViewType(position);
-        }
-        return type;
-    }
-
-
-
-    private void setTextJoke(JokeTextHolder holder,int position){
+    private void setTextJoke(JokeTextHolder holder, int position){
         JokeJsonData.JokeResBody.JokeItem item=getItem(position);
         holder.content.setText(Html.fromHtml(item.getText()));
         String html="<p>"+item.getTitle()+"<small>"+item.getCreateTime().substring(0,10)+"</small></p>";

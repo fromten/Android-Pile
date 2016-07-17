@@ -1,7 +1,6 @@
 package learn.example.pile.fragment;
 
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 
 import java.util.List;
@@ -13,7 +12,6 @@ import learn.example.pile.database.DatabaseManager;
 import learn.example.pile.net.IService;
 import learn.example.pile.net.JokeService;
 import learn.example.pile.util.AccessAppDataHelper;
-import learn.example.uidesign.CommonRecyclerView;
 
 /**
  * Created on 2016/5/5.
@@ -32,14 +30,14 @@ public class JokeListFragment extends BaseListFragment implements IService.Callb
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+         super.onViewCreated(view,savedInstanceState);
          mJokeListAdapter=new JokeListAdapter();
          setAdapter(mJokeListAdapter);
-         setLayoutManager(new LinearLayoutManager(getContext()));
          currentDataBasePage=AccessAppDataHelper.readInteger(getActivity(),AccessAppDataHelper.KEY_JOKE_PAGE,1);
           mJokeService=new JokeService();
          if (savedInstanceState==null)
          {
-             showRefreshProgressbar();
+             setRefreshing(true);
              mJokeService.getImageJoke(currentDataBasePage,this);
              mJokeService.getTextJoke(currentDataBasePage,this);
          }
@@ -61,34 +59,32 @@ public class JokeListFragment extends BaseListFragment implements IService.Callb
     public void onSuccess(JokeJsonData data) {
         if (data==null||data.getResCode()!=0)
         {
-            notifyLoadError();
+            notifyError();
             return;
         }
-
-        notifyLoadSuccess();
 
         mJokeListAdapter.addAll(data.getResBody().getJokeContentList());
 
          ++currentDataBasePage;
         //将数据保存到数据库
         saveToDatabase(data.getResBody().getJokeContentList());
-
+        notifySuccess();
 
     }
 
     @Override
     public void onFailure(String msg) {
-         notifyLoadError();
+         notifyError();
     }
 
     @Override
-    public void refresh(CommonRecyclerView recyclerView) {
+    public void onRefresh() {
          mJokeListAdapter.clear();
          requestData();
     }
 
     @Override
-    public void loadMore(CommonRecyclerView recyclerView) {
+    public void onLoadMore() {
         requestData();
     }
 

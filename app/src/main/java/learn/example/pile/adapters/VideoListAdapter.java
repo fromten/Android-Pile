@@ -22,7 +22,7 @@ public class VideoListAdapter extends SaveStateAbleAdapter<VideoListAdapter.Vide
 
     @Override
     public VideoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v= LayoutInflater.from(parent.getContext()).inflate(R.layout.adpter_video,parent,false);
+        View v= LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_video,parent,false);
         return new VideoViewHolder(v);
     }
 

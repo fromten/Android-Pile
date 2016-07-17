@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +28,7 @@ public class CommentListAdapter extends SaveStateAbleAdapter<CommentListAdapter.
 
     @Override
     public CommentViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adpter_comment, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_comment, parent, false);
         CommentViewHolder holder = new CommentViewHolder(view);
         return holder;
     }

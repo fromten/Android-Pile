@@ -45,10 +45,10 @@ public class JokeListAdapter extends SaveStateAbleAdapter<RecyclerView.ViewHolde
         View view;
         if(viewType==TEXT_TYPE)
         {
-            view=LayoutInflater.from(parent.getContext()).inflate(R.layout.adpter_joke_text_type,parent,false) ;
+            view=LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_joke_text_type,parent,false) ;
             holder=new JokeTextHolder(view);
         }else if (viewType==IMG_TYPE){
-            view=LayoutInflater.from(parent.getContext()).inflate(R.layout.adpter_joke_img_type,parent,false);
+            view=LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_joke_img_type,parent,false);
             holder=new JokeImgHolder(view);
         }
         return holder;

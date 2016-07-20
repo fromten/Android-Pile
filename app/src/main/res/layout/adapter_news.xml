@@ -10,12 +10,13 @@
         android:layout_height="80dp"
         android:id="@+id/news_img"
         android:layout_centerVertical="true"
-        android:layout_margin="5dp"/>
+        android:padding="5dp"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/TitleText"
         android:id="@+id/news_title"
+        android:layout_alignTop="@+id/news_img"
         android:layout_toRightOf="@+id/news_img"
         android:layout_toEndOf="@+id/news_img" />
     <TextView
@@ -27,4 +28,11 @@
         android:layout_toRightOf="@+id/news_img"
         android:layout_toEndOf="@+id/news_img"
         style="@style/SummaryText"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/comment"
+        android:layout_below="@+id/news_descr"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"/>
 </RelativeLayout>

@@ -2,39 +2,59 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:padding="@dimen/normal_padding">
+              android:background="?android:attr/selectableItemBackground"
+              android:paddingBottom="@dimen/normal_padding"
+              android:paddingTop="@dimen/normal_padding">
 
+    <ImageView
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:id="@+id/user_pic"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxLines="1"
         android:id="@+id/author"
-        android:gravity="center"
+        android:textColor="@color/blue_light"
+        android:layout_toRightOf="@+id/user_pic"
+        android:layout_toEndOf="@+id/user_pic"
         style="@style/SmallText"/>
 
+    <TextView
+        style="@style/SmallText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/like"
+        android:layout_alignTop="@+id/adress_and_time"
+        android:layout_toLeftOf="@+id/like_ic"
+        android:layout_toStartOf="@+id/like_ic"/>
+
     <ImageView
-        android:layout_width="100dp"
-        android:layout_height="80dp"
-        android:id="@+id/user_pic"
-        android:layout_below="@+id/author"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/like_ic"
+        android:src="@mipmap/ic_like"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/adress_and_time"
+        android:layout_below="@+id/author"
+        android:layout_alignLeft="@+id/author"
+        android:layout_alignStart="@+id/author"
+        style="@style/SmallText"/>
 
     <TextView
         style="@style/ContentText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/content"
+        android:padding="0dp"
+        android:layout_below="@+id/user_pic"
         android:layout_toRightOf="@+id/user_pic"
-        android:layout_toEndOf="@+id/user_pic"
-        android:layout_alignTop="@+id/user_pic"/>
-    <TextView
-        style="@style/SmallText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/like_and_time"
-        android:gravity="end"
-        android:layout_below="@+id/content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
+        android:layout_toEndOf="@+id/user_pic"/>
+
 </RelativeLayout>

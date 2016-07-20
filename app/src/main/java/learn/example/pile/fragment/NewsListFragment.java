@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 
 import learn.example.pile.adapters.NewsListAdapter;
+import learn.example.pile.jsonbean.NetEaseNews;
 import learn.example.pile.jsonbean.NewsJsonData;
 import learn.example.pile.net.GsonService;
 import learn.example.pile.net.NewsService;
@@ -13,12 +14,13 @@ import learn.example.pile.net.NewsService;
 /**
  * Created on 2016/5/7.
  */
-public class NewsListFragment extends BaseListFragment implements GsonService.Callback<NewsJsonData>{
+public class NewsListFragment extends BaseListFragment implements GsonService.Callback<NetEaseNews>{
 
 
     private NewsListAdapter mNewsListAdapter;
     private NewsService mService;
 
+    private int page;
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -28,7 +30,7 @@ public class NewsListFragment extends BaseListFragment implements GsonService.Ca
         if (savedInstanceState==null)
         {
             setRefreshing(true);
-            mService.getNews(this);
+            mService.getNetEaseNews(page,this);
         }
     }
 
@@ -39,9 +41,10 @@ public class NewsListFragment extends BaseListFragment implements GsonService.Ca
     }
 
     @Override
-    public void onSuccess(NewsJsonData data) {
-         mNewsListAdapter.addAll(data.getNewsItemList());
-         notifySuccess();
+    public void onSuccess(NetEaseNews data) {
+        page+=20;
+        mNewsListAdapter.addAll(data.getT1348647909107());
+        notifySuccess();
     }
 
     @Override
@@ -52,11 +55,11 @@ public class NewsListFragment extends BaseListFragment implements GsonService.Ca
     @Override
     public void onRefresh() {
         mNewsListAdapter.clear();
-        mService.getNews(this);
+        mService.getNetEaseNews(page,this);
     }
 
     @Override
     public void onLoadMore() {
-        mService.getNews(this);
+        mService.getNetEaseNews(page,this);
     }
 }

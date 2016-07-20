@@ -17,13 +17,12 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 
 
 import learn.example.pile.R;
-import learn.example.pile.jsonbean.ZhihuComment;
-import learn.example.pile.util.TimeUtil;
+import learn.example.pile.object.Comment;
 
 /**
  * Created on 2016/7/13.
  */
-public class CommentListAdapter extends SaveStateAbleAdapter<CommentListAdapter.CommentViewHolder, ZhihuComment.CommentsBean> {
+public class CommentListAdapter extends SaveStateAbleAdapter<CommentListAdapter.CommentViewHolder,Comment> {
 
 
     @Override
@@ -35,12 +34,12 @@ public class CommentListAdapter extends SaveStateAbleAdapter<CommentListAdapter.
 
     @Override
     public void onBindViewHolder(final CommentViewHolder holder, int position) {
-        ZhihuComment.CommentsBean bean = getItem(position);
+        Comment c = getItem(position);
         final Context context = holder.itemView.getContext();
-        holder.content.setText(bean.getContent());
-        holder.author.setText(bean.getAuthor());
+        holder.content.setText(c.getContent());
+        holder.author.setText(c.getAuthor());
 
-        Glide.with(context).load(bean.getAvatar()).asBitmap().fitCenter()
+        Glide.with(context).load(c.getUsePic()).asBitmap().fitCenter()
                 .into(new BitmapImageViewTarget(holder.user_pic) {
                     @Override
                     protected void setResource(Bitmap resource) {
@@ -50,22 +49,26 @@ public class CommentListAdapter extends SaveStateAbleAdapter<CommentListAdapter.
                         holder.user_pic.setImageDrawable(circularBitmapDrawable);
                     }
                 });
-        String show = String.valueOf(bean.getLikes()) + " 赞\n" + TimeUtil.formatYMD(bean.getTime());
-        holder.likeAndTime.setText(show);
+        String address=c.getAddress()==null?"":c.getAddress();
+        holder.addressAndTime.setText(address+c.getTime());
+
+        holder.like.setText(String.valueOf(c.getLikeNumber()));
+
     }
 
     public static class CommentViewHolder extends RecyclerView.ViewHolder {
         public TextView content;
         public TextView author;
-        public TextView likeAndTime;
+        public TextView like;
         public ImageView user_pic;
-
+        private TextView addressAndTime;
         public CommentViewHolder(View itemView) {
             super(itemView);
             content = (TextView) itemView.findViewById(R.id.content);
             author = (TextView) itemView.findViewById(R.id.author);
             user_pic = (ImageView) itemView.findViewById(R.id.user_pic);
-            likeAndTime = (TextView) itemView.findViewById(R.id.like_and_time);
+            like = (TextView) itemView.findViewById(R.id.like);
+            addressAndTime= (TextView) itemView.findViewById(R.id.adress_and_time);
         }
     }
 }

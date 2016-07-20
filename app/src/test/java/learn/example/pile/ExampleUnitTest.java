@@ -6,6 +6,9 @@ package learn.example.pile;
 
 import org.junit.Test;
 
+import java.util.Hashtable;
+
+import learn.example.pile.object.NetEase;
 import learn.example.pile.util.TimeUtil;
 
 
@@ -17,18 +20,8 @@ public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() {
 
-        System.out.print(TimeUtil.formatYMD(1413600071));
     }
 
-    public String getMyCss()
-    {
-        String str="<style type='text/css'>\n" +
-                ".headline .img-place-holder {\n" +
-                "  height: 200px;\n" +
-                "}"+
-                "\n</style>";
-        return str;
-    }
 
     public String scriptTag(String js)
     {

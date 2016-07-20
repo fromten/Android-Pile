@@ -61,10 +61,18 @@ public class ActivityLauncher {
     }
 
 
-    public static void startReaderActivity(@NonNull Context context, @NonNull int id,Bundle bundle)
+    public static void startReaderActivityFromZhihu(@NonNull Context context, @NonNull int id,Bundle bundle)
     {
         Intent intent=new Intent(context, ReaderActivity.class);
-        intent.putExtra(ReaderActivity.KEY_CONTENT_ID,id);
+        intent.putExtra(ReaderActivity.KEY_ZHIHU_CONTENT_ID,id);
+        ActivityCompat.startActivity((Activity) context,intent,bundle);
+    }
+
+
+    public static void startReaderActivityFromNetEase(@NonNull Context context,String[] data,Bundle bundle)
+    {
+        Intent intent=new Intent(context, ReaderActivity.class);
+        intent.putExtra(ReaderActivity.KEY_NETEASE_CONTENT_ID,data);
         ActivityCompat.startActivity((Activity) context,intent,bundle);
     }
 
@@ -73,6 +81,7 @@ public class ActivityLauncher {
         Intent intent=new Intent(context, ChatActivity.class);
         ActivityCompat.startActivity((Activity) context,intent,bundle);
     }
+
 
 
     /**

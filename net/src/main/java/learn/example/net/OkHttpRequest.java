@@ -85,6 +85,7 @@ public class OkHttpRequest{
                 }else {
                     deliverFailureResult(call.request().toString(),callback);
                 }
+                response.close();
             }
         });
         return call;
@@ -107,6 +108,7 @@ public class OkHttpRequest{
                 }else {
                     deliverFailureResult(call.request().toString(),callback);
                 }
+                response.close();
             }
         });
         return call;

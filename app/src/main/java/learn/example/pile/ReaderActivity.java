@@ -1,12 +1,14 @@
 package learn.example.pile;
 
 
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -25,22 +27,35 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.target.ImageViewTarget;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import java.util.List;
+import java.util.Locale;
 
+import learn.example.net.OkHttpRequest;
 import learn.example.pile.fragment.CommentFragment;
 import learn.example.pile.jsonbean.ZhihuNewsContent;
 import learn.example.pile.net.IService;
 import learn.example.pile.net.ZhihuContentService;
+import learn.example.pile.object.NetEase;
+import okhttp3.Request;
 
 /**
  * Created on 2016/7/10.
  */
-public class ReaderActivity extends AppCompatActivity implements IService.Callback<ZhihuNewsContent> {
+public class ReaderActivity extends AppCompatActivity  {
     private static final String TAG = "ReaderActivity";
 
 
-    public static final String KEY_CONTENT_ID="KEY_CONTENT_ID";
+    public static final String KEY_ZHIHU_CONTENT_ID ="key_zhihu_content_id";
+    public static final String KEY_NETEASE_CONTENT_ID ="key_netease_content_id";
+    private boolean isNetEaseContent;
+    private int zhihuID;
+
+    private String netEaseDocId;
+    private String netEaseBoradId;
+
     private ZhihuContentService mService;
 
 
@@ -49,11 +64,9 @@ public class ReaderActivity extends AppCompatActivity implements IService.Callba
     private Toolbar mToolbar;
     private AppBarLayout mAppBarLayout;
 
-    private int newsId;
 
     private ReadContentFragment mReadContentFragment;
     private CommentFragment mCommentFragment;
-
     private MoveEvent mMoveEventHandle;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,16 +75,88 @@ public class ReaderActivity extends AppCompatActivity implements IService.Callba
         setView();
         setTouchHandle();
         setSupportActionBar(mToolbar);
+        initPages();
+    }
 
-        mService=new ZhihuContentService();
-        int id=getIntent().getIntExtra(KEY_CONTENT_ID,0);
-        if (id!=0){
-            mReadContentFragment=new ReadContentFragment();
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.read_main_show,mReadContentFragment).commit();
-            mService.getContent(id,this);
+    private void initPages()
+    {
+        mReadContentFragment=new ReadContentFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.read_main_show,mReadContentFragment).commit();
+
+        Intent intent=getIntent();
+        isNetEaseContent=intent.hasExtra(KEY_NETEASE_CONTENT_ID);
+        if (isNetEaseContent)
+        {
+            initNetEasePage();
+
+        }else if (intent.hasExtra(KEY_ZHIHU_CONTENT_ID)){
+            initZhihuPage();
         }
+    }
 
+
+    private void initNetEasePage()
+    {
+        String[] array=getIntent().getStringArrayExtra(KEY_NETEASE_CONTENT_ID);
+        netEaseBoradId=array[0];
+        netEaseDocId =array[1];
+        Request request=new Request.Builder().url(String.format(Locale.CHINA,NetEase.ARTICLE_URL2, netEaseDocId)).build();
+
+        OkHttpRequest.getInstance(this).newStringRequest(request, new OkHttpRequest.RequestCallback<String>() {
+            @Override
+            public void onSuccess(String res) {
+                 Gson gson=new Gson();
+                 JsonObject object=gson.fromJson(res,JsonObject.class);
+                 String html= object.getAsJsonObject(netEaseDocId).get("body").getAsString();
+                 mReadContentFragment.onSetData(html);
+                 showMenuItem();
+            }
+
+            @Override
+            public void onFailure(String msg) {
+
+            }
+        });
+    }
+
+
+
+
+    private void initZhihuPage(){
+
+        zhihuID=getIntent().getIntExtra(KEY_ZHIHU_CONTENT_ID,0);
+        if (zhihuID==0)
+        {
+            return;
+        }
+        performZhihuRequest();
+
+    }
+
+
+    private void performZhihuRequest()
+    {
+        mService=new ZhihuContentService();
+        mService.getContent(zhihuID, new IService.Callback<ZhihuNewsContent>() {
+            @Override
+            public void onSuccess(ZhihuNewsContent data) {
+                final String imgSource=data.getImageSource();
+                Glide.with(ReaderActivity.this).load(data.getImage()).fitCenter().into(new ImageViewTarget<GlideDrawable>(mImageView) {
+                    @Override
+                    protected void setResource(GlideDrawable resource) {
+                        mImageView.setImageDrawable(resource);
+                        mImgSource.setText(imgSource);
+                        showMenuItem();
+                    }
+                });
+                mReadContentFragment.onSetData(data);
+            }
+
+            @Override
+            public void onFailure(String message) {
+
+            }
+        });
     }
 
     private void setView()
@@ -81,7 +166,6 @@ public class ReaderActivity extends AppCompatActivity implements IService.Callba
         mImageView= (ImageView) findViewById(R.id.image);
         mImgSource= (TextView) findViewById(R.id.img_source);
     }
-
 
 
     private void setTouchHandle()
@@ -135,6 +219,7 @@ public class ReaderActivity extends AppCompatActivity implements IService.Callba
 
     @Override
     protected void onDestroy() {
+        if (mService!=null)
         mService.cancelAll();
         super.onDestroy();
     }
@@ -157,13 +242,19 @@ public class ReaderActivity extends AppCompatActivity implements IService.Callba
      */
     private void showMenuBackUp()
     {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        if (getSupportActionBar()!=null)
+        {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
 
         //设置箭头为黑色
         final Drawable upArrow = getResources().getDrawable(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
-        upArrow.setColorFilter(getResources().getColor(R.color.black_light), PorterDuff.Mode.SRC_ATOP);
-        getSupportActionBar().setHomeAsUpIndicator(upArrow);;
+        if (upArrow!=null)
+        {
+            upArrow.setColorFilter(ResourcesCompat.getColor(getResources(),R.color.black_light,null), PorterDuff.Mode.SRC_ATOP);
+            getSupportActionBar().setHomeAsUpIndicator(upArrow);;
+        }
     }
 
     /**
@@ -178,7 +269,12 @@ public class ReaderActivity extends AppCompatActivity implements IService.Callba
         {
             mCommentFragment=new CommentFragment();
             Bundle bundle=new Bundle();
-            bundle.putInt(CommentFragment.KEY_ID,newsId);
+            if (isNetEaseContent)
+            {
+                bundle.putStringArray(CommentFragment.KEY_NETEASE_ID,new String[]{netEaseBoradId, netEaseDocId});
+            }else {
+                bundle.putInt(CommentFragment.KEY_ZHIHU_ID,zhihuID);
+            }
             mCommentFragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(R.anim.anim_slide_in_right,R.anim.anim_slide_out_left)
@@ -223,31 +319,6 @@ public class ReaderActivity extends AppCompatActivity implements IService.Callba
         });
     }
 
-
-    @Override
-    public void onSuccess(final ZhihuNewsContent data) {
-        newsId=data.getId();
-        final String imgSource=data.getImageSource();
-        Glide.with(this).load(data.getImage()).fitCenter().into(new ImageViewTarget<GlideDrawable>(mImageView) {
-            @Override
-            protected void setResource(GlideDrawable resource) {
-                mImageView.setImageDrawable(resource);
-                mImgSource.setText(imgSource);
-                showMenuItem();
-            }
-        });
-
-        //传递事件
-        mReadContentFragment.onSuccess(data);
-    }
-
-
-
-    @Override
-    public void onFailure(String msg) {
-        //传递事件
-        mReadContentFragment.onFailure(msg);
-    }
 
 
     private static class MoveEvent {
@@ -301,7 +372,7 @@ public class ReaderActivity extends AppCompatActivity implements IService.Callba
 
 
 
-     private class ReadContentFragment extends Fragment implements IService.Callback<ZhihuNewsContent> {
+     private class ReadContentFragment extends Fragment {
 
         private WebView mWebView;
 
@@ -327,24 +398,20 @@ public class ReaderActivity extends AppCompatActivity implements IService.Callba
 
          /**
           * 此方法由 主Activity调用
-           * @param data
+           *
           */
-        @Override
-        public void onSuccess(ZhihuNewsContent data) {
-
-            ReaderActivity.HtmlHelper mHtmlHelper=new ReaderActivity.HtmlHelper();
-            String html=mHtmlHelper.generateHtml(data.getBody(),data.getCss(),data.getJs());
+        public void onSetData(String html) {
             mWebView.loadDataWithBaseURL(null,html,"text/html","UTF-8",null);
         }
 
          /**
           * 此方法由 主Activity调用
-          * @param message
           */
-        @Override
-        public void onFailure(String message) {
-
-        }
+         public void onSetData(ZhihuNewsContent data) {
+             HtmlHelper htmlHelper=new HtmlHelper();
+             String html=htmlHelper.generateHtml(data.getBody(),data.getCss(),data.getJs());
+             mWebView.loadDataWithBaseURL(null,html,"text/html","UTF-8",null);
+         }
 
          @Override
          public void onPause() {
@@ -444,8 +511,8 @@ public class ReaderActivity extends AppCompatActivity implements IService.Callba
 
         /**
          * 替换知乎页面的评论点击
-         * 调用
-         * @see ReaderActivity.showCommentFragment();
+         *
+         * @see #showCommentFragment();
          * @return javascript text
          */
         public String getMyJs()

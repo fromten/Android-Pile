@@ -5,6 +5,10 @@ import android.graphics.Bitmap;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.DynamicDrawableSpan;
+import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +43,10 @@ public class CommentListAdapter extends SaveStateAbleAdapter<CommentListAdapter.
         holder.content.setText(c.getContent());
         holder.author.setText(c.getAuthor());
 
-        Glide.with(context).load(c.getUsePic()).asBitmap().fitCenter()
+        Glide.with(context).load(c.getUsePic()).asBitmap()
+                .error(R.mipmap.ic_def_show_user)
+                .placeholder(R.mipmap.ic_def_show_user)
+                .fitCenter()
                 .into(new BitmapImageViewTarget(holder.user_pic) {
                     @Override
                     protected void setResource(Bitmap resource) {
@@ -52,7 +59,10 @@ public class CommentListAdapter extends SaveStateAbleAdapter<CommentListAdapter.
         String address=c.getAddress()==null?"":c.getAddress();
         holder.addressAndTime.setText(address+c.getTime());
 
-        holder.like.setText(String.valueOf(c.getLikeNumber()));
+        SpannableString spanStr=new SpannableString(String.valueOf(c.getLikeNumber())+"l");
+        ImageSpan span=new ImageSpan(context,R.mipmap.ic_like, DynamicDrawableSpan.ALIGN_BASELINE);
+        spanStr.setSpan(span,spanStr.length()-1,spanStr.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        holder.like.setText(spanStr);
 
     }
 

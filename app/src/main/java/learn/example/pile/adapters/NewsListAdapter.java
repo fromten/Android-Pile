@@ -44,7 +44,8 @@ public class NewsListAdapter extends SaveStateAbleAdapter<NewsListAdapter.NewsVi
         NetEaseNews.T1348647909107Bean  item = getItem(position);
         holder.describe.setText(item.getDigest());
         holder.title.setText(item.getTitle());
-        holder.comment.setText(formatNumber(item.getReplyCount()));
+        holder.commentNum.setText(formatNumber(item.getReplyCount()));
+        holder.docSource.setText(item.getSource());
         Glide.with(holder.itemView.getContext()).load(item.getImgsrc()).into(holder.img);
 
         String[] arry={item.getBoardid(),item.getDocid()};
@@ -64,13 +65,15 @@ public class NewsListAdapter extends SaveStateAbleAdapter<NewsListAdapter.NewsVi
         public TextView title;
         public TextView describe;
         public ImageView img;
-        public TextView comment;
+        public TextView commentNum;
+        public TextView docSource;
         public NewsViewHolder(View itemView) {
             super(itemView);
             title = (TextView) itemView.findViewById(R.id.news_title);
             describe = (TextView) itemView.findViewById(R.id.news_descr);
             img = (ImageView) itemView.findViewById(R.id.news_img);
-            comment= (TextView) itemView.findViewById(R.id.comment);
+            commentNum= (TextView) itemView.findViewById(R.id.comment_num);
+            docSource= (TextView) itemView.findViewById(R.id.doc_source);
         }
     }
 }

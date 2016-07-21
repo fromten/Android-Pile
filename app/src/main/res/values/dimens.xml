@@ -4,5 +4,8 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="cardview_margin">10dp</dimen>
     <dimen name="normal_padding">8dp</dimen>
+    <dimen name="small_padding">4dp</dimen>
+    <dimen name="middle_padding">6dp</dimen>
+    <dimen name="big_padding">10dp</dimen>
     <dimen name="setting_margin">20dp</dimen>
 </resources>

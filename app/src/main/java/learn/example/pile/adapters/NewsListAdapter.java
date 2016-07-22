@@ -15,6 +15,7 @@ import learn.example.pile.jsonbean.NetEaseNews;
 import learn.example.pile.jsonbean.NewsJsonData;
 import learn.example.pile.object.NetEase;
 import learn.example.pile.util.ActivityLauncher;
+import learn.example.pile.util.TextUtil;
 
 
 /**
@@ -42,7 +43,8 @@ public class NewsListAdapter extends SaveStateAbleAdapter<NewsListAdapter.NewsVi
     @Override
     public void onBindViewHolder(NewsViewHolder holder, int position) {
         NetEaseNews.T1348647909107Bean  item = getItem(position);
-        holder.describe.setText(item.getDigest());
+        String shortDesc=item.getDigest()!=null?TextUtil.firstSentence(item.getDigest()):null;
+        holder.describe.setText(shortDesc);
         holder.title.setText(item.getTitle());
         holder.commentNum.setText(formatNumber(item.getReplyCount()));
         holder.docSource.setText(item.getSource());
@@ -58,7 +60,9 @@ public class NewsListAdapter extends SaveStateAbleAdapter<NewsListAdapter.NewsVi
         {
             return num+"评论";
         }
-        return (num/10000)+"万评论";
+        int tenThousand=num/10000;
+        int thousand=num%10000/1000;
+        return tenThousand+"."+thousand+"万评论";
     }
 
     public static class NewsViewHolder extends RecyclerView.ViewHolder {

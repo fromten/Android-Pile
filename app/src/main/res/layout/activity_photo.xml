@@ -6,8 +6,9 @@
     android:background="@android:color/black">
     <uk.co.senab.photoview.PhotoView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
+        android:scaleType="center"
         android:clickable="false"
         android:id="@+id/photo"/>
     <ProgressBar

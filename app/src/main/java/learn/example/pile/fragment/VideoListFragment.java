@@ -2,109 +2,78 @@ package learn.example.pile.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.View;
 
+import java.util.List;
+
 import learn.example.pile.adapters.VideoListAdapter;
-import learn.example.pile.jsonbean.VideoJsonData;
-import learn.example.pile.net.GankVideoService;
+import learn.example.pile.jsonbean.OpenEyeVideo;
 import learn.example.pile.net.IService;
-import learn.example.pile.util.AccessAppDataHelper;
+import learn.example.pile.net.OpenEyeService;
+import learn.example.pile.object.OpenEyes;
+import learn.example.pile.util.TimeUtil;
 
 /**
  * Created on 2016/5/25.
  */
-public class VideoListFragment extends BaseListFragment implements IService.Callback<VideoJsonData> {
+public class VideoListFragment extends BaseListFragment implements IService.Callback<OpenEyeVideo> {
 
     private VideoListAdapter mAdapter;
 
 
-    private static final int MAX_REQNUM =5;
-    private int currentPage;
-    private GankVideoService mService;
+    private OpenEyeService mService;
+    private String nextUrl;
+    private long nextPushTime;
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view,savedInstanceState);
         mAdapter=new VideoListAdapter();
         setAdapter(mAdapter);
-        currentPage=AccessAppDataHelper.readInteger(getActivity(),AccessAppDataHelper.KEY_VIDEO_PAGE,1);
-        mService=new GankVideoService();
+        mService=new OpenEyeService();
         if (savedInstanceState==null)
         {
             setRefreshing(true);
-            mService.getVideo(currentPage, MAX_REQNUM,this);
+            mService.getHotVideo(this);
         }
     }
-
-
-
-
     @Override
     public void onDestroy() {
         mService.cancelAll();
-        AccessAppDataHelper.saveInteger(getActivity(),AccessAppDataHelper.KEY_VIDEO_PAGE,currentPage);
         super.onDestroy();
     }
 
+
     @Override
-    public void onSuccess(VideoJsonData data) {
-        Log.d("TAG", "onSuccess");
-        if (data==null||data.isError()||data.getVideoItemList()==null||data.getVideoItemList().isEmpty())
-        {
-            Log.d("TAG", "notifyError");
-            notifyError();
-            return;
-        }
-        mAdapter.addAll(data.getVideoItemList());
-        currentPage++;
+    public void onSuccess(OpenEyeVideo data) {
+        List<OpenEyes.VideoInfo> infos=OpenEyes.buildVideoInfo(data);
+        nextUrl=data.getNextPageUrl();
+        nextPushTime=data.getNextPublishTime();
+        mAdapter.addAll(infos);
         notifySuccess();
     }
 
-
-
     @Override
-    public void onFailure(String msg) {
-        Log.d("TAG",msg);
-         notifyError();
+    public void onFailure(String message) {
+        notifyError();
     }
 
     @Override
     public void onRefresh() {
-        mAdapter.clear();
-        mService.getVideo(currentPage, MAX_REQNUM,this);
+        long second=nextPushTime- TimeUtil.getTime();
+        if (second<=0)
+        {
+            mAdapter.clear();
+            mService.getHotVideo(this);
+        }else {
+            setRefreshing(false);
+        }
     }
 
     @Override
     public void onLoadMore() {
-        mService.getVideo(currentPage,MAX_REQNUM,this);
+         mService.next(nextUrl,this);
     }
 
-//    private Subscriber<String[]> mSubscriber=new Subscriber<String[]>() {
-//        @Override
-//        public void onCompleted() {
-//            Log.d(TAG, "onCompleted() called with: " + "");
-//
-//        }
-//
-//        @Override
-//        public void onError(Throwable e) {
-//            Log.d(TAG, e.toString());
-//        }
-//
-//        @Override
-//        public void onNext(String[] strings) {
-//            Log.d(TAG, Arrays.toString(strings));
-//            List<VideoJsonData.VideoItem> list=mAdapter.getAll();
-//            int len=list.size();
-//            for (int i = len-1; i>=len-5; i--) {
-//                if (TextUtils.equals(strings[2],list.get(i).getHtmlUrl()))
-//                {
-//                    list.get(i).setFileUrl(strings[0]);
-//                    list.get(i).setImgUrl(strings[1]);
-//                    mAdapter.notifyItemChanged(i);
-//                }
-//            }
-//        }
-//    };
+
 
 }

@@ -11,13 +11,14 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import learn.example.pile.R;
-import learn.example.pile.jsonbean.VideoJsonData;
+import learn.example.pile.object.OpenEyes;
 import learn.example.pile.util.ActivityLauncher;
+import learn.example.pile.util.TimeUtil;
 
 /**
  * Created on 2016/5/25.
  */
-public class VideoListAdapter extends SaveStateAbleAdapter<VideoListAdapter.VideoViewHolder,VideoJsonData.VideoItem> implements View.OnClickListener{
+public class VideoListAdapter extends SaveStateAbleAdapter<VideoListAdapter.VideoViewHolder,OpenEyes.VideoInfo> implements View.OnClickListener{
 
 
     @Override
@@ -28,47 +29,32 @@ public class VideoListAdapter extends SaveStateAbleAdapter<VideoListAdapter.Vide
 
     @Override
     public void onBindViewHolder(VideoViewHolder holder, int position) {
-        VideoJsonData.VideoItem item=getItem(position);
-        holder.desc.setText(item.getDesc());
-        if(item.getImgUrl()!=null)
-        {
-            Glide.with(holder.itemView.getContext()).load(item.getImgUrl()).dontAnimate().centerCrop().into(holder.videoImg);
-        }else
-        {
-            holder.videoImg.setImageBitmap(null);
-        }
-        holder.videoPlay.setTag(position);
-        holder.videoPlay.setOnClickListener(this);
+        OpenEyes.VideoInfo item=getItem(position);
+        String timeAndTitle=item.getTitle()+"\n"+TimeUtil.formatMS(item.getDuration());
+        holder.title.setText(timeAndTitle);
+        Glide.with(holder.itemView.getContext()).load(item.getImgUrl()).fitCenter().into(holder.videoImg);
+        holder.itemView.setTag(item.getPlayUrl());
+        holder.itemView.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-         int position = (int) v.getTag();
-        if(position>=0)
+         String playUrl= (String) v.getTag();
+        if (playUrl!=null)
         {
-            VideoJsonData.VideoItem item=getItem(position);
-            String fileUrl=item.getFileUrl();//是否存在视频文件
-            Bundle anim=ActivityLauncher.slideAnimation(v.getContext());
-            if (fileUrl!=null&&!fileUrl.isEmpty())
-            {   //如果有视频实际地址,打开视频播放器
-                ActivityLauncher.startVideoActivity(v.getContext(),fileUrl,anim);
-            }else {
-                //没有则,打开web浏览器
-                ActivityLauncher.startInternalWebActivity(v.getContext(),item.getHtmlUrl(),anim);
-            }
+            Bundle anim= ActivityLauncher.slideAnimation(v.getContext());
+            ActivityLauncher.startVideoActivity(v.getContext(),playUrl,anim);
         }
     }
 
     public static class VideoViewHolder extends RecyclerView.ViewHolder
     {
-        public TextView desc;
+        public TextView title;
         public ImageView videoImg;
-        public ImageView videoPlay;
         public VideoViewHolder(View view) {
             super(view);
-            this.desc = (TextView) view.findViewById(R.id.video_desc);
+            this.title = (TextView) view.findViewById(R.id.title);
             this.videoImg = (ImageView) view.findViewById(R.id.video_img);
-            this.videoPlay = (ImageView) view.findViewById(R.id.video_play);
         }
     }
 }

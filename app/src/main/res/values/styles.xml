@@ -23,11 +23,9 @@
 
     <style name="TitleText" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textColor">@android:color/black</item>
-        <item name="android:padding">4dp</item>
     </style>
 
     <style name="SummaryText" parent="TextAppearance.AppCompat.Small">
-        <item name="android:padding">4dp</item>
     </style>
 
 
@@ -36,7 +34,6 @@
 
 
     <style name="ContentText" parent="TextAppearance.AppCompat.Small">
-        <item name="android:padding">4dp</item>
         <item name="android:textColor">@color/black_light</item>
     </style>
 

@@ -20,6 +20,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
+import junit.framework.Test;
+
 import learn.example.net.OkHttpRequest;
 import learn.example.pile.adapters.ViewPagerAdapter;
 import learn.example.pile.fragment.SettingFragment;
@@ -117,15 +119,15 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    public void onEnableActionBarHome() {
-        //do nothing
+    protected void onEnableActionBarHome() {
+        //取消显示菜单向上回退按钮
     }
 
     @Override
     protected void onPerformExitAnim() {
-        //do nothing
-    }
+        //不执行退出动画
 
+    }
     public static class ViewPagerFragment extends Fragment {
         private TabLayout mTabLayout;
         private ViewPager mViewPager;

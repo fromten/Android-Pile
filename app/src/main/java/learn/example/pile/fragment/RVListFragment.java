@@ -5,12 +5,17 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+
+import java.util.Arrays;
 
 import learn.example.pile.R;
 
@@ -120,13 +125,29 @@ public class RVListFragment extends Fragment implements SwipeRefreshLayout.OnRef
              {
                  return;
              }
-             int count=recyclerView.getAdapter().getItemCount();
-             int visiblePos=((LinearLayoutManager)recyclerView.getLayoutManager()).findLastVisibleItemPosition();
-             if (visiblePos==count-1)
-             {
+              int count=recyclerView.getAdapter().getItemCount();
+              boolean lastVisible=false;
+              if (recyclerView.getLayoutManager() instanceof StaggeredGridLayoutManager)
+              {
+                  int []arry=((StaggeredGridLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPositions(null);
+                  for (int i:arry) {
+                      if (i==count-1)
+                      {
+                          lastVisible=true;
+                      }
+                  }
+              }else if (recyclerView.getLayoutManager() instanceof LinearLayoutManager)
+              {
+                   int lastPost=((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
+                  if (lastPost==count-1){
+                      lastVisible=true;
+                  }
+              }
+               if (lastVisible)
+              {
                  inLoading=true;
                  RVListFragment.this.onLoadMore();
-             }
+              }
         }
 
         public void clearState()

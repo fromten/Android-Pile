@@ -11,44 +11,64 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import learn.example.pile.adapters.CommentListAdapter;
+import learn.example.pile.jsonbean.NetEaseComment;
 import learn.example.pile.jsonbean.ZhihuComment;
+import learn.example.pile.net.GsonService;
 import learn.example.pile.net.IService;
+import learn.example.pile.net.NewsService;
 import learn.example.pile.net.ZhihuContentService;
+import learn.example.pile.object.Comment;
+import learn.example.pile.object.NetEase;
+import learn.example.uidesign.DividerItemDecoration;
 
 /**
  * Created on 2016/7/13.
  */
-public class CommentFragment extends RVListFragment implements IService.Callback<ZhihuComment> {
+public class CommentFragment extends RVListFragment {
 
     private CommentListAdapter mCommentListAdapter;
-    private ZhihuContentService mService;
 
-    public static final String KEY_ID="id";
+    public static final String KEY_ZHIHU_ID="zhihuid";
+    public static final String KEY_NETEASE_ID="neteaseid";
     private TextView mEmptyTextView;
-    private int id;
 
-    private boolean finishRequest;
+
+    private NetEaseCommentHandler mNetEaseHandler;
+    private ZhihuCommentHandler mZhihuHandler;
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setLayoutManager(new LinearLayoutManager(getContext()));
+        addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL_LIST));
         setEnableSwipeLayout(false);
         mEmptyTextView= (TextView) generateEmptyView();
         setEmptyView(mEmptyTextView);
-
         mCommentListAdapter=new CommentListAdapter();
         setAdapter(mCommentListAdapter);
+        initComment();
+    }
 
-
-        mService=new ZhihuContentService();
+    private void initComment()
+    {
         Bundle bundle=getArguments();
         if (bundle!=null)
         {
-            id=bundle.getInt(KEY_ID);
-            mService.getLongComment(id,this);
-            finishRequest=false;
+            if (bundle.containsKey(KEY_ZHIHU_ID))
+            {
+                int id=bundle.getInt(KEY_ZHIHU_ID);
+                mZhihuHandler=new ZhihuCommentHandler(id);
+                mZhihuHandler.perfromRequest();
+            }else if (bundle.containsKey(KEY_NETEASE_ID))
+            {
+                String[] array=bundle.getStringArray(KEY_NETEASE_ID);
+                String netEaseBoradId=array[0];
+                String netEaseId=array[1];
+                mNetEaseHandler=new NetEaseCommentHandler(netEaseBoradId,netEaseId);
+                mNetEaseHandler.perfromHotRequest();
+            }
         }
     }
+
 
     private View generateEmptyView()
     {
@@ -64,39 +84,122 @@ public class CommentFragment extends RVListFragment implements IService.Callback
 
     @Override
     public void onDestroy() {
-        mService.cancelAll();
+        if (mNetEaseHandler!=null)
+        {
+            mNetEaseHandler.cancelAll();
+        }
+        if (mZhihuHandler!=null)
+        {
+            mZhihuHandler.cancelAll();
+        }
         super.onDestroy();
     }
 
     @Override
     public void onRefresh() {
-       //do nothing
+
     }
 
     @Override
     public void onLoadMore() {
-        //do nothing
+        if (mNetEaseHandler!=null)
+        {
+            mNetEaseHandler.next();
+        }
     }
 
-    @Override
-    public void onSuccess(ZhihuComment data) {
-        mCommentListAdapter.addAll(data.getComments());
 
-        if (!finishRequest)
+    private class NetEaseCommentHandler{
+        private String boradId;
+        private String docId;
+        private NewsService mNewsService;
+        private int start;
+        private static final int MAX_LENGTH=15;
+
+        public NetEaseCommentHandler(String boradId, String docId) {
+            this.boradId = boradId;
+            this.docId = docId;
+            mNewsService=new NewsService();
+        }
+
+        public void perfromHotRequest()
         {
-            mService.getShortComment(id,this);
-            finishRequest=true;
-        }else {
-            if (mCommentListAdapter.getItemCount()==0)
-            {
-                mEmptyTextView.setText("暂时没有评论");
-            }
+            mNewsService.getHotComment(boradId, docId, start, MAX_LENGTH, new IService.Callback<NetEaseComment>() {
+                @Override
+                public void onSuccess(NetEaseComment data) {
+                    mCommentListAdapter.addAll(Comment.toList(data));
+                    start+=MAX_LENGTH;
+                }
+
+                @Override
+                public void onFailure(String message) {
+
+                }
+            });
+        }
+
+        public void next()
+        {
+            mNewsService.getNormalComment(boradId, docId, start, MAX_LENGTH, new IService.Callback<NetEaseComment>() {
+                @Override
+                public void onSuccess(NetEaseComment data) {
+                    mCommentListAdapter.addAll(Comment.toList(data));
+                    start+=MAX_LENGTH;
+                }
+
+                @Override
+                public void onFailure(String message) {
+
+                }
+            });
+        }
+        public void cancelAll()
+        {
+            mNewsService.cancelAll();
+        }
+    }
+
+
+    private class ZhihuCommentHandler{
+
+        private boolean isFinishRequest;
+        private ZhihuContentService mService;
+        private int id;
+        public ZhihuCommentHandler(int id) {
+            mService=new ZhihuContentService();
+            this.id=id;
+        }
+
+        public void perfromRequest()
+        {
+            isFinishRequest=false;
+            mService.getLongComment(id, new IService.Callback<ZhihuComment>() {
+                @Override
+                public void onSuccess(ZhihuComment data) {
+                    mCommentListAdapter.addAll(Comment.toList(data));
+                    if (!isFinishRequest)
+                    {
+                        mService.getShortComment(id,this);
+                        isFinishRequest=true;
+                    }else {
+                        if (mCommentListAdapter.getItemCount()==0)
+                        {
+                            mEmptyTextView.setText("暂时没有评论");
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(String message) {
+
+                }
+            });
+        }
+        public void cancelAll()
+        {
+            mService.cancelAll();
         }
 
     }
 
-    @Override
-    public void onFailure(String message) {
-
-    }
 }

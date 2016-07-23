@@ -1,0 +1,49 @@
+package learn.example.pile.object;
+
+import java.util.Locale;
+
+/**
+ * Created on 2016/7/19.
+ */
+public class NetEase {
+    //头条新闻,%d-%d 页数-个数
+    public static final String TOUTAI_URL="http://c.m.163.com/nc/article/headline/T1348647909107/%d-%d.html";
+
+
+    //文章,%s 新闻id
+    public static final String ARTICLE_URL="http://c.m.163.com/nc/article/%s/full.html";
+    public static final String ARTICLE_URL2="http://c.3g.163.com/nc/article/%s/full.html";
+
+
+    //热门评论分别
+    // %s 区域,%s 新闻id ,%d 哪里开始查询,%d 查询个数
+    public static final String HOT_COMMENT_URL="http://comment.api.163.com/api/json/post/list/new/hot/%s/%s/%d/%d/10/2/2";
+
+
+    /**
+     *  普通评论
+     *  差数与热门评论相同
+     *  @see #HOT_COMMENT_URL
+     */
+    public static final String NORMAL_COMMENT_URL="http://comment.api.163.com/api/json/post/list/new/normal/%s/%s/%d/%d/10/2/2";
+
+
+
+    public static String generateHotCommentUrl(String replayBorad,String newsID,int start,int len)
+    {
+        return String.format(Locale.CHINA,HOT_COMMENT_URL,replayBorad,newsID,start,len);
+    }
+
+    public static String generateNormalCommentUrl(String replayBorad,String newsID,int start,int len)
+    {
+        return String.format(Locale.CHINA,NORMAL_COMMENT_URL,replayBorad,newsID,start,len);
+    }
+
+    public static String generateParamsUrl(int page,String sign)
+    {
+        String query="http://c.3g.163.com/nc/article/headline/T1348647909107/"+page+"-20.html?";
+        String param= "from=toutiao&size=20&prog=LTitleA&fn=1&passport=&devId=kKD8pCd0XRRW7xWYqMiVpEdxCGl%2F7BNok2%2FsiNT73k5TdKiqocj0eExU0s49fzqe&lat=&lon=&version=11.1&net=wifi&ts=1469017323&canal=news_lljc1&mac=racUMC0A9havm%2BHe6jH3YAvVdjgSXYDtwEDZ03eH1l8%3D";
+        String signParam="&sign="+sign;
+        return query+param+signParam;
+    }
+}

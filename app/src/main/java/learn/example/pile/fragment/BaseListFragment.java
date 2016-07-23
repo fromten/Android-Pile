@@ -38,9 +38,19 @@ public class BaseListFragment extends  RVListFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setLayout();
+        addEmptyView();
+    }
+
+    protected void setLayout()
+    {
         setLayoutManager(new LinearLayoutManager(getContext()));
         addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL_LIST));
         setRefreshSchemeColors(ResourcesCompat.getColor(getResources(),R.color.colorPrimary,null));
+    }
+
+    protected void addEmptyView()
+    {
         mEmptyViewHolder=new EmptyViewHolder(getContext());
         setEmptyView(mEmptyViewHolder.mEmptyView);
     }
@@ -86,18 +96,18 @@ public class BaseListFragment extends  RVListFragment {
 
     @Override
     public void onRefresh() {
-
+         //TODO
     };
 
     @Override
     public  void onLoadMore(){
-
+        //TODO
     };
 
 
     /**
      *  通知父类管理网络请求失败逻辑,此方法应该在Adapter改变元素集合后调用
-     *  @see notifySuccess()
+     *  @see #notifySuccess()
      */
     public void notifyError()
     {
@@ -106,7 +116,7 @@ public class BaseListFragment extends  RVListFragment {
 
     /**
      *  通知父类管理网络请求成功逻辑,此方法应该在Adapter改变元素集合后调用
-     *  @see notifyError()
+     *  @see #notifyError()
      */
     public void notifySuccess()
     {

@@ -52,24 +52,6 @@ public class PhotoActivity extends AppCompatActivity{
                 .error(R.mipmap.img_error)
                 .fitCenter()
                 .into(mImageView);
-//        mProgressBar.setVisibility(View.VISIBLE);
-//        mPhotoProgressTask=new PhotoProgressTask(new PhotoProgressTask.ProgressListener() {
-//            @Override
-//            public void onProgressChanged(int value) {
-//                mProgressBar.incrementProgressBy(value);
-//            }
-//
-//            @Override
-//            public void onComplete(byte[] bytes) {
-//                 mProgressBar.setVisibility(View.GONE);
-//                 Glide.with(PhotoActivity.this).load(bytes)
-//                         .asGif()
-//                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-//                         .dontAnimate().into(mImageView);
-//            }
-//        });
-//        Request request=new Request.Builder().url(url).build();
-//        mPhotoProgressTask.execute(request);
 
     }
     public void loadImage(String url)

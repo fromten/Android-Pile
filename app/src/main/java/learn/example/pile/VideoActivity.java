@@ -22,7 +22,7 @@ MediaPlayer.OnErrorListener,MediaPlayer.OnPreparedListener{
     private VolumeProgressView mVolumeProgressView;
     private TextView  mLogView;
     private static final String KEY_SAVE_STATE_POSITION ="KEY_SAVE_STATE_POSITION";
-    public static final String KEY_VIDEO_URL="KEY_VIDEO_URL";
+
     private Bundle  saveState;
     private String TAG="VideoActivity";
     @Override

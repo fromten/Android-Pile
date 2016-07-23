@@ -6,9 +6,11 @@ package learn.example.pile;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.List;
 
 import learn.example.pile.object.NetEase;
 import learn.example.pile.util.TextUtil;
@@ -22,10 +24,9 @@ public class ExampleUnitTest {
 
     @Test
     public void addition_isCorrect() {
-        String str= "nihao.zx。asdasdasd。asd";
 
-        System.out.println(Arrays.toString(TextUtil.sentenceSub(str)));
     }
+
 
 
     public String scriptTag(String js)

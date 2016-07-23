@@ -306,7 +306,7 @@ public class ReaderActivity extends AppCompatActivity  {
     private void showMenuItem()
     {
         //延时操作
-        runOnUiThread(new Runnable() {
+        mToolbar.postDelayed(new Runnable() {
             @Override
             public void run() {
                 MenuItem item=  mToolbar.getMenu().findItem(R.id.menu_comment);
@@ -316,7 +316,7 @@ public class ReaderActivity extends AppCompatActivity  {
                 }
                 showMenuBackUp();
             }
-        });
+        },500);
     }
 
 

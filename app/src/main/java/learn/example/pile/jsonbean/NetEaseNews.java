@@ -3,6 +3,8 @@ package learn.example.pile.jsonbean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.JsonArray;
+
 import java.util.List;
 
 /**
@@ -42,6 +44,9 @@ public class NetEaseNews {
         private String template;
         private String title;
         private int upTimes;
+        private ImageExtraBean[] imgnewextra;
+
+
 
         public String getReplyid() {
             return replyid;
@@ -143,6 +148,55 @@ public class NetEaseNews {
             return replyCount;
         }
 
+        public void setReplyCount(int replyCount) {
+            this.replyCount = replyCount;
+        }
+
+        public ImageExtraBean[] getImgnewextra() {
+            return imgnewextra;
+        }
+
+        public static class ImageExtraBean implements Parcelable {
+            private String imgsrc;
+
+            public String getImgsrc() {
+                return imgsrc;
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeString(this.imgsrc);
+            }
+
+            public ImageExtraBean() {
+            }
+
+            protected ImageExtraBean(Parcel in) {
+                this.imgsrc = in.readString();
+            }
+
+            public static final Creator<ImageExtraBean> CREATOR = new Creator<ImageExtraBean>() {
+                @Override
+                public ImageExtraBean createFromParcel(Parcel source) {
+                    return new ImageExtraBean(source);
+                }
+
+                @Override
+                public ImageExtraBean[] newArray(int size) {
+                    return new ImageExtraBean[size];
+                }
+            };
+        }
+
+
+        public T1348647909107Bean() {
+        }
+
 
         @Override
         public int describeContents() {
@@ -176,9 +230,7 @@ public class NetEaseNews {
             dest.writeString(this.template);
             dest.writeString(this.title);
             dest.writeInt(this.upTimes);
-        }
-
-        public T1348647909107Bean() {
+            dest.writeTypedArray(this.imgnewextra, flags);
         }
 
         protected T1348647909107Bean(Parcel in) {
@@ -207,6 +259,7 @@ public class NetEaseNews {
             this.template = in.readString();
             this.title = in.readString();
             this.upTimes = in.readInt();
+            this.imgnewextra = in.createTypedArray(ImageExtraBean.CREATOR);
         }
 
         public static final Creator<T1348647909107Bean> CREATOR = new Creator<T1348647909107Bean>() {

@@ -2,6 +2,8 @@ package learn.example.pile.object;
 
 import java.util.Locale;
 
+import learn.example.pile.util.TimeUtil;
+
 /**
  * Created on 2016/7/19.
  */
@@ -15,7 +17,7 @@ public class NetEase {
     public static final String ARTICLE_URL2="http://c.3g.163.com/nc/article/%s/full.html";
 
 
-    //热门评论分别
+    //热门评论
     // %s 区域,%s 新闻id ,%d 哪里开始查询,%d 查询个数
     public static final String HOT_COMMENT_URL="http://comment.api.163.com/api/json/post/list/new/hot/%s/%s/%d/%d/10/2/2";
 
@@ -25,7 +27,7 @@ public class NetEase {
      *  差数与热门评论相同
      *  @see #HOT_COMMENT_URL
      */
-    public static final String NORMAL_COMMENT_URL="http://comment.api.163.com/api/json/post/list/new/normal/%s/%s/%d/%d/10/2/2";
+    public static final String NORMAL_COMMENT_URL="http://comment.api.163.com/api/json/post/list/new/normal/%s/%s/desc/%d/%d/10/2/2 ";
 
 
 
@@ -41,9 +43,10 @@ public class NetEase {
 
     public static String generateParamsUrl(int page,String sign)
     {
-        String query="http://c.3g.163.com/nc/article/headline/T1348647909107/"+page+"-20.html?";
-        String param= "from=toutiao&size=20&prog=LTitleA&fn=1&passport=&devId=kKD8pCd0XRRW7xWYqMiVpEdxCGl%2F7BNok2%2FsiNT73k5TdKiqocj0eExU0s49fzqe&lat=&lon=&version=11.1&net=wifi&ts=1469017323&canal=news_lljc1&mac=racUMC0A9havm%2BHe6jH3YAvVdjgSXYDtwEDZ03eH1l8%3D";
+        String queryUrl="http://c.3g.163.com/nc/article/headline/T1348647909107/"+page+"-20.html?";
+        String normalParam= "from=toutiao&size=20&prog=LTitleA&fn=1&passport=&devId=kKD8pCd0XRRW7xWYqMiVpEdxCGl%2F7BNok2%2FsiNT73k5TdKiqocj0eExU0s49fzqe&lat=&lon=&version=12.0&net=wifi&canal=news_lljc1&mac=racUMC0A9havm%2BHe6jH3YAvVdjgSXYDtwEDZ03eH1l8%3D";
+        String tsParam="&ts="+String.valueOf(TimeUtil.getTime()/1000);
         String signParam="&sign="+sign;
-        return query+param+signParam;
+        return queryUrl+normalParam+tsParam+signParam;
     }
 }

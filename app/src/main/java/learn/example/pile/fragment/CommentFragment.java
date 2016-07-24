@@ -13,12 +13,10 @@ import android.widget.TextView;
 import learn.example.pile.adapters.CommentListAdapter;
 import learn.example.pile.jsonbean.NetEaseComment;
 import learn.example.pile.jsonbean.ZhihuComment;
-import learn.example.pile.net.GsonService;
 import learn.example.pile.net.IService;
 import learn.example.pile.net.NewsService;
 import learn.example.pile.net.ZhihuContentService;
 import learn.example.pile.object.Comment;
-import learn.example.pile.object.NetEase;
 import learn.example.uidesign.DividerItemDecoration;
 
 /**
@@ -145,11 +143,12 @@ public class CommentFragment extends RVListFragment {
                 public void onSuccess(NetEaseComment data) {
                     mCommentListAdapter.addAll(Comment.toList(data));
                     start+=MAX_LENGTH;
+                    cancelLoadMore();
                 }
 
                 @Override
                 public void onFailure(String message) {
-
+                   cancelLoadMore();
                 }
             });
         }

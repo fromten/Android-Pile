@@ -18,6 +18,12 @@ public class NetEaseComment  {
     private String docUrl;
     private String isTagOff;
     private JsonArray hotPosts;
+    private JsonArray newPosts;
+
+
+    public JsonArray getNewPosts() {
+        return newPosts;
+    }
 
     public String getAgainstLock() {
         return againstLock;

@@ -2,21 +2,12 @@ package learn.example.pile.object;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.text.TextUtils;
 
-import com.facebook.stetho.common.StringUtil;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
+import learn.example.pile.factory.CommentsFactory;
 import learn.example.pile.jsonbean.NetEaseComment;
 import learn.example.pile.jsonbean.ZhihuComment;
-import learn.example.pile.util.GsonHelper;
-import learn.example.pile.util.TimeUtil;
 
 /**
  * Created on 2016/7/20.
@@ -86,61 +77,16 @@ public class Comment implements Parcelable {
         this.content = content;
     }
 
-    public static Comment valueOf(ZhihuComment.CommentsBean zhihuCommentItem) {
-        String timeStr = TimeUtil.formatYMD(zhihuCommentItem.getTime());
-        Comment comment = new Comment
-                (zhihuCommentItem.getAuthor(),
-                        zhihuCommentItem.getLikes(), timeStr,
-                        zhihuCommentItem.getAvatar(), null,
-                        zhihuCommentItem.getContent());
-        return comment;
+
+    public static List<Comment> toList(NetEaseComment comment)
+    {
+        return CommentsFactory.newInstance().newNetEaseComments(comment);
     }
 
-
-    public static Comment valueOf(JsonObject netEaseCommen) {
-        String author = GsonHelper.getAsString(netEaseCommen.get("n"), "网友");
-        String time = GsonHelper.getAsString(netEaseCommen.get("t"), null);
-        String content = GsonHelper.getAsString(netEaseCommen.get("b"), null);
-        int like = GsonHelper.getAsInteger(netEaseCommen.get("v"), 0);
-        String imgUrl = GsonHelper.getAsString(netEaseCommen.get("timg"), null);
-        String address = GsonHelper.getAsString(netEaseCommen.get("f"), null);
-        try {
-            int index = address.indexOf("&nbsp");
-            if (index > 0) {
-                address = address.substring(0, index);
-            }
-        } catch (NullPointerException | IndexOutOfBoundsException e) {
-            address = null;
-        }
-
-        return new Comment(author, like, time, imgUrl, address, content);
+    public static List<Comment> toList(ZhihuComment comment)
+    {
+        return CommentsFactory.newInstance().newZhihuComments(comment);
     }
-
-    public static List<Comment> toList(ZhihuComment zhihuComment) {
-
-        List<Comment> list = new ArrayList<>();
-        for (ZhihuComment.CommentsBean item : zhihuComment.getComments()) {
-            Comment comment = valueOf(item);
-            if (comment != null)
-                list.add(comment);
-        }
-        return list;
-    }
-
-
-    public static List<Comment> toList(NetEaseComment netEaseComment) {
-        List<Comment> list = new ArrayList<>();
-        JsonArray array = netEaseComment.getHotPosts();
-        int len = array.size();
-        for (int i = 0; i < len; i++) {
-            JsonObject object = array.get(i).getAsJsonObject();
-            Comment comment = valueOf(object.getAsJsonObject("1"));
-            if (comment != null)
-                list.add(comment);
-        }
-        return list;
-    }
-
 
     @Override
     public int describeContents() {

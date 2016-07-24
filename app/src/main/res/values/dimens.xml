@@ -8,4 +8,6 @@
     <dimen name="middle_padding">6dp</dimen>
     <dimen name="big_padding">10dp</dimen>
     <dimen name="setting_margin">20dp</dimen>
+    <dimen name="news_img_width">100dp</dimen>
+    <dimen name="news_img_height">80dp</dimen>
 </resources>

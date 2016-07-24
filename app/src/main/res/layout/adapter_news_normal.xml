@@ -5,12 +5,13 @@
     android:clickable="true"
     android:focusable="true"
     android:background="?android:attr/selectableItemBackground">
+
     <ImageView
-        android:layout_width="100dp"
-        android:layout_height="80dp"
+        android:layout_width="@dimen/news_img_width"
+        android:layout_height="@dimen/news_img_height"
         android:id="@+id/news_img"
-        android:layout_centerVertical="true"
-        android:padding="5dp"/>
+        android:layout_centerVertical="true"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -20,11 +21,11 @@
         android:layout_alignTop="@+id/news_img"
         android:layout_toRightOf="@+id/news_img"
         android:layout_toEndOf="@+id/news_img" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="@dimen/small_padding"
-        android:maxLines="3"
         android:id="@+id/news_descr"
         android:layout_below="@+id/news_title"
         android:layout_toRightOf="@+id/news_img"

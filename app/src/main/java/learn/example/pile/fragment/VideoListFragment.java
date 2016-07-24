@@ -71,6 +71,7 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
 
     @Override
     public void onLoadMore() {
+        if (nextUrl!=null)
          mService.next(nextUrl,this);
     }
 

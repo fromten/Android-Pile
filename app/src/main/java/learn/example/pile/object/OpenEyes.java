@@ -107,7 +107,6 @@ public class OpenEyes {
         String playUrl=null;
         int   duration=0;
 
-          List<OpenEyeVideo.IssueListBean> issueList=object.getIssueList();
           for (OpenEyeVideo.IssueListBean bean:object.getIssueList())
           {
               for (OpenEyeVideo.IssueListBean.ItemListBean item:bean.getItemList())

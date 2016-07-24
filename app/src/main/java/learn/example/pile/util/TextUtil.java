@@ -10,7 +10,7 @@ public class TextUtil {
         String[] str=sentenceSub(text);
         if (str.length>=0)
         {
-            return str[0];
+            return str[0]+"。";
         }
         return null;
     }

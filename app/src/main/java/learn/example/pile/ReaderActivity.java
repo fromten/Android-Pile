@@ -108,8 +108,20 @@ public class ReaderActivity extends AppCompatActivity  {
                  Gson gson=new Gson();
                  JsonObject object=gson.fromJson(res,JsonObject.class);
                  String html= object.getAsJsonObject(netEaseDocId).get("body").getAsString();
-                 mReadContentFragment.onSetData(html);
+                 mReadContentFragment.onSetData(addHead()+html);
                  showMenuItem();
+            }
+            private String addHead()
+            {
+                return "<head>\n" +
+                        "<style type=\"text/css\">\n" +
+                        "\n" +
+                        "  p {margin-left: 15px;\n" +
+                        "     margin-right: 15px;\n" +
+                        "     text-indent: 1%;\n" +
+                        "     color: #333333;}\n" +
+                        "</style>\n" +
+                        "</head>";
             }
 
             @Override
@@ -392,6 +404,7 @@ public class ReaderActivity extends AppCompatActivity  {
             mWebView.getSettings().setBuiltInZoomControls(true);
             mWebView.getSettings().setDisplayZoomControls(false);
             mWebView.getSettings().setLoadsImagesAutomatically(true);
+            mWebView.setVerticalScrollBarEnabled(true);
             mWebView.getSettings().setJavaScriptEnabled(true);
             mWebView.addJavascriptInterface(new HtmlCommentClick(),"ReaderActivity");
         }
@@ -403,6 +416,10 @@ public class ReaderActivity extends AppCompatActivity  {
         public void onSetData(String html) {
             mWebView.loadDataWithBaseURL(null,html,"text/html","UTF-8",null);
         }
+
+        public void onLoadUrl(String url) {
+             mWebView.loadUrl(url);
+         }
 
          /**
           * 此方法由 主Activity调用

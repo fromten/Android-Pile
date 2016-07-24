@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/reader_root"
+    android:background="@color/grey_light"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="false">
@@ -18,7 +19,6 @@
             android:layout_height="match_parent"
             android:fitsSystemWindows="false"
             app:contentScrim="@color/white"
-            app:collapsedTitleTextAppearance="@style/TitleText"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">

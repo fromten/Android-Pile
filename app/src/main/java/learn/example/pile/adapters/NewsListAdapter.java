@@ -77,7 +77,7 @@ public class NewsListAdapter extends SaveStateAbleAdapter<NewsListAdapter.BaseNe
         NetEaseNews.T1348647909107Bean item=getItem(position);
         String shortDesc=item.getDigest()!=null?TextUtil.firstSentence(item.getDigest()):null;
         holder.describe.setText(shortDesc);
-        Glide.with(holder.itemView.getContext()).load(item.getImg()).fitCenter().into(holder.img);
+        Glide.with(holder.itemView.getContext()).load(item.getImg()).centerCrop().into(holder.img);
     }
 
 

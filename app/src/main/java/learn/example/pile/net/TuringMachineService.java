@@ -2,6 +2,9 @@ package learn.example.pile.net;
 
 import com.google.gson.JsonObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import learn.example.net.OkHttpRequest;
 import learn.example.net.Service;
 import learn.example.pile.jsonbean.TuringMachineJson;
@@ -22,9 +25,15 @@ public class TuringMachineService extends GsonService{
 
     public void getMessage(String question,Callback<TuringMachineJson> callback)
     {
-        RequestBody body=getRequestBody(question);
-        Request req=new Request.Builder().url(URL).post(body).build();
-        newRequest(TAG,TuringMachineJson.class,req,callback);
+
+        try {
+            RequestBody body= getRequestBody(question);
+            Request req=new Request.Builder().url(URL).post(body).build();
+            newRequest(TAG,TuringMachineJson.class,req,callback);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            callback.onFailure("URL encode is fail "+"{question="+question+"}");
+        }
     }
 
     /**
@@ -32,8 +41,8 @@ public class TuringMachineService extends GsonService{
      * @param info 询问的问题
      * @return RequestBody 如果成功
      */
-    private  RequestBody getRequestBody(String info)
-    {
+    private  RequestBody getRequestBody(String info) throws UnsupportedEncodingException {
+
         JsonObject object=new JsonObject();
         object.addProperty("key",APi_KEY);
         object.addProperty("info",info);

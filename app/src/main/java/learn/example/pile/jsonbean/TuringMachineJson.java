@@ -13,7 +13,7 @@ public class TuringMachineJson {
 
     private int code;
     private String text;
-
+    private String url;
     public int getCode() {
         return code;
     }
@@ -30,5 +30,7 @@ public class TuringMachineJson {
         this.text = text;
     }
 
-
+    public String getUrl() {
+        return url;
+    }
 }

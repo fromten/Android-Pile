@@ -10,6 +10,7 @@
         android:layout_width="@dimen/news_img_width"
         android:layout_height="@dimen/news_img_height"
         android:id="@+id/news_img"
+        android:background="@color/grey_dark"
         android:layout_centerVertical="true"/>
 
     <TextView

@@ -52,6 +52,7 @@ public class ChatActivity extends BaseActivity implements IService.Callback<Turi
 
     @Override
     public void onSuccess(TuringMachineJson data) {
+        Log.d(TAG,"onSuccess" );
         ChatInfo info=new ChatInfo(ChatInfo.GRAVITY_LEFT,data.getText());
         mChatListAdapter.addItem(info);
         mListView.smoothScrollToPosition(mChatListAdapter.getCount()-1);

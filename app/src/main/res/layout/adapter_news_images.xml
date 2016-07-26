@@ -24,16 +24,19 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/news_img_height"
             android:id="@+id/image_extra1"
+            android:background="@color/grey_dark"
             android:layout_weight="1"/>
         <ImageView
             android:layout_width="0dp"
             android:layout_height="@dimen/news_img_height"
             android:id="@+id/image_extra2"
+            android:background="@color/grey_dark"
             android:layout_weight="1"/>
         <ImageView
             android:layout_width="0dp"
             android:layout_height="@dimen/news_img_height"
             android:id="@+id/image_extra3"
+            android:background="@color/grey_dark"
             android:layout_weight="1"/>
     </LinearLayout>
 

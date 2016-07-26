@@ -40,4 +40,4 @@ public class GsonHelper {
         }
         return defInteger;
     }
-}
+ }

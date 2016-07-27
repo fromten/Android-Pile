@@ -13,6 +13,7 @@ import java.util.Hashtable;
 import java.util.List;
 
 import learn.example.pile.object.NetEase;
+import learn.example.pile.util.HtmlTagBuild;
 import learn.example.pile.util.TextUtil;
 import learn.example.pile.util.TimeUtil;
 
@@ -24,6 +25,16 @@ public class ExampleUnitTest {
 
     @Test
     public void addition_isCorrect() {
+
+        System.out.println(HtmlTagBuild.imageTag(50,50,"www"));
+        System.out.println(HtmlTagBuild.headTag("www"));
+        System.out.println(HtmlTagBuild.headTag(null));
+        System.out.println(HtmlTagBuild.linkTag("www"));
+        System.out.println(HtmlTagBuild.linkTag(null));
+        System.out.println(HtmlTagBuild.cssTag("www"));
+        System.out.println(HtmlTagBuild.cssTag(null));
+        System.out.println(HtmlTagBuild.jsTag("wwww"));
+        System.out.println(HtmlTagBuild.jsTag(null));
 
     }
 

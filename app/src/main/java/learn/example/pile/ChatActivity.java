@@ -39,7 +39,6 @@ public class ChatActivity extends BaseActivity implements IService.Callback<Turi
         mSendButton.setOnClickListener(this);
         mChatListAdapter=new ChatListAdapter();
         mListView.setAdapter(mChatListAdapter);
-
         mService=new TuringMachineService();
     }
 
@@ -55,7 +54,8 @@ public class ChatActivity extends BaseActivity implements IService.Callback<Turi
         Log.d(TAG,"onSuccess" );
         ChatInfo info=new ChatInfo(ChatInfo.GRAVITY_LEFT,data.getText());
         mChatListAdapter.addItem(info);
-        mListView.smoothScrollToPosition(mChatListAdapter.getCount()-1);
+
+        smoothListBottom();
     }
 
     @Override
@@ -65,6 +65,7 @@ public class ChatActivity extends BaseActivity implements IService.Callback<Turi
 
     @Override
     public void onClick(View v) {
+        smoothListBottom();
         String editText=mMsgEdit.getText().toString();
         if (!editText.isEmpty())
         {
@@ -72,12 +73,20 @@ public class ChatActivity extends BaseActivity implements IService.Callback<Turi
             ChatInfo info=new ChatInfo(ChatInfo.GRAVITY_RIGHT,editText);
             mChatListAdapter.addItem(info);
             mMsgEdit.setText(null);
-
             mService.getMessage(editText,this);
         }
-        mListView.smoothScrollToPosition(mChatListAdapter.getCount()-1);
+        collapseIME();
+
+    }
+
+    private void collapseIME(){
         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(mMsgEdit.getWindowToken(), 0);
+    }
+
+    private void smoothListBottom()
+    {
+        mListView.smoothScrollToPosition(mChatListAdapter.getCount()-1);
     }
 
 

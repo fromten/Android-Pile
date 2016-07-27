@@ -1,7 +1,20 @@
 package learn.example.pile.object;
 
+import android.text.Html;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonStreamParser;
+import com.google.gson.stream.JsonReader;
+
+import org.jsoup.parser.HtmlTreeBuilder;
+
 import java.util.Locale;
 
+import learn.example.pile.util.GsonHelper;
+import learn.example.pile.util.HtmlTagBuild;
 import learn.example.pile.util.TimeUtil;
 
 /**
@@ -49,4 +62,6 @@ public class NetEase {
         String signParam="&sign="+sign;
         return queryUrl+normalParam+tsParam+signParam;
     }
+
+
 }

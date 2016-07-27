@@ -3,8 +3,10 @@ package learn.example.pile;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
@@ -14,7 +16,7 @@ import learn.example.uidesign.VolumeProgressView;
 /**
  * Created on 2016/5/26.
  */
-public class VideoActivity extends BaseActivity implements MediaPlayer.OnCompletionListener,
+public class VideoActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener,
 MediaPlayer.OnErrorListener,MediaPlayer.OnPreparedListener{
 
     private VideoView mVideoView;
@@ -28,6 +30,9 @@ MediaPlayer.OnErrorListener,MediaPlayer.OnPreparedListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_video);
         initView();
         saveState=savedInstanceState;

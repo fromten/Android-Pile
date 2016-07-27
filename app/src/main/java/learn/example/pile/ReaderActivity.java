@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.webkit.WebViewFragment;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -35,6 +36,9 @@ import java.util.Locale;
 
 import learn.example.net.OkHttpRequest;
 import learn.example.pile.fragment.CommentFragment;
+import learn.example.pile.fragment.WebFragment;
+import learn.example.pile.html.NetEaseHtml;
+import learn.example.pile.html.ZhihuHtml;
 import learn.example.pile.jsonbean.ZhihuNewsContent;
 import learn.example.pile.net.IService;
 import learn.example.pile.net.ZhihuContentService;
@@ -65,7 +69,7 @@ public class ReaderActivity extends AppCompatActivity  {
     private AppBarLayout mAppBarLayout;
 
 
-    private ReadContentFragment mReadContentFragment;
+    private WebFragment mWebFragment;
     private CommentFragment mCommentFragment;
     private MoveEvent mMoveEventHandle;
     @Override
@@ -80,15 +84,14 @@ public class ReaderActivity extends AppCompatActivity  {
 
     private void initPages()
     {
-        mReadContentFragment=new ReadContentFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.read_main_show,mReadContentFragment).commit();
+        mWebFragment= new WebFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.read_main_show,mWebFragment).commit();
 
         Intent intent=getIntent();
         isNetEaseContent=intent.hasExtra(KEY_NETEASE_CONTENT_ID);
         if (isNetEaseContent)
         {
             initNetEasePage();
-
         }else if (intent.hasExtra(KEY_ZHIHU_CONTENT_ID)){
             initZhihuPage();
         }
@@ -105,25 +108,10 @@ public class ReaderActivity extends AppCompatActivity  {
         OkHttpRequest.getInstance(this).newStringRequest(request, new OkHttpRequest.RequestCallback<String>() {
             @Override
             public void onSuccess(String res) {
-                 Gson gson=new Gson();
-                 JsonObject object=gson.fromJson(res,JsonObject.class);
-                 String html= object.getAsJsonObject(netEaseDocId).get("body").getAsString();
-                 mReadContentFragment.onSetData(addHead()+html);
-                 showMenuItem();
+                  String html=new NetEaseHtml(netEaseDocId,res).getHtml();
+                  mWebFragment.loadLocalData(html);
+                  showMenuItem();
             }
-            private String addHead()
-            {
-                return "<head>\n" +
-                        "<style type=\"text/css\">\n" +
-                        "\n" +
-                        "  p {margin-left: 15px;\n" +
-                        "     margin-right: 15px;\n" +
-                        "     text-indent: 1%;\n" +
-                        "     color: #333333;}\n" +
-                        "</style>\n" +
-                        "</head>";
-            }
-
             @Override
             public void onFailure(String msg) {
 
@@ -161,7 +149,8 @@ public class ReaderActivity extends AppCompatActivity  {
                         showMenuItem();
                     }
                 });
-                mReadContentFragment.onSetData(data);
+                ZhihuHtml html=new ZhihuHtml(data.getBody(),data.getCss(),data.getJs());
+                mWebFragment.loadLocalData(html.generateHtml());
             }
 
             @Override
@@ -382,74 +371,6 @@ public class ReaderActivity extends AppCompatActivity  {
         }
     }
 
-
-
-     private class ReadContentFragment extends Fragment {
-
-        private WebView mWebView;
-
-        @Nullable
-        @Override
-        public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            View view=inflater.inflate(R.layout.fragment_read_content,container,false);
-            mWebView= (WebView) view.findViewById(R.id.web_view);
-            initWebView();
-            return view;
-        }
-
-
-        private void initWebView(){
-            mWebView.setWebViewClient(new WebViewClient());
-            mWebView.getSettings().setSupportZoom(true);
-            mWebView.getSettings().setBuiltInZoomControls(true);
-            mWebView.getSettings().setDisplayZoomControls(false);
-            mWebView.getSettings().setLoadsImagesAutomatically(true);
-            mWebView.setVerticalScrollBarEnabled(true);
-            mWebView.getSettings().setJavaScriptEnabled(true);
-            mWebView.addJavascriptInterface(new HtmlCommentClick(),"ReaderActivity");
-        }
-
-         /**
-          * 此方法由 主Activity调用
-           *
-          */
-        public void onSetData(String html) {
-            mWebView.loadDataWithBaseURL(null,html,"text/html","UTF-8",null);
-        }
-
-        public void onLoadUrl(String url) {
-             mWebView.loadUrl(url);
-         }
-
-         /**
-          * 此方法由 主Activity调用
-          */
-         public void onSetData(ZhihuNewsContent data) {
-             HtmlHelper htmlHelper=new HtmlHelper();
-             String html=htmlHelper.generateHtml(data.getBody(),data.getCss(),data.getJs());
-             mWebView.loadDataWithBaseURL(null,html,"text/html","UTF-8",null);
-         }
-
-         @Override
-         public void onPause() {
-             super.onPause();
-             mWebView.onPause();
-         }
-
-         @Override
-         public void onResume() {
-             super.onStart();
-             mWebView.onResume();
-         }
-
-         @Override
-         public void onDestroy() {
-             mWebView.removeAllViews();
-             mWebView.destroy();
-             super.onDestroy();
-         }
-     }
-
     private class HtmlCommentClick{
         public HtmlCommentClick() {
         }
@@ -468,96 +389,4 @@ public class ReaderActivity extends AppCompatActivity  {
         }
     }
 
-
-
-    public static class HtmlHelper{
-
-        private StringBuilder mBuilder=new StringBuilder();
-
-        /**
-         * 生成完整的Html页面
-         * @param body
-         * @param css
-         * @param js
-         * @return Html
-         */
-        public String generateHtml(String body,List<String> css, List<String> js)
-        {
-            mBuilder.append("<html lang='zh-CN'>");
-            mBuilder.append(toHeadTag(css,js));
-            mBuilder.append("<body>");
-            mBuilder.append(body);
-            mBuilder.append(getMyJs());//插入一段代码
-            mBuilder.append("</body>");
-            mBuilder.append("</html>");
-            return mBuilder.toString();
-        }
-
-
-        public String toHeadTag(List<String> css, List<String> js)
-        {
-            StringBuilder builder=new StringBuilder();
-            builder.append("<head>");
-            for (String str:css)
-            {
-                Log.d(TAG,str );
-                builder.append(toLinkTag(str));
-            }
-            builder.append(getMyCss());
-            for (String str:js)
-            {
-                builder.append(toScriptTag(str));
-            }
-            builder.append("</head>");
-            return builder.toString();
-        }
-
-        /**
-         * 知乎默认css会添加200px的头部图片高度,使用得到css覆盖原本的css属性
-         * @return
-         */
-        public String getMyCss()
-        {
-            String str="<style type='text/css'>\n" +
-                    ".headline .img-place-holder {\n" +
-                    "  height: 0px;\n" +
-                    "}"+
-                    "</style>";
-            return str;
-        }
-
-        /**
-         * 替换知乎页面的评论点击
-         *
-         * @see #showCommentFragment();
-         * @return javascript text
-         */
-        public String getMyJs()
-        {
-            String script="<script type=\"text/javascript\">\n" +
-                    "\n" +
-                    "var aTag=document.getElementsByTagName('a');\n" +
-                    "aTag=aTag[aTag.length-1];\n" +
-                    "aTag.removeAttribute('href');" +
-                    "aTag.setAttribute('onClick',\"showAndroidComment()\");\n" +
-                    "\n" +
-                    "function showAndroidComment()\n" +
-                    "{\n" +
-                    "  ReaderActivity.showCommentFragment();\n" +
-                    "}\n" +
-                    "</script>";
-            return script;
-        }
-
-
-        public String toLinkTag(String css)
-        {
-            return "<link rel='stylesheet' type='text/css' href='"+css+"'>";
-        }
-
-        public String toScriptTag(String js)
-        {
-            return "<script src='"+js+"'>"+"</script>";
-        }
-    }
 }

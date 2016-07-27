@@ -27,7 +27,7 @@
                   android:process="learn.example.pile.PileApplication.WebActivity"
                  android:label="@null"/>
         <activity android:name="learn.example.pile.VideoActivity"
-            android:label="视频"/>
+                  android:label="视频"/>
         <activity android:name="learn.example.pile.PhotoActivity"
                   android:theme="@style/Theme.AppCompat.NoActionBar"
             android:label="图片"/>

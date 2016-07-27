@@ -62,7 +62,7 @@ public class OkHttpRequest{
         return mInstance;
     }
 
-    public <T> Call newGsonRequest(final Class<T> clazz, Request request, final RequestCallback<T> callback)
+    public <T> Call newGsonRequest(final Class<T> clazz, final Request request, final RequestCallback<T> callback)
     {
         Call call=mOkhttpClient.newCall(request);
         call.enqueue(new Callback() {
@@ -81,6 +81,7 @@ public class OkHttpRequest{
                     }catch (JsonSyntaxException e)
                     {
                         deliverFailureResult(call.request().toString(),callback);
+
                     }
                 }else {
                     deliverFailureResult(call.request().toString(),callback);

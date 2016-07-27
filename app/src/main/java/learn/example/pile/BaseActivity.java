@@ -22,43 +22,39 @@ public class BaseActivity extends AppCompatActivity {
     private LinearLayout mRootLayout;
     private Toolbar mToolbar;
     private View mStatusView;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.toolbar);
-        statusBarCompat();
-        mRootLayout= (LinearLayout) findViewById(R.id.root_linelayout);
-        mToolbar= (Toolbar) findViewById(R.id.tool_bar);
+      //  statusBarCompat();
+        mRootLayout = (LinearLayout) findViewById(R.id.root_linelayout);
+        mToolbar = (Toolbar) findViewById(R.id.tool_bar);
         mToolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(mToolbar);
         onEnableActionBarHome();
     }
 
-    public void statusBarCompat()
-    {
-        if (Build.VERSION.SDK_INT==Build.VERSION_CODES.KITKAT)
-        {
+    public void statusBarCompat() {
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            ViewGroup group= (ViewGroup) getWindow().getDecorView();
-            mStatusView=createStatusView();
+            ViewGroup group = (ViewGroup) getWindow().getDecorView();
+            mStatusView = createStatusView();
             group.addView(mStatusView);
         }
         //else do nothing
     }
 
 
-    public void setActionBarBackgroundColor(int color)
-    {
-        if (mToolbar!=null)
-        mToolbar.setBackgroundColor(color);
+    public void setActionBarBackgroundColor(int color) {
+        if (mToolbar != null)
+            mToolbar.setBackgroundColor(color);
     }
 
-    public void setStatusBarColor(int color)
-    {
-        if (mStatusView!=null)
-        {
+    public void setStatusBarColor(int color) {
+        if (mStatusView != null) {
             mStatusView.setBackgroundColor(color);
-        }else if (Build.VERSION.SDK_INT>=21){
+        } else if (Build.VERSION.SDK_INT >= 21) {
             getWindow().setStatusBarColor(color);
         }
     }

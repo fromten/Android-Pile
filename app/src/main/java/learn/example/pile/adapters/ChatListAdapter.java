@@ -7,7 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,6 +72,7 @@ public class ChatListAdapter extends BaseAdapter {
         layoutParams.gravity=gravity;
         holder.mChatText.setLayoutParams(layoutParams);
         holder.mChatText.setText(msg.getMsg());
+
         return convertView;
     }
 

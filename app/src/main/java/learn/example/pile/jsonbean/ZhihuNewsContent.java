@@ -19,9 +19,9 @@ public class ZhihuNewsContent {
     private String ga_prefix;
     private int type;
     private int id;
-    private List<String> js;
-    private List<String> images;
-    private List<String> css;
+    private String[] js;
+    private String[] images;
+    private String[] css;
 
     public String getBody() {
         return body;
@@ -55,15 +55,15 @@ public class ZhihuNewsContent {
         return id;
     }
 
-    public List<String> getJs() {
+    public String[] getJs() {
         return js;
     }
 
-    public List<String> getImages() {
+    public String[] getImages() {
         return images;
     }
 
-    public List<String> getCss() {
+    public String[] getCss() {
         return css;
     }
 }

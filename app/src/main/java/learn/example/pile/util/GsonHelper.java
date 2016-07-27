@@ -10,14 +10,11 @@ public class GsonHelper {
     public static String getAsString(JsonElement element,String defString)
     {
         try {
-            return element.getAsString();
+            return element==null?defString:element.getAsString();
         }catch (ClassCastException e)
         {
             e.printStackTrace();
         }catch (IllegalStateException e)
-        {
-            e.printStackTrace();
-        }catch (NullPointerException e)
         {
             e.printStackTrace();
         }
@@ -27,17 +24,13 @@ public class GsonHelper {
     public static int getAsInteger(JsonElement element,int defInteger)
     {
         try {
-            return element.getAsInt();
+            return element==null?defInteger:element.getAsInt();
         }catch (ClassCastException e)
         {
             e.printStackTrace();
-        }catch (IllegalStateException e)
-        {
-            e.printStackTrace();
-        }catch (NullPointerException e)
-        {
+        }catch (IllegalStateException e) {
             e.printStackTrace();
         }
         return defInteger;
     }
-}
+ }

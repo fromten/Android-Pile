@@ -7,7 +7,6 @@ import android.view.View;
 
 import learn.example.pile.adapters.NewsListAdapter;
 import learn.example.pile.jsonbean.NetEaseNews;
-import learn.example.pile.jsonbean.NewsJsonData;
 import learn.example.pile.net.GsonService;
 import learn.example.pile.net.NewsService;
 

@@ -44,7 +44,6 @@ public class NetEaseHtml {
                 "  max-width: 100%;\n" +
                 "  display: block;\n" +
                 "  margin: 30px auto;\n" +
-                "  margin-top: 15px;\n" +
                 "}"+
                 " p {margin-left: 15px;\n" +
                 " margin-right: 15px;\n" +
@@ -74,10 +73,9 @@ public class NetEaseHtml {
             String src=GsonHelper.getAsString(object.get("src"),null);
 
             String imageTag=HtmlTagBuild.imageTag(0,0,src);
-            if (imageTag!=null)
-            {
-                oldBody=oldBody.replace(ref,imageTag);
-            }
+            imageTag+=HtmlTagBuild.tag("a",null,alt);
+            oldBody=oldBody.replace(ref,imageTag);
+
         }
         newBody=oldBody;
         return newBody;

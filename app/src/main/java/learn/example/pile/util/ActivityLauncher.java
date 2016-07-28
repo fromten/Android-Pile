@@ -1,6 +1,7 @@
 package learn.example.pile.util;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -53,7 +54,7 @@ public class ActivityLauncher {
      * @param url
      */
 
-    public static void startPhotoActivity(@NonNull Context context, @NonNull String url,Bundle bundle)
+    public static void startPhotoActivity(@NonNull Context context, @NonNull String[] url,Bundle bundle)
     {
         Intent intent=new Intent(context, PhotoActivity.class);
         intent.putExtra(PhotoActivity.KEY_IMG_URL,url);
@@ -73,7 +74,14 @@ public class ActivityLauncher {
     {
         Intent intent=new Intent(context, ReaderActivity.class);
         intent.putExtra(ReaderActivity.KEY_NETEASE_CONTENT_ID,data);
-        ActivityCompat.startActivity((Activity) context,intent,bundle);
+
+        if (context instanceof Application)
+        {
+            context.startActivity(intent);
+        }else {
+            ActivityCompat.startActivity((Activity) context,intent,bundle);
+        }
+
     }
 
     public static void startChatActivity(@NonNull Context context,Bundle bundle)

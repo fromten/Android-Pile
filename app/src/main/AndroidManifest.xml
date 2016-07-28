@@ -38,6 +38,7 @@
         <activity android:name="learn.example.pile.ReaderActivity"
                   android:theme="@style/ReaderTheme"
                   android:label="@null"/>
+        <service android:name=".service.LoadPhotoService"/>
     </application>
 
 </manifest>

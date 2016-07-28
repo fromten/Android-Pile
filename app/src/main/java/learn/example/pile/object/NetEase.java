@@ -1,20 +1,7 @@
 package learn.example.pile.object;
 
-import android.text.Html;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonStreamParser;
-import com.google.gson.stream.JsonReader;
-
-import org.jsoup.parser.HtmlTreeBuilder;
-
 import java.util.Locale;
 
-import learn.example.pile.util.GsonHelper;
-import learn.example.pile.util.HtmlTagBuild;
 import learn.example.pile.util.TimeUtil;
 
 /**
@@ -42,6 +29,7 @@ public class NetEase {
      */
     public static final String NORMAL_COMMENT_URL="http://comment.api.163.com/api/json/post/list/new/normal/%s/%s/desc/%d/%d/10/2/2 ";
 
+    public static final String PHOTOS_SET_URL="http://c.m.163.com/photo/api/set/%S/%S.json";
 
 
     public static String generateHotCommentUrl(String replayBorad,String newsID,int start,int len)

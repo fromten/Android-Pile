@@ -1,9 +1,5 @@
 package learn.example.pile.html;
 
-import android.util.Log;
-
-import java.util.List;
-
 import learn.example.pile.util.HtmlTagBuild;
 
 /**
@@ -15,9 +11,9 @@ public class ZhihuHtml {
     private String[] css;
     private String[] js;
 
-    public ZhihuHtml(String body, String[] css, String[] js) {
+    public ZhihuHtml(String body, String[] cssLink, String[] js) {
         this.body = body;
-        this.css = css;
+        this.css = cssLink;
         this.js = js;
     }
 
@@ -32,7 +28,6 @@ public class ZhihuHtml {
         builder.append(toHeadTag(css,js));
         builder.append("<body>");
         builder.append(body);
-        builder.append(HtmlTagBuild.jsTag(getMyJs()));//插入一段代码
         builder.append("</body>");
         builder.append("</html>");
         return builder.toString();
@@ -65,22 +60,4 @@ public class ZhihuHtml {
         return HtmlTagBuild.styleTag(".headline .img-place-holder{" +
                 " height: 0px;}");
     }
-
-    /**
-     * 替换知乎页面的评论点击
-     * @return javascript text
-     */
-    public String getMyJs()
-    {
-       return  "var aTag=document.getElementsByTagName('a');\n" +
-                "aTag=aTag[aTag.length-1];\n" +
-                "aTag.removeAttribute('href');" +
-                "aTag.setAttribute('onClick',\"showAndroidComment()\");\n" +
-                "\n" +
-                "function showAndroidComment()\n" +
-                "{\n" +
-                "  ReaderActivity.showCommentFragment();\n" +
-                "}\n";
-    }
-
 }

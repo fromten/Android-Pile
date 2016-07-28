@@ -25,16 +25,11 @@ public class ExampleUnitTest {
 
     @Test
     public void addition_isCorrect() {
-
-        System.out.println(HtmlTagBuild.imageTag(50,50,"www"));
-        System.out.println(HtmlTagBuild.headTag("www"));
-        System.out.println(HtmlTagBuild.headTag(null));
-        System.out.println(HtmlTagBuild.linkTag("www"));
-        System.out.println(HtmlTagBuild.linkTag(null));
-        System.out.println(HtmlTagBuild.cssTag("www"));
-        System.out.println(HtmlTagBuild.cssTag(null));
-        System.out.println(HtmlTagBuild.jsTag("wwww"));
-        System.out.println(HtmlTagBuild.jsTag(null));
+        String skipID="00AP0001|2189904";
+        int line=skipID.indexOf("|");
+        String first=skipID.substring(4,line);
+        String second=skipID.substring(line+1,skipID.length());
+        System.out.println(first+" "+second);
 
     }
 

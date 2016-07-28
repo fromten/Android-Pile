@@ -1,47 +1,55 @@
 package learn.example.pile.adapters;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.view.View;
+import android.view.ViewGroup;
 
-import learn.example.pile.fragment.BaseListFragment;
-import learn.example.pile.fragment.JokeListFragment;
-import learn.example.pile.fragment.NewsListFragment;
-import learn.example.pile.fragment.ReadListFragment;
-import learn.example.pile.fragment.VideoListFragment;
+import java.util.List;
 
 /**
- * Created on 2016/5/6.
+ * Created on 2016/7/28.
  */
-public class ViewPagerAdapter extends FragmentStatePagerAdapter {
-
-    private final String[] title={"新闻","阅读","视频","笑话"};
-    public ViewPagerAdapter(FragmentManager fm) {
-        super(fm);
-    }
-
-
-
-    @Override
-    public CharSequence getPageTitle(int position) {
-        return title[position];
-    }
-
-    @Override
-    public Fragment getItem(int position) {
-        Fragment fragment=null;
-        switch (position)
-        {
-            case 0:fragment=new NewsListFragment();break;
-            case 1:fragment=new ReadListFragment();break;
-            case 2:fragment=new VideoListFragment();break;
-            case 3:fragment=new JokeListFragment();break;
-        }
-       return fragment;
+public class ViewPagerAdapter extends PagerAdapter {
+    private List<View> mViews;
+    private onViewShowListener mOnViewShowListener;
+    public ViewPagerAdapter(List<View> views) {
+        mViews = views;
     }
 
     @Override
     public int getCount() {
-        return title.length;
+        return mViews.size();
+    }
+
+    public onViewShowListener getOnViewShowListener() {
+        return mOnViewShowListener;
+    }
+
+    public void setOnViewShowListener(onViewShowListener onViewShowListener) {
+        mOnViewShowListener = onViewShowListener;
+    }
+
+    @Override
+    public boolean isViewFromObject(View view, Object object) {
+        return view==object;
+    }
+
+    @Override
+    public Object instantiateItem(ViewGroup container, int position) {
+        container.addView(mViews.get(position));
+        if (mOnViewShowListener!=null)
+        {
+            mOnViewShowListener.onBindView(mViews.get(position),position);
+        }
+        return mViews.get(position);
+    }
+
+    @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
+        container.removeView(mViews.get(position));
+    }
+
+    public interface onViewShowListener{
+        void onBindView(View view,int position);
     }
 }

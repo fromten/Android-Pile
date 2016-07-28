@@ -20,10 +20,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-import junit.framework.Test;
-
 import learn.example.net.OkHttpRequest;
-import learn.example.pile.adapters.ViewPagerAdapter;
+import learn.example.pile.adapters.FragmentPagerAdapter;
 import learn.example.pile.fragment.SettingFragment;
 import learn.example.pile.util.ActivityLauncher;
 import learn.example.pile.util.AppInfo;
@@ -142,7 +140,7 @@ public class MainActivity extends BaseActivity {
             super.onViewCreated(view, savedInstanceState);
             mTabLayout= (TabLayout)view.findViewById(R.id.tab_layout);
             mViewPager= (ViewPager) view.findViewById(R.id.page_layout);
-            mViewPager.setAdapter(new ViewPagerAdapter(getFragmentManager()));
+            mViewPager.setAdapter(new FragmentPagerAdapter(getFragmentManager()));
             mTabLayout.setupWithViewPager(mViewPager);
         }
     }

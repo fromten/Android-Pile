@@ -1,10 +1,6 @@
 package learn.example.pile.jsonbean;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created on 2016/7/20.

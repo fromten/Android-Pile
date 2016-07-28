@@ -4,8 +4,6 @@ import android.app.Application;
 
 import com.squareup.leakcanary.LeakCanary;
 
-import learn.example.net.OkHttpRequest;
-
 
 /**
  * Created on 2016/6/9.

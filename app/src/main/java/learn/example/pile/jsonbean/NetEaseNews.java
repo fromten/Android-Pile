@@ -3,8 +3,6 @@ package learn.example.pile.jsonbean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.gson.JsonArray;
-
 import java.util.List;
 
 /**
@@ -44,6 +42,7 @@ public class NetEaseNews {
         private String template;
         private String title;
         private int upTimes;
+        private String skipID;
         private ImageExtraBean[] imgnewextra;
 
 
@@ -148,9 +147,7 @@ public class NetEaseNews {
             return replyCount;
         }
 
-        public void setReplyCount(int replyCount) {
-            this.replyCount = replyCount;
-        }
+
 
         public ImageExtraBean[] getImgnewextra() {
             return imgnewextra;
@@ -193,6 +190,9 @@ public class NetEaseNews {
             };
         }
 
+        public String getSkipID() {
+            return skipID;
+        }
 
         public T1348647909107Bean() {
         }
@@ -230,6 +230,7 @@ public class NetEaseNews {
             dest.writeString(this.template);
             dest.writeString(this.title);
             dest.writeInt(this.upTimes);
+            dest.writeString(this.skipID);
             dest.writeTypedArray(this.imgnewextra, flags);
         }
 
@@ -259,6 +260,7 @@ public class NetEaseNews {
             this.template = in.readString();
             this.title = in.readString();
             this.upTimes = in.readInt();
+            this.skipID = in.readString();
             this.imgnewextra = in.createTypedArray(ImageExtraBean.CREATOR);
         }
 

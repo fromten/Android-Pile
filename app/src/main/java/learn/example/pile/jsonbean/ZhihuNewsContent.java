@@ -2,8 +2,6 @@ package learn.example.pile.jsonbean;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
 /**
  * Created on 2016/7/9.
  */

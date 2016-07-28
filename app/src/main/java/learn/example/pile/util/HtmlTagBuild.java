@@ -1,7 +1,5 @@
 package learn.example.pile.util;
 
-import android.text.TextUtils;
-
 import java.util.Locale;
 
 /**

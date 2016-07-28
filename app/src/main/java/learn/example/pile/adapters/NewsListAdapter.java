@@ -1,6 +1,7 @@
 package learn.example.pile.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,12 +11,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 
 import learn.example.pile.R;
 import learn.example.pile.jsonbean.NetEaseNews;
-import learn.example.pile.jsonbean.NewsJsonData;
+import learn.example.pile.object.NetEase;
+import learn.example.pile.service.LoadPhotoService;
 import learn.example.pile.util.ActivityLauncher;
 import learn.example.pile.util.TextUtil;
 
@@ -32,9 +32,20 @@ public class NewsListAdapter extends SaveStateAbleAdapter<NewsListAdapter.BaseNe
     private View.OnClickListener mItemClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            String[] tag= (String[]) v.getTag();
-            Bundle anim= ActivityLauncher.slideAnimation(v.getContext());
-            ActivityLauncher.startReaderActivityFromNetEase(v.getContext(),tag,anim);
+            int position= (int) v.getTag();
+            NetEaseNews.T1348647909107Bean item=getItem(position);
+            Context context=v.getContext();
+            if (item.getSkipID()!=null)
+            {
+                Intent intent=new Intent(context, LoadPhotoService.class);
+                intent.putExtra(LoadPhotoService.KEY_SKIPID,item.getSkipID());
+                context.startService(intent);
+            }else {
+                String[] array=new String[]{item.getBoardid(),item.getDocid()};
+                Bundle anim= ActivityLauncher.slideAnimation(v.getContext());
+                ActivityLauncher.startReaderActivityFromNetEase(v.getContext(),array,anim);
+            }
+
         }
     };
 
@@ -60,8 +71,8 @@ public class NewsListAdapter extends SaveStateAbleAdapter<NewsListAdapter.BaseNe
         holder.title.setText(item.getTitle());
         holder.commentNum.setText(formatNumber(item.getReplyCount()));
         holder.docSource.setText(item.getSource());
-        String[] arry={item.getBoardid(),item.getDocid()};
-        holder.itemView.setTag(arry);
+
+        holder.itemView.setTag(position);
 
         if (holder instanceof NewsNormalViewHolder)
         {

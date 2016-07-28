@@ -3,10 +3,7 @@ package learn.example.pile.net;
 import com.google.gson.JsonObject;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
-import learn.example.net.OkHttpRequest;
-import learn.example.net.Service;
 import learn.example.pile.jsonbean.TuringMachineJson;
 import okhttp3.MediaType;
 import okhttp3.Request;

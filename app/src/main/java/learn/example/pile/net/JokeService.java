@@ -1,7 +1,5 @@
 package learn.example.pile.net;
 
-import learn.example.net.OkHttpRequest;
-import learn.example.net.Service;
 import learn.example.pile.MyURI;
 import learn.example.pile.jsonbean.JokeJsonData;
 import okhttp3.Request;

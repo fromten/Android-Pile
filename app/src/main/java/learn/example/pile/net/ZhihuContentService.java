@@ -1,12 +1,9 @@
 package learn.example.pile.net;
 
 
-import learn.example.net.OkHttpRequest;
-import learn.example.net.Service;
 import learn.example.pile.jsonbean.ZhihuComment;
 import learn.example.pile.jsonbean.ZhihuNewsContent;
 import learn.example.pile.object.Zhihu;
-import okhttp3.Request;
 
 /**
  * Created on 2016/7/10.

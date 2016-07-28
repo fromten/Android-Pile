@@ -7,31 +7,21 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.webkit.WebViewFragment;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.target.ImageViewTarget;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
-import java.util.List;
 import java.util.Locale;
 
 import learn.example.net.OkHttpRequest;
@@ -43,6 +33,9 @@ import learn.example.pile.jsonbean.ZhihuNewsContent;
 import learn.example.pile.net.IService;
 import learn.example.pile.net.ZhihuContentService;
 import learn.example.pile.object.NetEase;
+import learn.example.pile.util.ActivityLauncher;
+import learn.example.pile.util.HtmlTagBuild;
+import okhttp3.Call;
 import okhttp3.Request;
 
 /**
@@ -54,13 +47,10 @@ public class ReaderActivity extends AppCompatActivity  {
 
     public static final String KEY_ZHIHU_CONTENT_ID ="key_zhihu_content_id";
     public static final String KEY_NETEASE_CONTENT_ID ="key_netease_content_id";
-    private boolean isNetEaseContent;
-    private int zhihuID;
 
-    private String netEaseDocId;
-    private String netEaseBoradId;
 
-    private ZhihuContentService mService;
+    private NetEaseManager mNetEaseManager;
+    private ZhihuManager mZhihuManager;
 
 
     private ImageView mImageView;
@@ -68,97 +58,49 @@ public class ReaderActivity extends AppCompatActivity  {
     private Toolbar mToolbar;
     private AppBarLayout mAppBarLayout;
 
-
     private WebFragment mWebFragment;
     private CommentFragment mCommentFragment;
-    private MoveEvent mMoveEventHandle;
+
+    private MoveEvent mMoveEvent=new MoveEvent();
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reader);
         setView();
-        setTouchHandle();
         setSupportActionBar(mToolbar);
         initPages();
     }
+
+
 
     private void initPages()
     {
         mWebFragment= new WebFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.read_main_show,mWebFragment).commit();
 
+        mAppBarLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mWebFragment.requestProgressBar(true,0);
+            }
+        });
         Intent intent=getIntent();
-        isNetEaseContent=intent.hasExtra(KEY_NETEASE_CONTENT_ID);
-        if (isNetEaseContent)
+
+        if (intent.hasExtra(KEY_NETEASE_CONTENT_ID))
         {
-            initNetEasePage();
+            String[] array=getIntent().getStringArrayExtra(KEY_NETEASE_CONTENT_ID);
+            String netEaseBoardId=array[0];
+            String netEaseDocId =array[1];
+            mNetEaseManager=new NetEaseManager(netEaseDocId,netEaseBoardId);
+            mNetEaseManager.requestHtml();
         }else if (intent.hasExtra(KEY_ZHIHU_CONTENT_ID)){
-            initZhihuPage();
+            int  zhihuID=getIntent().getIntExtra(KEY_ZHIHU_CONTENT_ID,0);
+            mZhihuManager=new ZhihuManager(zhihuID);
+            mZhihuManager.requestHtml();
         }
     }
 
 
-    private void initNetEasePage()
-    {
-        String[] array=getIntent().getStringArrayExtra(KEY_NETEASE_CONTENT_ID);
-        netEaseBoradId=array[0];
-        netEaseDocId =array[1];
-        Request request=new Request.Builder().url(String.format(Locale.CHINA,NetEase.ARTICLE_URL2, netEaseDocId)).build();
-
-        OkHttpRequest.getInstance(this).newStringRequest(request, new OkHttpRequest.RequestCallback<String>() {
-            @Override
-            public void onSuccess(String res) {
-                  String html=new NetEaseHtml(netEaseDocId,res).getHtml();
-                  mWebFragment.loadLocalData(html);
-                  showMenuItem();
-            }
-            @Override
-            public void onFailure(String msg) {
-
-            }
-        });
-    }
-
-
-
-
-    private void initZhihuPage(){
-
-        zhihuID=getIntent().getIntExtra(KEY_ZHIHU_CONTENT_ID,0);
-        if (zhihuID==0)
-        {
-            return;
-        }
-        performZhihuRequest();
-
-    }
-
-
-    private void performZhihuRequest()
-    {
-        mService=new ZhihuContentService();
-        mService.getContent(zhihuID, new IService.Callback<ZhihuNewsContent>() {
-            @Override
-            public void onSuccess(ZhihuNewsContent data) {
-                final String imgSource=data.getImageSource();
-                Glide.with(ReaderActivity.this).load(data.getImage()).fitCenter().into(new ImageViewTarget<GlideDrawable>(mImageView) {
-                    @Override
-                    protected void setResource(GlideDrawable resource) {
-                        mImageView.setImageDrawable(resource);
-                        mImgSource.setText(imgSource);
-                        showMenuItem();
-                    }
-                });
-                ZhihuHtml html=new ZhihuHtml(data.getBody(),data.getCss(),data.getJs());
-                mWebFragment.loadLocalData(html.generateHtml());
-            }
-
-            @Override
-            public void onFailure(String message) {
-
-            }
-        });
-    }
 
     private void setView()
     {
@@ -166,36 +108,6 @@ public class ReaderActivity extends AppCompatActivity  {
         mAppBarLayout= (AppBarLayout) findViewById(R.id.app_bar_layout);
         mImageView= (ImageView) findViewById(R.id.image);
         mImgSource= (TextView) findViewById(R.id.img_source);
-    }
-
-
-    private void setTouchHandle()
-    {
-        mMoveEventHandle=new MoveEvent();
-        //管理屏幕手势移动方向
-        mMoveEventHandle.setListener(new MoveEvent.MoveListener() {
-            @Override
-            public boolean onMove(float x, float dx, float y, float dy) {
-
-                int offsetY= (int) (y-dy);
-                if (Math.abs(offsetY)<=30)
-                {
-                    int offsetX= (int) (x-dx);
-                    if (Math.abs(offsetX)>=200)
-                   {
-                       if (offsetX>0)
-                       {
-                           onBackPressed();
-                       }else {
-                           showCommentFragment();
-                       }
-                       return true;
-                   }
-                }
-                return false;
-            }
-        });
-
     }
 
 
@@ -220,8 +132,12 @@ public class ReaderActivity extends AppCompatActivity  {
 
     @Override
     protected void onDestroy() {
-        if (mService!=null)
-        mService.cancelAll();
+        if (mNetEaseManager!=null)
+            mNetEaseManager.remove();
+
+        if (mZhihuManager!=null)
+            mZhihuManager.remove();
+
         super.onDestroy();
     }
 
@@ -233,9 +149,13 @@ public class ReaderActivity extends AppCompatActivity  {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        //监听Activity屏幕,左右移动,
-        mMoveEventHandle.onTouchEvent(ev);
-        return super.dispatchTouchEvent(ev);
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            onUserInteraction();
+        }
+        if (mMoveEvent.onTouchEvent(ev)||getWindow().superDispatchTouchEvent(ev)) {
+            return true;
+        }
+        return onTouchEvent(ev);
     }
 
     /**
@@ -254,7 +174,7 @@ public class ReaderActivity extends AppCompatActivity  {
         if (upArrow!=null)
         {
             upArrow.setColorFilter(ResourcesCompat.getColor(getResources(),R.color.black_light,null), PorterDuff.Mode.SRC_ATOP);
-            getSupportActionBar().setHomeAsUpIndicator(upArrow);;
+            getSupportActionBar().setHomeAsUpIndicator(upArrow);
         }
     }
 
@@ -270,11 +190,11 @@ public class ReaderActivity extends AppCompatActivity  {
         {
             mCommentFragment=new CommentFragment();
             Bundle bundle=new Bundle();
-            if (isNetEaseContent)
+            if (mNetEaseManager!=null)
             {
-                bundle.putStringArray(CommentFragment.KEY_NETEASE_ID,new String[]{netEaseBoradId, netEaseDocId});
-            }else {
-                bundle.putInt(CommentFragment.KEY_ZHIHU_ID,zhihuID);
+                bundle.putStringArray(CommentFragment.KEY_NETEASE_ID,new String[]{mNetEaseManager.netEaseBoardId, mNetEaseManager.netEaseDocId});
+            }else if (mZhihuManager!=null){
+                bundle.putInt(CommentFragment.KEY_ZHIHU_ID,mZhihuManager.zhihuDocId);
             }
             mCommentFragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction()
@@ -320,31 +240,28 @@ public class ReaderActivity extends AppCompatActivity  {
         },500);
     }
 
+    public void setWebProgressVisibility(final int visible)
+    {
+        mAppBarLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                if (mWebFragment.getProgressBar()!=null)
+                {
+                    mWebFragment.getProgressBar().setVisibility(visible);
+                }
+            }
+        });
+
+    }
 
 
-    private static class MoveEvent {
+
+    private class MoveEvent {
         private boolean inPress;
         private float downX;
         private float downY;
 
-        private MoveListener mListener;
-        public interface MoveListener {
-            /**
-             *
-             * @param x 当前x
-             * @param dx 按下的x
-             * @param y 当前y
-             * @param dy 按下的y
-             * @return 是否拦截接下来事件
-             */
-            boolean onMove(float x,float dx,float y,float dy);
-        }
-
         public boolean onTouchEvent(MotionEvent event) {
-            if (mListener==null)
-            {
-                return false;
-            }
             int action = event.getAction();
             if (action == MotionEvent.ACTION_DOWN) {
                 inPress = true;
@@ -356,25 +273,28 @@ public class ReaderActivity extends AppCompatActivity  {
                 if (inPress) {
                     float x=event.getX();
                     float y=event.getY();
-                    inPress=!mListener.onMove(x,downX,y,downY);
+                   if (Math.abs(y-downY)<=30)
+                   {
+                       int offsetX= (int) (x-downX);
+                       if (Math.abs(offsetX)>=200)
+                       {
+                           if (offsetX>0)
+                           {
+                               onBackPressed();
+                           }else {
+                               showCommentFragment();
+                           }
+                          inPress=false;
+                       }
+                       return true;
+                   }
                 }
             }
-            return true;
-        }
-
-        public MoveListener getListener() {
-            return mListener;
-        }
-
-        public void setListener(MoveListener listener) {
-            mListener = listener;
+            return false;
         }
     }
 
-    private class HtmlCommentClick{
-        public HtmlCommentClick() {
-        }
-
+    private class HtmlClick{
         @JavascriptInterface()
         public void showCommentFragment()
         {
@@ -385,7 +305,130 @@ public class ReaderActivity extends AppCompatActivity  {
                     ReaderActivity.this.showCommentFragment();
                 }
             });
+        }
 
+        @JavascriptInterface()
+        public void openPhotos(final String res)
+        {
+            //正确的姿势使用这个方法
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Bundle anim= ActivityLauncher.openAnimation(ReaderActivity.this);
+                    ActivityLauncher.startPhotoActivity(ReaderActivity.this,new String[]{res},anim);
+                }
+            });
+        }
+    }
+
+    private class NetEaseManager{
+        private String netEaseDocId;
+        private String netEaseBoardId;
+        private Call mCall;
+        public NetEaseManager(String netEaseDocId, String netEaseBoardId) {
+            this.netEaseDocId = netEaseDocId;
+            this.netEaseBoardId = netEaseBoardId;
+        }
+
+        public void requestHtml()
+        {
+            Request request=new Request.Builder().url(String.format(Locale.CHINA,NetEase.ARTICLE_URL2, netEaseDocId)).build();
+            mCall=OkHttpRequest.getInstance(ReaderActivity.this).newStringRequest(request, new OkHttpRequest.RequestCallback<String>() {
+                @Override
+                public void onSuccess(String res) {
+
+                    setWebProgressVisibility(View.INVISIBLE);
+
+                    mWebFragment.getWebView().getSettings().setJavaScriptEnabled(true);
+                    mWebFragment.getWebView().addJavascriptInterface(new HtmlClick(),"ReaderActivity");
+                    String html=new NetEaseHtml(netEaseDocId,res).getHtml();
+                    html+= HtmlTagBuild.jsTag(getImageClickInterface());
+                    mWebFragment.loadLocalData(html);
+                    showMenuItem();
+                }
+                @Override
+                public void onFailure(String msg) {
+
+                }
+            });
+        }
+
+        private String getImageClickInterface()
+        {
+            return "var objs = document.getElementsByTagName(\"img\");\n" +
+                    "for(var i=0;i<objs.length;i++)\n" +
+                    "    {\n" +
+                    "       objs[i].onclick=function(){\n" +
+                    "          ReaderActivity.openPhotos(this.src);\n" +
+                    "       }\n" +
+                    "    }";
+        }
+
+        public void remove()
+        {
+           if (mCall!=null)
+               mCall.cancel();
+        }
+    }
+    private class ZhihuManager{
+
+        private int zhihuDocId;
+        private ZhihuContentService mService;
+        public ZhihuManager(int docId) {
+            zhihuDocId=docId;
+        }
+
+        public void requestHtml()
+        {
+           mService=new ZhihuContentService();
+           mService.getContent(zhihuDocId, new IService.Callback<ZhihuNewsContent>() {
+                @Override
+                public void onSuccess(ZhihuNewsContent data) {
+                    setWebProgressVisibility(View.INVISIBLE);
+
+                    final String imgSource=data.getImageSource();
+                    Glide.with(ReaderActivity.this).load(data.getImage()).fitCenter().into(new ImageViewTarget<GlideDrawable>(mImageView) {
+                        @Override
+                        protected void setResource(GlideDrawable resource) {
+                            mImageView.setImageDrawable(resource);
+                            mImgSource.setText(imgSource);
+                            showMenuItem();
+                        }
+                    });
+                    mWebFragment.getWebView().getSettings().setJavaScriptEnabled(true);
+                    mWebFragment.getWebView().addJavascriptInterface(new HtmlClick(),"ReaderActivity");
+                    ZhihuHtml html=new ZhihuHtml(data.getBody(),data.getCss(),new String[]{getMyJs()});
+                    mWebFragment.loadLocalData(html.generateHtml());
+                }
+
+                @Override
+                public void onFailure(String message) {
+
+                }
+           });
+        }
+
+        /**
+         * 替换知乎页面的评论点击
+         * @return javascript text
+         */
+        public String getMyJs()
+        {
+            return  "var aTag=document.getElementsByTagName('a');\n" +
+                    "aTag=aTag[aTag.length-1];\n" +
+                    "aTag.removeAttribute('href');" +
+                    "aTag.setAttribute('onClick',\"showAndroidComment()\");\n" +
+                    "\n" +
+                    "function showAndroidComment()\n" +
+                    "{\n" +
+                    "  ReaderActivity.showCommentFragment();\n" +
+                    "}\n";
+        }
+
+        public void remove()
+        {
+            if (mService!=null)
+                mService.cancelAll();
         }
     }
 

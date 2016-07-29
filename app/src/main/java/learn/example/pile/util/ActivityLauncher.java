@@ -7,8 +7,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.content.ContextCompat;
 
 import learn.example.pile.R;
 import learn.example.pile.ChatActivity;
@@ -23,7 +25,7 @@ import learn.example.pile.WebViewActivity;
 public class ActivityLauncher {
 
     /**
-     * 启动自己应用程序内部Web浏览器Activity,使用左边进入动画
+     * 启动自己应用程序内部Web浏览器Activity
      * @param context
      * @param url
      */
@@ -31,12 +33,12 @@ public class ActivityLauncher {
     {
         Intent intent=new Intent(context, WebViewActivity.class);
         intent.setData(Uri.parse(url));
-        ActivityCompat.startActivity((Activity) context,intent,bundle);
+        startActivity(context,intent,bundle);
     }
 
 
     /**
-     * 启动视频播放器Activity,使用左边进入动画,
+     * 启动视频播放器Activity
      * @param context
      * @param url
      */
@@ -44,53 +46,69 @@ public class ActivityLauncher {
     {
         Intent intent=new Intent(context, VideoActivity.class);
         intent.setData(Uri.parse(url));
-        ActivityCompat.startActivity((Activity) context,intent,bundle);
+        startActivity(context,intent,bundle);
     }
 
 
     /**
-     * 启动图片查看Activity,使用左边进入动画
+     * 启动图片查看Activity
      * @param context
-     * @param url
+     * @param url 图片的URL
      */
 
-    public static void startPhotoActivity(@NonNull Context context, @NonNull String[] url,Bundle bundle)
+    public static void startPhotoActivityForNormal(@NonNull Context context, @NonNull String url,Bundle bundle)
     {
         Intent intent=new Intent(context, PhotoActivity.class);
         intent.putExtra(PhotoActivity.KEY_IMG_URL,url);
-        ActivityCompat.startActivity((Activity) context,intent,bundle);
+        startActivity(context,intent,bundle);
+    }
+
+    /**
+     * 启动图片查看器,查看网易新闻图片新闻
+     * @param context
+     * @param skipID
+     * @param bundle
+     */
+    public static void startPhotoActivityForNetEase(@NonNull Context context, @NonNull String skipID,Bundle bundle)
+    {
+        Intent intent=new Intent(context, PhotoActivity.class);
+        intent.putExtra(PhotoActivity.KEY_NETEASE_SKIPID,skipID);
+        startActivity(context,intent,bundle);
     }
 
 
-    public static void startReaderActivityFromZhihu(@NonNull Context context, @NonNull int id,Bundle bundle)
+    /**
+     * 启动阅读器,显示知乎内容
+     * @param id  id 知乎文章ID
+     */
+    public static void startReaderActivityForZhihu(@NonNull Context context, @NonNull int id, Bundle bundle)
     {
         Intent intent=new Intent(context, ReaderActivity.class);
         intent.putExtra(ReaderActivity.KEY_ZHIHU_CONTENT_ID,id);
-        ActivityCompat.startActivity((Activity) context,intent,bundle);
+        startActivity(context,intent,bundle);
     }
 
-
-    public static void startReaderActivityFromNetEase(@NonNull Context context,String[] data,Bundle bundle)
+    /**
+     * 启动阅读器,显示网易内容
+     * @param array  所需要的消息,array[0]=boardID,=array[1]=docID
+     */
+    public static void startReaderActivityForNetEase(@NonNull Context context, String[] array, Bundle bundle)
     {
         Intent intent=new Intent(context, ReaderActivity.class);
-        intent.putExtra(ReaderActivity.KEY_NETEASE_CONTENT_ID,data);
-
-        if (context instanceof Application)
-        {
-            context.startActivity(intent);
-        }else {
-            ActivityCompat.startActivity((Activity) context,intent,bundle);
-        }
-
+        intent.putExtra(ReaderActivity.KEY_NETEASE_CONTENT_ID,array);
+        startActivity(context,intent,bundle);
     }
 
     public static void startChatActivity(@NonNull Context context,Bundle bundle)
     {
         Intent intent=new Intent(context, ChatActivity.class);
-        ActivityCompat.startActivity((Activity) context,intent,bundle);
+        startActivity(context,intent,bundle);
     }
 
-
+    public static void startActivity(@NonNull Context context,@NonNull Intent intent,@Nullable Bundle bundle)
+    {
+        ContextCompat.startActivities(context,new Intent[]{intent},bundle);
+    }
 
     /**
      *  左边进入动画
@@ -104,7 +122,7 @@ public class ActivityLauncher {
 
 
     /**
-     * 重中心打开动画
+     * 从中心打开动画
      * @param context
      * @return
      */

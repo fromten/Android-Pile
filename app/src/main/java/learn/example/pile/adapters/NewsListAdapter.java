@@ -14,7 +14,6 @@ import com.bumptech.glide.Glide;
 
 import learn.example.pile.R;
 import learn.example.pile.jsonbean.NetEaseNews;
-import learn.example.pile.object.NetEase;
 import learn.example.pile.service.LoadPhotoService;
 import learn.example.pile.util.ActivityLauncher;
 import learn.example.pile.util.TextUtil;
@@ -34,16 +33,15 @@ public class NewsListAdapter extends SaveStateAbleAdapter<NewsListAdapter.BaseNe
         public void onClick(View v) {
             int position= (int) v.getTag();
             NetEaseNews.T1348647909107Bean item=getItem(position);
-            Context context=v.getContext();
-            if (item.getSkipID()!=null)
+
+            if (item.getSkipType()!=null&&item.getSkipType().equals("photoset"))
             {
-                Intent intent=new Intent(context, LoadPhotoService.class);
-                intent.putExtra(LoadPhotoService.KEY_SKIPID,item.getSkipID());
-                context.startService(intent);
+                Bundle anim= ActivityLauncher.slideAnimation(v.getContext());
+                ActivityLauncher.startPhotoActivityForNetEase(v.getContext(),item.getSkipID(),anim);
             }else {
                 String[] array=new String[]{item.getBoardid(),item.getDocid()};
                 Bundle anim= ActivityLauncher.slideAnimation(v.getContext());
-                ActivityLauncher.startReaderActivityFromNetEase(v.getContext(),array,anim);
+                ActivityLauncher.startReaderActivityForNetEase(v.getContext(),array,anim);
             }
 
         }
@@ -88,7 +86,7 @@ public class NewsListAdapter extends SaveStateAbleAdapter<NewsListAdapter.BaseNe
         NetEaseNews.T1348647909107Bean item=getItem(position);
         String shortDesc=item.getDigest()!=null?TextUtil.firstSentence(item.getDigest()):null;
         holder.describe.setText(shortDesc);
-        Glide.with(holder.itemView.getContext()).load(item.getImg()).centerCrop().into(holder.img);
+        Glide.with(holder.itemView.getContext()).load(item.getImgsrc()).centerCrop().into(holder.img);
     }
 
 
@@ -97,7 +95,7 @@ public class NewsListAdapter extends SaveStateAbleAdapter<NewsListAdapter.BaseNe
     {
         NetEaseNews.T1348647909107Bean item=getItem(position);
         Context context=holder.itemView.getContext();
-        Glide.with(context).load(item.getImg()).fitCenter().into(holder.mImageView1);
+        Glide.with(context).load(item.getImgsrc()).fitCenter().into(holder.mImageView1);
         NetEaseNews.T1348647909107Bean.ImageExtraBean[] images=item.getImgnewextra();
         if (images!=null)
         {

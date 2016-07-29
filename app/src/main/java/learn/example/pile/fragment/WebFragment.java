@@ -26,7 +26,7 @@ public class WebFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_read_content, container, false);
+        View view = inflater.inflate(R.layout.fragment_web, container, false);
         mRootLayout= (FrameLayout) view.findViewById(R.id.root);
         mWebView = (WebView) view.findViewById(R.id.web_view);
         return view;
@@ -46,6 +46,7 @@ public class WebFragment extends Fragment {
         mWebView.getSettings().setDisplayZoomControls(false);
         mWebView.getSettings().setLoadsImagesAutomatically(true);
         mWebView.setVerticalScrollBarEnabled(true);
+
     }
 
 

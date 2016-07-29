@@ -1,5 +1,7 @@
 package learn.example.pile.net;
 
+import java.util.Locale;
+
 import learn.example.pile.MyURI;
 import learn.example.pile.jsonbean.NetEaseComment;
 import learn.example.pile.jsonbean.NetEaseNews;
@@ -23,9 +25,9 @@ public class NewsService extends GsonService {
 
     public void getNetEaseNews(int page,Callback<NetEaseNews> callback)
     {
-       // String url=String.format(Locale.CHINA,NetEase.TOUTAI_URL,page,20);
-        String sign="SK6FxIsU30l0eN4Kb/7PUv0OSGGIfD8Up2mqkxqGk+R48ErR02zJ6/KXOnxX046I";
-        String url=NetEase.generateParamsUrl(page,sign);
+        String url=String.format(Locale.CHINA,NetEase.TOUTAI_URL,page,20);
+//        String sign="SK6FxIsU30l0eN4Kb/7PUv0OSGGIfD8Up2mqkxqGk+R48ErR02zJ6/KXOnxX046I";
+//        String url=NetEase.generateParamsUrl(page,sign);
         newRequest(TAG,NetEaseNews.class,url,callback);
     }
 

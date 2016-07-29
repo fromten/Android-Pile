@@ -78,6 +78,7 @@ public class ReaderActivity extends AppCompatActivity  {
         mWebFragment= new WebFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.read_main_show,mWebFragment).commit();
 
+        //延迟操作
         mAppBarLayout.post(new Runnable() {
             @Override
             public void run() {
@@ -88,14 +89,11 @@ public class ReaderActivity extends AppCompatActivity  {
 
         if (intent.hasExtra(KEY_NETEASE_CONTENT_ID))
         {
-            String[] array=getIntent().getStringArrayExtra(KEY_NETEASE_CONTENT_ID);
-            String netEaseBoardId=array[0];
-            String netEaseDocId =array[1];
-            mNetEaseManager=new NetEaseManager(netEaseDocId,netEaseBoardId);
+            mNetEaseManager=new NetEaseManager();
             mNetEaseManager.requestHtml();
         }else if (intent.hasExtra(KEY_ZHIHU_CONTENT_ID)){
-            int  zhihuID=getIntent().getIntExtra(KEY_ZHIHU_CONTENT_ID,0);
-            mZhihuManager=new ZhihuManager(zhihuID);
+
+            mZhihuManager=new ZhihuManager();
             mZhihuManager.requestHtml();
         }
     }
@@ -315,7 +313,7 @@ public class ReaderActivity extends AppCompatActivity  {
                 @Override
                 public void run() {
                     Bundle anim= ActivityLauncher.openAnimation(ReaderActivity.this);
-                    ActivityLauncher.startPhotoActivity(ReaderActivity.this,new String[]{res},anim);
+                    ActivityLauncher.startPhotoActivityForNormal(ReaderActivity.this,res,anim);
                 }
             });
         }
@@ -325,9 +323,10 @@ public class ReaderActivity extends AppCompatActivity  {
         private String netEaseDocId;
         private String netEaseBoardId;
         private Call mCall;
-        public NetEaseManager(String netEaseDocId, String netEaseBoardId) {
-            this.netEaseDocId = netEaseDocId;
-            this.netEaseBoardId = netEaseBoardId;
+        public NetEaseManager() {
+            String[] array=getIntent().getStringArrayExtra(KEY_NETEASE_CONTENT_ID);
+            this.netEaseBoardId =array[0];
+            this.netEaseDocId =array[1];
         }
 
         public void requestHtml()
@@ -374,8 +373,8 @@ public class ReaderActivity extends AppCompatActivity  {
 
         private int zhihuDocId;
         private ZhihuContentService mService;
-        public ZhihuManager(int docId) {
-            zhihuDocId=docId;
+        public ZhihuManager() {
+            zhihuDocId=getIntent().getIntExtra(KEY_ZHIHU_CONTENT_ID,0);
         }
 
         public void requestHtml()

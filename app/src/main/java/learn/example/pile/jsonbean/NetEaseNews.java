@@ -3,6 +3,8 @@ package learn.example.pile.jsonbean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 /**
@@ -20,11 +22,12 @@ public class NetEaseNews {
         private String boardid;
         private int clkNum;
         private String digest;
+
+        @SerializedName(value = "id",alternate = "docid")
         private String docid;
         private int downTimes;
-        private String id;
-        private String img;
         private int imgType;
+        @SerializedName(value = "img",alternate = "imgsrc")
         private String imgsrc;
         private String interest;
         private String lmodify;
@@ -43,6 +46,9 @@ public class NetEaseNews {
         private String title;
         private int upTimes;
         private String skipID;
+        private String skipType;
+
+        @SerializedName(value = "imgnewextra",alternate = "imgextra")
         private ImageExtraBean[] imgnewextra;
 
 
@@ -86,15 +92,6 @@ public class NetEaseNews {
         public int getDownTimes() {
             return downTimes;
         }
-
-        public String getId() {
-            return id;
-        }
-
-        public String getImg() {
-            return img;
-        }
-
         public int getImgType() {
             return imgType;
         }
@@ -147,7 +144,9 @@ public class NetEaseNews {
             return replyCount;
         }
 
-
+        public String getSkipType() {
+            return skipType;
+        }
 
         public ImageExtraBean[] getImgnewextra() {
             return imgnewextra;
@@ -210,8 +209,6 @@ public class NetEaseNews {
             dest.writeString(this.digest);
             dest.writeString(this.docid);
             dest.writeInt(this.downTimes);
-            dest.writeString(this.id);
-            dest.writeString(this.img);
             dest.writeInt(this.imgType);
             dest.writeString(this.imgsrc);
             dest.writeString(this.interest);
@@ -231,6 +228,7 @@ public class NetEaseNews {
             dest.writeString(this.title);
             dest.writeInt(this.upTimes);
             dest.writeString(this.skipID);
+            dest.writeString(this.skipType);
             dest.writeTypedArray(this.imgnewextra, flags);
         }
 
@@ -240,8 +238,6 @@ public class NetEaseNews {
             this.digest = in.readString();
             this.docid = in.readString();
             this.downTimes = in.readInt();
-            this.id = in.readString();
-            this.img = in.readString();
             this.imgType = in.readInt();
             this.imgsrc = in.readString();
             this.interest = in.readString();
@@ -261,6 +257,7 @@ public class NetEaseNews {
             this.title = in.readString();
             this.upTimes = in.readInt();
             this.skipID = in.readString();
+            this.skipType = in.readString();
             this.imgnewextra = in.createTypedArray(ImageExtraBean.CREATOR);
         }
 

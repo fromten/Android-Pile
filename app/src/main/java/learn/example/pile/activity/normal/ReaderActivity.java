@@ -1,4 +1,4 @@
-package learn.example.pile;
+package learn.example.pile.activity.normal;
 
 
 import android.content.Intent;
@@ -10,6 +10,8 @@ import android.support.design.widget.AppBarLayout;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -25,6 +27,7 @@ import com.bumptech.glide.request.target.ImageViewTarget;
 import java.util.Locale;
 
 import learn.example.net.OkHttpRequest;
+import learn.example.pile.R;
 import learn.example.pile.fragment.CommentFragment;
 import learn.example.pile.fragment.WebFragment;
 import learn.example.pile.html.NetEaseHtml;
@@ -44,7 +47,6 @@ import okhttp3.Request;
 public class ReaderActivity extends AppCompatActivity  {
     private static final String TAG = "ReaderActivity";
 
-
     public static final String KEY_ZHIHU_CONTENT_ID ="key_zhihu_content_id";
     public static final String KEY_NETEASE_CONTENT_ID ="key_netease_content_id";
 
@@ -61,7 +63,7 @@ public class ReaderActivity extends AppCompatActivity  {
     private WebFragment mWebFragment;
     private CommentFragment mCommentFragment;
 
-    private MoveEvent mMoveEvent=new MoveEvent();
+    private MoveEvent mMoveEvent;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +71,7 @@ public class ReaderActivity extends AppCompatActivity  {
         setView();
         setSupportActionBar(mToolbar);
         initPages();
+        mMoveEvent=new MoveEvent();
     }
 
 
@@ -78,6 +81,7 @@ public class ReaderActivity extends AppCompatActivity  {
         mWebFragment= new WebFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.read_main_show,mWebFragment).commit();
 
+        //延迟操作
         mAppBarLayout.post(new Runnable() {
             @Override
             public void run() {
@@ -88,14 +92,11 @@ public class ReaderActivity extends AppCompatActivity  {
 
         if (intent.hasExtra(KEY_NETEASE_CONTENT_ID))
         {
-            String[] array=getIntent().getStringArrayExtra(KEY_NETEASE_CONTENT_ID);
-            String netEaseBoardId=array[0];
-            String netEaseDocId =array[1];
-            mNetEaseManager=new NetEaseManager(netEaseDocId,netEaseBoardId);
+            mNetEaseManager=new NetEaseManager();
             mNetEaseManager.requestHtml();
         }else if (intent.hasExtra(KEY_ZHIHU_CONTENT_ID)){
-            int  zhihuID=getIntent().getIntExtra(KEY_ZHIHU_CONTENT_ID,0);
-            mZhihuManager=new ZhihuManager(zhihuID);
+
+            mZhihuManager=new ZhihuManager();
             mZhihuManager.requestHtml();
         }
     }
@@ -144,7 +145,7 @@ public class ReaderActivity extends AppCompatActivity  {
     @Override
     public void finish() {
         super.finish();
-        overridePendingTransition(R.anim.anim_slide_out_right,R.anim.anim_slide_in_left);//添加一个右边退出动画
+        overridePendingTransition(R.anim.anim_slide_left_in,R.anim.anim_slide_left_to_end);//添加一个右边退出动画
     }
 
     @Override
@@ -168,14 +169,6 @@ public class ReaderActivity extends AppCompatActivity  {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
-
-        //设置箭头为黑色
-        final Drawable upArrow = getResources().getDrawable(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
-        if (upArrow!=null)
-        {
-            upArrow.setColorFilter(ResourcesCompat.getColor(getResources(),R.color.black_light,null), PorterDuff.Mode.SRC_ATOP);
-            getSupportActionBar().setHomeAsUpIndicator(upArrow);
-        }
     }
 
     /**
@@ -198,11 +191,11 @@ public class ReaderActivity extends AppCompatActivity  {
             }
             mCommentFragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction()
-                    .setCustomAnimations(R.anim.anim_slide_in_right,R.anim.anim_slide_out_left)
+                    .setCustomAnimations(R.anim.anim_slide_right_to_start,R.anim.anim_slide_out_to_right)
                     .add(R.id.read_main_show,mCommentFragment).commit();
         }else if (!mCommentFragment.isVisible()){
             getSupportFragmentManager().beginTransaction()
-                    .setCustomAnimations(R.anim.anim_slide_in_right,R.anim.anim_slide_out_left)
+                    .setCustomAnimations(R.anim.anim_slide_right_to_start,R.anim.anim_slide_out_to_right)
                     .show(mCommentFragment).commit();
         }
     }
@@ -216,7 +209,7 @@ public class ReaderActivity extends AppCompatActivity  {
     public void onBackPressed() {
         if (mCommentFragment!=null&&mCommentFragment.isVisible()) {
                 getSupportFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.anim.anim_slide_out_right,R.anim.anim_slide_in_left)
+                        .setCustomAnimations(R.anim.anim_slide_left_in,R.anim.anim_slide_left_to_end)
                         .hide(mCommentFragment).commit();
         }else {
             super.onBackPressed();
@@ -261,6 +254,18 @@ public class ReaderActivity extends AppCompatActivity  {
         private float downX;
         private float downY;
 
+        private int xOffset;
+        private int yOffset;
+
+        public MoveEvent() {
+            DisplayMetrics metrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(metrics);
+            yOffset= metrics.heightPixels/15;
+            xOffset = metrics.widthPixels/3;
+            Log.d(TAG, String.valueOf(yOffset));
+            Log.d(TAG, String.valueOf(xOffset));
+        }
+
         public boolean onTouchEvent(MotionEvent event) {
             int action = event.getAction();
             if (action == MotionEvent.ACTION_DOWN) {
@@ -273,10 +278,10 @@ public class ReaderActivity extends AppCompatActivity  {
                 if (inPress) {
                     float x=event.getX();
                     float y=event.getY();
-                   if (Math.abs(y-downY)<=30)
+                   if (Math.abs(y-downY)<=yOffset)
                    {
                        int offsetX= (int) (x-downX);
-                       if (Math.abs(offsetX)>=200)
+                       if (Math.abs(offsetX)>=xOffset)
                        {
                            if (offsetX>0)
                            {
@@ -315,7 +320,7 @@ public class ReaderActivity extends AppCompatActivity  {
                 @Override
                 public void run() {
                     Bundle anim= ActivityLauncher.openAnimation(ReaderActivity.this);
-                    ActivityLauncher.startPhotoActivity(ReaderActivity.this,new String[]{res},anim);
+                    ActivityLauncher.startPhotoActivityForNormal(ReaderActivity.this,res,anim);
                 }
             });
         }
@@ -325,9 +330,10 @@ public class ReaderActivity extends AppCompatActivity  {
         private String netEaseDocId;
         private String netEaseBoardId;
         private Call mCall;
-        public NetEaseManager(String netEaseDocId, String netEaseBoardId) {
-            this.netEaseDocId = netEaseDocId;
-            this.netEaseBoardId = netEaseBoardId;
+        public NetEaseManager() {
+            String[] array=getIntent().getStringArrayExtra(KEY_NETEASE_CONTENT_ID);
+            this.netEaseBoardId =array[0];
+            this.netEaseDocId =array[1];
         }
 
         public void requestHtml()
@@ -374,8 +380,8 @@ public class ReaderActivity extends AppCompatActivity  {
 
         private int zhihuDocId;
         private ZhihuContentService mService;
-        public ZhihuManager(int docId) {
-            zhihuDocId=docId;
+        public ZhihuManager() {
+            zhihuDocId=getIntent().getIntExtra(KEY_ZHIHU_CONTENT_ID,0);
         }
 
         public void requestHtml()

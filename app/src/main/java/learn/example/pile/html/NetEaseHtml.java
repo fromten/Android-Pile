@@ -36,16 +36,16 @@ public class NetEaseHtml {
     }
     private String insertHead()
     {
-        String css="img {\n" +
+        String css="img{\n" +
                 "  border: 0;\n" +
                 "  vertical-align: middle;\n" +
                 "  color: transparent;\n" +
                 "  font-size: 0;\n" +
                 "  max-width: 100%;\n" +
                 "  display: block;\n" +
-                "  margin: 30px auto;\n" +
+                "  marginTop: 20px auto;\n" +
                 "}"+
-                " p {margin-left: 15px;\n" +
+                " p{margin-left: 10px;\n" +
                 " margin-right: 15px;\n" +
                 " color: #333333;}\n";
         return HtmlTagBuild.headTag(HtmlTagBuild.styleTag(css));
@@ -53,7 +53,7 @@ public class NetEaseHtml {
 
     private String insertTitle(String title)
     {
-        return "<h4>"+title+"</h4>";
+        return "<h2>"+title+"</h2>";
     }
 
 
@@ -73,7 +73,7 @@ public class NetEaseHtml {
             String src=GsonHelper.getAsString(object.get("src"),null);
 
             String imageTag=HtmlTagBuild.imageTag(0,0,src);
-            imageTag+=HtmlTagBuild.tag("a",null,alt);
+            imageTag+=HtmlTagBuild.tag("strong",null,alt);
             oldBody=oldBody.replace(ref,imageTag);
 
         }

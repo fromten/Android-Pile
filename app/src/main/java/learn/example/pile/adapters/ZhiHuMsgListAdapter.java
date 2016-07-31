@@ -26,7 +26,7 @@ public class ZhiHuMsgListAdapter extends SaveStateAbleAdapter<ZhiHuMsgListAdapte
         public void onClick(View v) {
             int id= (int) v.getTag();
             Bundle anim= ActivityLauncher.slideAnimation(v.getContext());
-            ActivityLauncher.startReaderActivityFromZhihu(v.getContext(),id,anim);
+            ActivityLauncher.startReaderActivityForZhihu(v.getContext(),id,anim);
         }
     };
 

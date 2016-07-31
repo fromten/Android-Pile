@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class ViewPagerAdapter extends PagerAdapter {
     private List<View> mViews;
-    private onViewShowListener mOnViewShowListener;
+
     public ViewPagerAdapter(List<View> views) {
         mViews = views;
     }
@@ -21,14 +21,6 @@ public class ViewPagerAdapter extends PagerAdapter {
         return mViews.size();
     }
 
-    public onViewShowListener getOnViewShowListener() {
-        return mOnViewShowListener;
-    }
-
-    public void setOnViewShowListener(onViewShowListener onViewShowListener) {
-        mOnViewShowListener = onViewShowListener;
-    }
-
     @Override
     public boolean isViewFromObject(View view, Object object) {
         return view==object;
@@ -36,20 +28,23 @@ public class ViewPagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        container.addView(mViews.get(position));
-        if (mOnViewShowListener!=null)
-        {
-            mOnViewShowListener.onBindView(mViews.get(position),position);
-        }
-        return mViews.get(position);
+        container.addView(getView(position));
+        return getView(position);
     }
+
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         container.removeView(mViews.get(position));
     }
 
-    public interface onViewShowListener{
-        void onBindView(View view,int position);
+    @Override
+    public int getItemPosition(Object object) {
+        return mViews.indexOf(object);
+    }
+
+    public View getView(int position)
+    {
+        return mViews.get(position);
     }
 }

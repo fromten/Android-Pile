@@ -65,16 +65,15 @@ public class WebFragment extends Fragment {
      */
     public void requestProgressBar(boolean indeterminate,int style)
     {
-
         FrameLayout.LayoutParams params=new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         if (indeterminate)
         {
             params.gravity=Gravity.CENTER;
-            style=style==0?android.R.attr.progressBarStyleLarge:style;
         }else {
             params.gravity= Gravity.TOP;
-            style=style==0?android.R.attr.progressBarStyleHorizontal:style;
         }
+        int defStyle=indeterminate?android.R.attr.progressBarStyleLarge:android.R.attr.progressBarStyleHorizontal;
+        style=style==0?defStyle:style;
         mProgressBar=new ProgressBar(getContext(),null,style);
         mRootLayout.addView(mProgressBar,params);
     }

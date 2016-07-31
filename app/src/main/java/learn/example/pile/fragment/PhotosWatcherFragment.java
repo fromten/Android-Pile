@@ -2,12 +2,16 @@ package learn.example.pile.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -31,17 +35,30 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 /**
  * Created on 2016/7/29.
  */
-public class PhotosWatcherFragment extends Fragment implements OkHttpRequest.RequestCallback<String> {
+public class PhotosWatcherFragment extends Fragment implements OkHttpRequest.RequestCallback<String>,ViewPager.OnPageChangeListener {
 
     private ViewPager mViewPager;
     private ViewPagerAdapter mViewPagerAdapter;
+
+    private RelativeLayout mRelativeLayout;
+    private TextView title;
+    private TextView number;
+    private TextView content;
+
+    private List<PhotosMessage> mMessagesList;
+
     private Call mCall;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mViewPager = new ViewPager(getContext());
-        return mViewPager;
+        View view=inflater.inflate(R.layout.fragment_photowatcher,container,false);
+        mViewPager = (ViewPager) view.findViewById(R.id.view_pager);
+        mRelativeLayout= (RelativeLayout) view.findViewById(R.id.container);
+        title= (TextView) view.findViewById(R.id.title);
+        number= (TextView) view.findViewById(R.id.number);
+        content= (TextView) view.findViewById(R.id.content);
+        return view;
     }
 
     public void setContent(String skipID) {
@@ -64,23 +81,22 @@ public class PhotosWatcherFragment extends Fragment implements OkHttpRequest.Req
         JsonArray array = object.getAsJsonArray("photos");
         if (array != null) {
             List<View> list = new ArrayList<>();
+            mMessagesList=new ArrayList<>();
             String title = GsonHelper.getAsString(object.get("setname"), null);
             final int size = array.size();
             for (int i = 0; i < size; ++i) {
                 JsonObject o = (JsonObject) array.get(i);
                 String imgUrl = GsonHelper.getAsString(o.get("imgurl"), null);
                 String content = GsonHelper.getAsString(o.get("note"), null);
-                list.add(createView(imgUrl, title, content));
+                list.add(createPhotoView());
+                mMessagesList.add(new PhotosMessage(title,content,imgUrl));
             }
             mViewPagerAdapter = new ViewPagerAdapter(list);
-            mViewPagerAdapter.setOnViewShowListener(new ViewPagerAdapter.onViewShowListener() {
-                @Override
-                public void onBindView(View view, int position) {
-                    TextView textView = (TextView) view.findViewById(R.id.number);
-                    textView.setText(position+1+"/"+size);
-                }
-            });
             mViewPager.setAdapter(mViewPagerAdapter);
+            mViewPager.addOnPageChangeListener(this);
+
+            //手动调用此方法,初始化
+            onPageSelected(0);
         }
     }
 
@@ -96,27 +112,66 @@ public class PhotosWatcherFragment extends Fragment implements OkHttpRequest.Req
         super.onDestroy();
     }
 
-    public View createView(String url, String title, String content) {
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.photo_watcher, mViewPager, false);
-        PhotoView photoView = (PhotoView) view.findViewById(R.id.imageView);
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        PhotosMessage message=mMessagesList.get(position);
+        ImageView view= (ImageView) mViewPagerAdapter.getView(position);
+        if (view.getDrawable()==null)
+        {
+            Glide.with(this).load(message.mUrl).into(view);
+        }
+        title.setText(message.getTitle());
+        content.setText(message.getContent());
+        number.setText(position+1+"/"+mMessagesList.size());
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
+
+    private View createPhotoView(){
+        PhotoView photoView = new PhotoView(getContext());
         photoView.setMinimumScale(0.5f);
         photoView.setOnViewTapListener(mOnViewTapListener);
-        Glide.with(this).load(url)
-                .dontAnimate()
-                .error(R.mipmap.img_error)
-                .fitCenter()
-                .into(photoView);
-        TextView titleView = (TextView) view.findViewById(R.id.title);
-        titleView.setText(title);
-        TextView contentView = (TextView) view.findViewById(R.id.content);
-        contentView.setText(content);
-        return view;
+        photoView.setScaleType(ImageView.ScaleType.CENTER);
+        photoView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        return photoView;
     }
     private PhotoViewAttacher.OnViewTapListener mOnViewTapListener=new PhotoViewAttacher.OnViewTapListener() {
         @Override
         public void onViewTap(View view, float v, float v1) {
-            getActivity().finish();
+            if (mRelativeLayout.getVisibility() != View.VISIBLE) {
+                mRelativeLayout.setVisibility(View.VISIBLE);
+            } else {
+                mRelativeLayout.setVisibility(View.INVISIBLE);
+            }
         }
     };
+
+    private static class PhotosMessage{
+        private String title;
+        private String content;
+        private String mUrl;
+
+        public PhotosMessage(String title, String content,String url) {
+            this.title = title;
+            this.content = content;
+            this.mUrl=url;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+        public String getContent() {
+            return content;
+        }
+
+    }
 
 }

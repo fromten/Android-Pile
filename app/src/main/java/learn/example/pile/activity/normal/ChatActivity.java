@@ -1,4 +1,4 @@
-package learn.example.pile;
+package learn.example.pile.activity.normal;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -11,6 +11,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 
+import learn.example.pile.R;
+import learn.example.pile.activity.base.ToolBarActivity;
 import learn.example.pile.adapters.ChatListAdapter;
 import learn.example.pile.jsonbean.TuringMachineJson;
 import learn.example.pile.net.IService;
@@ -20,7 +22,7 @@ import learn.example.pile.object.ChatInfo;
 /**
  * Created on 2016/6/26.
  */
-public class ChatActivity extends BaseActivity implements IService.Callback<TuringMachineJson>, View.OnClickListener{
+public class ChatActivity extends ToolBarActivity implements IService.Callback<TuringMachineJson>, View.OnClickListener{
 
     private static final String TAG = "ChatActivity";
 

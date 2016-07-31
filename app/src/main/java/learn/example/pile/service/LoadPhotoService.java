@@ -8,7 +8,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import learn.example.net.OkHttpRequest;
-import learn.example.pile.PhotoActivity;
+import learn.example.pile.activity.normal.PhotoActivity;
 import learn.example.pile.object.NetEase;
 import learn.example.pile.util.GsonHelper;
 import okhttp3.Request;

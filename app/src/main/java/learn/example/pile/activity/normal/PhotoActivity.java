@@ -1,5 +1,7 @@
-package learn.example.pile;
+package learn.example.pile.activity.normal;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -16,6 +18,8 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
 
+import learn.example.pile.R;
+import learn.example.pile.activity.base.FullScreenActivity;
 import learn.example.pile.adapters.ViewPagerAdapter;
 import learn.example.pile.fragment.PhotosWatcherFragment;
 import uk.co.senab.photoview.PhotoView;
@@ -24,7 +28,7 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 /**
  * Created on 2016/6/1.
  */
-public class PhotoActivity extends AppCompatActivity {
+public class PhotoActivity extends FullScreenActivity {
 
 
     private static final String TAG = "PhotoActivity";
@@ -40,7 +44,6 @@ public class PhotoActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo);
-
         String url=getIntent().getStringExtra(KEY_IMG_URL);
         String skipId=getIntent().getStringExtra(KEY_NETEASE_SKIPID);
         if (url!=null)

@@ -1,4 +1,4 @@
-package learn.example.pile;
+package learn.example.pile.activity.normal;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,10 +9,13 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
+import learn.example.pile.R;
+import learn.example.pile.activity.base.ToolBarActivity;
+
 /**
  * Created on 2016/5/7.
  */
-public class WebViewActivity extends BaseActivity {
+public class WebViewActivity extends ToolBarActivity {
 
 
 

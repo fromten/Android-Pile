@@ -1,26 +1,26 @@
 <resources>
-    <!-- Base application theme. -->
-    <style name="BaseAppTheme" parent="Theme.Design.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorPrimary</item>
-        <item name="android:textColorLink">@color/link_color</item>
+    <attr name="activityAnimationStyle" format="reference"/>
+
+    <style name="SlideAnimationStyle">
+        <item name="android:activityCloseEnterAnimation">@anim/anim_slide_left_in</item>
+        <item name="android:activityCloseExitAnimation">@anim/anim_slide_left_to_end</item>
+        <item name="android:activityOpenEnterAnimation">@anim/anim_slide_right_to_start</item>
+        <item name="android:activityOpenExitAnimation">@anim/anim_slide_out_to_right</item>
     </style>
-    <style name="AppTheme" parent="BaseAppTheme"/>
-    <style name="ReaderTheme" parent="BaseAppTheme">
-        <item name="actionMenuTextColor">@color/black_light</item>
-        <item name="android:actionMenuTextColor">@color/black_light</item>
+
+    <style name="ExplodeAnimationStyle">
+        <item name="android:activityCloseEnterAnimation">@null</item>
+        <item name="android:activityCloseExitAnimation">@anim/anim_center_close</item>
+        <item name="android:activityOpenEnterAnimation">@anim/anim_center_open</item>
+        <item name="android:activityOpenExitAnimation">@null</item>
     </style>
-    <style name="VideoTheme" parent="BaseAppTheme">
-        <item name="colorPrimaryDark">@color/none</item>
-    </style>
+
+
 
     <style name="ChatTextStyle" parent="Base.TextAppearance.AppCompat.Small">
         <item name="android:background">@drawable/chat_textwrap</item>
         <item name="drawerArrowStyle">@style/Widget.AppCompat.DrawerArrowToggle</item>
     </style>
-
 
 
     <style name="TitleText" parent="TextAppearance.AppCompat.Medium">

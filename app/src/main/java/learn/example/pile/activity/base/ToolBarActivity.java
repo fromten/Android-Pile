@@ -1,4 +1,4 @@
-package learn.example.pile;
+package learn.example.pile.activity.base;
 
 import android.annotation.TargetApi;
 import android.graphics.Color;
@@ -15,10 +15,12 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
+import learn.example.pile.R;
+
 /**
  * Created on 2016/6/23.
  */
-public class BaseActivity extends AppCompatActivity {
+public class ToolBarActivity extends AppCompatActivity {
     private LinearLayout mRootLayout;
     private Toolbar mToolbar;
     private View mStatusView;
@@ -27,7 +29,6 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.toolbar);
-      //  statusBarCompat();
         mRootLayout = (LinearLayout) findViewById(R.id.root_linelayout);
         mToolbar = (Toolbar) findViewById(R.id.tool_bar);
         mToolbar.setTitleTextColor(Color.WHITE);
@@ -139,6 +140,6 @@ public class BaseActivity extends AppCompatActivity {
      */
     protected void onPerformExitAnim()
     {
-        overridePendingTransition(R.anim.anim_slide_out_right,R.anim.anim_slide_in_left);//添加一个右边退出动画
+       overridePendingTransition(R.anim.anim_slide_left_in,R.anim.anim_slide_left_to_end);//添加一个右边退出动画
     }
 }

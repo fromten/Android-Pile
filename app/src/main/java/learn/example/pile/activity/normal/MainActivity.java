@@ -1,4 +1,4 @@
-package learn.example.pile;
+package learn.example.pile.activity.normal;
 
 import android.Manifest;
 import android.annotation.TargetApi;
@@ -21,13 +21,15 @@ import android.view.ViewGroup;
 
 
 import learn.example.net.OkHttpRequest;
+import learn.example.pile.R;
+import learn.example.pile.activity.base.ToolBarActivity;
 import learn.example.pile.adapters.FragmentPagerAdapter;
 import learn.example.pile.fragment.SettingFragment;
 import learn.example.pile.util.ActivityLauncher;
 import learn.example.pile.util.AppInfo;
 
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends ToolBarActivity {
 
     private final int permissionResultCode=99;
     @Override

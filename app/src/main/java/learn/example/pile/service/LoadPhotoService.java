@@ -2,18 +2,14 @@ package learn.example.pile.service;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.os.Bundle;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.stream.JsonReader;
 
 import learn.example.net.OkHttpRequest;
-import learn.example.pile.PhotoActivity;
+import learn.example.pile.activity.normal.PhotoActivity;
 import learn.example.pile.object.NetEase;
-import learn.example.pile.util.ActivityLauncher;
 import learn.example.pile.util.GsonHelper;
 import okhttp3.Request;
 

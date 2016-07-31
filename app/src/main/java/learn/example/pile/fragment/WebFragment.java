@@ -26,7 +26,7 @@ public class WebFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_read_content, container, false);
+        View view = inflater.inflate(R.layout.fragment_web, container, false);
         mRootLayout= (FrameLayout) view.findViewById(R.id.root);
         mWebView = (WebView) view.findViewById(R.id.web_view);
         return view;
@@ -46,6 +46,7 @@ public class WebFragment extends Fragment {
         mWebView.getSettings().setDisplayZoomControls(false);
         mWebView.getSettings().setLoadsImagesAutomatically(true);
         mWebView.setVerticalScrollBarEnabled(true);
+
     }
 
 
@@ -64,16 +65,15 @@ public class WebFragment extends Fragment {
      */
     public void requestProgressBar(boolean indeterminate,int style)
     {
-
         FrameLayout.LayoutParams params=new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         if (indeterminate)
         {
             params.gravity=Gravity.CENTER;
-            style=style==0?android.R.attr.progressBarStyleLarge:style;
         }else {
             params.gravity= Gravity.TOP;
-            style=style==0?android.R.attr.progressBarStyleHorizontal:style;
         }
+        int defStyle=indeterminate?android.R.attr.progressBarStyleLarge:android.R.attr.progressBarStyleHorizontal;
+        style=style==0?defStyle:style;
         mProgressBar=new ProgressBar(getContext(),null,style);
         mRootLayout.addView(mProgressBar,params);
     }

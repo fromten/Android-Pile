@@ -3,6 +3,7 @@ package learn.example.pile.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import learn.example.pile.adapters.ZhiHuMsgListAdapter;
@@ -63,11 +64,21 @@ public class ReadListFragment extends BaseListFragment implements IService.Callb
     @Override
     public void onRefresh() {
         mAdapter.clear();
-        mService.getStories(this);
+        correctGet();
     }
 
     @Override
     public void onLoadMore() {
-        mService.getStoriesAtTime(date,this);
+         correctGet();
+    }
+
+    private void correctGet()
+    {
+        if (date==null)
+        {
+            mService.getStories(this);
+        }else {
+            mService.getStoriesAtTime(date,this);
+        }
     }
 }

@@ -52,6 +52,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/content"
         android:layout_below="@+id/adress_and_time"
+        android:layout_alignStart="@+id/adress_and_time"
         android:layout_alignLeft="@+id/adress_and_time"/>
 
 </RelativeLayout>

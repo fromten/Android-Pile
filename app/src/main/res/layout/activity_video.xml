@@ -15,13 +15,13 @@
         android:clickable="false"
         android:focusable="false"
         android:textColor="@color/colorPrimaryDark"
-        android:layout_gravity="left|start|center_vertical"
+        android:layout_gravity="start|center_vertical"
         android:id="@+id/video_logmsg"/>
     <learn.example.uidesign.VolumeProgressView
-        android:layout_width="20dp"
-        android:layout_height="200dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/video_volume"
         android:clickable="false"
         android:visibility="invisible"
-        android:layout_gravity="right|center_vertical"/>
+        android:layout_gravity="end|center_vertical"/>
 </FrameLayout>

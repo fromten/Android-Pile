@@ -1,26 +1,15 @@
 package learn.example.pile.activity.normal;
 
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import learn.example.pile.R;
 import learn.example.pile.activity.base.FullScreenActivity;
-import learn.example.pile.adapters.ViewPagerAdapter;
 import learn.example.pile.fragment.PhotosWatcherFragment;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;

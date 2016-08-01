@@ -41,6 +41,6 @@
             android:text="确定"
             android:textColor="@android:color/holo_red_dark"
             android:id="@+id/spinner_button"
-            android:layout_gravity="right|end"/>
+            android:layout_gravity="end"/>
     </FrameLayout>
 </LinearLayout>

@@ -24,6 +24,7 @@ public class VideoListAdapter extends SaveStateAbleAdapter<VideoListAdapter.Vide
     @Override
     public VideoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v= LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_video,parent,false);
+        v.setOnClickListener(this);
         return new VideoViewHolder(v);
     }
 
@@ -34,7 +35,6 @@ public class VideoListAdapter extends SaveStateAbleAdapter<VideoListAdapter.Vide
         holder.title.setText(timeAndTitle);
         Glide.with(holder.itemView.getContext()).load(item.getImgUrl()).fitCenter().into(holder.videoImg);
         holder.itemView.setTag(item.getPlayUrl());
-        holder.itemView.setOnClickListener(this);
     }
 
     @Override

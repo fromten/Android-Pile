@@ -20,7 +20,7 @@ public class JokeDatabase {
 
     JokeDatabase(Context context)
     {
-        JokeDatabaseHelper mDBHelper = new JokeDatabaseHelper(context, JokeDatabaseHelper.DATABASE_NAME, null, JokeDatabaseHelper.VERSION);
+        JokeDatabaseHelper mDBHelper = new JokeDatabaseHelper(context,null);
         mDB= mDBHelper.getWritableDatabase();
     }
     public void close(){

@@ -7,8 +7,11 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.media.AudioManager;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 /**
  * Created on 2016/5/27.
@@ -20,7 +23,8 @@ public class VolumeProgressView extends View {
     private int currentValue;
     private int rectColor;//格子的颜色
     private int borderColor;//格子四边的颜色
-
+    private int defWidth;
+    private int defHeight;
 
     private AudioManager mAudioManager;
 
@@ -33,6 +37,28 @@ public class VolumeProgressView extends View {
     public VolumeProgressView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initView();
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int width=MeasureSpec.getSize(widthMeasureSpec);
+        int widthMode=MeasureSpec.getMode(widthMeasureSpec);
+        int height=MeasureSpec.getSize(heightMeasureSpec);
+        int heightMode=MeasureSpec.getMode(heightMeasureSpec);
+
+        int viewWidth=width;
+        int viewHeight=height;
+
+        if (widthMode==MeasureSpec.AT_MOST)
+        {
+            viewWidth=Math.min(defWidth,width);
+        }
+        if (heightMode==MeasureSpec.AT_MOST)
+        {
+            //每格40个高度
+            viewHeight=Math.min(defHeight,height);
+        }
+        setMeasuredDimension(viewWidth,viewHeight);
     }
 
     public void initView()
@@ -49,9 +75,15 @@ public class VolumeProgressView extends View {
         for(int i = 0; i< VOLUME_MAX_VALUE; ++i){
             mRect[i]=new Rect(0,0,0,0);
         }
-
         rectColor=Color.RED;
         borderColor=Color.BLACK;
+
+        //屏幕宽度1/15作为默认宽度,屏幕高度1/30作为默认格子高度
+        DisplayMetrics metrics = new DisplayMetrics();
+        WindowManager manager= (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+        manager.getDefaultDisplay().getMetrics(metrics);
+        defWidth=metrics.widthPixels/15;
+        defHeight=VOLUME_MAX_VALUE*metrics.heightPixels/30;
     }
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
@@ -107,6 +139,16 @@ public class VolumeProgressView extends View {
         this.currentValue = value;
         mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC,value,AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
         invalidate();
+    }
+
+    public void show()
+    {
+        setVisibility(VISIBLE);
+    }
+
+    public void hide()
+    {
+        setVisibility(INVISIBLE);
     }
 
     public int getBorderColor() {

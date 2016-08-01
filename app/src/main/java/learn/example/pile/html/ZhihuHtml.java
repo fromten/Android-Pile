@@ -8,13 +8,14 @@ import learn.example.pile.util.HtmlTagBuild;
 public class ZhihuHtml {
 
     private String body;
-    private String[] css;
-    private String[] js;
-
-    public ZhihuHtml(String body, String[] cssLink, String[] js) {
+    private String[] cssLink;
+    private String[] jsLink;
+    private String js;
+    private String css;
+    public ZhihuHtml(String body, String[] cssLink, String[] jsLink) {
         this.body = body;
-        this.css = cssLink;
-        this.js = js;
+        this.cssLink = cssLink;
+        this.jsLink = jsLink;
     }
 
     /**
@@ -25,10 +26,20 @@ public class ZhihuHtml {
     {
         StringBuilder builder=new StringBuilder();
         builder.append("<html lang='zh-CN'>");
-        builder.append(toHeadTag(css,js));
+        builder.append(toHeadTag(cssLink,jsLink));
+        if (css!=null)
+        {
+           builder.append(HtmlTagBuild.styleTag(css));
+        }
         builder.append("<body>");
         builder.append(body);
         builder.append("</body>");
+
+        if (js!=null)
+        {
+            builder.append(HtmlTagBuild.jsTag(js));
+        }
+
         builder.append("</html>");
         return builder.toString();
     }
@@ -40,24 +51,40 @@ public class ZhihuHtml {
         builder.append("<head>");
         for (String str:css)
         {
-            builder.append(HtmlTagBuild.linkTag(str));
+            builder.append(HtmlTagBuild.cssLinkTag(str));
         }
         builder.append(getMyCss());
         for (String str:js)
         {
-            builder.append(HtmlTagBuild.jsTag(str));
+            builder.append(HtmlTagBuild.tag("script",HtmlTagBuild.attr("src",str),null));
         }
         builder.append("</head>");
         return builder.toString();
     }
 
     /**
-     * 知乎默认css会添加200px的头部图片高度,使用得到css覆盖原本的css属性
+     * 知乎默认css会添加200px的头部图片高度,覆盖原本的css属性
      * @return
      */
     public String getMyCss()
     {
         return HtmlTagBuild.styleTag(".headline .img-place-holder{" +
                 " height: 0px;}");
+    }
+
+    /**
+     * 设置额外的Js 脚本代码
+     * @param js javaScript
+     */
+    public void setJs(String js) {
+        this.js = js;
+    }
+
+    /**
+     * 设置额外的Css 样式
+     * @param css css内容
+     */
+    public void setCss(String css) {
+        this.css = css;
     }
 }

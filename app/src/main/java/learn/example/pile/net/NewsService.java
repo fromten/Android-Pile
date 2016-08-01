@@ -1,7 +1,5 @@
 package learn.example.pile.net;
 
-import java.util.Locale;
-
 import learn.example.pile.MyURI;
 import learn.example.pile.jsonbean.NetEaseComment;
 import learn.example.pile.jsonbean.NetEaseNews;

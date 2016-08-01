@@ -3,10 +3,10 @@ package learn.example.pile.activity.normal;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.os.Handler;
+import android.os.Message;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
@@ -30,6 +30,19 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
     private Bundle saveState;
     private String TAG = "VideoActivity";
 
+    private Handler mHandler=new Handler(){
+
+        @Override
+        public void handleMessage(Message msg) {
+           switch (msg.what)
+           {
+               case 0:mVolumeProgressView.hide();break;
+               case 1:
+                   if (!mMediaController.isShowing())//Actionbar和MediaController应该同步显示或隐藏
+                    hideActionBar();break;
+           }
+        }
+    };
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +70,7 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
         mVideoView.setOnCompletionListener(this);
         mVideoView.setOnErrorListener(this);
         mVideoView.setOnTouchListener(touchListener);
+
     }
 
     @Override
@@ -85,6 +99,7 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
         mVideoView.stopPlayback();
         mVideoView = null;
         mMediaController = null;
+        mHandler=null;
         super.onDestroy();
     }
 
@@ -104,6 +119,13 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
     @Override
     public void onCompletion(MediaPlayer mp) {
         mLogView.setText("播放结束");
+        //十秒后
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mLogView.setText(null);
+            }
+        },10000);
     }
 
     @Override
@@ -115,10 +137,8 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
     //监听,控制播放的音量
     private View.OnTouchListener touchListener = new View.OnTouchListener() {
 
-
         private float mDownY; //按下的y坐标
         private boolean inPress;//是否按下
-        private boolean inMove;//是否移动
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
@@ -126,13 +146,10 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
             if (action == MotionEvent.ACTION_DOWN) {
                 mDownY = event.getY();
                 inPress = true;
-                inMove = false;
             } else if (action == MotionEvent.ACTION_MOVE) {   //移动增加或减少音量
                 float y = event.getY();
                 if (Math.abs(mDownY - y) > 90) {
-                    //如果不可见,则显示
-                    if (mVolumeProgressView.getVisibility() != View.VISIBLE)
-                        mVolumeProgressView.setVisibility(View.VISIBLE);
+                    mVolumeProgressView.show();
                     int value = mVolumeProgressView.getCurrentValue();
                     if (mDownY > y) {
                         mVolumeProgressView.setCurrentValue(value + 1);
@@ -140,11 +157,12 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
                         mVolumeProgressView.setCurrentValue(value - 1);
                     }
                     inPress = false;
-                    inMove = true;
                     mDownY = event.getY();
+
+                    //在隐藏音量View的时间内,如果手指再次按下,移除message,取消事件
+                    mHandler.removeMessages(0);
                 }
             } else if (action == MotionEvent.ACTION_UP) {
-                inMove = false;
                 if (inPress) {
                     if (mMediaController.isShowing()) {
                         mMediaController.hide();
@@ -153,14 +171,14 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
                         mMediaController.show();
                         showActionBar();
                     }
+
+                    //在事件时间内如果重新点击,移除msg
+                    mHandler.removeMessages(1);
+                    //3秒后隐藏ActionBar
+                    mHandler.sendEmptyMessageDelayed(1,3000);
                 } else {
-                    mVolumeProgressView.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (!inMove)
-                                mVolumeProgressView.setVisibility(View.INVISIBLE);
-                        }
-                    }, 3000);//三秒后移除音量进度栏
+                    //发送message隐藏音量View
+                    mHandler.sendEmptyMessageDelayed(0,3000);
                 }
             }
             return true;

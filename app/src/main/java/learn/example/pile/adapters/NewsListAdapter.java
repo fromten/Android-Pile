@@ -1,7 +1,6 @@
 package learn.example.pile.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,7 +13,6 @@ import com.bumptech.glide.Glide;
 
 import learn.example.pile.R;
 import learn.example.pile.jsonbean.NetEaseNews;
-import learn.example.pile.service.LoadPhotoService;
 import learn.example.pile.util.ActivityLauncher;
 import learn.example.pile.util.TextUtil;
 

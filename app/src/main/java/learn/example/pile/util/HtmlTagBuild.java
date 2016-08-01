@@ -25,11 +25,12 @@ public class HtmlTagBuild {
         return tag("script",attr("type","text/javascript"),js);
     }
 
-    public static String linkTag(String href)
+    public static String cssLinkTag(String href)
     {
         String attr=attr("rel","stylesheet")+attr("type","text/css")+ attr("href",href);
         return tag("link",attr,null);
     }
+
 
     public static String imageTag(int width,int height,String src)
     {
@@ -43,12 +44,26 @@ public class HtmlTagBuild {
         return tag("image",widthAttr+heightAttr+srcAttr,null);
     }
 
-    public static String tag(String tagName,String attr,String wrapContent)
+    /**
+     * 生成Xml标签
+     * @param tagName 标签名字
+     * @param attrs 标签属性
+     * @param wrapContent 标签内容
+     * @return 完整的XML标签
+     */
+    public static String tag(String tagName,String attrs,String wrapContent)
     {
+
         String wrap=TextUtil.checkString(wrapContent,"");
-        return String.format(Locale.CHINA,TAG,tagName,attr,wrap,tagName);
+        return String.format(Locale.CHINA,TAG,tagName,attrs,wrap,tagName);
     }
 
+    /**
+     * 生成属性参数,如 attr("width","50") ,return width='50'
+     * @param attrName 属性名字
+     * @param value 属性值
+     * @return 完整的属性
+     */
     public static String attr(String attrName,String value)
     {
         return String.format(Locale.CHINA,ATTR,attrName,value);

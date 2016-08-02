@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Android-Pile
 ##简要:
   一个小巧的App.
@@ -25,7 +24,5 @@
 <li>EventBus</li>
 <li>Okhttp</li>
 </ul>
-=======
 
->>>>>>> test
   

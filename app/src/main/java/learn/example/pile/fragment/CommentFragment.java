@@ -14,7 +14,7 @@ import learn.example.pile.adapters.CommentListAdapter;
 import learn.example.pile.jsonbean.NetEaseComment;
 import learn.example.pile.jsonbean.ZhihuComment;
 import learn.example.pile.net.IService;
-import learn.example.pile.net.NewsService;
+import learn.example.pile.net.NetEaseNewsService;
 import learn.example.pile.net.ZhihuContentService;
 import learn.example.pile.object.Comment;
 import learn.example.uidesign.DividerItemDecoration;
@@ -110,19 +110,19 @@ public class CommentFragment extends RVListFragment {
     private class NetEaseCommentHandler{
         private String boradId;
         private String docId;
-        private NewsService mNewsService;
+        private NetEaseNewsService mNetEaseNewsService;
         private int start;
         private static final int MAX_LENGTH=15;
 
         public NetEaseCommentHandler(String boradId, String docId) {
             this.boradId = boradId;
             this.docId = docId;
-            mNewsService=new NewsService();
+            mNetEaseNewsService =new NetEaseNewsService();
         }
 
         public void perfromHotRequest()
         {
-            mNewsService.getHotComment(boradId, docId, start, MAX_LENGTH, new IService.Callback<NetEaseComment>() {
+            mNetEaseNewsService.getHotComment(boradId, docId, start, MAX_LENGTH, new IService.Callback<NetEaseComment>() {
                 @Override
                 public void onSuccess(NetEaseComment data) {
                     mCommentListAdapter.addAll(Comment.toList(data));
@@ -138,7 +138,7 @@ public class CommentFragment extends RVListFragment {
 
         public void next()
         {
-            mNewsService.getNormalComment(boradId, docId, start, MAX_LENGTH, new IService.Callback<NetEaseComment>() {
+            mNetEaseNewsService.getNormalComment(boradId, docId, start, MAX_LENGTH, new IService.Callback<NetEaseComment>() {
                 @Override
                 public void onSuccess(NetEaseComment data) {
                     mCommentListAdapter.addAll(Comment.toList(data));
@@ -154,7 +154,7 @@ public class CommentFragment extends RVListFragment {
         }
         public void cancelAll()
         {
-            mNewsService.cancelAll();
+            mNetEaseNewsService.cancelAll();
         }
     }
 

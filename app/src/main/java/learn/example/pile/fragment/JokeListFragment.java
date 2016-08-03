@@ -57,7 +57,7 @@ public class JokeListFragment extends BaseListFragment implements IService.Callb
 
     @Override
     public void onSuccess(JokeJsonData data) {
-        if (data==null||data.getResCode()!=0)
+        if (data==null||data.getResCode()!=0||data.getResBody()==null)
         {
             notifyError();
             return;

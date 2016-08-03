@@ -22,9 +22,6 @@ import learn.example.pile.util.GsonHelper;
  */
 public class NetEaseCommentFragment extends CommentFragment implements NetEaseNewsService.Callback<NetEaseComment>{
 
-    public static final String KEY_DOC_ID="docID";
-    public static final String KEY_BOARD_ID="boardID";
-
     private String docId;
     private String boardId;
 
@@ -35,7 +32,6 @@ public class NetEaseCommentFragment extends CommentFragment implements NetEaseNe
 
     public static NetEaseCommentFragment newInstance(String docId,String boardID) {
         NetEaseCommentFragment fragment = new NetEaseCommentFragment();
-        Log.d("instance", "newInstance() called with: " + "docId = [" + docId + "], boardID = [" + boardID + "]");
         fragment.docId=docId;
         fragment.boardId=boardID;
         return fragment;
@@ -44,12 +40,10 @@ public class NetEaseCommentFragment extends CommentFragment implements NetEaseNe
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.d("null", "onViewCreated");
         if (boardId==null&&docId==null)
         {
             return;
         }
-        Log.d("tag", "onViewCreated");
         mNetEaseNewsService =new NetEaseNewsService();
         mNetEaseNewsService.getHotComment(boardId,docId,currentPos,10,this);
     }

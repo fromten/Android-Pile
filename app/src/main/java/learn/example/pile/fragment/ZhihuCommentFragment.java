@@ -40,20 +40,17 @@ public class ZhihuCommentFragment extends CommentFragment implements IService.Ca
     public void onSuccess(ZhihuComment data) {
         addComments(new ZhihuCommentFactory().getCommentList(data));
         notifySuccess();
+
+        //请求长评论成功后请求短评论
+        requestShortComment();
     }
 
     @Override
     public void onFailure(String message) {
          notifyError();
-    }
 
-    @Override
-    public void onLoadMore() {
-        if (!hadRequestedShortComment)
-        {
-            mCommentService.getShortComment(docID,this);
-            hadRequestedShortComment=true;
-        }
+        //请求长评论失败后请求短评论
+         requestShortComment();
     }
 
     @Override
@@ -62,6 +59,16 @@ public class ZhihuCommentFragment extends CommentFragment implements IService.Ca
          mCommentService.cancelAll();
         super.onDestroy();
     }
+
+    private void requestShortComment()
+    {
+        if (!hadRequestedShortComment)
+        {
+            mCommentService.getShortComment(docID,this);
+            hadRequestedShortComment=true;
+        }
+    }
+
 
     public static class ZhihuCommentFactory{
         public List<Comment> getCommentList(ZhihuComment zhihuComment) {

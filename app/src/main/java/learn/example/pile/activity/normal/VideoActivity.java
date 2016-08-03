@@ -96,6 +96,9 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
 
     @Override
     protected void onDestroy() {
+        mHandler.removeMessages(0);
+        mHandler.removeMessages(1);
+        mHandler=null;
         mVideoView.stopPlayback();
         mVideoView = null;
         mMediaController = null;

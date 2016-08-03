@@ -27,11 +27,8 @@ import learn.example.pile.R;
 import learn.example.pile.fragment.CommentFragment;
 import learn.example.pile.fragment.NetEaseCommentFragment;
 import learn.example.pile.fragment.WebFragment;
-<<<<<<< HEAD
 import learn.example.pile.fragment.ZhihuCommentFragment;
-=======
 import learn.example.pile.html.ImageClickHandler;
->>>>>>> master
 import learn.example.pile.html.NetEaseHtml;
 import learn.example.pile.html.ZhihuHtml;
 import learn.example.pile.jsonbean.ZhihuNewsContent;

@@ -22,8 +22,6 @@ public class CommentFragment extends BaseListFragment {
 
     private CommentListAdapter mCommentListAdapter;
 
-    private TextView mEmptyTextView;
-
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -31,7 +29,6 @@ public class CommentFragment extends BaseListFragment {
         setEnableSwipeLayout(false);
         mCommentListAdapter=new CommentListAdapter();
         setAdapter(mCommentListAdapter);
-
     }
 
     public void addComments(List<Comment> comments)
@@ -50,15 +47,4 @@ public class CommentFragment extends BaseListFragment {
         return view;
     }
 
-<<<<<<< HEAD
-=======
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-
-
-
->>>>>>> master
 }

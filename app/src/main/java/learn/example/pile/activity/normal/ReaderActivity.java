@@ -29,7 +29,9 @@ import java.util.Locale;
 import learn.example.net.OkHttpRequest;
 import learn.example.pile.R;
 import learn.example.pile.fragment.CommentFragment;
+import learn.example.pile.fragment.NetEaseCommentFragment;
 import learn.example.pile.fragment.WebFragment;
+import learn.example.pile.fragment.ZhihuCommentFragment;
 import learn.example.pile.html.NetEaseHtml;
 import learn.example.pile.html.ZhihuHtml;
 import learn.example.pile.jsonbean.ZhihuNewsContent;
@@ -185,11 +187,11 @@ public class ReaderActivity extends AppCompatActivity  {
             Bundle bundle=new Bundle();
             if (mNetEaseManager!=null)
             {
-                bundle.putStringArray(CommentFragment.KEY_NETEASE_ID,new String[]{mNetEaseManager.netEaseBoardId, mNetEaseManager.netEaseDocId});
+
+                mCommentFragment= NetEaseCommentFragment.newInstance(mNetEaseManager.netEaseDocId,mNetEaseManager.netEaseBoardId);
             }else if (mZhihuManager!=null){
-                bundle.putInt(CommentFragment.KEY_ZHIHU_ID,mZhihuManager.zhihuDocId);
+                mCommentFragment= ZhihuCommentFragment.newInstance(mZhihuManager.zhihuDocId);
             }
-            mCommentFragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(R.anim.anim_slide_right_to_start,R.anim.anim_slide_out_to_right)
                     .add(R.id.read_main_show,mCommentFragment).commit();

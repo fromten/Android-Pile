@@ -8,7 +8,7 @@ import android.view.View;
 import learn.example.pile.adapters.NewsListAdapter;
 import learn.example.pile.jsonbean.NetEaseNews;
 import learn.example.pile.net.GsonService;
-import learn.example.pile.net.NewsService;
+import learn.example.pile.net.NetEaseNewsService;
 
 /**
  * Created on 2016/5/7.
@@ -17,7 +17,7 @@ public class NewsListFragment extends BaseListFragment implements GsonService.Ca
 
 
     private NewsListAdapter mNewsListAdapter;
-    private NewsService mService;
+    private NetEaseNewsService mService;
 
     private int page;
     @Override
@@ -25,7 +25,7 @@ public class NewsListFragment extends BaseListFragment implements GsonService.Ca
         super.onViewCreated(view, savedInstanceState);
         mNewsListAdapter=new NewsListAdapter();
         setAdapter(mNewsListAdapter);
-        mService=new NewsService();
+        mService=new NetEaseNewsService();
         if (savedInstanceState==null)
         {
             setRefreshing(true);

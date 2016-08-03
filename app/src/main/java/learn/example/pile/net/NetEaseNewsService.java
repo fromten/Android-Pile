@@ -12,8 +12,8 @@ import okhttp3.Request;
 /**
  * Created on 2016/7/1.
  */
-public class NewsService extends GsonService {
-    private static final String TAG = "NewsService";
+public class NetEaseNewsService extends GsonService {
+    private static final String TAG = "NetEaseNewsService";
 
 
     public void getNews(Callback<NewsJsonData> callback)

@@ -8,9 +8,10 @@ public class TextUtil {
     public static String firstSentence(String text)
     {
         String[] str=sentenceSub(text);
-        if (str.length>=0)
+        if (str!=null&&str.length>0)
         {
-            return str[0]+"。";
+            String fs=str[0];
+            return fs.length()>0?fs+=".":fs;
         }
         return null;
     }
@@ -18,9 +19,7 @@ public class TextUtil {
 
     public static String[] sentenceSub(String text)
     {
-        if (text==null)
-            throw new NullPointerException("null object");
-        return text.split("\\.|\\。");
+        return text==null?null:text.split("\\.|\\。");
     }
 
     public static String checkString(String string,String defValue)

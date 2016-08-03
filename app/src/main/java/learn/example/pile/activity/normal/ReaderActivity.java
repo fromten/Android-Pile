@@ -2,16 +2,12 @@ package learn.example.pile.activity.normal;
 
 
 import android.content.Intent;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -31,14 +27,18 @@ import learn.example.pile.R;
 import learn.example.pile.fragment.CommentFragment;
 import learn.example.pile.fragment.NetEaseCommentFragment;
 import learn.example.pile.fragment.WebFragment;
+<<<<<<< HEAD
 import learn.example.pile.fragment.ZhihuCommentFragment;
+=======
+import learn.example.pile.html.ImageClickHandler;
+>>>>>>> master
 import learn.example.pile.html.NetEaseHtml;
 import learn.example.pile.html.ZhihuHtml;
 import learn.example.pile.jsonbean.ZhihuNewsContent;
 import learn.example.pile.net.IService;
 import learn.example.pile.net.ZhihuContentService;
 import learn.example.pile.object.NetEase;
-import learn.example.pile.util.ActivityLauncher;
+
 import learn.example.pile.util.HtmlTagBuild;
 import okhttp3.Call;
 import okhttp3.Request;
@@ -264,8 +264,6 @@ public class ReaderActivity extends AppCompatActivity  {
             getWindowManager().getDefaultDisplay().getMetrics(metrics);
             yOffset= metrics.heightPixels/15;
             xOffset = metrics.widthPixels/3;
-            Log.d(TAG, String.valueOf(yOffset));
-            Log.d(TAG, String.valueOf(xOffset));
         }
 
         public boolean onTouchEvent(MotionEvent event) {
@@ -313,19 +311,6 @@ public class ReaderActivity extends AppCompatActivity  {
                 }
             });
         }
-
-        @JavascriptInterface()
-        public void openPhotos(final String res)
-        {
-            //正确的姿势使用这个方法
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Bundle anim= ActivityLauncher.openAnimation(ReaderActivity.this);
-                    ActivityLauncher.startPhotoActivityForNormal(ReaderActivity.this,res,anim);
-                }
-            });
-        }
     }
 
     private class NetEaseManager{
@@ -347,10 +332,13 @@ public class ReaderActivity extends AppCompatActivity  {
 
                     setWebProgressVisibility(View.INVISIBLE);
 
+
+                    //添加网页图片点击监听
                     mWebFragment.getWebView().getSettings().setJavaScriptEnabled(true);
-                    mWebFragment.getWebView().addJavascriptInterface(new HtmlClick(),"ReaderActivity");
+                    ImageClickHandler handler=new ImageClickHandler(ReaderActivity.this);
+                    mWebFragment.getWebView().addJavascriptInterface(handler,handler.getName());
                     String html=new NetEaseHtml(netEaseDocId,res).getHtml();
-                    html+= HtmlTagBuild.jsTag(getImageClickInterface());
+                    html+= HtmlTagBuild.jsTag(handler.getClickJS());
                     mWebFragment.loadLocalData(html);
                     showMenuItem();
                 }
@@ -359,17 +347,6 @@ public class ReaderActivity extends AppCompatActivity  {
 
                 }
             });
-        }
-
-        private String getImageClickInterface()
-        {
-            return "var objs = document.getElementsByTagName(\"img\");\n" +
-                    "for(var i=0;i<objs.length;i++)\n" +
-                    "    {\n" +
-                    "       objs[i].onclick=function(){\n" +
-                    "          ReaderActivity.openPhotos(this.src);\n" +
-                    "       }\n" +
-                    "    }";
         }
 
         public void remove()
@@ -405,7 +382,13 @@ public class ReaderActivity extends AppCompatActivity  {
                     });
                     mWebFragment.getWebView().getSettings().setJavaScriptEnabled(true);
                     mWebFragment.getWebView().addJavascriptInterface(new HtmlClick(),"ReaderActivity");
-                    ZhihuHtml html=new ZhihuHtml(data.getBody(),data.getCss(),new String[]{getMyJs()});
+
+                    //添加图片点击监听
+                    ImageClickHandler imageClickHandler=new ImageClickHandler(ReaderActivity.this);
+                    mWebFragment.getWebView().addJavascriptInterface(imageClickHandler,imageClickHandler.getName());
+
+                    ZhihuHtml html=new ZhihuHtml(data.getBody(),data.getCss(),data.getJs());
+                    html.setJs(imageClickHandler.getClickJS()+"\n"+getCommentClickJs());
                     mWebFragment.loadLocalData(html.generateHtml());
                 }
 
@@ -420,7 +403,7 @@ public class ReaderActivity extends AppCompatActivity  {
          * 替换知乎页面的评论点击
          * @return javascript text
          */
-        public String getMyJs()
+        public String getCommentClickJs()
         {
             return  "var aTag=document.getElementsByTagName('a');\n" +
                     "aTag=aTag[aTag.length-1];\n" +

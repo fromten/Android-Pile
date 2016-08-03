@@ -97,7 +97,7 @@ public class JokeListAdapter extends SaveStateAbleAdapter<RecyclerView.ViewHolde
     public void onClick(View v) {
         String url= (String) v.getTag(R.id.link);
         Bundle anim=ActivityLauncher.openAnimation(v.getContext());
-        ActivityLauncher.startPhotoActivityForNormal(v.getContext(),url,anim);
+        ActivityLauncher.startPhotoActivityForSingle(v.getContext(),url,anim);
     }
 
     public static class JokeTextHolder extends RecyclerView.ViewHolder

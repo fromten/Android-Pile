@@ -3,6 +3,7 @@ package learn.example.pile.activity.normal;
 import android.Manifest;
 import android.annotation.TargetApi;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -32,11 +33,13 @@ import learn.example.pile.util.AppInfo;
 public class MainActivity extends ToolBarActivity {
 
     private final int permissionResultCode=99;
+    private static boolean is=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
+
     }
 
     public void initView()

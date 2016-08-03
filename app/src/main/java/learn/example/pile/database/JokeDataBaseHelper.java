@@ -17,7 +17,8 @@ public class JokeDatabaseHelper extends SQLiteOpenHelper {
                           +JOKE_JSONDATA_COLUMN+SPACE+"TEXT)";
     public static final int VERSION=1;
     public static final String DATABASE_NAME="jokedata.db";
-    public JokeDatabaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+
+    public JokeDatabaseHelper(Context context, SQLiteDatabase.CursorFactory factory) {
         super(context, DATABASE_NAME, factory, VERSION);
     }
     @Override

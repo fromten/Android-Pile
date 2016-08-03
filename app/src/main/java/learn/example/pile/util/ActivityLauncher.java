@@ -53,7 +53,7 @@ public class ActivityLauncher {
      * @param url 图片的URL
      */
 
-    public static void startPhotoActivityForNormal(@NonNull Context context, @NonNull String url,Bundle bundle)
+    public static void startPhotoActivityForSingle(@NonNull Context context, @NonNull String url, Bundle bundle)
     {
         Intent intent=new Intent(context, PhotoActivity.class);
         intent.putExtra(PhotoActivity.KEY_IMG_URL,url);

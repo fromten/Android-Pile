@@ -3,7 +3,6 @@ package learn.example.pile.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,13 +12,8 @@ import android.widget.TextView;
 import java.util.List;
 
 import learn.example.pile.adapters.CommentListAdapter;
-import learn.example.pile.jsonbean.NetEaseComment;
-import learn.example.pile.jsonbean.ZhihuComment;
-import learn.example.pile.net.IService;
-import learn.example.pile.net.NetEaseNewsService;
-import learn.example.pile.net.ZhihuContentService;
 import learn.example.pile.object.Comment;
-import learn.example.uidesign.DividerItemDecoration;
+
 
 /**
  * Created on 2016/7/13.
@@ -56,4 +50,15 @@ public class CommentFragment extends BaseListFragment {
         return view;
     }
 
+<<<<<<< HEAD
+=======
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+
+
+
+>>>>>>> master
 }

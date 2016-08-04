@@ -26,7 +26,7 @@ public class CommentFragment extends BaseListFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setEnableSwipeLayout(false);
+        setDisEnableRefresh(true);
         mCommentListAdapter=new CommentListAdapter();
         setAdapter(mCommentListAdapter);
     }

@@ -77,7 +77,7 @@ public class PhotoActivity extends FullScreenActivity {
     private PhotoViewAttacher.OnViewTapListener mOnViewTapListener=new PhotoViewAttacher.OnViewTapListener() {
         @Override
         public void onViewTap(View view, float v, float v1) {
-          finish();
+            finish();
         }
     };
 }

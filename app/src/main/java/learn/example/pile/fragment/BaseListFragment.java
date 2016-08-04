@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -77,6 +78,7 @@ public class BaseListFragment extends  RVListFragment {
            List<? extends Parcelable> list=savedInstanceState.getParcelableArrayList(TAG);
             ((SaveStateAbleAdapter) mAdapter).addAll(list);
         }
+        if (savedInstanceState!=null)//回复状态后,如果数据为0,确定上一个请求失败
         mEmptyViewHolder.onAdapterSetChanged(mAdapter.getItemCount());
     }
 
@@ -163,7 +165,6 @@ public class BaseListFragment extends  RVListFragment {
         setRefreshing(false);
         cancelLoadMore();
     }
-
 
 
     private  class CommonFooterHolder extends FooterHolder implements View.OnClickListener{

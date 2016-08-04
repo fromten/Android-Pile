@@ -33,7 +33,7 @@ public class VideoListAdapter extends SaveStateAbleAdapter<VideoListAdapter.Vide
         OpenEyes.VideoInfo item=getItem(position);
         String timeAndTitle=item.getTitle()+"\n"+TimeUtil.formatMS(item.getDuration());
         holder.title.setText(timeAndTitle);
-        Glide.with(holder.itemView.getContext()).load(item.getImgUrl()).fitCenter().into(holder.videoImg);
+        Glide.with(holder.itemView.getContext()).load(item.getImgUrl()).dontAnimate().fitCenter().into(holder.videoImg);
         holder.itemView.setTag(item.getPlayUrl());
     }
 

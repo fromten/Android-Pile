@@ -63,10 +63,10 @@ public class RVListFragment extends Fragment implements SwipeRefreshLayout.OnRef
        mSwipeRefreshLayout.setColorSchemeColors(color);
     }
 
-    //是否启用下拉刷新
-    public void setEnableSwipeLayout(boolean enable)
+    //是否禁止下拉刷新
+    public void setDisEnableRefresh(boolean whether)
     {
-        mSwipeRefreshLayout.setEnabled(enable);
+        mSwipeRefreshLayout.setEnabled(!whether);
     }
 
     @Override
@@ -111,6 +111,15 @@ public class RVListFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     public RecyclerView getRecyclerView() {
         return mRecyclerView;
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mSwipeRefreshLayout.isRefreshing())
+        {
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
+        super.onDestroy();
     }
 
     private class ScrollHelper extends RecyclerView.OnScrollListener{

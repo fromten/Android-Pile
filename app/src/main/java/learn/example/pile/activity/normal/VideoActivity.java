@@ -1,10 +1,15 @@
 package learn.example.pile.activity.normal;
 
+import android.content.Context;
+import android.gesture.GestureUtils;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.MediaController;
@@ -28,16 +33,19 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
     private static final String KEY_SAVE_STATE_POSITION = "KEY_SAVE_STATE_POSITION";
 
     private Bundle saveState;
-    private String TAG = "VideoActivity";
 
-    private Handler mHandler=new Handler(){
+    private GestureDetector mScreenTouchListener;
 
+    public static final int HIDE_VOLUME_PROGERESSBAR=0;
+    public static final int HIDE_ACTIONBAR=1;
+    private Handler mHandler=new Handler()
+    {
         @Override
         public void handleMessage(Message msg) {
            switch (msg.what)
            {
-               case 0:mVolumeProgressView.hide();break;
-               case 1:
+               case HIDE_VOLUME_PROGERESSBAR:mVolumeProgressView.hide();break;
+               case HIDE_ACTIONBAR:
                    if (!mMediaController.isShowing())//Actionbar和MediaController应该同步显示或隐藏
                     hideActionBar();break;
            }
@@ -69,15 +77,20 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
         mVideoView.setOnPreparedListener(this);
         mVideoView.setOnCompletionListener(this);
         mVideoView.setOnErrorListener(this);
-        mVideoView.setOnTouchListener(touchListener);
-
+        mScreenTouchListener=new GestureDetector(this,mSimpleOnGestureListener);
+        mVideoView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return mScreenTouchListener.onTouchEvent(event);
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         if (!mVideoView.isPlaying())
-            mVideoView.start();
+            mVideoView.resume();
     }
 
     @Override
@@ -96,13 +109,13 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
 
     @Override
     protected void onDestroy() {
-        mHandler.removeMessages(0);
-        mHandler.removeMessages(1);
+        mHandler.removeMessages(HIDE_ACTIONBAR);
+        mHandler.removeMessages(HIDE_VOLUME_PROGERESSBAR);
         mHandler=null;
         mVideoView.stopPlayback();
         mVideoView = null;
         mMediaController = null;
-        mHandler=null;
+
         super.onDestroy();
     }
 
@@ -137,54 +150,64 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
         return true;
     }
 
-    //监听,控制播放的音量
-    private View.OnTouchListener touchListener = new View.OnTouchListener() {
+    private GestureDetector.SimpleOnGestureListener mSimpleOnGestureListener=new GestureDetector.SimpleOnGestureListener(){
 
-        private float mDownY; //按下的y坐标
-        private boolean inPress;//是否按下
+        private void showControls()
+        {
+            if (mMediaController.isShowing()) {
+                mMediaController.hide();
+                hideActionBar();
+            } else {
+                mMediaController.show(3000);
+                showActionBar();
+            }
+            //在事件时间内如果重新点击,移除msg
+            mHandler.removeMessages(HIDE_ACTIONBAR);
+            //3秒后隐藏ActionBar
+            mHandler.sendEmptyMessageDelayed(HIDE_ACTIONBAR,3000);
+        }
 
         @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            int action = event.getAction();
-            if (action == MotionEvent.ACTION_DOWN) {
-                mDownY = event.getY();
-                inPress = true;
-            } else if (action == MotionEvent.ACTION_MOVE) {   //移动增加或减少音量
-                float y = event.getY();
-                if (Math.abs(mDownY - y) > 90) {
-                    mVolumeProgressView.show();
-                    int value = mVolumeProgressView.getCurrentValue();
-                    if (mDownY > y) {
-                        mVolumeProgressView.setCurrentValue(value + 1);
-                    } else {
-                        mVolumeProgressView.setCurrentValue(value - 1);
-                    }
-                    inPress = false;
-                    mDownY = event.getY();
-
-                    //在隐藏音量View的时间内,如果手指再次按下,移除message,取消事件
-                    mHandler.removeMessages(0);
-                }
-            } else if (action == MotionEvent.ACTION_UP) {
-                if (inPress) {
-                    if (mMediaController.isShowing()) {
-                        mMediaController.hide();
-                        hideActionBar();
-                    } else {
-                        mMediaController.show();
-                        showActionBar();
-                    }
-
-                    //在事件时间内如果重新点击,移除msg
-                    mHandler.removeMessages(1);
-                    //3秒后隐藏ActionBar
-                    mHandler.sendEmptyMessageDelayed(1,3000);
-                } else {
-                    //发送message隐藏音量View
-                    mHandler.sendEmptyMessageDelayed(0,3000);
-                }
+        public boolean onDown(MotionEvent e) {
+            return true;
+        }
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            if (mVideoView.isPlaying() && mVideoView.canPause()) {
+                mVideoView.pause();
+            } else {
+                mVideoView.start();
             }
             return true;
+        }
+
+        @Override
+        public boolean onSingleTapUp(MotionEvent e) {
+            showControls();
+            return true;
+        }
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            return false;
+        }
+
+
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            if (Math.abs(distanceY) >= 20) {
+                mVolumeProgressView.show();
+                int value = mVolumeProgressView.getCurrentValue();
+                if (distanceY > 0) {
+                    mVolumeProgressView.setCurrentValue(value + 1);
+                } else {
+                    mVolumeProgressView.setCurrentValue(value - 1);
+                }
+                //发送消息隐藏音量进度条,如果重新
+                mHandler.removeMessages(HIDE_VOLUME_PROGERESSBAR);
+                mHandler.sendEmptyMessageDelayed(HIDE_VOLUME_PROGERESSBAR, 3000);
+                return true;
+            }
+            return false;
         }
     };
 }

@@ -68,7 +68,7 @@ public class JokeListAdapter extends SaveStateAbleAdapter<RecyclerView.ViewHolde
     private void setTextJoke(JokeTextHolder holder, int position){
         JokeJsonData.JokeResBody.JokeItem item=getItem(position);
         holder.content.setText(Html.fromHtml(item.getText()));
-        String html="<p>"+item.getTitle()+"<small>"+item.getCreateTime().substring(0,10)+"</small></p>";
+        String html="<p>"+item.getTitle()+"</p>\n\t"+"<small>"+item.getCreateTime().substring(0,10)+"</small>";
         holder.title.setText(Html.fromHtml(html));
     }
 
@@ -88,7 +88,7 @@ public class JokeListAdapter extends SaveStateAbleAdapter<RecyclerView.ViewHolde
             holder.img.setOnClickListener(this);
         }
         String time="<small>  "+item.getCreateTime().substring(0,10)+"</small>";
-        String html="<p>"+item.getTitle()+time+"</p>";
+        String html="<p>"+item.getTitle()+"</p>\n\t"+time;
         holder.title.setText(Html.fromHtml(html));
     }
 

@@ -1,10 +1,14 @@
 package learn.example.pile.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -120,7 +124,7 @@ public class PhotosWatcherFragment extends Fragment implements OkHttpRequest.Req
         ImageView view= (ImageView) mViewPagerAdapter.getView(position);
         if (view.getDrawable()==null)
         {
-            Glide.with(this).load(message.mUrl).into(view);
+            Glide.with(this).load(message.mUrl).fitCenter().into(view);
         }
         title.setText(message.getTitle());
         content.setText(message.getContent());
@@ -143,13 +147,24 @@ public class PhotosWatcherFragment extends Fragment implements OkHttpRequest.Req
     private PhotoViewAttacher.OnViewTapListener mOnViewTapListener=new PhotoViewAttacher.OnViewTapListener() {
         @Override
         public void onViewTap(View view, float v, float v1) {
+            Activity activity=getActivity();
             if (mRelativeLayout.getVisibility() != View.VISIBLE) {
                 mRelativeLayout.setVisibility(View.VISIBLE);
+                if (activity instanceof AppCompatActivity)
+                {
+                    ((AppCompatActivity) activity).getSupportActionBar().show();
+                }
             } else {
                 mRelativeLayout.setVisibility(View.INVISIBLE);
+                if (activity instanceof AppCompatActivity)
+                {
+                    ((AppCompatActivity) activity).getSupportActionBar().hide();
+                }
             }
         }
     };
+
+
 
     private static class PhotosMessage{
         private String title;

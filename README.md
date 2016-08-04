@@ -1,6 +1,6 @@
 # Android-Pile
 ##简要:
-  一个小巧的App.
+  
 ##  
  <image  src="https://github.com/fromten/Android-Pile/blob/master/s1.png" width=300 height=450/>
   <image  src="https://github.com/fromten/Android-Pile/blob/master/s2.png" width=300 height=450/>

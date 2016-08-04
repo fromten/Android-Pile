@@ -2,7 +2,7 @@
 ##简要:
   
 ##  
- <image  src="https://github.com/fromten/Android-Pile/blob/master/s1.png" width=300 height=450/>
+ <image  src="https://github.com/fromten/Android-Pile/blob/master/s4.png" width=300 height=450/>
   <image  src="https://github.com/fromten/Android-Pile/blob/master/s2.png" width=300 height=450/>
  <image  src="https://github.com/fromten/Android-Pile/blob/master/s3.png" width=300 height=450/>
  

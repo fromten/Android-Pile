@@ -1,21 +1,18 @@
 package learn.example.pile;
 
 
+import android.util.Log;
 
-
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
-import java.util.Hashtable;
 import java.util.List;
 
-import learn.example.pile.object.NetEase;
-import learn.example.pile.util.HtmlTagBuild;
-import learn.example.pile.util.TextUtil;
-import learn.example.pile.util.TimeUtil;
+import learn.example.pile.factory.OpenEyeVideoFactory;
+import learn.example.pile.object.OpenEyes;
 
 
 /**
@@ -23,16 +20,48 @@ import learn.example.pile.util.TimeUtil;
  */
 public class ExampleUnitTest {
 
+
+
     @Test
     public void addition_isCorrect() {
-        String skipID="00AP0001|2189904";
-        int line=skipID.indexOf("|");
-        String first=skipID.substring(4,line);
-        String second=skipID.substring(line+1,skipID.length());
-        System.out.println(first+" "+second);
 
     }
 
+
+    public static class bean{
+
+
+        private FruitBean fruit;
+
+        public FruitBean getFruit() {
+            return fruit;
+        }
+
+        public void setFruit(FruitBean fruit) {
+            this.fruit = fruit;
+        }
+
+        public static class FruitBean {
+            private int count;
+            private int time;
+
+            public int getCount() {
+                return count;
+            }
+
+            public void setCount(int count) {
+                this.count = count;
+            }
+
+            public int getTime() {
+                return time;
+            }
+
+            public void setTime(int time) {
+                this.time = time;
+            }
+        }
+    }
 
 
     public String scriptTag(String js)

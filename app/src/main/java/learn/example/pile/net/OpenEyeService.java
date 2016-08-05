@@ -1,5 +1,6 @@
 package learn.example.pile.net;
 
+import learn.example.pile.jsonbean.OpenEyeComment;
 import learn.example.pile.jsonbean.OpenEyeVideo;
 import learn.example.pile.object.OpenEyes;
 import okhttp3.Request;
@@ -16,10 +17,23 @@ public class OpenEyeService extends GsonService{
         newRequest(TAG,OpenEyeVideo.class,buildRequest(url),callback);
     }
 
-    public void next(String nextUrl,Callback<OpenEyeVideo> callback)
+    //翻页,获得下个视频列表
+    public void nextVideoList(String nextUrl, Callback<OpenEyeVideo> callback)
     {
         String url=OpenEyes.getNextHotUrl(nextUrl);
         newRequest(TAG,OpenEyeVideo.class,buildRequest(url),callback);
+    }
+
+    public void getComments(int id, Callback<OpenEyeComment> callback)
+    {
+        String url=OpenEyes.COMMENT_URL+"?id="+id+OpenEyes.APP_PARAMS;
+        newRequest(TAG,OpenEyeComment.class,buildRequest(url),callback);
+    }
+
+    public void nextCommentList(String nextUrl,Callback<OpenEyeComment> callback)
+    {
+        String url=nextUrl+OpenEyes.APP_PARAMS;
+        newRequest(TAG,OpenEyeComment.class,buildRequest(url),callback);
     }
 
     private Request buildRequest(String url)

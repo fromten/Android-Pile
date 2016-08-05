@@ -14,9 +14,27 @@ import learn.example.pile.jsonbean.OpenEyeVideo;
  */
 public class OpenEyes {
 
+    /*
+         udid= 5cf7bfcf19a84c618fd8d1e41f55518025ce2f94
+         vc = 89
+         vn= 1.13.1
+         deviceModel= Samsung Galaxy S6 - 6.0.0 - API 23 - 1440x2560
+    */
 
-    public static String HOT_URL="http://baobab.wandoujia.com/api/v2/feed?udid=5cf7bfcf19a84c618fd8d1e41f55518025ce2f94&vc=89&vn=1.13.1&deviceModel=Samsung%20Galaxy%20S6%20-%206.0.0%20-%20API%2023%20-%201440x2560&first_channel=eyepetizer_web&last_channel=eyepetizer_web";
-    public static String APP_PARAMS="&udid=5cf7bfcf19a84c618fd8d1e41f55518025ce2f94&vc=89&vn=1.13.1&deviceModel=Samsung%20Galaxy%20S6%20-%206.0.0%20-%20API%2023%20-%201440x2560&first_channel=eyepetizer_web&last_channel=eyepetizer_web";
+
+
+    public static final String HOT_URL="http://baobab.wandoujia.com/api/v2/feed?udid=5cf7bfcf19a84c618fd8d1e41f55518025ce2f94&vc=89&vn=1.13.1&deviceModel=Samsung%20Galaxy%20S6%20-%206.0.0%20-%20API%2023%20-%201440x2560&first_channel=eyepetizer_web&last_channel=eyepetizer_web";
+    public static final String APP_PARAMS="&udid=5cf7bfcf19a84c618fd8d1e41f55518025ce2f94&vc=89&vn=1.13.1&deviceModel=Samsung%20Galaxy%20S6%20-%206.0.0%20-%20API%2023%20-%201440x2560&first_channel=eyepetizer_web&last_channel=eyepetizer_web";
+
+
+    /**
+     *  参数使用 APP_PARAMS+ 视频Id
+     *  例如 id=8522,http://baobab.wandoujia.com/api/v1/replies/video?id=8522 + APP_PARAMS
+     *  @see #APP_PARAMS
+     *
+     */
+    public static final String COMMENT_URL="http://baobab.wandoujia.com/api/v1/replies/video";
+
 
     public static String getHotUrl(int num)
     {
@@ -34,13 +52,14 @@ public class OpenEyes {
         private String playUrl;
         private String imgUrl;
         private int  duration;
+        private int id;
 
-        public VideoInfo(String title, String playUrl, String imgUrl,int duration) {
+        public VideoInfo(String title, String playUrl, String imgUrl,int duration,int id) {
             this.title = title;
             this.playUrl = playUrl;
             this.imgUrl = imgUrl;
             this.duration=duration;
-
+            this.id=id;
         }
 
         public int getDuration() {
@@ -59,6 +78,10 @@ public class OpenEyes {
             return imgUrl;
         }
 
+        public int getId() {
+            return id;
+        }
+
         @Override
         public int describeContents() {
             return 0;
@@ -70,6 +93,7 @@ public class OpenEyes {
             dest.writeString(this.playUrl);
             dest.writeString(this.imgUrl);
             dest.writeInt(this.duration);
+            dest.writeInt(this.id);
         }
 
         protected VideoInfo(Parcel in) {
@@ -77,6 +101,7 @@ public class OpenEyes {
             this.playUrl = in.readString();
             this.imgUrl = in.readString();
             this.duration = in.readInt();
+            this.id = in.readInt();
         }
 
         public static final Creator<VideoInfo> CREATOR = new Creator<VideoInfo>() {
@@ -92,38 +117,5 @@ public class OpenEyes {
         };
     }
 
-    public static List<VideoInfo> buildVideoInfo(OpenEyeVideo object)
-    {
-
-        List<VideoInfo> list=new ArrayList<>();
-
-        String title=null;
-        String imgUrl=null;
-        String playUrl=null;
-        int   duration=0;
-
-          for (OpenEyeVideo.IssueListBean bean:object.getIssueList())
-          {
-              for (OpenEyeVideo.IssueListBean.ItemListBean item:bean.getItemList())
-              {
-                  try {
-                      if (!TextUtils.equals(item.getType(),"video"))
-                      {
-                          continue;
-                      }
-                      title=item.getData().getTitle();
-                      imgUrl=item.getData().getCover().getDetail();
-                      playUrl=item.getData().getPlayUrl();
-                      duration=item.getData().getDuration();
-                  }catch (NullPointerException e)
-                  {
-                      e.printStackTrace();
-                  }
-                  list.add(new VideoInfo(title,playUrl,imgUrl,duration));
-              }
-          }
-
-        return list;
-    }
 
 }

@@ -4,11 +4,14 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 
 import learn.example.pile.R;
@@ -35,6 +38,11 @@ public class ChatActivity extends ToolBarActivity implements IService.Callback<T
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+        init();
+    }
+
+    private void init()
+    {
         mListView= (ListView) findViewById(android.R.id.list);
         mMsgEdit= (EditText) findViewById(R.id.chat_msgedit);
         mSendButton= (Button) findViewById(R.id.chat_msgsend);
@@ -42,6 +50,18 @@ public class ChatActivity extends ToolBarActivity implements IService.Callback<T
         mChatListAdapter=new ChatListAdapter();
         mListView.setAdapter(mChatListAdapter);
         mService=new TuringMachineService();
+
+        mMsgEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                       smoothListBottom();
+                    }
+                },100);
+            }
+        });
     }
 
 
@@ -53,7 +73,7 @@ public class ChatActivity extends ToolBarActivity implements IService.Callback<T
 
     @Override
     public void onSuccess(TuringMachineJson data) {
-        Log.d(TAG,"onSuccess" );
+
         ChatInfo info=new ChatInfo(ChatInfo.GRAVITY_LEFT,data.getText());
         mChatListAdapter.addItem(info);
 
@@ -67,7 +87,7 @@ public class ChatActivity extends ToolBarActivity implements IService.Callback<T
 
     @Override
     public void onClick(View v) {
-        smoothListBottom();
+
         String editText=mMsgEdit.getText().toString();
         if (!editText.isEmpty())
         {
@@ -81,9 +101,13 @@ public class ChatActivity extends ToolBarActivity implements IService.Callback<T
 
     }
 
+
+    /**
+     * 收缩关闭输入法
+     */
     private void collapseIME(){
         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(mMsgEdit.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(mMsgEdit.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 
     private void smoothListBottom()

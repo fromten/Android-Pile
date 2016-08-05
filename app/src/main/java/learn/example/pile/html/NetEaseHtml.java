@@ -44,8 +44,10 @@ public class NetEaseHtml {
                 "  max-width: 100%;\n" +
                 "  display: block;\n" +
                 "  marginTop: 20px auto;\n" +
+                "  margin-left:15px"+
+                "  marigin-right:15px"+
                 "}"+
-                " p{margin-left: 10px;\n" +
+                " p{margin-right: 15px"+
                 " margin-right: 15px;\n" +
                 " color: #333333;}\n";
         return HtmlTagBuild.headTag(HtmlTagBuild.styleTag(css));
@@ -53,7 +55,7 @@ public class NetEaseHtml {
 
     private String insertTitle(String title)
     {
-        return "<h2>"+title+"</h2>";
+        return "<h2 color='#202020' >"+title+"</h2>";
     }
 
 

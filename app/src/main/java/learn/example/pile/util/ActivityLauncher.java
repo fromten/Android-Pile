@@ -15,6 +15,7 @@ import learn.example.pile.activity.normal.PhotoActivity;
 import learn.example.pile.activity.normal.ReaderActivity;
 import learn.example.pile.activity.normal.VideoActivity;
 import learn.example.pile.activity.normal.WebViewActivity;
+import learn.example.pile.object.OpenEyes;
 
 /**
  * Created on 2016/6/23.
@@ -43,6 +44,18 @@ public class ActivityLauncher {
     {
         Intent intent=new Intent(context, VideoActivity.class);
         intent.setData(Uri.parse(url));
+        startActivity(context,intent,bundle);
+    }
+
+
+    /**
+     * 启动视频播放器Activity()(开眼视频)
+     */
+    public static void startVideoActivityForOpenEye(@NonNull Context context, OpenEyes.VideoInfo info, Bundle bundle)
+    {
+        Intent intent=new Intent(context, VideoActivity.class);
+        intent.setData(Uri.parse(info.getPlayUrl()));
+        intent.putExtra(VideoActivity.KEY_VIDEO_OPEN_EYE,info);
         startActivity(context,intent,bundle);
     }
 

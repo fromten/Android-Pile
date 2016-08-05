@@ -3,6 +3,7 @@ package learn.example.net;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.gson.Gson;
@@ -103,6 +104,7 @@ public class OkHttpRequest{
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+
                 if (response.isSuccessful())
                 {
                     deliverSuccessResult(response.body().string(),callback);
@@ -130,22 +132,23 @@ public class OkHttpRequest{
 
     private  <T>void deliverSuccessResult(final T data, final RequestCallback<T> callBack)
     {
-      mHandler.post(new Runnable() {
+       mHandler.postDelayed(new Runnable() {
           @Override
           public void run() {
               callBack.onSuccess(data);
           }
-      });
+      },200);
     }
 
     private void deliverFailureResult(final String msg, final RequestCallback callBack)
     {
-        mHandler.post(new Runnable() {
+
+        mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
                callBack.onFailure(msg);
             }
-        });
+        },200);
     }
 
 

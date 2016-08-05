@@ -34,16 +34,18 @@ public class VideoListAdapter extends SaveStateAbleAdapter<VideoListAdapter.Vide
         String timeAndTitle=item.getTitle()+"\n"+TimeUtil.formatMS(item.getDuration());
         holder.title.setText(timeAndTitle);
         Glide.with(holder.itemView.getContext()).load(item.getImgUrl()).dontAnimate().fitCenter().into(holder.videoImg);
-        holder.itemView.setTag(item.getPlayUrl());
+        holder.itemView.setTag(position);
     }
 
     @Override
     public void onClick(View v) {
-         String playUrl= (String) v.getTag();
-        if (playUrl!=null)
+        int pos= (int) v.getTag();
+
+        OpenEyes.VideoInfo info=getItem(pos);
+        if (info!=null)
         {
             Bundle anim= ActivityLauncher.slideAnimation(v.getContext());
-            ActivityLauncher.startVideoActivity(v.getContext(),playUrl,anim);
+            ActivityLauncher.startVideoActivityForOpenEye(v.getContext(),info,anim);
         }
     }
 

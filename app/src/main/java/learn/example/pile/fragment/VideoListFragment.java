@@ -7,6 +7,7 @@ import android.view.View;
 import java.util.List;
 
 import learn.example.pile.adapters.VideoListAdapter;
+import learn.example.pile.factory.OpenEyeVideoFactory;
 import learn.example.pile.jsonbean.OpenEyeVideo;
 import learn.example.pile.net.IService;
 import learn.example.pile.net.OpenEyeService;
@@ -45,7 +46,7 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
 
     @Override
     public void onSuccess(OpenEyeVideo data) {
-        List<OpenEyes.VideoInfo> infos=OpenEyes.buildVideoInfo(data);
+        List<OpenEyes.VideoInfo> infos=new OpenEyeVideoFactory().getInfoList(data.getIssueList());
         nextUrl=data.getNextPageUrl();
         nextPushTime=data.getNextPublishTime();
         mAdapter.addAll(infos);
@@ -72,7 +73,7 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
     @Override
     public void onLoadMore() {
         if (nextUrl!=null)
-         mService.next(nextUrl,this);
+         mService.nextVideoList(nextUrl,this);
     }
 
 

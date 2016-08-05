@@ -5,7 +5,6 @@ import android.os.Parcelable;
 
 import java.util.List;
 
-import learn.example.pile.factory.CommentsFactory;
 import learn.example.pile.jsonbean.NetEaseComment;
 import learn.example.pile.jsonbean.ZhihuComment;
 
@@ -78,15 +77,6 @@ public class Comment implements Parcelable {
     }
 
 
-    public static List<Comment> toList(NetEaseComment comment)
-    {
-        return CommentsFactory.newInstance().newNetEaseComments(comment);
-    }
-
-    public static List<Comment> toList(ZhihuComment comment)
-    {
-        return CommentsFactory.newInstance().newZhihuComments(comment);
-    }
 
     @Override
     public int describeContents() {

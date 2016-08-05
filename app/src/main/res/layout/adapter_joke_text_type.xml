@@ -20,6 +20,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start|bottom"
             android:padding="@dimen/small_padding"
-            style="@style/ContentText"
+            style="@style/SummaryText"
             android:id="@+id/joke_content"/>
 </LinearLayout>

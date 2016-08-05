@@ -38,7 +38,7 @@ public class BaseListFragment extends  RVListFragment {
     private CommonFooterHolder mFooterHolder;
     private EmptyViewHolder mEmptyViewHolder;
     private RecyclerView.Adapter mAdapter;
-
+    private LinearLayoutManager mLinearLayoutManager;
 
     //子类必须调用此方法
     @Override
@@ -50,8 +50,9 @@ public class BaseListFragment extends  RVListFragment {
 
     protected void initView()
     {
-        setLayoutManager(new LinearLayoutManager(getContext()));
-        addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL_LIST));
+        mLinearLayoutManager=new LinearLayoutManager(getContext());
+        setLayoutManager(mLinearLayoutManager);
+        addItemDecoration(new DividerItemDecoration(getContext()));
         setRefreshSchemeColors(ResourcesCompat.getColor(getResources(),R.color.colorPrimary,null));
     }
 
@@ -166,31 +167,58 @@ public class BaseListFragment extends  RVListFragment {
         cancelLoadMore();
     }
 
+    public CommonFooterHolder getFooterHolder() {
+        return mFooterHolder;
+    }
 
     private  class CommonFooterHolder extends FooterHolder implements View.OnClickListener{
         public ProgressBar mFooterProgress;
         public TextView mFooterText;
+
         public CommonFooterHolder(View itemView) {
             super(itemView);
             mFooterProgress= (ProgressBar) itemView.findViewById(R.id.footer_progress);
             mFooterText= (TextView) itemView.findViewById(R.id.footer_text);
             mFooterText.setOnClickListener(this);
         }
+
         @Override
         public void onBindHolder(RecyclerView.Adapter adapter) {
             if (adapter.getItemCount()==0)
             {
-                this.itemView.setVisibility(View.INVISIBLE);
+                hide();
             }else {
-                this.itemView.setVisibility(View.VISIBLE);
+
+                int firstPos=mLinearLayoutManager.findFirstCompletelyVisibleItemPosition();
+                //第一个元素可见,隐藏Footer
+                if (firstPos==0)
+                {
+                    hide();
+                }else {
+                    show();
+                }
             }
-            mFooterText.setText(null);
+            setFooterText(null);
         }
 
         @Override
         public void onClick(View v) {
-            mFooterText.setText("重新请求...");
+            setFooterText("重新请求...");
             onLoadMore();
+        }
+
+        public void setFooterText(CharSequence charSequence)
+        {
+            mFooterText.setText(charSequence);
+        }
+
+        public void show()
+        {
+            this.itemView.setVisibility(View.VISIBLE);
+        }
+        public void hide()
+        {
+            this.itemView.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -213,9 +241,7 @@ public class BaseListFragment extends  RVListFragment {
             FrameLayout.LayoutParams params=new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.gravity=Gravity.CENTER;
             mEmptyView.setLayoutParams(params);
-            Drawable drawable=getResources().getDrawable(R.mipmap.ic_refresh);
-            drawable.setBounds(0,0,drawable.getIntrinsicWidth(),drawable.getIntrinsicHeight());
-            mEmptyView.setCompoundDrawables(null,drawable,null,null);
+            mEmptyView.setCompoundDrawablesWithIntrinsicBounds(0,R.mipmap.ic_refresh,0,0);
             mEmptyView.setOnClickListener(this);
             mEmptyView.setVisibility(View.INVISIBLE);
             return mEmptyView;

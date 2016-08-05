@@ -10,6 +10,8 @@ import android.os.Message;
 
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.MediaController;
@@ -18,6 +20,8 @@ import android.widget.VideoView;
 
 import learn.example.pile.R;
 import learn.example.pile.activity.base.FullScreenActivity;
+import learn.example.pile.fragment.OpenEyeCommentFragment;
+import learn.example.pile.object.OpenEyes;
 import learn.example.uidesign.VolumeProgressView;
 
 /**
@@ -26,11 +30,14 @@ import learn.example.uidesign.VolumeProgressView;
 public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnCompletionListener,
         MediaPlayer.OnErrorListener, MediaPlayer.OnPreparedListener {
 
+    private static final String KEY_SAVE_STATE_POSITION = "key_save_state_position";
+    public static final String KEY_VIDEO_OPEN_EYE="open_eye";
+
+
     private VideoView mVideoView;
     private MediaController mMediaController;
     private VolumeProgressView mVolumeProgressView;
     private TextView mLogView;
-    private static final String KEY_SAVE_STATE_POSITION = "KEY_SAVE_STATE_POSITION";
 
     private Bundle saveState;
 
@@ -64,6 +71,9 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
         } else {
             mLogView.setText("无效的地址");
         }
+
+
+
     }
 
 
@@ -84,6 +94,35 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
                 return mScreenTouchListener.onTouchEvent(event);
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (getIntent().hasExtra(KEY_VIDEO_OPEN_EYE))
+        {
+            Log.d("v","have" );
+            getMenuInflater().inflate(R.menu.video_menu,menu);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId()==R.id.menu_comment)
+        {
+            //打开评论
+            OpenEyes.VideoInfo info=getIntent().getParcelableExtra(KEY_VIDEO_OPEN_EYE);
+            if (info!=null)
+            {
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.root, OpenEyeCommentFragment.newInstance(info.getId()))
+                        .commit();
+            }
+
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

@@ -13,9 +13,9 @@ public class PileApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
         LeakCanary.install(this);
        // Stetho.initializeWithDefaults(this);
-
     }
 
 }

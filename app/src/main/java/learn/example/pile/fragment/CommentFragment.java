@@ -35,16 +35,5 @@ public class CommentFragment extends BaseListFragment {
     {
         mCommentListAdapter.addAll(comments);
     }
-    private View generateEmptyView()
-    {
-        TextView view =new TextView(getContext());
-        view.setGravity(Gravity.CENTER);
-        FrameLayout.LayoutParams params=new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.gravity=Gravity.CENTER;
-        view.setLayoutParams(params);
-        view.setClickable(false);
-        view.setFocusable(false);
-        return view;
-    }
 
 }

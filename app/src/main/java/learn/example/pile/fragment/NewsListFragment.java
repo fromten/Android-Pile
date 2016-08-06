@@ -15,6 +15,8 @@ import learn.example.pile.net.NetEaseNewsService;
  */
 public class NewsListFragment extends BaseListFragment implements GsonService.Callback<NetEaseNews>{
 
+     private static final String KEY_PAGE="page";
+
 
     private NewsListAdapter mNewsListAdapter;
     private NetEaseNewsService mService;
@@ -30,7 +32,15 @@ public class NewsListFragment extends BaseListFragment implements GsonService.Ca
         {
             setRefreshing(true);
             mService.getNetEaseNews(page,this);
+        }else {
+            page=savedInstanceState.getInt(KEY_PAGE);
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(KEY_PAGE,page);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -59,6 +69,6 @@ public class NewsListFragment extends BaseListFragment implements GsonService.Ca
 
     @Override
     public void onLoadMore() {
-        mService.getNetEaseNews(page,this);
+       mService.getNetEaseNews(page,this);
     }
 }

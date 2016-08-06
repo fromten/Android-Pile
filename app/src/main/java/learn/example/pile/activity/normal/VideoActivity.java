@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
@@ -33,13 +35,17 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
     private static final String KEY_SAVE_STATE_POSITION = "key_save_state_position";
     public static final String KEY_VIDEO_OPEN_EYE="open_eye";
 
+    private final String TAG_COMMENT_FRAGMENT="tag_comment_fragment";
+
+    private Fragment.SavedState mCommentState;
+
 
     private VideoView mVideoView;
     private MediaController mMediaController;
     private VolumeProgressView mVolumeProgressView;
     private TextView mLogView;
 
-    private Bundle saveState;
+    private int seekPostion;
 
     private GestureDetector mScreenTouchListener;
 
@@ -51,9 +57,9 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
         public void handleMessage(Message msg) {
            switch (msg.what)
            {
-               case HIDE_VOLUME_PROGERESSBAR:mVolumeProgressView.hide();break;
+               case HIDE_VOLUME_PROGERESSBAR:
+                   mVolumeProgressView.hide();break;
                case HIDE_ACTIONBAR:
-                   if (!mMediaController.isShowing())//Actionbar和MediaController应该同步显示或隐藏
                     hideActionBar();break;
            }
         }
@@ -62,8 +68,10 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
+
+        seekPostion=savedInstanceState==null?-1:savedInstanceState.getInt(KEY_SAVE_STATE_POSITION,-1);
+
         initView();
-        saveState = savedInstanceState;
         Uri uri = getIntent().getData();
         if (uri != null) {
             mLogView.setText("加载中....");
@@ -71,9 +79,6 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
         } else {
             mLogView.setText("无效的地址");
         }
-
-
-
     }
 
 
@@ -87,11 +92,13 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
         mVideoView.setOnPreparedListener(this);
         mVideoView.setOnCompletionListener(this);
         mVideoView.setOnErrorListener(this);
+
         mScreenTouchListener=new GestureDetector(this,mSimpleOnGestureListener);
         mVideoView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                return mScreenTouchListener.onTouchEvent(event);
+                mScreenTouchListener.onTouchEvent(event);
+                return true;//截断MediaController的事件
             }
         });
     }
@@ -100,7 +107,6 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
     public boolean onCreateOptionsMenu(Menu menu) {
         if (getIntent().hasExtra(KEY_VIDEO_OPEN_EYE))
         {
-            Log.d("v","have" );
             getMenuInflater().inflate(R.menu.video_menu,menu);
             return true;
         }
@@ -111,33 +117,48 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId()==R.id.menu_comment)
         {
-            //打开评论
+            //打开评论Fragment
             OpenEyes.VideoInfo info=getIntent().getParcelableExtra(KEY_VIDEO_OPEN_EYE);
             if (info!=null)
             {
-                getSupportFragmentManager().beginTransaction()
-                        .add(R.id.root, OpenEyeCommentFragment.newInstance(info.getId()))
-                        .commit();
+                FragmentManager manager=getSupportFragmentManager();
+                Fragment commentFragment= OpenEyeCommentFragment.newInstance(info.getId());
+                commentFragment.setInitialSavedState(mCommentState);
+                manager.beginTransaction().add(R.id.root,commentFragment,TAG_COMMENT_FRAGMENT).addToBackStack(null).commit();
             }
-
+            mVideoView.pause();
+            mMediaController.hide();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
-        if (!mVideoView.isPlaying())
-            mVideoView.resume();
+        mVideoView.start();
     }
 
     @Override
     protected void onPause() {
-        if (mVideoView.isPlaying())
-            mVideoView.pause();
+        mVideoView.pause();
         super.onPause();
     }
+
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().findFragmentByTag(TAG_COMMENT_FRAGMENT)!=null)
+        {
+            Log.d(TAG_COMMENT_FRAGMENT, "onBackPressed");
+            saveCommentFragmentState();
+            mVideoView.start();
+        }
+        Log.d(TAG_COMMENT_FRAGMENT, "onBackPressed after");
+        super.onBackPressed();
+    }
+
+
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -146,15 +167,30 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
         super.onSaveInstanceState(outState);
     }
 
+    private void saveCommentFragmentState()
+    {
+        FragmentManager manager=getSupportFragmentManager();
+        Fragment commentFragment=manager.findFragmentByTag(TAG_COMMENT_FRAGMENT);
+        mCommentState=commentFragment!=null?manager.saveFragmentInstanceState(commentFragment):null;
+    }
+
+
     @Override
     protected void onDestroy() {
+        mCommentState=null;
+
         mHandler.removeMessages(HIDE_ACTIONBAR);
         mHandler.removeMessages(HIDE_VOLUME_PROGERESSBAR);
         mHandler=null;
-        mVideoView.stopPlayback();
-        mVideoView = null;
-        mMediaController = null;
 
+        mVideoView.stopPlayback();
+        mVideoView.setOnPreparedListener(null);
+        mVideoView.setOnCompletionListener(null);
+        mVideoView.setOnErrorListener(null);
+        mVideoView.setOnTouchListener(null);
+        mVideoView = null;
+        mSimpleOnGestureListener=null;
+        mMediaController = null;
         super.onDestroy();
     }
 
@@ -162,9 +198,8 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
     public void onPrepared(MediaPlayer mp) {
 
         //跳到旋转之前的播放位置
-        if (saveState != null) {
-            int playOldPos = saveState.getInt(KEY_SAVE_STATE_POSITION);
-            mVideoView.seekTo(playOldPos);
+        if (seekPostion>0) {
+            mVideoView.seekTo(seekPostion);
         }
         mVideoView.start();
         mLogView.setText(null);
@@ -191,7 +226,7 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
 
     private GestureDetector.SimpleOnGestureListener mSimpleOnGestureListener=new GestureDetector.SimpleOnGestureListener(){
 
-        private void showControls()
+        private void toggleControlsVisible()
         {
             if (mMediaController.isShowing()) {
                 mMediaController.hide();
@@ -217,17 +252,18 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
             } else {
                 mVideoView.start();
             }
+            toggleControlsVisible();
             return true;
         }
 
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
-            showControls();
             return true;
         }
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
-            return false;
+            toggleControlsVisible();
+            return true;
         }
 
 

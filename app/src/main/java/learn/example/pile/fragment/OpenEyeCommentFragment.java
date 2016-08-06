@@ -7,7 +7,6 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
-import learn.example.pile.adapters.CommentListAdapter;
 import learn.example.pile.jsonbean.OpenEyeComment;
 import learn.example.pile.net.IService;
 import learn.example.pile.net.OpenEyeService;
@@ -18,6 +17,8 @@ import learn.example.pile.util.TimeUtil;
  * Created on 2016/8/5.
  */
 public class OpenEyeCommentFragment  extends CommentFragment implements IService.Callback<OpenEyeComment>{
+
+    public static final String KEY_NEXT_PAGE_URL="url";
 
     private OpenEyeService mOpenEyeService;
     private int id;
@@ -32,9 +33,21 @@ public class OpenEyeCommentFragment  extends CommentFragment implements IService
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mOpenEyeService=new OpenEyeService();
-        mOpenEyeService.getComments(id,this);
+
+        if (savedInstanceState!=null)
+        {
+            nextPageUrl=savedInstanceState.getString(KEY_NEXT_PAGE_URL);
+        }else {
+            mOpenEyeService.getComments(id,this);
+        }
+
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(KEY_NEXT_PAGE_URL,nextPageUrl);
+        super.onSaveInstanceState(outState);
+    }
 
     @Override
     public void onSuccess(OpenEyeComment data) {
@@ -50,7 +63,18 @@ public class OpenEyeCommentFragment  extends CommentFragment implements IService
 
     @Override
     public void onLoadMore() {
-        mOpenEyeService.nextCommentList(nextPageUrl,this);
+        if (nextPageUrl!=null)
+        {
+            mOpenEyeService.nextCommentList(nextPageUrl,this);
+        }else {
+            notifyRequestEnd();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        mOpenEyeService.cancelAll();
+        super.onDestroy();
     }
 
     public static class OpenEyeCommentFactory{

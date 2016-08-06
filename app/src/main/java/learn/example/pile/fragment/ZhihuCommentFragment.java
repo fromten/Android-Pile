@@ -66,6 +66,7 @@ public class ZhihuCommentFragment extends CommentFragment implements IService.Ca
         {
             mCommentService.getShortComment(docID,this);
             hadRequestedShortComment=true;
+            notifyRequestEnd();
         }
     }
 

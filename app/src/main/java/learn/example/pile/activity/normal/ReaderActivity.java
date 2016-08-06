@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
@@ -60,7 +61,9 @@ public class ReaderActivity extends AppCompatActivity  {
     private AppBarLayout mAppBarLayout;
 
     private WebFragment mWebFragment;
+
     private CommentFragment mCommentFragment;
+
 
     private MoveEvent mMoveEvent;
     @Override
@@ -180,8 +183,6 @@ public class ReaderActivity extends AppCompatActivity  {
         mAppBarLayout.setExpanded(false,true);
         if (mCommentFragment==null)
         {
-            mCommentFragment=new CommentFragment();
-            Bundle bundle=new Bundle();
             if (mNetEaseManager!=null)
             {
 

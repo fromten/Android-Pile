@@ -20,7 +20,7 @@ public class ZhihuStoryService extends GsonService {
         performRequest(Zhihu.STORY_URL,callback);
     }
 
-    public void getStoriesAtTime(String date,Callback<ZhihuStories> callback)
+    public void getStoriesFromDate(String date, Callback<ZhihuStories> callback)
     {
         performRequest(Zhihu.STORY_URL_AT_TIME+date,callback);
     }

@@ -17,9 +17,10 @@ import learn.example.pile.object.Zhihu;
 public class ReadListFragment extends BaseListFragment implements IService.Callback<ZhihuStories> {
 
 
+    private static final String KEY_DATE="date";
 
     private ZhiHuMsgListAdapter mAdapter;
-    private static final String TAG="ReadListFragment";
+
 
     private ZhihuStoryService mService;
     private String date;
@@ -33,6 +34,8 @@ public class ReadListFragment extends BaseListFragment implements IService.Callb
         {
             setRefreshing(true);
             mService.getStories(this);
+        }else {
+            date=savedInstanceState.getString(KEY_DATE);
         }
     }
 
@@ -40,6 +43,12 @@ public class ReadListFragment extends BaseListFragment implements IService.Callb
     @Override
     public void addItemDecoration(RecyclerView.ItemDecoration itemDecoration) {
          //no show ItemDecoration
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(KEY_DATE,date);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -63,7 +72,7 @@ public class ReadListFragment extends BaseListFragment implements IService.Callb
     @Override
     public void onRefresh() {
         mAdapter.clear();
-        correctGet();
+        mService.getStories(this);
     }
 
     @Override
@@ -77,7 +86,7 @@ public class ReadListFragment extends BaseListFragment implements IService.Callb
         {
             mService.getStories(this);
         }else {
-            mService.getStoriesAtTime(date,this);
+            mService.getStoriesFromDate(date,this);
         }
     }
 }

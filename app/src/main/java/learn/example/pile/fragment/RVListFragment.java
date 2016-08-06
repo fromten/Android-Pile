@@ -26,7 +26,7 @@ public class RVListFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private RecyclerView mRecyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
-    private ScrollHelper mScrollHelper=new ScrollHelper();
+    private ScrollHelper mScrollHelper;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -40,6 +40,7 @@ public class RVListFragment extends Fragment implements SwipeRefreshLayout.OnRef
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         mSwipeRefreshLayout.setOnRefreshListener(this);
+        mScrollHelper=new ScrollHelper();
         mRecyclerView.addOnScrollListener(mScrollHelper);
     }
 
@@ -79,7 +80,7 @@ public class RVListFragment extends Fragment implements SwipeRefreshLayout.OnRef
         //TODO
     }
 
-
+    //添加底部Holder
     public void addFooterHolder(FooterHolder holder) {
         RecyclerView.Adapter adapter=mRecyclerView.getAdapter();
         ((AdapterWrapper)adapter).setFooterHolder(holder);
@@ -94,6 +95,7 @@ public class RVListFragment extends Fragment implements SwipeRefreshLayout.OnRef
         mRootLayout.addView(view);
     }
 
+    //设置是否刷新,true 刷新,否则 false
     public void setRefreshing(final boolean refreshing)
     {
         mSwipeRefreshLayout.post(new Runnable() {
@@ -104,9 +106,20 @@ public class RVListFragment extends Fragment implements SwipeRefreshLayout.OnRef
         });
     }
 
+    //取消加载更多,如果没有调用,后续的onLoadMore方法将不会调用
     public void cancelLoadMore()
     {
+        if (mScrollHelper!=null)
         mScrollHelper.clearState();
+    }
+
+    /**
+     * 禁用加载更多,使用后 onLoadMore 将不会调用
+     */
+    public void disableLoadMore()
+    {
+        mRecyclerView.removeOnScrollListener(mScrollHelper);
+        mScrollHelper=null;
     }
 
     public RecyclerView getRecyclerView() {

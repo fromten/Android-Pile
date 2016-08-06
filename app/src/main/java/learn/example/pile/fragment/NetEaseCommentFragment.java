@@ -22,6 +22,9 @@ import learn.example.pile.util.GsonHelper;
  */
 public class NetEaseCommentFragment extends CommentFragment implements NetEaseNewsService.Callback<NetEaseComment>{
 
+    private static final String KEY_POSITION="position";
+
+
     private String docId;
     private String boardId;
 
@@ -45,7 +48,18 @@ public class NetEaseCommentFragment extends CommentFragment implements NetEaseNe
             return;
         }
         mNetEaseNewsService =new NetEaseNewsService();
-        mNetEaseNewsService.getHotComment(boardId,docId,currentPos,10,this);
+        if (savedInstanceState==null)
+        {
+            mNetEaseNewsService.getHotComment(boardId,docId,currentPos,10,this);
+        }else {
+            currentPos=savedInstanceState.getInt(KEY_POSITION);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(KEY_POSITION,currentPos);
+        super.onSaveInstanceState(outState);
     }
 
     @Override

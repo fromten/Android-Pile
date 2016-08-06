@@ -45,7 +45,7 @@ public class BaseListFragment extends  RVListFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initView();
-        setEmptyViewHolder(getEmptyViewHolder());
+        setEmptyViewHolder(createEmptyViewHolder());
     }
 
     protected void initView()
@@ -63,10 +63,10 @@ public class BaseListFragment extends  RVListFragment {
     }
 
     /**
-     * 获得默认的EmptyViewHolder,之类可以覆盖此方法
+     * 获得默认的EmptyViewHolder,子类可以覆盖此方法
      * @return 默认实现的EmptyViewHolder
      */
-    protected EmptyViewHolder getEmptyViewHolder()
+    protected EmptyViewHolder createEmptyViewHolder()
     {
         return new SimpleEmptyViewHolder();
     }
@@ -167,13 +167,29 @@ public class BaseListFragment extends  RVListFragment {
         cancelLoadMore();
     }
 
-    public CommonFooterHolder getFooterHolder() {
-        return mFooterHolder;
+
+    /**
+     * 使用此方法表示网络请求到头,将会应用叁数去显示底部文本
+     * onLoadMore 不会继续调用
+     * @param footerText 底部显示文本
+     */
+    public void notifyRequestEnd(CharSequence footerText)
+    {
+        mFooterHolder.end(footerText);
+        disableLoadMore();
     }
 
-    private  class CommonFooterHolder extends FooterHolder implements View.OnClickListener{
+
+    public void notifyRequestEnd()
+    {
+        notifyRequestEnd("~~~到底了~~~");
+    }
+
+
+    private class CommonFooterHolder extends FooterHolder implements View.OnClickListener{
         public ProgressBar mFooterProgress;
         public TextView mFooterText;
+        private boolean inEnd=false;
 
         public CommonFooterHolder(View itemView) {
             super(itemView);
@@ -198,6 +214,7 @@ public class BaseListFragment extends  RVListFragment {
                     show();
                 }
             }
+            if (!inEnd)
             setFooterText(null);
         }
 
@@ -210,6 +227,13 @@ public class BaseListFragment extends  RVListFragment {
         public void setFooterText(CharSequence charSequence)
         {
             mFooterText.setText(charSequence);
+        }
+
+        public void end(CharSequence charSequence)
+        {
+            inEnd=true;
+            mFooterText.setText(charSequence);
+            mFooterProgress.setVisibility(View.GONE);
         }
 
         public void show()

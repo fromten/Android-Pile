@@ -23,6 +23,13 @@ public class TimeUtil {
         return format.format(date);
     }
 
+    public static String formatTimeFull(long timestamp)
+    {
+        SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd  HH:mm:ss",Locale.CHINA);
+        Date date = new Date(timestamp*1000);
+        return dateFormat.format(date);
+    }
+
     /**
      * 转换成 分钟-秒,如 204 = 3'4
      * @param second 秒数

@@ -137,7 +137,7 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
     @Override
     protected void onResume() {
         super.onResume();
-        mVideoView.start();
+        mVideoView.resume();
     }
 
     @Override
@@ -150,11 +150,11 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
     public void onBackPressed() {
         if (getSupportFragmentManager().findFragmentByTag(TAG_COMMENT_FRAGMENT)!=null)
         {
-            Log.d(TAG_COMMENT_FRAGMENT, "onBackPressed");
+
             saveCommentFragmentState();
             mVideoView.start();
         }
-        Log.d(TAG_COMMENT_FRAGMENT, "onBackPressed after");
+
         super.onBackPressed();
     }
 

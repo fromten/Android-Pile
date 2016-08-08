@@ -19,28 +19,35 @@ import learn.example.pile.util.TimeUtil;
 public class OpenEyeCommentFragment  extends CommentFragment implements IService.Callback<OpenEyeComment>{
 
     public static final String KEY_NEXT_PAGE_URL="url";
-
+    private static final String KEY_VIDEO_ID="id";
     private OpenEyeService mOpenEyeService;
     private int id;
     private String nextPageUrl;
-    public static OpenEyeCommentFragment newInstance(int id) {
+
+    public static OpenEyeCommentFragment newInstance(int videoId) {
+
+        Bundle args = new Bundle();
+        args.putInt(KEY_VIDEO_ID,videoId);
         OpenEyeCommentFragment fragment = new OpenEyeCommentFragment();
-        fragment.id=id;
+        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mOpenEyeService=new OpenEyeService();
-
-        if (savedInstanceState!=null)
+        Bundle args=getArguments();
+        if (args!=null)
         {
-            nextPageUrl=savedInstanceState.getString(KEY_NEXT_PAGE_URL);
-        }else {
-            mOpenEyeService.getComments(id,this);
+            id=args.getInt(KEY_VIDEO_ID);
+            mOpenEyeService=new OpenEyeService();
+            if (savedInstanceState!=null)
+            {
+                nextPageUrl=savedInstanceState.getString(KEY_NEXT_PAGE_URL);
+            }else {
+                mOpenEyeService.getComments(id,this);
+            }
         }
-
     }
 
     @Override

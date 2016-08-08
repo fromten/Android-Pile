@@ -18,22 +18,37 @@ import learn.example.pile.util.TimeUtil;
  * Created on 2016/8/3.
  */
 public class ZhihuCommentFragment extends CommentFragment implements IService.Callback<ZhihuComment> {
+
+    private static final String KEY_DOCID="zhihudocid";
+
     private int docID;
     private ZhihuContentService mCommentService;
 
     private boolean hadRequestedShortComment;
 
-    public static ZhihuCommentFragment newInstance(int docID) {
+    public static ZhihuCommentFragment newInstance(int zhihuDocID) {
+
+        Bundle args = new Bundle();
+        args.putInt(KEY_DOCID,zhihuDocID);
         ZhihuCommentFragment fragment = new ZhihuCommentFragment();
-        fragment.docID=docID;
+        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mCommentService=new ZhihuContentService();
-        mCommentService.getLongComment(docID,this);
+        Bundle args=getArguments();
+        if (args!=null)
+        {
+            docID=args.getInt(KEY_DOCID);
+            mCommentService=new ZhihuContentService();
+            if (savedInstanceState==null)
+            {
+                mCommentService.getLongComment(docID,this);
+            }
+        }
+
     }
 
     @Override
@@ -62,7 +77,7 @@ public class ZhihuCommentFragment extends CommentFragment implements IService.Ca
 
     private void requestShortComment()
     {
-        if (!hadRequestedShortComment)
+        if (!hadRequestedShortComment&&mCommentService!=null)
         {
             mCommentService.getShortComment(docID,this);
             hadRequestedShortComment=true;

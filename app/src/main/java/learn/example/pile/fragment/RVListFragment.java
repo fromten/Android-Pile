@@ -8,10 +8,13 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+
+import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import learn.example.pile.R;
 
@@ -27,6 +30,9 @@ public class RVListFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private ScrollHelper mScrollHelper;
+
+    private AdapterWrapper mAdapterWrap;
+    private View mEmptyView;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -37,6 +43,7 @@ public class RVListFragment extends Fragment implements SwipeRefreshLayout.OnRef
         return view;
     }
 
+    @OverridingMethodsMustInvokeSuper
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         mSwipeRefreshLayout.setOnRefreshListener(this);
@@ -44,14 +51,33 @@ public class RVListFragment extends Fragment implements SwipeRefreshLayout.OnRef
         mRecyclerView.addOnScrollListener(mScrollHelper);
     }
 
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState!=null)
+        mAdapterDataObserver.onChanged();
+    }
+
     public void setLayoutManager(RecyclerView.LayoutManager manager)
     {
        mRecyclerView.setLayoutManager(manager);
     }
 
+
+    /**
+     * 使用Wrap模式添加Adapter,
+     * @see RecyclerView.setAdapter();
+     */
     public void setAdapter(RecyclerView.Adapter adapter)
     {
-       mRecyclerView.setAdapter(new AdapterWrapper(adapter));
+        if (adapter==null)
+        {
+            mRecyclerView.setAdapter(null);
+        }else {
+            adapter.registerAdapterDataObserver(mAdapterDataObserver);
+            mAdapterWrap=new AdapterWrapper(adapter);
+            mRecyclerView.setAdapter(mAdapterWrap);
+        }
     }
 
 
@@ -87,12 +113,23 @@ public class RVListFragment extends Fragment implements SwipeRefreshLayout.OnRef
     }
 
 
+    /**
+     * 在布局中心添加空View
+     * @param view 如果是Null,将移除View
+     */
     public void setEmptyView(View view) {
-        if (view==null)
+        if (mEmptyView!=null)
         {
-            view.getClass();
+            mRootLayout.removeView(view);
         }
-        mRootLayout.addView(view);
+        if (view!=null)
+        {
+            FrameLayout.LayoutParams params=new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.gravity= Gravity.CENTER;
+            view.setLayoutParams(params);
+            mRootLayout.addView(view);
+        }
+        mEmptyView=view;
     }
 
     //设置是否刷新,true 刷新,否则 false
@@ -132,8 +169,70 @@ public class RVListFragment extends Fragment implements SwipeRefreshLayout.OnRef
         {
             mSwipeRefreshLayout.setRefreshing(false);
         }
+        if (mAdapterWrap!=null)
+        {
+            mAdapterWrap.mInnerAdapter.unregisterAdapterDataObserver(mAdapterDataObserver);
+        }
+        if (mScrollHelper!=null)
+        {
+            mRecyclerView.removeOnScrollListener(mScrollHelper);
+            mScrollHelper=null;
+        }
+
         super.onDestroy();
     }
+
+
+    private RecyclerView.AdapterDataObserver mAdapterDataObserver
+            =new RecyclerView.AdapterDataObserver() {
+        @Override
+        public void onChanged() {
+            mAdapterWrap.notifyDataSetChanged();
+            checkItemCount();
+        }
+
+        @Override
+        public void onItemRangeChanged(int positionStart, int itemCount) {
+            mAdapterWrap.notifyItemRangeChanged(positionStart, itemCount);
+            checkItemCount();
+        }
+
+        @Override
+        public void onItemRangeChanged(int positionStart, int itemCount, Object payload) {
+            mAdapterWrap.notifyItemRangeChanged(positionStart, itemCount, payload);
+            checkItemCount();
+        }
+
+        @Override
+        public void onItemRangeInserted(int positionStart, int itemCount) {
+            mAdapterWrap.notifyItemRangeInserted(positionStart, itemCount);
+            checkItemCount();
+        }
+
+        @Override
+        public void onItemRangeRemoved(int positionStart, int itemCount) {
+            mAdapterWrap.notifyItemRangeRemoved(positionStart, itemCount);
+            checkItemCount();
+        }
+
+        @Override
+        public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
+            mAdapterWrap.notifyItemRangeRemoved(fromPosition, itemCount);
+            checkItemCount();
+        }
+
+        public void checkItemCount() {
+            if (mSwipeRefreshLayout.isRefreshing())
+            {
+                return;
+            }
+
+            int visibility = mAdapterWrap.getInnerAdapterItemCount() == 0 ? View.VISIBLE : View.INVISIBLE;
+            if (mEmptyView != null) {
+                mEmptyView.setVisibility(visibility);
+            }
+        }
+    };
 
     private class ScrollHelper extends RecyclerView.OnScrollListener{
         private boolean inLoading=false;
@@ -185,37 +284,6 @@ public class RVListFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         public AdapterWrapper(RecyclerView.Adapter adapter) {
             mInnerAdapter = adapter;
-            mInnerAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-                @Override
-                public void onChanged() {
-                    AdapterWrapper.this.notifyDataSetChanged();
-                }
-
-                @Override
-                public void onItemRangeChanged(int positionStart, int itemCount) {
-                    AdapterWrapper.this.notifyItemRangeChanged(positionStart,itemCount);
-                }
-
-                @Override
-                public void onItemRangeChanged(int positionStart, int itemCount, Object payload) {
-                    AdapterWrapper.this.notifyItemRangeChanged(positionStart,itemCount,payload);
-                }
-
-                @Override
-                public void onItemRangeInserted(int positionStart, int itemCount) {
-                    AdapterWrapper.this.notifyItemRangeInserted(positionStart,itemCount);
-                }
-
-                @Override
-                public void onItemRangeRemoved(int positionStart, int itemCount) {
-                    AdapterWrapper.this.notifyItemRangeRemoved(positionStart,itemCount);
-                }
-
-                @Override
-                public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
-                    AdapterWrapper.this.notifyItemMoved(fromPosition,toPosition);
-                }
-            });
         }
 
         @Override
@@ -243,6 +311,11 @@ public class RVListFragment extends Fragment implements SwipeRefreshLayout.OnRef
             return mInnerAdapter.getItemCount()+num;
         }
 
+        public int getInnerAdapterItemCount() {
+
+            return mInnerAdapter.getItemCount();
+        }
+
         @Override
         public int getItemViewType(int position) {
             if (position==mInnerAdapter.getItemCount())
@@ -252,13 +325,11 @@ public class RVListFragment extends Fragment implements SwipeRefreshLayout.OnRef
             return mInnerAdapter.getItemViewType(position);
         }
 
-
         public void setFooterHolder(FooterHolder holder)
         {
             mFooterHolder=holder;
             notifyDataSetChanged();
         }
-
     }
 
     public static abstract class FooterHolder extends RecyclerView.ViewHolder{

@@ -82,8 +82,6 @@ public class NewsListAdapter extends SaveStateAbleAdapter<NewsListAdapter.BaseNe
     private void setNormalViews(NewsNormalViewHolder holder,int position)
     {
         NetEaseNews.T1348647909107Bean item=getItem(position);
-        String shortDesc=item.getDigest()!=null?TextUtil.firstSentence(item.getDigest()):null;
-        holder.describe.setText(shortDesc);
         Glide.with(holder.itemView.getContext()).load(item.getImgsrc()).centerCrop().into(holder.img);
     }
 
@@ -147,11 +145,11 @@ public class NewsListAdapter extends SaveStateAbleAdapter<NewsListAdapter.BaseNe
     }
 
     public static class NewsNormalViewHolder extends BaseNewsViewHolder {
-        public TextView describe;
+      //  public TextView describe;
         public ImageView img;
         public NewsNormalViewHolder(View itemView) {
             super(itemView);
-            describe = (TextView) itemView.findViewById(R.id.news_descr);
+           // describe = (TextView) itemView.findViewById(R.id.news_descr);
             img = (ImageView) itemView.findViewById(R.id.news_img);
         }
     }

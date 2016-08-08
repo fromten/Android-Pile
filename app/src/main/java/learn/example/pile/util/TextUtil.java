@@ -11,7 +11,7 @@ public class TextUtil {
         if (str!=null&&str.length>0)
         {
             String fs=str[0];
-            return fs.length()>0?fs+=".":fs;
+            return fs.length()>0?fs+="。":fs;
         }
         return null;
     }
@@ -19,7 +19,7 @@ public class TextUtil {
 
     public static String[] sentenceSub(String text)
     {
-        return text==null?null:text.split("\\.|\\。");
+        return text==null?null:text.split("\\。");
     }
 
     public static String checkString(String string,String defValue)

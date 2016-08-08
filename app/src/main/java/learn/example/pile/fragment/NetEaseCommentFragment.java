@@ -23,7 +23,8 @@ import learn.example.pile.util.GsonHelper;
 public class NetEaseCommentFragment extends CommentFragment implements NetEaseNewsService.Callback<NetEaseComment>{
 
     private static final String KEY_POSITION="position";
-
+    private static final String KEY_DOCID="docId";
+    private static final String KEY_BOARDID="boardID";
 
     private String docId;
     private String boardId;
@@ -33,27 +34,35 @@ public class NetEaseCommentFragment extends CommentFragment implements NetEaseNe
 
     private NetEaseNewsService mNetEaseNewsService;
 
+
     public static NetEaseCommentFragment newInstance(String docId,String boardID) {
+        Bundle bundle=new Bundle();
         NetEaseCommentFragment fragment = new NetEaseCommentFragment();
-        fragment.docId=docId;
-        fragment.boardId=boardID;
+        bundle.putString(KEY_DOCID,docId);
+        bundle.putString(KEY_BOARDID,boardID);
+        fragment.setArguments(bundle);
         return fragment;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (boardId==null&&docId==null)
+        Bundle argument=getArguments();
+        if (argument!=null)
         {
-            return;
+            docId=argument.getString(KEY_DOCID);
+            boardId=argument.getString(KEY_BOARDID);
+
+            mNetEaseNewsService =new NetEaseNewsService();
+            if (savedInstanceState==null)
+            {
+                mNetEaseNewsService.getHotComment(boardId,docId,currentPos,10,this);
+            }else {
+                currentPos=savedInstanceState.getInt(KEY_POSITION);
+            }
         }
-        mNetEaseNewsService =new NetEaseNewsService();
-        if (savedInstanceState==null)
-        {
-            mNetEaseNewsService.getHotComment(boardId,docId,currentPos,10,this);
-        }else {
-            currentPos=savedInstanceState.getInt(KEY_POSITION);
-        }
+
+
     }
 
     @Override
@@ -76,6 +85,7 @@ public class NetEaseCommentFragment extends CommentFragment implements NetEaseNe
     @Override
     public void onLoadMore() {
        currentPos+=MAX_LEN;
+       if (mNetEaseNewsService!=null)
        mNetEaseNewsService.getNormalComment(boardId,docId,currentPos,MAX_LEN,this);
     }
 

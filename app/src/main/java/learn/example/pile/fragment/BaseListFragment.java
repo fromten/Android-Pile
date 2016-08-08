@@ -36,16 +36,14 @@ public class BaseListFragment extends  RVListFragment {
 
     private static final String TAG = "BaseListFragment";
     private CommonFooterHolder mFooterHolder;
-    private EmptyViewHolder mEmptyViewHolder;
     private RecyclerView.Adapter mAdapter;
     private LinearLayoutManager mLinearLayoutManager;
-
+    private SimpleEmptyViewHolder mSimpleEmptyViewHolder;
     //子类必须调用此方法
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initView();
-        setEmptyViewHolder(createEmptyViewHolder());
     }
 
     protected void initView()
@@ -54,22 +52,11 @@ public class BaseListFragment extends  RVListFragment {
         setLayoutManager(mLinearLayoutManager);
         addItemDecoration(new DividerItemDecoration(getContext()));
         setRefreshSchemeColors(ResourcesCompat.getColor(getResources(),R.color.colorPrimary,null));
+
+        mSimpleEmptyViewHolder=new SimpleEmptyViewHolder();
+        setEmptyView(mSimpleEmptyViewHolder.getView());
     }
 
-    private void setEmptyViewHolder(EmptyViewHolder emptyViewHolder)
-    {
-        mEmptyViewHolder=emptyViewHolder;
-        setEmptyView(mEmptyViewHolder.getView());
-    }
-
-    /**
-     * 获得默认的EmptyViewHolder,子类可以覆盖此方法
-     * @return 默认实现的EmptyViewHolder
-     */
-    protected EmptyViewHolder createEmptyViewHolder()
-    {
-        return new SimpleEmptyViewHolder();
-    }
 
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
@@ -79,8 +66,6 @@ public class BaseListFragment extends  RVListFragment {
            List<? extends Parcelable> list=savedInstanceState.getParcelableArrayList(TAG);
             ((SaveStateAbleAdapter) mAdapter).addAll(list);
         }
-        if (savedInstanceState!=null)//回复状态后,如果数据为0,确定上一个请求失败
-        mEmptyViewHolder.onAdapterSetChanged(mAdapter.getItemCount());
     }
 
     @Override
@@ -96,10 +81,10 @@ public class BaseListFragment extends  RVListFragment {
     public void setAdapter(RecyclerView.Adapter adapter) {
         super.setAdapter(adapter);
         mAdapter=adapter;
-        setFooterHolder();
+        setDefFooterHolder();
     }
 
-    protected void setFooterHolder()
+    protected void setDefFooterHolder()
     {
         View view= LayoutInflater.from(getContext()).inflate(R.layout.footerview,getRecyclerView(),false);
         mFooterHolder=new CommonFooterHolder(view);
@@ -148,11 +133,12 @@ public class BaseListFragment extends  RVListFragment {
         }
         setRefreshing(false);
         cancelLoadMore();
+        mSimpleEmptyViewHolder.isClicked=false;
+        mSimpleEmptyViewHolder.showErrorText();
         int count=mAdapter.getItemCount();
         if (count>0)
             mFooterHolder.mFooterText.setText("请求失败,点击重试");
 
-        mEmptyViewHolder.onAdapterSetChanged(count);
     }
 
 
@@ -162,7 +148,7 @@ public class BaseListFragment extends  RVListFragment {
         {
             return;
         }
-        mEmptyViewHolder.onAdapterSetChanged(mAdapter.getItemCount());
+        mSimpleEmptyViewHolder.isClicked=false;
         setRefreshing(false);
         cancelLoadMore();
     }
@@ -246,47 +232,37 @@ public class BaseListFragment extends  RVListFragment {
         }
     }
 
-    public interface EmptyViewHolder
-    {
-        View getView();
-        void onAdapterSetChanged(int itemCount);
-    }
 
-
-
-    public class SimpleEmptyViewHolder implements EmptyViewHolder,View.OnClickListener{
+    public class SimpleEmptyViewHolder implements View.OnClickListener{
 
         public TextView mEmptyView;
-
-        @Override
+        public boolean isClicked;
         public View getView() {
+            if (mEmptyView!=null)
+            {
+                return mEmptyView;
+            }
             mEmptyView =new TextView(getContext());
             mEmptyView.setGravity(Gravity.CENTER);
-            FrameLayout.LayoutParams params=new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.gravity=Gravity.CENTER;
-            mEmptyView.setLayoutParams(params);
             mEmptyView.setCompoundDrawablesWithIntrinsicBounds(0,R.mipmap.ic_refresh,0,0);
             mEmptyView.setOnClickListener(this);
             mEmptyView.setVisibility(View.INVISIBLE);
+            showErrorText();
             return mEmptyView;
         }
 
-
-        @Override
-        public void onAdapterSetChanged(int itemCount) {
-            if (itemCount==0)
-            {
-                mEmptyView.setVisibility(View.VISIBLE);
-                mEmptyView.setText("请求失败,点击重试");
-            }else {
-                mEmptyView.setVisibility(View.INVISIBLE);
-            }
+        public void showErrorText()
+        {
+            mEmptyView.setText("加载错误,点击重新加载...");
         }
 
-        @Override
         public void onClick(View v) {
-              mEmptyView.setText("重新加载中...");
-              onRefresh();
+            if (!isClicked)
+            {
+                mEmptyView.setText("加载中...");
+                onRefresh();
+                isClicked=true;
+            }
         }
 
     }

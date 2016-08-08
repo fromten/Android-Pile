@@ -68,19 +68,17 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
         nextPushTime=data.getNextPublishTime();
         mAdapter.addAll(infos);
         notifySuccess();
-        Log.d("tag", "onSuccess");
     }
 
     @Override
     public void onFailure(String message) {
         notifyError();
-        Log.d("tag", "onFailure");
     }
 
     @Override
     public void onRefresh() {
-        long second=nextPushTime- TimeUtil.getTime();
-        if (second<=0)
+        long second=nextPushTime-TimeUtil.getTime();
+        if (second<0)
         {
             mAdapter.clear();
             mService.getHotVideo(this);

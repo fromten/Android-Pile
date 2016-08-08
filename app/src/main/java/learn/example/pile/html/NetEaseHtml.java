@@ -1,5 +1,7 @@
 package learn.example.pile.html;
 
+import android.util.Log;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -26,12 +28,15 @@ public class NetEaseHtml {
         JsonObject object=new JsonParser().parse(res).getAsJsonObject();
         object=object.getAsJsonObject(docID);
         builder.append(insertHead());
+        builder.append("<div>");
         String title= GsonHelper.getAsString(object.get("title"),null);
         builder.append(insertTitle(title));
         String body= GsonHelper.getAsString(object.get("body"),null);
         JsonArray array=object.getAsJsonArray("img");
         body=insertImages(body,array);
         builder.append(body);
+        builder.append("</div>");
+        Log.d("html", builder.toString());;
         return builder.toString();
     }
     private String insertHead()
@@ -43,13 +48,21 @@ public class NetEaseHtml {
                 "  font-size: 0;\n" +
                 "  max-width: 100%;\n" +
                 "  display: block;\n" +
-                "  marginTop: 20px auto;\n" +
-                "  margin-left:15px"+
-                "  marigin-right:15px"+
+                "  marginTop: 20px auto;\n"+
                 "}"+
-                " p{margin-right: 15px"+
-                " margin-right: 15px;\n" +
-                " color: #333333;}\n";
+                " p{" +
+                " text-align: justify;\n"+
+                " color: #333333;}\n"
+                +"div div.p{\n" +
+                " text-align:justify;\n" +
+                " text-justify: inter-word;"+
+                " overflow: hidden;"+
+                " display: inline-block;"+
+                " margin-left : 10px;\n" +
+                " margin-right: 10px;\n" +
+                " align : justify;\n" +
+                " }";
+
         return HtmlTagBuild.headTag(HtmlTagBuild.styleTag(css));
     }
 

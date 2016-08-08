@@ -1,6 +1,8 @@
 package learn.example.pile;
 
+import android.app.Activity;
 import android.app.Application;
+import android.os.Bundle;
 
 import com.squareup.leakcanary.LeakCanary;
 

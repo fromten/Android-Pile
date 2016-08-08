@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
+    android:padding="@dimen/big_padding"
     android:background="?android:attr/selectableItemBackground">
 
     <ImageView
@@ -18,37 +19,44 @@
         android:layout_height="wrap_content"
         style="@style/TitleText"
         android:id="@+id/news_title"
-        android:padding="@dimen/small_padding"
+        android:paddingLeft="@dimen/small_padding"
+        android:paddingBottom="@dimen/small_padding"
+        android:paddingRight="@dimen/small_padding"
+        android:includeFontPadding="false"
         android:layout_alignTop="@+id/news_img"
         android:layout_toRightOf="@+id/news_img"
         android:layout_toEndOf="@+id/news_img" />
 
+    <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:padding="@dimen/small_padding"-->
+        <!--android:id="@+id/news_descr"-->
+        <!--android:layout_below="@+id/news_title"-->
+        <!--android:layout_toRightOf="@+id/news_img"-->
+        <!--android:layout_toEndOf="@+id/news_img"-->
+        <!--style="@style/SummaryText"/>-->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="@dimen/small_padding"
-        android:id="@+id/news_descr"
-        android:layout_below="@+id/news_title"
-        android:layout_toRightOf="@+id/news_img"
-        android:layout_toEndOf="@+id/news_img"
-        style="@style/SummaryText"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/small_padding"
+        android:paddingLeft="@dimen/small_padding"
+        android:paddingTop="@dimen/small_padding"
+        android:paddingRight="@dimen/small_padding"
         android:id="@+id/comment_num"
-        android:layout_below="@+id/news_descr"
-        android:layout_alignParentRight="true"
+        android:layout_alignBottom="@+id/news_img"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         style="@style/SmallText"/>
 
     <TextView
         style="@style/SmallText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="@dimen/small_padding"
+        android:paddingLeft="@dimen/small_padding"
+        android:paddingTop="@dimen/small_padding"
+        android:paddingRight="@dimen/small_padding"
         android:id="@+id/doc_source"
-        android:layout_below="@+id/news_descr"
-        android:layout_alignLeft="@+id/news_descr"
-        android:layout_alignStart="@+id/news_descr"/>
+        android:layout_alignLeft="@+id/news_title"
+        android:layout_alignStart="@+id/news_title"
+        android:layout_alignBottom="@+id/news_img"/>
 </RelativeLayout>

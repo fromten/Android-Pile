@@ -2,7 +2,6 @@ package learn.example.pile.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.View;
 
 import java.util.List;
@@ -63,7 +62,7 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
 
     @Override
     public void onSuccess(OpenEyeVideo data) {
-        List<OpenEyes.VideoInfo> infos=new OpenEyeVideoFactory().getInfoList(data.getIssueList());
+        List<OpenEyes.VideoInfo> infos=new OpenEyeVideoFactory().parseIssueList(data.getIssueList());
         nextUrl=data.getNextPageUrl();
         nextPushTime=data.getNextPublishTime();
         mAdapter.addAll(infos);

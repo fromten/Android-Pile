@@ -96,7 +96,7 @@ public class OpenEyeCommentFragment  extends CommentFragment implements IService
             for (OpenEyeComment.ReplyListBean item:data.getReplyList())
             {
                 String content=item.getMessage();
-                String time= TimeUtil.formatYMD(item.getCreateTime());
+                String time= TimeUtil.formatYMD(item.getCreateTime()/1000);
                 int likeCount=item.getLikeCount();
 
                 OpenEyeComment.ReplyListBean.UserBean user=item.getUser();

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
@@ -181,6 +182,9 @@ public class ReaderActivity extends AppCompatActivity  {
     public void  showCommentFragment()
     {
         mAppBarLayout.setExpanded(false,true);
+        FragmentTransaction mAnimationTransaction=getSupportFragmentManager()
+                 .beginTransaction()
+                .setCustomAnimations(R.anim.anim_slide_right_to_start,R.anim.anim_slide_out_to_right);
         if (mCommentFragment==null)
         {
             if (mNetEaseManager!=null)
@@ -190,13 +194,9 @@ public class ReaderActivity extends AppCompatActivity  {
             }else if (mZhihuManager!=null){
                 mCommentFragment= ZhihuCommentFragment.newInstance(mZhihuManager.zhihuDocId);
             }
-            getSupportFragmentManager().beginTransaction()
-                    .setCustomAnimations(R.anim.anim_slide_right_to_start,R.anim.anim_slide_out_to_right)
-                    .add(R.id.read_main_show,mCommentFragment).commit();
+            mAnimationTransaction.add(R.id.read_main_show,mCommentFragment).commit();
         }else if (!mCommentFragment.isVisible()){
-            getSupportFragmentManager().beginTransaction()
-                    .setCustomAnimations(R.anim.anim_slide_right_to_start,R.anim.anim_slide_out_to_right)
-                    .show(mCommentFragment).commit();
+            mAnimationTransaction.show(mCommentFragment).commit();
         }
     }
 
@@ -288,8 +288,8 @@ public class ReaderActivity extends AppCompatActivity  {
                                showCommentFragment();
                            }
                           inPress=false;
+                          return true;
                        }
-                       return true;
                    }
                 }
             }

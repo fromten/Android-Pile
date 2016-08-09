@@ -17,12 +17,18 @@ public class OpenEyeService extends GsonService{
         newRequest(TAG,OpenEyeVideo.class,buildRequest(url),callback);
     }
 
-    //翻页,获得下个视频列表
-    public void nextVideoList(String nextUrl, Callback<OpenEyeVideo> callback)
+    public void getCategoryVideoDateSort(int categoryID,Callback<OpenEyeVideo> callback)
     {
-        String url=OpenEyes.getNextHotUrl(nextUrl);
+        String url=OpenEyes.getCategoryUrl(categoryID,OpenEyes.Strategy.DATE);
         newRequest(TAG,OpenEyeVideo.class,buildRequest(url),callback);
     }
+
+    public void getCategoryVideoShareCountSort(int categoryID,Callback<OpenEyeVideo> callback)
+    {
+        String url=OpenEyes.getCategoryUrl(categoryID,OpenEyes.Strategy.SHARE_COUNT);
+        newRequest(TAG,OpenEyeVideo.class,buildRequest(url),callback);
+    }
+
 
     public void getComments(int id, Callback<OpenEyeComment> callback)
     {
@@ -30,9 +36,18 @@ public class OpenEyeService extends GsonService{
         newRequest(TAG,OpenEyeComment.class,buildRequest(url),callback);
     }
 
+
+    //翻页,获得下个视频列表
+    public void nextVideoList(String nextUrl, Callback<OpenEyeVideo> callback)
+    {
+        String url=OpenEyes.getNextUrl(nextUrl);
+        newRequest(TAG,OpenEyeVideo.class,buildRequest(url),callback);
+    }
+
+
     public void nextCommentList(String nextUrl,Callback<OpenEyeComment> callback)
     {
-        String url=nextUrl+OpenEyes.APP_PARAMS;
+        String url=OpenEyes.getNextUrl(nextUrl);
         newRequest(TAG,OpenEyeComment.class,buildRequest(url),callback);
     }
 

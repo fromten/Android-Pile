@@ -21,11 +21,27 @@ public class OpenEyes {
          deviceModel= Samsung Galaxy S6 - 6.0.0 - API 23 - 1440x2560
     */
 
+    public static final String HOT_URL="http://baobab.wandoujia.com/api/v2/feed?";
+    public static final String APP_PARAMS="&udid=5cf7bfcf19a84c618fd8d1e41f55518025ce2f94&vc=126&vn=2.4.1&deviceModel=Samsung%20Galaxy%20S6%20-%206.0.0%20-%20API%2023%20-%201440x2560&first_channel=eyepetizer_web&last_channel=eyepetizer_web&system_version_code=23";
+    public static final String APP_PARAMS_OLD="&udid=5cf7bfcf19a84c618fd8d1e41f55518025ce2f94&vc=89&vn=1.13.1&deviceModel=Samsung%20Galaxy%20S6%20-%206.0.0%20-%20API%2023%20-%201440x2560&first_channel=eyepetizer_web&last_channel=eyepetizer_web";
+    public static final String CATEGORY_URL="http://baobab.wandoujia.com/api/v3/videos?";
 
 
-    public static final String HOT_URL="http://baobab.wandoujia.com/api/v2/feed?udid=5cf7bfcf19a84c618fd8d1e41f55518025ce2f94&vc=89&vn=1.13.1&deviceModel=Samsung%20Galaxy%20S6%20-%206.0.0%20-%20API%2023%20-%201440x2560&first_channel=eyepetizer_web&last_channel=eyepetizer_web";
-    public static final String APP_PARAMS="&udid=5cf7bfcf19a84c618fd8d1e41f55518025ce2f94&vc=89&vn=1.13.1&deviceModel=Samsung%20Galaxy%20S6%20-%206.0.0%20-%20API%2023%20-%201440x2560&first_channel=eyepetizer_web&last_channel=eyepetizer_web";
+    //视频策略
+    public static class Strategy{
+        public static String SHARE_COUNT="shareCount";//按分享总数获得视频列表
+        public static String DATE="date";//按时间获得视频列表
+    }
 
+    //分类视频
+    public static class Category{
+        public static final int DRAMA=12;//剧情
+        public static final int ART=2;//创意
+        public static final int ADVERTISEMENT=14;//广告
+        public static final int RECORD=22;//记录
+        public static final int PREVIEW=8;//预告
+        public static final int TRIP=6;//旅行
+    }
 
     /**
      *  参数使用 APP_PARAMS+ 视频Id
@@ -38,14 +54,18 @@ public class OpenEyes {
 
     public static String getHotUrl(int num)
     {
-        return HOT_URL+"&num="+num;
+        return HOT_URL+APP_PARAMS_OLD+"&num="+num;
     }
 
-    public static String getNextHotUrl(String nextUrl)
+    public static String getNextUrl(String nextUrl)
     {
         return nextUrl+APP_PARAMS;
     }
 
+    public static String getCategoryUrl(int categoryID,String strategy)
+    {
+        return CATEGORY_URL+"categoryId="+categoryID+"&strategy"+strategy+APP_PARAMS;
+    }
 
     public static class VideoInfo implements Parcelable {
         private String title;

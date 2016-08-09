@@ -17,6 +17,7 @@ public class OpenEyeVideo {
     private long nextPublishTime;
     private String newestIssueType;
     private JsonArray issueList;
+    private JsonArray itemList;
 
     public String getNextPageUrl() {
         return nextPageUrl;
@@ -32,5 +33,9 @@ public class OpenEyeVideo {
 
     public JsonArray getIssueList() {
         return issueList;
+    }
+
+    public JsonArray getItemList() {
+        return itemList;
     }
 }

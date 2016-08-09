@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import java.lang.annotation.Retention;
+
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import learn.example.pile.R;
@@ -108,8 +110,12 @@ public class RVListFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     //添加底部Holder
     public void addFooterHolder(FooterHolder holder) {
-        RecyclerView.Adapter adapter=mRecyclerView.getAdapter();
-        ((AdapterWrapper)adapter).setFooterHolder(holder);
+        mAdapterWrap.setFooterHolder(holder);
+    }
+
+    //添加头部Holder
+    public void addHeadHolder(HeadHolder holder) {
+        mAdapterWrap.setHeadHolder(holder);
     }
 
 
@@ -222,11 +228,11 @@ public class RVListFragment extends Fragment implements SwipeRefreshLayout.OnRef
         }
 
         public void checkItemCount() {
+            //如果在刷新,不显示空view
             if (mSwipeRefreshLayout.isRefreshing())
             {
                 return;
             }
-
             int visibility = mAdapterWrap.getInnerAdapterItemCount() == 0 ? View.VISIBLE : View.INVISIBLE;
             if (mEmptyView != null) {
                 mEmptyView.setVisibility(visibility);
@@ -278,9 +284,11 @@ public class RVListFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private static class AdapterWrapper extends RecyclerView.Adapter{
 
         private final int TYPE_FOOTER=66;
+        private final int TYPE_HEAD=88;
 
         private RecyclerView.Adapter mInnerAdapter;
         private FooterHolder mFooterHolder;
+        private HeadHolder mHeadHolder;
 
         public AdapterWrapper(RecyclerView.Adapter adapter) {
             mInnerAdapter = adapter;
@@ -288,37 +296,51 @@ public class RVListFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            if (viewType==TYPE_FOOTER&&mFooterHolder!=null)
+            if (viewType==TYPE_FOOTER)
             {
                 return mFooterHolder;
+            }
+            if (viewType==TYPE_HEAD)
+            {
+                return mHeadHolder;
             }
             return mInnerAdapter.onCreateViewHolder(parent,viewType);
         }
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            if (getItemViewType(position)==TYPE_FOOTER)
+            if (holder instanceof HeadHolder)
+            {
+                mHeadHolder.onBindHolder(mInnerAdapter);
+            }else if (holder instanceof FooterHolder)
             {
                 mFooterHolder.onBindHolder(mInnerAdapter);
-            }else {
-                mInnerAdapter.onBindViewHolder(holder,position);
+            }else{
+                int realPos=position;
+                if (mHeadHolder!=null)
+                {
+                    realPos=position-1;
+                }
+                mInnerAdapter.onBindViewHolder(holder,realPos);
             }
         }
 
         @Override
         public int getItemCount() {
-            int num=mFooterHolder==null?0:1;
-            return mInnerAdapter.getItemCount()+num;
+            int footerNum=mFooterHolder==null?0:1;
+            int headNum=mHeadHolder==null?0:1;
+            return mInnerAdapter.getItemCount()+footerNum+headNum;
         }
 
         public int getInnerAdapterItemCount() {
-
             return mInnerAdapter.getItemCount();
         }
 
         @Override
         public int getItemViewType(int position) {
-            if (position==mInnerAdapter.getItemCount())
+            if (mHeadHolder!=null&&position==0){
+                return TYPE_HEAD;
+            }else if (position==getItemCount()-1&&mFooterHolder!=null)
             {
                 return TYPE_FOOTER;
             }
@@ -330,6 +352,13 @@ public class RVListFragment extends Fragment implements SwipeRefreshLayout.OnRef
             mFooterHolder=holder;
             notifyDataSetChanged();
         }
+
+        public void setHeadHolder(HeadHolder holder)
+        {
+            mHeadHolder=holder;
+            notifyDataSetChanged();
+        }
+
     }
 
     public static abstract class FooterHolder extends RecyclerView.ViewHolder{
@@ -337,8 +366,16 @@ public class RVListFragment extends Fragment implements SwipeRefreshLayout.OnRef
         public FooterHolder(View itemView) {
             super(itemView);
         }
+        //显示时调用
+        public abstract void onBindHolder(RecyclerView.Adapter adapter);
+    }
 
-        //当footer显示时调用
+    public static abstract class HeadHolder extends RecyclerView.ViewHolder{
+
+        public HeadHolder(View itemView) {
+            super(itemView);
+        }
+        //显示时调用
         public abstract void onBindHolder(RecyclerView.Adapter adapter);
     }
 

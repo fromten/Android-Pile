@@ -20,6 +20,13 @@
         <item name="drawerArrowStyle">@style/Widget.AppCompat.DrawerArrowToggle</item>
     </style>
 
+    <style name="Category">
+        <item name="android:background">@color/grey_dark</item>
+        <item name="android:textColor">@color/white_dark</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:gravity">center</item>
+    </style>
 
     <style name="TitleText" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textColor">@color/titleColor</item>

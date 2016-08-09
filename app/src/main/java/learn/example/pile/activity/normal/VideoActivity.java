@@ -39,18 +39,19 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
 
     private Fragment.SavedState mCommentState;
 
-
+    private MediaPlayer mMediaPlayer;
     private VideoView mVideoView;
     private MediaController mMediaController;
     private VolumeProgressView mVolumeProgressView;
     private TextView mLogView;
 
-    private int seekPostion;
+    private int seekPosition;
 
     private GestureDetector mScreenTouchListener;
 
     public static final int HIDE_VOLUME_PROGERESSBAR=0;
     public static final int HIDE_ACTIONBAR=1;
+    public static final int REMOVE_LOG_TEXT=2;
     private Handler mHandler=new Handler()
     {
         @Override
@@ -58,9 +59,14 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
            switch (msg.what)
            {
                case HIDE_VOLUME_PROGERESSBAR:
-                   mVolumeProgressView.hide();break;
+                   mVolumeProgressView.hide();
+                   break;
                case HIDE_ACTIONBAR:
-                    hideActionBar();break;
+                    hideActionBar();
+                   break;
+               case REMOVE_LOG_TEXT:
+                   mLogView.setText(null);
+                   break;
            }
         }
     };
@@ -69,7 +75,7 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
 
-        seekPostion=savedInstanceState==null?-1:savedInstanceState.getInt(KEY_SAVE_STATE_POSITION,-1);
+        seekPosition=savedInstanceState==null?-1:savedInstanceState.getInt(KEY_SAVE_STATE_POSITION,-1);
 
         initView();
         Uri uri = getIntent().getData();
@@ -136,12 +142,14 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
 
     @Override
     protected void onResume() {
+        mVideoView.seekTo(seekPosition);
+        mVideoView.start();
         super.onResume();
-        mVideoView.resume();
     }
 
     @Override
     protected void onPause() {
+        seekPosition=mVideoView.getCurrentPosition();
         mVideoView.pause();
         super.onPause();
     }
@@ -181,6 +189,7 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
 
         mHandler.removeMessages(HIDE_ACTIONBAR);
         mHandler.removeMessages(HIDE_VOLUME_PROGERESSBAR);
+        mHandler.removeMessages(REMOVE_LOG_TEXT);
         mHandler=null;
 
         mVideoView.stopPlayback();
@@ -189,6 +198,7 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
         mVideoView.setOnErrorListener(null);
         mVideoView.setOnTouchListener(null);
         mVideoView = null;
+        mMediaPlayer=null;
         mSimpleOnGestureListener=null;
         mMediaController = null;
         super.onDestroy();
@@ -196,10 +206,10 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-
+        Log.d("hh", "onPrepared");
         //跳到旋转之前的播放位置
-        if (seekPostion>0) {
-            mVideoView.seekTo(seekPostion);
+        if (seekPosition>0) {
+            mVideoView.seekTo(seekPosition);
         }
         mVideoView.start();
         mLogView.setText(null);
@@ -210,12 +220,7 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
     public void onCompletion(MediaPlayer mp) {
         mLogView.setText("播放结束");
         //十秒后
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mLogView.setText(null);
-            }
-        },10000);
+        mHandler.sendEmptyMessage(REMOVE_LOG_TEXT);
     }
 
     @Override

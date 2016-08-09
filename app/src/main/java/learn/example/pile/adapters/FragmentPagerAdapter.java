@@ -8,6 +8,7 @@ import learn.example.pile.fragment.JokeListFragment;
 import learn.example.pile.fragment.NewsListFragment;
 import learn.example.pile.fragment.ReadListFragment;
 import learn.example.pile.fragment.VideoListFragment;
+import learn.example.pile.fragment.VideoListFragment3;
 
 /**
  * Created on 2016/5/6.
@@ -33,7 +34,7 @@ public class FragmentPagerAdapter extends FragmentStatePagerAdapter {
         {
             case 0:fragment=new NewsListFragment();break;
             case 1:fragment=new ReadListFragment();break;
-            case 2:fragment=new VideoListFragment();break;
+            case 2:fragment=new VideoListFragment3();break;
             case 3:fragment=new JokeListFragment();break;
         }
        return fragment;

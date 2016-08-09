@@ -29,8 +29,7 @@ public class VolumeProgressView extends View {
     private AudioManager mAudioManager;
 
     public VolumeProgressView(Context context) {
-        super(context);
-        initView();
+        this(context,null);
     }
 
 
@@ -55,7 +54,7 @@ public class VolumeProgressView extends View {
         }
         if (heightMode==MeasureSpec.AT_MOST)
         {
-            //每格40个高度
+
             viewHeight=Math.min(defHeight,height);
         }
         setMeasuredDimension(viewWidth,viewHeight);
@@ -78,25 +77,29 @@ public class VolumeProgressView extends View {
         rectColor=Color.RED;
         borderColor=Color.BLACK;
 
-        //屏幕宽度1/15作为默认宽度,屏幕高度1/30作为默认格子高度
+        //View的高度默认为屏幕3分之一,宽度为 高度 ÷ 音量最大值
         DisplayMetrics metrics = new DisplayMetrics();
         WindowManager manager= (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
         manager.getDefaultDisplay().getMetrics(metrics);
-        defWidth=metrics.widthPixels/15;
-        defHeight=VOLUME_MAX_VALUE*metrics.heightPixels/30;
+
+        defHeight=(metrics.heightPixels/3);
+        defWidth=defHeight/VOLUME_MAX_VALUE;
     }
+
+
+
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         int len=mRect.length;
         int width=right-left;
         int height=bottom-top;
-        int space=height/ VOLUME_MAX_VALUE;
-        mRect[0].set(0,0,width,space);
+        int rectHeight=height/ VOLUME_MAX_VALUE;
+        mRect[0].set(0,0,width,rectHeight);
         for(int i=1;i<len;++i)
         {
             int t=mRect[i-1].bottom;
-            int b=t+space;
+            int b=t+rectHeight;
             mRect[i].set(0,t,width,b);
         }
     }

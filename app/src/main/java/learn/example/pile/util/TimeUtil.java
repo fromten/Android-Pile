@@ -2,6 +2,7 @@ package learn.example.pile.util;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -13,7 +14,7 @@ public class TimeUtil {
 
     /**
      * 转换成 年-月-日
-     * @param timestamp 时间戳
+     * @param timestamp 时间戳 秒格式
      * @return string
      */
     public static String formatYMD(long timestamp)
@@ -46,5 +47,23 @@ public class TimeUtil {
     public static long getTime()
     {
         return new Date().getTime();
+    }
+
+    public static long getNextDayTime()
+    {
+        Calendar calendar=Calendar.getInstance(Locale.CHINA);
+        calendar.roll(Calendar.DAY_OF_YEAR, +1);
+        return calendar.getTime().getTime();
+    }
+
+    public static long getNextDayZeroClock()
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        cal.roll(Calendar.DAY_OF_YEAR,1);
+        return cal.getTime().getTime();
     }
 }

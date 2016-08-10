@@ -40,6 +40,7 @@ public class NetEaseNews {
         private int recType;
         private String recprog;
         private int replyCount;
+        private String replayString;
         private String replyid;
         private String source;
         private String template;
@@ -148,6 +149,10 @@ public class NetEaseNews {
             return skipType;
         }
 
+        public void setReplayString(String replayString) {
+            this.replayString = replayString;
+        }
+
         public ImageExtraBean[] getImgnewextra() {
             return imgnewextra;
         }
@@ -222,6 +227,7 @@ public class NetEaseNews {
             dest.writeInt(this.recType);
             dest.writeString(this.recprog);
             dest.writeInt(this.replyCount);
+            dest.writeString(this.replayString);
             dest.writeString(this.replyid);
             dest.writeString(this.source);
             dest.writeString(this.template);
@@ -251,6 +257,7 @@ public class NetEaseNews {
             this.recType = in.readInt();
             this.recprog = in.readString();
             this.replyCount = in.readInt();
+            this.replayString = in.readString();
             this.replyid = in.readString();
             this.source = in.readString();
             this.template = in.readString();

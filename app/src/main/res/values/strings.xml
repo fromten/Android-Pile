@@ -26,7 +26,7 @@
     <!--视频分类表-->
     <string name="art">创意</string>
     <string name="drama">剧情</string>
-    <string name="adv">广告</string>
+    <string name="ads">广告</string>
     <string name="record">记录</string>
     <string name="preview">预告</string>
     <string name="trip">旅行</string>

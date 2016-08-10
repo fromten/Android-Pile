@@ -2,28 +2,24 @@ package learn.example.pile.fragment;
 
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
-import android.content.Context;
-import android.graphics.Picture;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.PictureDrawable;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import learn.example.pile.R;
 import learn.example.pile.adapters.SaveStateAbleAdapter;
@@ -35,14 +31,22 @@ import learn.example.uidesign.DividerItemDecoration;
 public class BaseListFragment extends  RVListFragment {
 
     private static final String TAG = "BaseListFragment";
+
+
+    private TextView mTopLogView;
+    private Animator mTopAniamtor;
+
+
     private CommonFooterHolder mFooterHolder;
     private RecyclerView.Adapter mAdapter;
     private LinearLayoutManager mLinearLayoutManager;
     private SimpleEmptyViewHolder mSimpleEmptyViewHolder;
     //子类必须调用此方法
+    @OverridingMethodsMustInvokeSuper
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        addTopView();
         initView();
     }
 
@@ -55,6 +59,63 @@ public class BaseListFragment extends  RVListFragment {
 
         mSimpleEmptyViewHolder=new SimpleEmptyViewHolder();
         setEmptyView(mSimpleEmptyViewHolder.getView());
+    }
+
+    /**
+     * 添加一个顶部视图
+     */
+    private void addTopView()
+    {
+        View root=getView();
+        if (!(root instanceof ViewGroup))
+        {
+            return;
+        }
+        ViewGroup viewGroup= (ViewGroup) root;
+        mTopLogView=new TextView(getContext());
+        mTopLogView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        mTopLogView.setGravity(Gravity.CENTER);
+        mTopLogView.setBackgroundColor(ResourcesCompat.getColor(getResources(),R.color.blue_light,null));
+        mTopLogView.setPadding(20,10,10,20);
+        mTopLogView.setTextColor(Color.WHITE);
+        mTopLogView.setClickable(false);
+        mTopLogView.setFocusable(false);
+        mTopLogView.setVisibility(View.INVISIBLE);
+        viewGroup.addView(mTopLogView);
+    }
+
+    public void showTopView(String text)
+    {
+        mTopLogView.setVisibility(View.VISIBLE);
+        mTopAniamtor=AnimatorInflater.loadAnimator(getContext(),R.animator.expand);
+        mTopAniamtor.setTarget(mTopLogView);
+        mTopAniamtor.start();
+        mTopAniamtor.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mTopAniamtor=AnimatorInflater.loadAnimator(getContext(),R.animator.collaspe);
+                mTopAniamtor.setStartDelay(2000);
+                mTopAniamtor.setTarget(mTopLogView);
+                mTopAniamtor.start();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+        mTopLogView.setText(text);
+
     }
 
 
@@ -95,11 +156,21 @@ public class BaseListFragment extends  RVListFragment {
          this.setAdapter((RecyclerView.Adapter) saveStateAdapter);
     }
 
+
+    @Override
+    public void onDestroy() {
+        if (mTopAniamtor!=null)
+        {
+            mTopAniamtor.cancel();
+            mTopAniamtor.removeAllListeners();
+        }
+        super.onDestroy();
+    }
+
     @Override
     public void onRefresh() {
          //TODO
     }
-
     @Override
     public  void onLoadMore(){
         //TODO
@@ -131,7 +202,10 @@ public class BaseListFragment extends  RVListFragment {
         {
             return;
         }
-        setRefreshing(false);
+        if (isRefreshing())
+        {
+            setRefreshing(false);
+        }
         cancelLoadMore();
         mSimpleEmptyViewHolder.isClicked=false;
         mSimpleEmptyViewHolder.showErrorText();
@@ -148,8 +222,12 @@ public class BaseListFragment extends  RVListFragment {
         {
             return;
         }
+        if (isRefreshing())
+        {
+            setRefreshing(false);
+            showTopView("成功更新"+mAdapter.getItemCount()+"内容");
+        }
         mSimpleEmptyViewHolder.isClicked=false;
-        setRefreshing(false);
         cancelLoadMore();
     }
 
@@ -236,7 +314,7 @@ public class BaseListFragment extends  RVListFragment {
     public class SimpleEmptyViewHolder implements View.OnClickListener{
 
         public TextView mEmptyView;
-        public boolean isClicked;
+        public boolean isClicked;//是否点击过,防止重复点击
         public View getView() {
             if (mEmptyView!=null)
             {

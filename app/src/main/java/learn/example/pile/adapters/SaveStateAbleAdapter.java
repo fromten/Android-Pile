@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import learn.example.pile.jsonbean.NetEaseNews;
+
 /**
  * Created on 2016/6/29.
  */
@@ -25,7 +27,7 @@ public abstract class SaveStateAbleAdapter<VH extends RecyclerView.ViewHolder,D 
     }
     public void addAll(List<D> items)
     {
-        if (items==null||items.isEmpty())return;
+        if (items==null||items.isEmpty()) return;
         mDataList.addAll(items);
         notifyItemInserted(getItemCount());
     }

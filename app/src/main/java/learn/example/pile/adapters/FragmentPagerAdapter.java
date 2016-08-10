@@ -8,7 +8,6 @@ import learn.example.pile.fragment.JokeListFragment;
 import learn.example.pile.fragment.NewsListFragment;
 import learn.example.pile.fragment.ReadListFragment;
 import learn.example.pile.fragment.VideoListFragment;
-import learn.example.pile.fragment.VideoListFragment3;
 
 /**
  * Created on 2016/5/6.
@@ -16,6 +15,7 @@ import learn.example.pile.fragment.VideoListFragment3;
 public class FragmentPagerAdapter extends FragmentStatePagerAdapter {
 
     private final String[] title={"新闻","阅读","视频","笑话"};
+
     public FragmentPagerAdapter(FragmentManager fm) {
         super(fm);
     }
@@ -34,11 +34,18 @@ public class FragmentPagerAdapter extends FragmentStatePagerAdapter {
         {
             case 0:fragment=new NewsListFragment();break;
             case 1:fragment=new ReadListFragment();break;
-            case 2:fragment=new VideoListFragment3();break;
+            case 2:fragment=new VideoListFragment();break;
             case 3:fragment=new JokeListFragment();break;
         }
+
        return fragment;
     }
+
+    public String getTag(int position)
+    {
+        return "ListFragment"+position;
+    }
+
 
     @Override
     public int getCount() {

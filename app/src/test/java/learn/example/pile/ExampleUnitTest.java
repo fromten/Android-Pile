@@ -37,13 +37,7 @@ public class ExampleUnitTest {
 
     @Test
     public void addition_isCorrect() {
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        cal.roll(Calendar.DAY_OF_YEAR,1);
-        System.out.println(cal.getTime().getTime());
+        System.out.println(TimeUtil.getNextDayTime(0));
     }
 
 

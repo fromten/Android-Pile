@@ -6,7 +6,6 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorPrimary</item>
-        <item name="android:textColorLink">@color/blue_light</item>
         <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
         <item name="android:progressBarStyleLarge">@style/Widget.AppCompat.ProgressBar</item>
@@ -14,7 +13,8 @@
     </style>
 
     <style name="AppTheme" parent="BaseAppTheme">
-         <item name="android:textColorSecondary">@color/secondary</item>
+        <item name="android:textColorSecondary">@color/secondary</item>
+        <item name="android:textColorLink">@color/blue_light</item>
     </style>
 
     <style name="FullScreenTheme" parent="Theme.AppCompat.Light.DarkActionBar">

@@ -49,21 +49,21 @@ public class TimeUtil {
         return new Date().getTime();
     }
 
-    public static long getNextDayTime()
+
+    /**
+     * 获得下一天的时间
+     * @param when 几点钟
+     * @return 毫秒时间
+     */
+    public static long getNextDayTime(int when)
     {
         Calendar calendar=Calendar.getInstance(Locale.CHINA);
         calendar.roll(Calendar.DAY_OF_YEAR, +1);
+        calendar.set(Calendar.HOUR_OF_DAY, when);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
         return calendar.getTime().getTime();
     }
 
-    public static long getNextDayZeroClock()
-    {
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        cal.roll(Calendar.DAY_OF_YEAR,1);
-        return cal.getTime().getTime();
-    }
 }

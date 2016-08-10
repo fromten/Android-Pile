@@ -12,15 +12,16 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import learn.example.pile.R;
+import learn.example.pile.jsonbean.ZhihuStories;
 import learn.example.pile.object.Zhihu;
 import learn.example.pile.util.ActivityLauncher;
 
 /**
  * Created on 2016/7/9.
  */
-public class ZhiHuMsgListAdapter extends SaveStateAbleAdapter<ZhiHuMsgListAdapter.ZhihuListViewHolder,Zhihu.Story> {
+public class ZhiHuStoriesListAdapter extends SaveStateAbleAdapter<ZhiHuStoriesListAdapter.ZhihuListViewHolder,ZhihuStories.StoriesBean> {
 
-
+    private String date;
     private View.OnClickListener viewClick=new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -30,6 +31,9 @@ public class ZhiHuMsgListAdapter extends SaveStateAbleAdapter<ZhiHuMsgListAdapte
         }
     };
 
+    public void setDate(String date) {
+        this.date = date;
+    }
 
     @Override
     public ZhihuListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -41,12 +45,18 @@ public class ZhiHuMsgListAdapter extends SaveStateAbleAdapter<ZhiHuMsgListAdapte
 
     @Override
     public void onBindViewHolder(ZhihuListViewHolder holder, int position) {
-        Zhihu.Story story=getItem(position);
+        ZhihuStories.StoriesBean stories=getItem(position);
 
-        Glide.with(holder.itemView.getContext()).load(story.getImageUrls()[0]).diskCacheStrategy(DiskCacheStrategy.SOURCE).fitCenter().into(holder.image);
-        holder.title.setText(story.getTitle());
-        holder.pushDate.setText(story.getDate());
-        holder.itemView.setTag(story.getId());
+        String url = stories.getImage();
+        if (url==null)
+        {
+            url=stories.getImages()[0];
+        }
+
+        Glide.with(holder.itemView.getContext()).load(url).diskCacheStrategy(DiskCacheStrategy.SOURCE).fitCenter().into(holder.image);
+        holder.title.setText(stories.getTitle());
+        holder.pushDate.setText(date);
+        holder.itemView.setTag(stories.getId());
     }
 
     public static class ZhihuListViewHolder extends RecyclerView.ViewHolder{

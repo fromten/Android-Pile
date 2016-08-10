@@ -1,5 +1,8 @@
 package learn.example.pile.jsonbean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -11,31 +14,29 @@ public class ZhihuStories {
 
 
     private String date;
+
+    @SerializedName(value = "stories",alternate = "top_stories")
     private List<StoriesBean> stories;
-    @SerializedName("top_stories")
-    private List<TopStoriesBean> topStories;
 
 
     public String getDate() {
         return date;
     }
 
+
     public List<StoriesBean> getStories() {
         return stories;
     }
 
-    public List<TopStoriesBean> getTopStories() {
-        return topStories;
-    }
 
-    public static class StoriesBean {
+    public static class StoriesBean implements Parcelable {
         private int type;
         private int id;
         @SerializedName("ga_prefix")
         private String gaPrefix;
         private String title;
         private String[] images;
-
+        private String image;
         public int getType() {
             return type;
         }
@@ -55,38 +56,50 @@ public class ZhihuStories {
         public String[] getImages() {
             return images;
         }
-    }
-
-    public static class TopStoriesBean {
-        private String image;
-        private int type;
-        private int id;
-
-        @SerializedName("ga_prefix")
-        private String gaPrefix;
-
-        private String title;
 
         public String getImage() {
             return image;
         }
 
-        public int getType() {
-            return type;
+
+        @Override
+        public int describeContents() {
+            return 0;
         }
 
-        public int getId() {
-            return id;
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(this.type);
+            dest.writeInt(this.id);
+            dest.writeString(this.gaPrefix);
+            dest.writeString(this.title);
+            dest.writeStringArray(this.images);
+            dest.writeString(this.image);
         }
 
-        public String getGaPrefix() {
-            return gaPrefix;
+        public StoriesBean() {
         }
 
-        public String getTitle() {
-            return title;
+        protected StoriesBean(Parcel in) {
+            this.type = in.readInt();
+            this.id = in.readInt();
+            this.gaPrefix = in.readString();
+            this.title = in.readString();
+            this.images = in.createStringArray();
+            this.image = in.readString();
         }
+
+        public static final Parcelable.Creator<StoriesBean> CREATOR = new Parcelable.Creator<StoriesBean>() {
+            @Override
+            public StoriesBean createFromParcel(Parcel source) {
+                return new StoriesBean(source);
+            }
+
+            @Override
+            public StoriesBean[] newArray(int size) {
+                return new StoriesBean[size];
+            }
+        };
     }
-
 
 }

@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.List;
+
 import learn.example.pile.R;
 import learn.example.pile.jsonbean.NetEaseNews;
 import learn.example.pile.util.ActivityLauncher;
@@ -25,7 +27,6 @@ public class NewsListAdapter extends SaveStateAbleAdapter<NewsListAdapter.BaseNe
     private final int TYPE_NORMAL=5;
     private final int TYPE_IMAGES=6;
 
-
     private View.OnClickListener mItemClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -33,10 +34,10 @@ public class NewsListAdapter extends SaveStateAbleAdapter<NewsListAdapter.BaseNe
             NetEaseNews.T1348647909107Bean item=getItem(position);
 
             if (item.getSkipType()!=null&&item.getSkipType().equals("photoset"))
-            {
+            {   //启动图片查看器
                 Bundle anim= ActivityLauncher.slideAnimation(v.getContext());
                 ActivityLauncher.startPhotoActivityForNetEase(v.getContext(),item.getSkipID(),anim);
-            }else {
+            }else { //启动新闻阅读器
                 String[] array=new String[]{item.getBoardid(),item.getDocid()};
                 Bundle anim= ActivityLauncher.slideAnimation(v.getContext());
                 ActivityLauncher.startReaderActivityForNetEase(v.getContext(),array,anim);
@@ -45,8 +46,40 @@ public class NewsListAdapter extends SaveStateAbleAdapter<NewsListAdapter.BaseNe
         }
     };
 
+    @Override
+    public void addItem(NetEaseNews.T1348647909107Bean item) {
+        if (item!=null)
+        {
+            int replyCount=item.getReplyCount();
+            item.setReplayString(formatNumber(replyCount));
+        }
+        super.addItem(item);
+    }
 
+    @Override
+    public void addAll(List<NetEaseNews.T1348647909107Bean> items) {
+        if (items!=null)
+        {
+            for (NetEaseNews.T1348647909107Bean item:items)
+            {
+                int replyCount=item.getReplyCount();
+                item.setReplayString(formatNumber(replyCount));
+            }
+        }
+        super.addAll(items);
+    }
 
+    //格式化数字
+    private String formatNumber(int num)
+    {
+        if (num<10000)
+        {
+            return num+"评论";
+        }
+        int tenThousand=num/10000;
+        int thousand=num%10000/1000;
+        return tenThousand+"."+thousand+"万评论";
+    }
 
     @Override
     public BaseNewsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -119,16 +152,7 @@ public class NewsListAdapter extends SaveStateAbleAdapter<NewsListAdapter.BaseNe
         return TYPE_NORMAL;
     }
 
-    private String formatNumber(int num)
-    {
-        if (num<10000)
-        {
-            return num+"评论";
-        }
-        int tenThousand=num/10000;
-        int thousand=num%10000/1000;
-        return tenThousand+"."+thousand+"万评论";
-    }
+
 
 
     public static class BaseNewsViewHolder extends RecyclerView.ViewHolder{

@@ -2,10 +2,16 @@ package learn.example.pile.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import learn.example.pile.R;
 import learn.example.pile.adapters.VideoListAdapter;
 import learn.example.pile.factory.OpenEyeVideoFactory;
 import learn.example.pile.jsonbean.OpenEyeVideo;
@@ -30,16 +36,26 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
     private OpenEyeService mService;
     private String nextUrl;
     private long nextPushTime;
+
+    private CategoryViewHolder mCategoryViewHolder;;
+
+    private boolean isRequireClear=false;
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view,savedInstanceState);
+        getRecyclerView().setItemAnimator(new DefaultItemAnimator());
         mAdapter=new VideoListAdapter();
         setAdapter(mAdapter);
+        createCategoryHead();
+
         mService=new OpenEyeService();
+
+
         if (savedInstanceState==null)
         {
             setRefreshing(true);
             mService.getHotVideo(this);
+            nextPushTime=TimeUtil.getNextDayTime(0);
         }else {
             nextUrl=savedInstanceState.getString(KEY_NEXT_URL);
             nextPushTime=savedInstanceState.getLong(KEY_NEXT_PUSH_TIME);
@@ -62,10 +78,24 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
 
     @Override
     public void onSuccess(OpenEyeVideo data) {
-        List<OpenEyes.VideoInfo> infos=new OpenEyeVideoFactory().parseIssueList(data.getIssueList());
+
+        List<OpenEyes.VideoInfo> mList = null;
+        if (data.getIssueList()!=null)
+        {
+           mList=new OpenEyeVideoFactory().parseIssueList(data.getIssueList());
+        }else if (data.getItemList()!=null){
+            mList=new ArrayList<>();
+            new OpenEyeVideoFactory().parseItemList(data.getItemList(),mList);
+        }
+
         nextUrl=data.getNextPageUrl();
-        nextPushTime=data.getNextPublishTime();
-        mAdapter.addAll(infos);
+
+        if (isRequireClear)
+        {
+            mAdapter.clear();
+            isRequireClear=false;
+        }
+        mAdapter.addAll(mList);
         notifySuccess();
     }
 
@@ -77,12 +107,17 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
     @Override
     public void onRefresh() {
         long second=nextPushTime-TimeUtil.getTime();
-        if (second<0)
+
+        //如果到下一次推送时间,或者当前的Adapter 没有元素,需要再次请求
+        boolean requireRequest=second<0||mAdapter.getItemCount()==0;
+        if (requireRequest)
         {
-            mAdapter.clear();
+            isRequireClear=true;
             mService.getHotVideo(this);
+            nextPushTime=TimeUtil.getNextDayTime(0);
         }else {
             setRefreshing(false);
+            showTopView("下次更新时间为"+TimeUtil.formatYMD(nextPushTime/1000));
         }
     }
 
@@ -96,4 +131,58 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
         }
     }
 
+    private void createCategoryHead()
+    {
+        View view= LayoutInflater.from(getContext()).inflate(R.layout.category,getRecyclerView(),false);
+        mCategoryViewHolder=new CategoryViewHolder(view);
+        addHeadHolder(mCategoryViewHolder);
+    }
+    private void requestCategoryVideo(int categoryId)
+    {
+        setRefreshing(true);
+        mService.getCategoryVideoDateSort(categoryId,VideoListFragment.this);
+    }
+
+    public class CategoryViewHolder extends HeadHolder implements View.OnClickListener{
+
+        public CategoryViewHolder(View view) {
+            super(view);
+            ViewGroup viewGroup= (ViewGroup) view;
+            int count=viewGroup.getChildCount();
+            for (int i = 0; i < count; i++) {
+                viewGroup.getChildAt(i).setOnClickListener(this);
+            }
+        }
+
+        @Override
+        public void onBindHolder(RecyclerView.Adapter adapter) {
+
+        }
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId())
+            {
+                case R.id.trip:
+                    requestCategoryVideo(OpenEyes.Category.TRIP);
+                    break;
+                case R.id.ads:
+                    requestCategoryVideo(OpenEyes.Category.ADVERTISEMENT);
+                    break;
+                case R.id.art:
+                    requestCategoryVideo(OpenEyes.Category.ART);
+                    break;
+                case R.id.record:
+                    requestCategoryVideo(OpenEyes.Category.RECORD);
+                    break;
+                case R.id.drama:
+                    requestCategoryVideo(OpenEyes.Category.DRAMA);
+                    break;
+                case R.id.preview:
+                    requestCategoryVideo(OpenEyes.Category.PREVIEW);
+                    break;
+            }
+            isRequireClear=true;
+        }
+    }
 }

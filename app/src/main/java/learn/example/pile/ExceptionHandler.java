@@ -38,6 +38,18 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
     public void uncaughtException(Thread thread, Throwable ex) {
           if (mDir!=null)
           {
+              long len=0;
+              for (File file:mDir.listFiles())
+              {
+                  len+=file.length();
+              }
+              if (len>=10485760)//10M
+              {
+                  for (File file:mDir.listFiles())
+                  {
+                      file.delete();
+                  }
+              }
 
               String name=TimeUtil.formatTimeFull(TimeUtil.getTime()/1000);
               File newFile=new File(mDir,name);

@@ -34,19 +34,13 @@ import learn.example.pile.util.AccessAppDataHelper;
  */
 public class SettingFragment extends Fragment {
     public static final String TAG = "SettingFragment";
-    private TextView picCache;
     private TextView mImgCache;
-    private Spinner mSpinner;
-    private Button mSpinnerButton;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_setting, container, false);
         mImgCache = (TextView) v.findViewById(R.id.img_cache);
-        mSpinner = (Spinner) v.findViewById(R.id.mode_spinner);
-        mSpinnerButton = (Button) v.findViewById(R.id.spinner_button);
-        mSpinnerButton.setOnClickListener(new SpinnerButtonClick());
         return v;
     }
 
@@ -115,44 +109,10 @@ public class SettingFragment extends Fragment {
     }
 
 
-    private class SpinnerButtonClick implements View.OnClickListener {
-
-
-        @Override
-        public void onClick(View v) {
-            final String selected = (String) mSpinner.getSelectedItem();
-            String title = "重新设置页数";
-            ForegroundColorSpan fgspan = new ForegroundColorSpan(Color.RED);
-            SpannableString spannableString = new SpannableString("重新设置" + selected + "请求页数");
-            spannableString.setSpan(fgspan, 4, 4 + selected.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            showCommonDialog(getContext(), title, spannableString, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                   performClear(selected);
-                }
-            }, null);
-        }
-
-        public void performClear(final String selected) {
-            switch (selected) {
-                case "笑话":
-                    AccessAppDataHelper.saveInteger(getActivity(), AccessAppDataHelper.KEY_JOKE_PAGE, 1);
-                    break;
-                case "视频":
-                    AccessAppDataHelper.saveInteger(getActivity(), AccessAppDataHelper.KEY_VIDEO_PAGE, 1);
-                    break;
-                case "阅读":
-                    AccessAppDataHelper.saveInteger(getActivity(), AccessAppDataHelper.KEY_READ_PAGE, 1);
-                    break;
-            }
-
-        }
-    }
 
 
     /**
      * 显示带有确定和取消按钮的对话框
-     *
      * @param context          context
      * @param title            标题
      * @param msg              消息

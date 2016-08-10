@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import java.util.List;
+
 import learn.example.pile.adapters.NewsListAdapter;
 import learn.example.pile.jsonbean.NetEaseNews;
 import learn.example.pile.net.GsonService;
@@ -55,6 +57,8 @@ public class NewsListFragment extends BaseListFragment implements GsonService.Ca
         mNewsListAdapter.addAll(data.getT1348647909107());
         notifySuccess();
     }
+
+
 
     @Override
     public void onFailure(String msg) {

@@ -25,6 +25,7 @@ import learn.example.net.OkHttpRequest;
 import learn.example.pile.R;
 import learn.example.pile.activity.base.ToolBarActivity;
 import learn.example.pile.adapters.FragmentPagerAdapter;
+import learn.example.pile.fragment.RVListFragment;
 import learn.example.pile.fragment.SettingFragment;
 import learn.example.pile.util.ActivityLauncher;
 import learn.example.pile.util.AppInfo;
@@ -131,9 +132,10 @@ public class MainActivity extends ToolBarActivity {
         //不执行退出动画
 
     }
-    public static class ViewPagerFragment extends Fragment {
+    public static class ViewPagerFragment extends Fragment  {
         private TabLayout mTabLayout;
         private ViewPager mViewPager;
+        private FragmentPagerAdapter mFragmentPagerAdapter;
         public static final String  TAG="ViewPagerFragment";
         @Nullable
         @Override
@@ -145,8 +147,21 @@ public class MainActivity extends ToolBarActivity {
             super.onViewCreated(view, savedInstanceState);
             mTabLayout= (TabLayout)view.findViewById(R.id.tab_layout);
             mViewPager= (ViewPager) view.findViewById(R.id.page_layout);
-            mViewPager.setAdapter(new FragmentPagerAdapter(getFragmentManager()));
+            mFragmentPagerAdapter=new FragmentPagerAdapter(getFragmentManager());
+            mViewPager.setAdapter(mFragmentPagerAdapter);
             mTabLayout.setupWithViewPager(mViewPager);
+
+            mTabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager)
+            {
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
+                    Fragment fragment= (Fragment) mFragmentPagerAdapter.instantiateItem(mViewPager,tab.getPosition());
+                    if (fragment!=null&&fragment instanceof RVListFragment)
+                    {
+                        ((RVListFragment) fragment).getRecyclerView().scrollToPosition(0);
+                    }
+                }
+            });
         }
     }
 

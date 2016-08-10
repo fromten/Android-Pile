@@ -1,7 +1,6 @@
 package learn.example.pile.activity.normal;
 
-import android.content.Context;
-import android.gesture.GestureUtils;
+
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,7 +9,6 @@ import android.os.Message;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -76,7 +74,7 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
         setContentView(R.layout.activity_video);
 
         seekPosition=savedInstanceState==null?-1:savedInstanceState.getInt(KEY_SAVE_STATE_POSITION,-1);
-
+        setTitle();
         initView();
         Uri uri = getIntent().getData();
         if (uri != null) {
@@ -87,6 +85,14 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
         }
     }
 
+    private void setTitle()
+    {
+        OpenEyes.VideoInfo info=getIntent().getParcelableExtra(KEY_VIDEO_OPEN_EYE);
+        if (info!=null)
+        {
+            setTitle(info.getTitle());
+        }
+    }
 
     public void initView() {
         mVideoView = (VideoView) findViewById(R.id.video_view);
@@ -160,9 +166,7 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
         {
 
             saveCommentFragmentState();
-            mVideoView.start();
         }
-
         super.onBackPressed();
     }
 
@@ -206,7 +210,6 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-        Log.d("hh", "onPrepared");
         //跳到旋转之前的播放位置
         if (seekPosition>0) {
             mVideoView.seekTo(seekPosition);
@@ -219,7 +222,7 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
     @Override
     public void onCompletion(MediaPlayer mp) {
         mLogView.setText("播放结束");
-        //十秒后
+        //十秒后移除logView
         mHandler.sendEmptyMessage(REMOVE_LOG_TEXT);
     }
 
@@ -282,7 +285,7 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
                 } else {
                     mVolumeProgressView.setCurrentValue(value - 1);
                 }
-                //发送消息隐藏音量进度条,如果重新
+                //发送消息隐藏音量进度条
                 mHandler.removeMessages(HIDE_VOLUME_PROGERESSBAR);
                 mHandler.sendEmptyMessageDelayed(HIDE_VOLUME_PROGERESSBAR, 3000);
                 return true;

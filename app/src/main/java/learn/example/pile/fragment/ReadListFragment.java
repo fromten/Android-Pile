@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import learn.example.pile.adapters.ZhiHuMsgListAdapter;
+import learn.example.pile.adapters.ZhiHuStoriesListAdapter;
 import learn.example.pile.jsonbean.ZhihuStories;
 import learn.example.pile.net.IService;
 import learn.example.pile.net.ZhihuStoryService;
@@ -19,7 +19,7 @@ public class ReadListFragment extends BaseListFragment implements IService.Callb
 
     private static final String KEY_DATE="date";
 
-    private ZhiHuMsgListAdapter mAdapter;
+    private ZhiHuStoriesListAdapter mAdapter;
 
 
     private ZhihuStoryService mService;
@@ -27,7 +27,7 @@ public class ReadListFragment extends BaseListFragment implements IService.Callb
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view,savedInstanceState);
-        mAdapter = new ZhiHuMsgListAdapter();
+        mAdapter = new ZhiHuStoriesListAdapter();
         setAdapter(mAdapter);
         mService=new ZhihuStoryService();
         if (savedInstanceState==null)
@@ -36,6 +36,7 @@ public class ReadListFragment extends BaseListFragment implements IService.Callb
             mService.getStories(this);
         }else {
             date=savedInstanceState.getString(KEY_DATE);
+            mAdapter.setDate(formatDate(date));
         }
     }
 
@@ -60,8 +61,16 @@ public class ReadListFragment extends BaseListFragment implements IService.Callb
     @Override
     public void onSuccess(ZhihuStories data) {
         date=data.getDate();
-        mAdapter.addAll(Zhihu.valueOf(data));
+
+        mAdapter.setDate(formatDate(date));
+        mAdapter.addAll(data.getStories());
         notifySuccess();
+    }
+
+    //只能传递 ZhihuStories.date 网络得到的日期
+    private String formatDate(String date)
+    {
+        return date.substring(0,4)+"-"+date.substring(4,6)+"-"+date.substring(6);
     }
 
     @Override

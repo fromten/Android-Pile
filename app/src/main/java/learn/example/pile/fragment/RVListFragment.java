@@ -35,7 +35,8 @@ public class RVListFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     private AdapterWrapper mAdapterWrap;
     private View mEmptyView;
-    @Nullable
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=  inflater.inflate(R.layout.fragment_rvlist,container,false);
@@ -141,6 +142,10 @@ public class RVListFragment extends Fragment implements SwipeRefreshLayout.OnRef
     //设置是否刷新,true 刷新,否则 false
     public void setRefreshing(final boolean refreshing)
     {
+        if (mSwipeRefreshLayout.isRefreshing()==refreshing)
+        {
+            return;
+        }
         mSwipeRefreshLayout.post(new Runnable() {
             @Override
             public void run() {
@@ -149,12 +154,19 @@ public class RVListFragment extends Fragment implements SwipeRefreshLayout.OnRef
         });
     }
 
+    public boolean isRefreshing()
+    {
+        return mSwipeRefreshLayout.isRefreshing();
+    }
+
     //取消加载更多,如果没有调用,后续的onLoadMore方法将不会调用
     public void cancelLoadMore()
     {
         if (mScrollHelper!=null)
         mScrollHelper.clearState();
     }
+
+
 
     /**
      * 禁用加载更多,使用后 onLoadMore 将不会调用
@@ -233,8 +245,8 @@ public class RVListFragment extends Fragment implements SwipeRefreshLayout.OnRef
             {
                 return;
             }
-            int visibility = mAdapterWrap.getInnerAdapterItemCount() == 0 ? View.VISIBLE : View.INVISIBLE;
             if (mEmptyView != null) {
+                int visibility = mAdapterWrap.getInnerAdapterItemCount() == 0 ? View.VISIBLE : View.INVISIBLE;
                 mEmptyView.setVisibility(visibility);
             }
         }
@@ -316,6 +328,7 @@ public class RVListFragment extends Fragment implements SwipeRefreshLayout.OnRef
             {
                 mFooterHolder.onBindHolder(mInnerAdapter);
             }else{
+                //在有头部的情况下,实际的位置要减一
                 int realPos=position;
                 if (mHeadHolder!=null)
                 {

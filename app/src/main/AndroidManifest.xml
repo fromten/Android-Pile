@@ -38,7 +38,8 @@
         </activity>
         <activity android:name=".activity.normal.ReaderActivity"
                   android:label=" "/>
-        <service android:name=".service.LoadPhotoService"/>
+        <activity android:name=".activity.normal.ShortVideoActivity"
+                  android:label=" "/>
     </application>
 
 </manifest>

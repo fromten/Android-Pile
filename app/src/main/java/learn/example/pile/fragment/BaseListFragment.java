@@ -142,19 +142,22 @@ public class BaseListFragment extends  RVListFragment {
     public void setAdapter(RecyclerView.Adapter adapter) {
         super.setAdapter(adapter);
         mAdapter=adapter;
-        setDefFooterHolder();
+        createFooterHolder();
     }
 
-    protected void setDefFooterHolder()
+    public void setAdapter(SaveStateAbleAdapter saveStateAdapter) {
+        this.setAdapter((RecyclerView.Adapter) saveStateAdapter);
+    }
+
+
+    //创建底部视图
+    private void createFooterHolder()
     {
         View view= LayoutInflater.from(getContext()).inflate(R.layout.footerview,getRecyclerView(),false);
         mFooterHolder=new CommonFooterHolder(view);
         addFooterHolder(mFooterHolder);
     }
 
-    public void setAdapter(SaveStateAbleAdapter saveStateAdapter) {
-         this.setAdapter((RecyclerView.Adapter) saveStateAdapter);
-    }
 
 
     @Override
@@ -255,7 +258,12 @@ public class BaseListFragment extends  RVListFragment {
         public TextView mFooterText;
         private boolean inEnd=false;
 
-        public CommonFooterHolder(View itemView) {
+        public CommonFooterHolder()
+        {
+            this(LayoutInflater.from(getContext()).inflate(R.layout.footerview,getRecyclerView(),false));
+        }
+
+        private CommonFooterHolder(View itemView) {
             super(itemView);
             mFooterProgress= (ProgressBar) itemView.findViewById(R.id.footer_progress);
             mFooterText= (TextView) itemView.findViewById(R.id.footer_text);

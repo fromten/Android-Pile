@@ -16,7 +16,6 @@ import java.util.List;
 import learn.example.pile.R;
 import learn.example.pile.jsonbean.NetEaseNews;
 import learn.example.pile.util.ActivityLauncher;
-import learn.example.pile.util.TextUtil;
 
 
 /**
@@ -34,13 +33,13 @@ public class NewsListAdapter extends SaveStateAbleAdapter<NewsListAdapter.BaseNe
             NetEaseNews.T1348647909107Bean item=getItem(position);
 
             if (item.getSkipType()!=null&&item.getSkipType().equals("photoset"))
-            {   //启动图片查看器
-                Bundle anim= ActivityLauncher.slideAnimation(v.getContext());
-                ActivityLauncher.startPhotoActivityForNetEase(v.getContext(),item.getSkipID(),anim);
-            }else { //启动新闻阅读器
+            {
+                //启动图片查看器
+                ActivityLauncher.startPhotoActivityForNetEase(v.getContext(),item.getSkipID());
+            }else {
+                //启动新闻阅读器
                 String[] array=new String[]{item.getBoardid(),item.getDocid()};
-                Bundle anim= ActivityLauncher.slideAnimation(v.getContext());
-                ActivityLauncher.startReaderActivityForNetEase(v.getContext(),array,anim);
+                ActivityLauncher.startReaderActivityForNetEase(v.getContext(),array);
             }
 
         }

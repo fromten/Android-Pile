@@ -1,75 +1,93 @@
 package learn.example.pile.fragment;
 
 import android.os.Bundle;
+
 import android.view.View;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.util.ArrayList;
 import java.util.List;
 
-import learn.example.pile.adapters.JokeListAdapter;
+import learn.example.pile.adapters.JokeListAdapter2;
 import learn.example.pile.database.JokeDatabase;
-import learn.example.pile.jsonbean.JokeJsonData;
-import learn.example.pile.database.DatabaseManager;
+import learn.example.pile.jsonbean.JokeBean;
 import learn.example.pile.net.IService;
 import learn.example.pile.net.JokeService;
-import learn.example.pile.util.AccessAppDataHelper;
+
+import learn.example.pile.util.DeviceInfo;
+import okhttp3.Request;
 
 /**
  * Created on 2016/5/5.
  */
-public class JokeListFragment extends BaseListFragment implements IService.Callback<JokeJsonData> {
+public class JokeListFragment extends BaseListFragment implements IService.Callback<JokeBean> {
 
-    private JokeListAdapter mJokeListAdapter;
+    public static final String KEY_SAVE_LIST_DATA="jokedata";
+
+    private JokeListAdapter2 mJokeListAdapter;
 
     private JokeDatabase mJokeDataBase;
 
-    private int currentDataBasePage=0;//现在页数
-
     private JokeService mJokeService;
 
-    private final String TAG="JokeListFragment";
+    private int requestCount=30;
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
          super.onViewCreated(view,savedInstanceState);
-         mJokeListAdapter=new JokeListAdapter();
+         mJokeListAdapter=new JokeListAdapter2();
          setAdapter(mJokeListAdapter);
-         currentDataBasePage=AccessAppDataHelper.readInteger(getActivity(),AccessAppDataHelper.KEY_JOKE_PAGE,1);
-          mJokeService=new JokeService();
+         mJokeService=new JokeService();
          if (savedInstanceState==null)
          {
              setRefreshing(true);
-             mJokeService.getImageJoke(currentDataBasePage,this);
-             mJokeService.getTextJoke(currentDataBasePage,this);
+             mJokeService.getTuijianJoke(requestCount,new DeviceInfo(getActivity()).SCREEN_WIDTH,this);
+         }else {
+
+             String json=savedInstanceState.getString(KEY_SAVE_LIST_DATA);
+             List<JokeBean.DataBean.DataListBean.GroupBean> bean=new Gson().fromJson(json,new TypeToken<ArrayList<JokeBean.DataBean.DataListBean.GroupBean>>(){}.getType());
+             mJokeListAdapter.addList(bean);
          }
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        String json=new Gson().toJson(mJokeListAdapter.getList(), new TypeToken<ArrayList<JokeBean.DataBean.DataListBean.GroupBean>>(){}.getType());
+        outState.putString(KEY_SAVE_LIST_DATA,json);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
     public void onDestroy() {
-        mJokeService.cancelAll();
-        AccessAppDataHelper.saveInteger(getActivity(),AccessAppDataHelper.KEY_JOKE_PAGE,currentDataBasePage);
-        mJokeListAdapter=null;
-        if(mJokeDataBase!=null)
+        if (mJokeService!=null)
         {
-            mJokeDataBase.close();
+            mJokeService.cancelAll();
         }
         super.onDestroy();
     }
 
     @Override
-    public void onSuccess(JokeJsonData data) {
-        if (data==null||data.getResCode()!=0||data.getResBody()==null)
+    public void onSuccess(JokeBean data) {
+
+        if (isRefreshing())
         {
-            notifyError();
-            return;
+            mJokeListAdapter.clear();
         }
 
-        mJokeListAdapter.addAll(data.getResBody().getJokeContentList());
+        List<JokeBean.DataBean.DataListBean.GroupBean> list=new ArrayList<>();
+        int count=data.getData().getData().size();
+        //不需要第一个
+        for (int i = 1; i < count; i++) {
+            JokeBean.DataBean.DataListBean listBean=data.getData().getData().get(i);
+            if (listBean.getType()!=5)//type==5是广告
+                list.add(listBean.getGroup());
+        }
 
-         ++currentDataBasePage;
-        //将数据保存到数据库
-        saveToDatabase(data.getResBody().getJokeContentList());
+        mJokeListAdapter.addList(list);
         notifySuccess();
-
     }
 
     @Override
@@ -79,45 +97,13 @@ public class JokeListFragment extends BaseListFragment implements IService.Callb
 
     @Override
     public void onRefresh() {
-         mJokeListAdapter.clear();
-         requestData();
+        mJokeService.getTuijianJoke(requestCount,new DeviceInfo(getActivity()).SCREEN_WIDTH,this);
     }
 
     @Override
     public void onLoadMore() {
-        requestData();
+        mJokeService.getTuijianJoke(requestCount,new DeviceInfo(getActivity()).SCREEN_WIDTH,this);
     }
 
-    public void requestData()
-    {
-        if (currentDataBasePage%2==0)
-        {
-            mJokeService.getTextJoke(currentDataBasePage,this);
-        }else {
-            mJokeService.getImageJoke(currentDataBasePage,this);
-        }
 
-    }
-
-    public void loadLocalData()
-    {
-        if(mJokeDataBase==null)
-        {
-            mJokeDataBase= DatabaseManager.openJokeDatabase(getContext());
-        }
-        List<JokeJsonData.JokeResBody.JokeItem> data=mJokeDataBase.readJoke(currentDataBasePage,10);
-        if(data!=null&&!data.isEmpty())
-        {
-            mJokeListAdapter.addAll(mJokeDataBase.readJoke(currentDataBasePage,10));
-            currentDataBasePage=currentDataBasePage+10;
-        }
-    }
-    public void saveToDatabase(List<JokeJsonData.JokeResBody.JokeItem> data)
-    {
-       if(mJokeDataBase==null)
-       {
-           mJokeDataBase=DatabaseManager.openJokeDatabase(getContext());
-       }
-        mJokeDataBase.saveJoke(data);
-    }
 }

@@ -50,8 +50,6 @@ public class SettingFragment extends Fragment {
     }
 
 
-
-
     /**
      * 设置显示的缓存大小文本
      *

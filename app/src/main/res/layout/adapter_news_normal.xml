@@ -19,6 +19,7 @@
         android:layout_height="wrap_content"
         style="@style/TitleText"
         android:id="@+id/news_title"
+        android:maxLines="2"
         android:paddingLeft="@dimen/small_padding"
         android:paddingBottom="@dimen/small_padding"
         android:paddingRight="@dimen/small_padding"

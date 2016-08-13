@@ -7,8 +7,8 @@
               android:paddingTop="@dimen/normal_padding">
 
     <ImageView
-        android:layout_width="60dp"
-        android:layout_height="50dp"
+        android:layout_width="@dimen/avatar_img_width"
+        android:layout_height="@dimen/avatar_img_width"
         android:id="@+id/user_pic"/>
 
     <TextView

@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import learn.example.pile.R;
 import learn.example.pile.activity.base.FullScreenActivity;
@@ -45,10 +46,12 @@ public class PhotoActivity extends FullScreenActivity {
 
     private void initPhotoView(String url)
     {
+
         mPhotoView= (PhotoView) findViewById(R.id.photo_view);
         mPhotoView.setMinimumScale(0.5f);
         mPhotoView.setOnViewTapListener(mOnViewTapListener);
         Glide.with(this).load(url)
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .dontAnimate()
                 .error(R.mipmap.img_error)
                 .fitCenter()

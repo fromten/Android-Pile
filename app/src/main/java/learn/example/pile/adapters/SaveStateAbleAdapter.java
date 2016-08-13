@@ -25,10 +25,10 @@ public abstract class SaveStateAbleAdapter<VH extends RecyclerView.ViewHolder,D 
         mDataList.add(item);
         notifyItemInserted(getItemCount());
     }
-    public void addAll(List<D> items)
+    public void addAll(List<D> list)
     {
-        if (items==null||items.isEmpty()) return;
-        mDataList.addAll(items);
+        if (list==null||list.isEmpty()) return;
+        mDataList.addAll(list);
         notifyItemInserted(getItemCount());
     }
 

@@ -3,7 +3,6 @@ package learn.example.pile.activity.normal;
 import android.Manifest;
 import android.annotation.TargetApi;
 
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -28,7 +27,7 @@ import learn.example.pile.adapters.FragmentPagerAdapter;
 import learn.example.pile.fragment.RVListFragment;
 import learn.example.pile.fragment.SettingFragment;
 import learn.example.pile.util.ActivityLauncher;
-import learn.example.pile.util.AppInfo;
+import learn.example.pile.util.DeviceInfo;
 
 
 public class MainActivity extends ToolBarActivity {
@@ -51,7 +50,7 @@ public class MainActivity extends ToolBarActivity {
 
 
         //如果版本大于23和外部存储可以用时需要请求权限
-        if (Build.VERSION.SDK_INT>=23&& AppInfo.checkExternalStorageState())
+        if (Build.VERSION.SDK_INT>=23&& DeviceInfo.checkExternalStorageState())
         {
             requirePermission();
         }else {
@@ -117,7 +116,7 @@ public class MainActivity extends ToolBarActivity {
             }
         }else if (item.getItemId()==R.id.menu_machine)
         {
-            ActivityLauncher.startChatActivity(this,null);
+            ActivityLauncher.startChatActivity(this);
         }
         return true;
     }

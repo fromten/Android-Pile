@@ -44,8 +44,8 @@ public class VideoListAdapter extends SaveStateAbleAdapter<VideoListAdapter.Vide
         OpenEyes.VideoInfo info=getItem(pos);
         if (info!=null)
         {
-            Bundle anim= ActivityLauncher.slideAnimation(v.getContext());
-            ActivityLauncher.startVideoActivityForOpenEye(v.getContext(),info,anim);
+
+            ActivityLauncher.startVideoActivityForOpenEye(v.getContext(),info);
         }
     }
 

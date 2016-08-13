@@ -3,6 +3,7 @@ package learn.example.net;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.facebook.stetho.okhttp3.StethoInterceptor;
@@ -38,23 +39,36 @@ public class OkHttpRequest{
 
 
     private OkHttpRequest(Context context) {
-        File file=new File(context.getCacheDir(),CAHDE_DIRECTORY);
-        Cache cache=new Cache(file,CACHE_SIZE);
-        mOkhttpClient=new OkHttpClient.Builder().cache(cache).build();
+
+        if (context!=null)
+        {
+            File file=new File(context.getCacheDir(),CAHDE_DIRECTORY);
+            Cache cache=new Cache(file,CACHE_SIZE);
+            mOkhttpClient=new OkHttpClient.Builder().cache(cache).build();
+        }else {
+            mOkhttpClient=new OkHttpClient.Builder().build();
+        }
         mHandler=new Handler(Looper.getMainLooper());
         mGson=new Gson();
     }
 
+
+    /**
+     * 不安全的使用,如果这个方法在getInstance(Context context)之前调用,将返回Null对象
+     * @return
+     */
     public synchronized static OkHttpRequest getInstanceUnsafe()
     {
-        if (mInstance==null)
-        {
-            throw new NullPointerException("Class no init,to use getInstance(Context context)");
-        }
         return mInstance;
     }
 
-    public synchronized static OkHttpRequest getInstance(Context context)
+
+    /**
+     *
+     * @param context 使用磁盘缓存,可以传递Null对象,不使用缓存
+     * @return
+     */
+    public synchronized static OkHttpRequest getInstance(@Nullable Context context)
     {
         if (mInstance==null)
         {

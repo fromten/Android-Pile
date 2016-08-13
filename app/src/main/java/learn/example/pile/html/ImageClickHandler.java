@@ -20,8 +20,8 @@ public class ImageClickHandler {
     @JavascriptInterface
     public void openPhotoActivity(String src)
     {
-        Bundle anim=ActivityLauncher.openAnimation(mContext);
-        ActivityLauncher.startPhotoActivityForSingle(mContext,src,anim);
+
+        ActivityLauncher.startPhotoActivityForSingle(mContext,src);
     }
 
     public String getClickJS()

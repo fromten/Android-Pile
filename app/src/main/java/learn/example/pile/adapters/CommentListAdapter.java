@@ -2,6 +2,7 @@ package learn.example.pile.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.shapes.RoundRectShape;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
@@ -22,6 +23,7 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 
 import learn.example.pile.R;
 import learn.example.pile.object.Comment;
+import learn.example.pile.ui.CircleViewTarget;
 
 /**
  * Created on 2016/7/13.
@@ -47,15 +49,7 @@ public class CommentListAdapter extends SaveStateAbleAdapter<CommentListAdapter.
                 .error(R.mipmap.ic_def_show_user)
                 .placeholder(R.mipmap.ic_def_show_user)
                 .fitCenter()
-                .into(new BitmapImageViewTarget(holder.user_pic) {
-                    @Override
-                    protected void setResource(Bitmap resource) {
-                        RoundedBitmapDrawable circularBitmapDrawable =
-                                RoundedBitmapDrawableFactory.create(context.getResources(), resource);
-                        circularBitmapDrawable.setCircular(true);
-                        holder.user_pic.setImageDrawable(circularBitmapDrawable);
-                    }
-                });
+                .into(new CircleViewTarget(holder.user_pic));
         String address=c.getAddress()==null?"":c.getAddress();
         holder.addressAndTime.setText(address+c.getTime());
 

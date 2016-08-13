@@ -11,9 +11,6 @@ public class AccessAppDataHelper {
 
 
     public static String KEY_JOKE_PAGE="KEY_JOKE_PAGE";
-    public static String KEY_VIDEO_PAGE="KEY_VIDEO_PAGE";
-    public static String KEY_READ_PAGE="KEY_READ_PAGE";
-
 
     public static int readInteger(Activity activity,String key,int defValue)
     {

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/normal_padding">
+
+    <include layout="@layout/adpter_joke_top"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/content"
+        android:padding="@dimen/small_padding"
+        android:layout_below="@+id/text">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:id="@+id/cover"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/ic_play"
+            android:background="@android:drawable/ic_media_play"/>
+        <TextView
+            style="@style/SmallText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:background="@color/blue_light"
+            android:textColor="@color/white"
+            android:id="@+id/hint"/>
+    </FrameLayout>
+
+    <include layout="@layout/adapter_joke_bottom"
+             android:layout_below="@+id/content"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"/>
+
+</RelativeLayout>

@@ -16,6 +16,7 @@
     <string name="setting_show1">源码地址:https://github.com/fromten/Android-Pile</string>
 
     <item name="link" type="id"/>
+    <item name="view_tag1" type="id"/>
 
     <array name="setting_spinner">
         <item>视频</item>

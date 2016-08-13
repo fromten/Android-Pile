@@ -13,7 +13,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import learn.example.pile.R;
 import learn.example.pile.jsonbean.ZhihuStories;
-import learn.example.pile.object.Zhihu;
 import learn.example.pile.util.ActivityLauncher;
 
 /**
@@ -26,8 +25,7 @@ public class ZhiHuStoriesListAdapter extends SaveStateAbleAdapter<ZhiHuStoriesLi
         @Override
         public void onClick(View v) {
             int id= (int) v.getTag();
-            Bundle anim= ActivityLauncher.slideAnimation(v.getContext());
-            ActivityLauncher.startReaderActivityForZhihu(v.getContext(),id,anim);
+            ActivityLauncher.startReaderActivityForZhihu(v.getContext(),id);
         }
     };
 

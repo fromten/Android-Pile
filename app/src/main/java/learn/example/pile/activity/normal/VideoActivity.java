@@ -37,7 +37,7 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
 
     private Fragment.SavedState mCommentState;
 
-    private MediaPlayer mMediaPlayer;
+
     private VideoView mVideoView;
     private MediaController mMediaController;
     private VolumeProgressView mVolumeProgressView;
@@ -196,13 +196,13 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
         mHandler.removeMessages(REMOVE_LOG_TEXT);
         mHandler=null;
 
+
         mVideoView.stopPlayback();
         mVideoView.setOnPreparedListener(null);
         mVideoView.setOnCompletionListener(null);
         mVideoView.setOnErrorListener(null);
         mVideoView.setOnTouchListener(null);
         mVideoView = null;
-        mMediaPlayer=null;
         mSimpleOnGestureListener=null;
         mMediaController = null;
         super.onDestroy();

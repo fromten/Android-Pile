@@ -1,5 +1,6 @@
 package learn.example.pile.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -133,8 +134,7 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
 
     private void createCategoryHead()
     {
-        View view= LayoutInflater.from(getContext()).inflate(R.layout.category,getRecyclerView(),false);
-        mCategoryViewHolder=new CategoryViewHolder(view);
+        mCategoryViewHolder=new CategoryViewHolder();
         addHeadHolder(mCategoryViewHolder);
     }
     private void requestCategoryVideo(int categoryId)
@@ -145,7 +145,12 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
 
     public class CategoryViewHolder extends HeadHolder implements View.OnClickListener{
 
-        public CategoryViewHolder(View view) {
+        public CategoryViewHolder()
+        {
+            this(LayoutInflater.from(getContext()).inflate(R.layout.category,getRecyclerView(),false));
+        }
+
+        private CategoryViewHolder(View view) {
             super(view);
             ViewGroup viewGroup= (ViewGroup) view;
             int count=viewGroup.getChildCount();

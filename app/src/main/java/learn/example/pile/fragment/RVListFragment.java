@@ -73,6 +73,12 @@ public class RVListFragment extends Fragment implements SwipeRefreshLayout.OnRef
      */
     public void setAdapter(RecyclerView.Adapter adapter)
     {
+        if (mAdapterWrap!=null)
+        {
+            mAdapterWrap.mInnerAdapter.unregisterAdapterDataObserver(mAdapterDataObserver);
+            mAdapterWrap=null;
+        }
+
         if (adapter==null)
         {
             mRecyclerView.setAdapter(null);
@@ -303,6 +309,10 @@ public class RVListFragment extends Fragment implements SwipeRefreshLayout.OnRef
         private HeadHolder mHeadHolder;
 
         public AdapterWrapper(RecyclerView.Adapter adapter) {
+            if (adapter==null)
+            {
+                throw new NullPointerException("Adapter must not be null");
+            }
             mInnerAdapter = adapter;
         }
 
@@ -329,11 +339,8 @@ public class RVListFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 mFooterHolder.onBindHolder(mInnerAdapter);
             }else{
                 //在有头部的情况下,实际的位置要减一
-                int realPos=position;
-                if (mHeadHolder!=null)
-                {
-                    realPos=position-1;
-                }
+                int realPos=mHeadHolder==null?position:position-1;
+
                 mInnerAdapter.onBindViewHolder(holder,realPos);
             }
         }

@@ -8,7 +8,7 @@ import learn.example.pile.object.Zhihu;
 /**
  * Created on 2016/7/10.
  */
-public class ZhihuContentService extends GsonService {
+public class ZhihuContentService extends NetService {
 
     public   String TAG_CONTENT = "tag_content";
     public  String TAG_COMMENT_LONG = "tag_comment_long";

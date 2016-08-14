@@ -8,7 +8,7 @@ import okhttp3.Request;
 /**
  * Created on 2016/7/22.
  */
-public class OpenEyeService extends GsonService{
+public class OpenEyeService extends NetService {
     private static final String TAG = "OpenEyeService";
 
     public void getHotVideo(Callback<OpenEyeVideo> callback)

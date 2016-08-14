@@ -36,4 +36,8 @@ public class CommentFragment extends BaseListFragment {
         mCommentListAdapter.addAll(comments);
     }
 
+    @Override
+    protected void addTopView() {
+
+    }
 }

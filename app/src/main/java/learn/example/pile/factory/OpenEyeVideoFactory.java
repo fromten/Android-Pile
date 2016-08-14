@@ -1,6 +1,5 @@
 package learn.example.pile.factory;
 
-import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.google.gson.JsonArray;

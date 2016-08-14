@@ -11,6 +11,7 @@ import android.support.v4.content.ContextCompat;
 
 import learn.example.pile.R;
 import learn.example.pile.activity.normal.ChatActivity;
+import learn.example.pile.activity.normal.DetailJokeActivity;
 import learn.example.pile.activity.normal.PhotoActivity;
 import learn.example.pile.activity.normal.ReaderActivity;
 import learn.example.pile.activity.normal.ShortVideoActivity;
@@ -95,6 +96,17 @@ public class ActivityLauncher {
     {
         Intent intent=new Intent(context, ReaderActivity.class);
         intent.putExtra(ReaderActivity.KEY_ZHIHU_CONTENT_ID,id);
+        startActivity(context,intent,makeSlideAnimation(context));
+    }
+
+    /**
+     * 启动阅读器,显示知乎内容
+     * @param groupJson  groupBean class 反序列的json 数据
+     */
+    public static void startDetailActivity(@NonNull Context context, @NonNull String groupJson)
+    {
+        Intent intent=new Intent(context, DetailJokeActivity.class);
+        intent.putExtra(DetailJokeActivity.KEY_GROUP_JSON,groupJson);
         startActivity(context,intent,makeSlideAnimation(context));
     }
 

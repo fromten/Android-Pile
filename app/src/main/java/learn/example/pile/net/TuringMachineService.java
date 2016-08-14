@@ -12,7 +12,7 @@ import okhttp3.RequestBody;
 /**
  * Created on 2016/7/2.
  */
-public class TuringMachineService extends GsonService{
+public class TuringMachineService extends NetService {
 
 
     public static final String APi_KEY="16c644fa5cd7be8e4d8c22572ba7ef1a";

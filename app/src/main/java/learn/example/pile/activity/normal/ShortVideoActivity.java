@@ -53,6 +53,7 @@ public class ShortVideoActivity extends FullScreenActivity  implements MediaPlay
             if (inPress)
             {
                 finish();
+                return true;
             }
         }
         return super.dispatchTouchEvent(ev);

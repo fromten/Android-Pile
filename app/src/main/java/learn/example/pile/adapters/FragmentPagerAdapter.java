@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import learn.example.pile.fragment.JokeCommentFragment;
 import learn.example.pile.fragment.JokeListFragment;
 import learn.example.pile.fragment.NewsListFragment;
 import learn.example.pile.fragment.ReadListFragment;

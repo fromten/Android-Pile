@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,16 +76,19 @@ public class JokeListAdapter2 extends RecyclerView.Adapter<JokeListAdapter2.Joke
         if (mContext == null) {
             mContext = parent.getContext();
         }
+        JokeViewHolder holder;
         if (viewType == TYPE_MULTI) {
-            return new JokeMultipleViewHolder(parent);
+            holder= new JokeMultipleViewHolder(parent);
         }else if (viewType== TYPE_SINGLE)
         {
-            JokeSingleViewHolder holder=new JokeSingleViewHolder(parent);
-            holder.cover.setOnClickListener(this);
-            return holder;
+            holder=new JokeSingleViewHolder(parent);
+            ((JokeSingleViewHolder)holder).cover.setOnClickListener(this);
+        }else {
+            View view=LayoutInflater.from(mContext).inflate(R.layout.adapter_joke_normal,parent,false);
+            holder=new JokeViewHolder(view);
         }
-        View view=LayoutInflater.from(mContext).inflate(R.layout.adapter_joke_normal,parent,false);
-        return new JokeViewHolder(view);
+        holder.commentCount.setOnClickListener(this);
+        return holder;
     }
 
     @Override
@@ -106,7 +110,7 @@ public class JokeListAdapter2 extends RecyclerView.Adapter<JokeListAdapter2.Joke
                 .asBitmap()
                 .into(new CircleViewTarget(holder.avatar));
 
-
+        holder.commentCount.setTag(R.id.view_tag1,item);
         if (holder instanceof JokeMultipleViewHolder) {
             bindMulti((JokeMultipleViewHolder) holder, item);
         }else if (holder instanceof JokeSingleViewHolder)
@@ -154,24 +158,29 @@ public class JokeListAdapter2 extends RecyclerView.Adapter<JokeListAdapter2.Joke
     @Override
     public void onClick(View v) {
         JokeBean.DataBean.DataListBean.GroupBean item= (JokeBean.DataBean.DataListBean.GroupBean) v.getTag(R.id.view_tag1);
-
-        if (item.getIs_video()==1)
+        if (v.getId()==R.id.comment_num)
         {
-            String url=item.getMp4_url();
-            ActivityLauncher.startVideoActivity(mContext,url);
-        }else if (item.getIs_gif()==1)
-        {  if (item.getGifVideo()!=null)
-           {
-            String url= GsonHelper.getAsString(item.getGifVideo().get("mp4_url"),null);
-            if (url!=null)
+            ActivityLauncher.startDetailActivity(mContext,new Gson().toJson(item));
+        }else if (v.getId()==R.id.cover){
+            if (item.getIs_video()==1)
             {
-                ActivityLauncher.startShortVideoActivity(mContext,url);
+                String url=item.getMp4_url();
+                ActivityLauncher.startVideoActivity(mContext,url);
+            }else if (item.getIs_gif()==1)
+            {  if (item.getGifVideo()!=null)
+            {
+                String url= GsonHelper.getAsString(item.getGifVideo().get("mp4_url"),null);
+                if (url!=null)
+                {
+                    ActivityLauncher.startShortVideoActivity(mContext,url);
+                }
             }
-           }
-        }else {
-            String url=item.getImages().getUrl_list()[0].getUrl();
-            ActivityLauncher.startPhotoActivityForSingle(mContext,url);
+            }else {
+                String url=item.getImages().getUrl_list()[0].getUrl();
+                ActivityLauncher.startPhotoActivityForSingle(mContext,url);
+            }
         }
+
     }
 
     public static class JokeViewHolder extends RecyclerView.ViewHolder {

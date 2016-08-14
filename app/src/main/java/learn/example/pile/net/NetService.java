@@ -9,13 +9,33 @@ import okhttp3.Request;
 /**
  * Created on 2016/7/11.
  */
-public class GsonService implements IService{
+public class NetService implements IService{
     private HashMap<String,Call> map=new HashMap<>();
 
     public <T> void newRequest(final String tag, Class<T> clazz, String url, final IService.Callback<T> callback)
     {
         Request request=new Request.Builder().url(url).build();
         newRequest(tag,clazz,request,callback);
+    }
+
+
+    public <T> void newStringRequest(final String tag, String url, final IService.Callback<String> callback)
+    {
+        Request request=new Request.Builder().url(url).build();
+        Call call=OkHttpRequest.getInstanceUnsafe().newStringRequest(request, new OkHttpRequest.RequestCallback<String>() {
+            @Override
+            public void onSuccess(String res) {
+                callback.onSuccess(res);
+                remove(tag);
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                callback.onSuccess(msg);
+                remove(tag);
+            }
+        });
+        addToMap(tag,call);
     }
 
 

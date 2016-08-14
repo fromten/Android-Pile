@@ -64,7 +64,7 @@ public class BaseListFragment extends  RVListFragment {
     /**
      * 添加一个顶部视图
      */
-    private void addTopView()
+    protected void addTopView()
     {
         View root=getView();
         if (!(root instanceof ViewGroup))
@@ -86,6 +86,10 @@ public class BaseListFragment extends  RVListFragment {
 
     public void showTopView(String text)
     {
+        if (mTopLogView==null)
+        {
+            return;
+        }
         mTopLogView.setVisibility(View.VISIBLE);
         mTopAniamtor=AnimatorInflater.loadAnimator(getContext(),R.animator.expand);
         mTopAniamtor.setTarget(mTopLogView);

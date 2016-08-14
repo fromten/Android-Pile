@@ -10,7 +10,7 @@ import okhttp3.Request;
 /**
  * Created on 2016/7/1.
  */
-public class NetEaseNewsService extends GsonService {
+public class NetEaseNewsService extends NetService {
     private static final String TAG = "NetEaseNewsService";
 
 

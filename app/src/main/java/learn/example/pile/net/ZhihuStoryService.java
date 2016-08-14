@@ -11,7 +11,7 @@ import okhttp3.Request;
 /**
  * Created on 2016/7/9.
  */
-public class ZhihuStoryService extends GsonService {
+public class ZhihuStoryService extends NetService {
 
     private static final String TAG = "ZhihuStoryService";
 

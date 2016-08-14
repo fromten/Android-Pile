@@ -1,26 +1,9 @@
 package learn.example.pile;
 
 
-import android.util.Log;
-
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
-import com.google.gson.TypeAdapter;
 
 import org.junit.Test;
-
-import java.io.IOException;
-import java.util.List;
-
-import learn.example.net.OkHttpRequest;
-import learn.example.pile.jsonbean.JokeBean;
-import learn.example.pile.net.GsonService;
-import learn.example.pile.net.IService;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 
 /**
@@ -36,7 +19,6 @@ public class ExampleUnitTest {
 
     @Test
     public void addition_isCorrect() {
-
 
     }
 

@@ -376,7 +376,7 @@ public class RVListFragment extends Fragment implements SwipeRefreshLayout.OnRef
         public void setHeadHolder(HeadHolder holder)
         {
             mHeadHolder=holder;
-            notifyDataSetChanged();
+            notifyItemRangeChanged(0,1);
         }
 
     }

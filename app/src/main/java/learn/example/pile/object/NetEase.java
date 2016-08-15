@@ -19,7 +19,7 @@ public class NetEase {
 
     //热门评论
     // %s 区域,%s 新闻id ,%d 哪里开始查询,%d 查询个数
-    public static final String HOT_COMMENT_URL="http://comment.api.163.com/api/json/post/list/new/hot/%s/%s/%d/%d/10/2/2";
+    public static final String HOT_COMMENT_URL="http://comment.api.163.com/api/json/post/list/new/hot/%S/%S/%d/%d/10/2/2";
 
 
     /**
@@ -32,9 +32,9 @@ public class NetEase {
     public static final String PHOTOS_SET_URL="http://c.m.163.com/photo/api/set/%S/%S.json";
 
 
-    public static String generateHotCommentUrl(String replayBorad,String newsID,int start,int len)
+    public static String generateHotCommentUrl(String replayBorad,String docID,int start,int len)
     {
-        return String.format(Locale.CHINA,HOT_COMMENT_URL,replayBorad,newsID,start,len);
+        return String.format(Locale.CHINA,HOT_COMMENT_URL,replayBorad,docID,start,len);
     }
 
     public static String generateNormalCommentUrl(String replayBorad,String newsID,int start,int len)

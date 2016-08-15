@@ -1,12 +1,15 @@
 package learn.example.pile.adapters;
 
+import android.app.Activity;
 import android.content.Context;
-import android.os.Bundle;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -18,8 +21,10 @@ import java.util.List;
 import learn.example.pile.R;
 import learn.example.pile.jsonbean.JokeBean;
 import learn.example.pile.ui.CircleViewTarget;
+import learn.example.pile.ui.NineGridLayout;
 import learn.example.pile.ui.NineTableLayout;
 import learn.example.pile.util.ActivityLauncher;
+import learn.example.pile.util.DeviceInfo;
 import learn.example.pile.util.GsonHelper;
 
 /**
@@ -207,7 +212,7 @@ public class JokeListAdapter2 extends RecyclerView.Adapter<JokeListAdapter2.Joke
         private ImageView ic_play;
         private TextView hint;
         public JokeSingleViewHolder(ViewGroup parent) {
-            this(LayoutInflater.from(parent.getContext()).inflate(R.layout.adpter_joke_single, parent, false));
+            this(LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_joke_single, parent, false));
         }
 
         public JokeSingleViewHolder(View itemView) {
@@ -221,46 +226,34 @@ public class JokeListAdapter2 extends RecyclerView.Adapter<JokeListAdapter2.Joke
 
     public static class JokeMultipleViewHolder extends JokeViewHolder {
 
-        private NineTableLayout mTableLayout;
+        //private NineTableLayout mTableLayout;
+        private NineGridLayout mGridLayout;
         private String urls[];
+
         public JokeMultipleViewHolder(ViewGroup parent) {
-            this(LayoutInflater.from(parent.getContext()).inflate(R.layout.adpter_joke_multiple, parent, false));
+            this(LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_joke_multiple, parent, false));
         }
 
         public JokeMultipleViewHolder(View itemView) {
             super(itemView);
-            mTableLayout= (NineTableLayout) itemView.findViewById(R.id.table);
-            mTableLayout.setItemClickListener(new NineTableLayout.OnItemClickListener() {
+            mGridLayout= (NineGridLayout) itemView.findViewById(R.id.table);
+            mGridLayout.setItemClickListener(new NineGridLayout.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, ViewGroup parent, int position) {
-
-                    ActivityLauncher.startPhotoActivityForSingle(view.getContext(),urls[position]);
+                    ActivityLauncher.startPhotoActivityForMuliti(view.getContext(),urls,position);
                 }
             });
         }
 
         public void updateViews(String[] urls)
         {
-            if (urls!=null&&urls.length>0)
+            if (urls==null||urls.length<0)
             {
-                this.urls=urls;
+                return;
             }
-            mTableLayout.setUrls(urls);
+            this.urls=urls;
+            mGridLayout.updateViews(urls);
         }
 
-
-
-        /**
-         *  int i = 0;
-         for (i = 0; i < urlLen; i++) {
-         ImageView image = (ImageView) mGridLayout.getChildAt(i);
-         if (image == null) {
-         image = addView();
-         }
-         Glide.with(mGridLayout.getContext()).load(urls[i]).into(image);
-         }
-         if (i < childCount)
-         mGridLayout.removeViews(i, Math.abs(changedCount));
-         */
     }
 }

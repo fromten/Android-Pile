@@ -5,18 +5,17 @@
               android:padding="@dimen/normal_padding">
 
 
-    <include layout="@layout/adpter_joke_top"
+    <include layout="@layout/adapter_joke_top"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"/>
 
-    <learn.example.pile.ui.NineTableLayout
+    <learn.example.pile.ui.NineGridLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/table"
-        android:gravity="center"
         android:layout_below="@+id/text"
         android:columnCount="3">
-    </learn.example.pile.ui.NineTableLayout>
+    </learn.example.pile.ui.NineGridLayout>
 
     <include layout="@layout/adapter_joke_bottom"
              android:layout_below="@+id/table"

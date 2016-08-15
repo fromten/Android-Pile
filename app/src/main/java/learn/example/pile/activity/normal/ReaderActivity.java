@@ -315,6 +315,7 @@ public class ReaderActivity extends AppCompatActivity  {
         private String netEaseDocId;
         private String netEaseBoardId;
         private Call mCall;
+
         public NetEaseManager() {
             String[] array=getIntent().getStringArrayExtra(KEY_NETEASE_CONTENT_ID);
             this.netEaseBoardId =array[0];

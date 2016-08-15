@@ -77,6 +77,8 @@ public class JokeBean {
             }
 
             public static class GroupBean {
+
+                @SerializedName(value ="text",alternate = "title")
                 private String text;
                 private int comment_count;
                 private int digg_count;
@@ -88,10 +90,10 @@ public class JokeBean {
                 private String mp4_url;
                 private JsonObject gifvideo;
                 private User user;
-                private int is_multi_image;
+                private int is_multi_image=-1;
                 @SerializedName(value = "middle_image",alternate = "medium_cover")
                 private ImagesBean images;
-                private ImagesBean[] thumb_image_list;
+                private ImagesBean[] large_image_list;
 
                 public String getText() {
                     return text;
@@ -146,7 +148,7 @@ public class JokeBean {
                 }
 
                 public ImagesBean[] getThumb_image_list() {
-                    return thumb_image_list;
+                    return large_image_list;
                 }
 
                 public static class ImagesBean {

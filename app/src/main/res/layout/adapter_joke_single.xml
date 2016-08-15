@@ -4,7 +4,7 @@
                 android:layout_height="wrap_content"
                 android:padding="@dimen/normal_padding">
 
-    <include layout="@layout/adpter_joke_top"
+    <include layout="@layout/adapter_joke_top"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"/>
 

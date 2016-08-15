@@ -16,7 +16,7 @@ public class JokeCommentFragment extends CommentFragment implements IService.Cal
 
      private JokeService mJokeService;
 
-     public final static String KEY_LAST_POSITION="last_position";
+     public final static String KEY_LAST_POSITION="last_start";
      public final static String KEY_GROUP_ID="group_id";
 
 

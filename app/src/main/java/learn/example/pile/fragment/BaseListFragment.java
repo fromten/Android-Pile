@@ -30,6 +30,8 @@ import learn.example.uidesign.DividerItemDecoration;
  */
 public class BaseListFragment extends  RVListFragment {
 
+
+
     private static final String TAG = "BaseListFragment";
 
 
@@ -102,6 +104,7 @@ public class BaseListFragment extends  RVListFragment {
 
             @Override
             public void onAnimationEnd(Animator animation) {
+                //结束动画2秒后隐藏view
                 mTopAniamtor=AnimatorInflater.loadAnimator(getContext(),R.animator.collaspe);
                 mTopAniamtor.setStartDelay(2000);
                 mTopAniamtor.setTarget(mTopLogView);
@@ -126,17 +129,20 @@ public class BaseListFragment extends  RVListFragment {
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
-        if (savedInstanceState!=null&&mAdapter instanceof SaveStateAbleAdapter)
+        if (savedInstanceState!=null)
         {
-           List<? extends Parcelable> list=savedInstanceState.getParcelableArrayList(TAG);
-            ((SaveStateAbleAdapter) mAdapter).addAll(list);
+            if (mAdapter instanceof SaveStateAbleAdapter)
+            {  //恢复适配器状态
+                List<? extends Parcelable> list=savedInstanceState.getParcelableArrayList(TAG);
+                ((SaveStateAbleAdapter) mAdapter).addAll(list);
+            }
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         if (mAdapter instanceof SaveStateAbleAdapter)
-        {
+        {   //保存适配器状态
             outState.putParcelableArrayList(TAG, (ArrayList<? extends Parcelable>) ((SaveStateAbleAdapter) mAdapter).saveState());
         }
         super.onSaveInstanceState(outState);

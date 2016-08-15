@@ -25,6 +25,7 @@ public class NetEaseNews {
 
         @SerializedName(value = "id",alternate = "docid")
         private String docid;
+
         private int downTimes;
         private int imgType;
         @SerializedName(value = "img",alternate = "imgsrc")

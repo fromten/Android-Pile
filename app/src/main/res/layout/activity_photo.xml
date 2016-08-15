@@ -5,23 +5,21 @@
     android:id="@+id/root"
     android:background="@android:color/black">
 
-    <uk.co.senab.photoview.PhotoView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:scaleType="center"
-        android:id="@+id/photo_view"/>
+     <learn.example.pile.ui.PhotoWatcherLayout
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:id="@+id/photo_layout"/>
 
-    <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="200dp"
-        style="@android:style/Widget.ProgressBar.Horizontal"
-        android:max="100"
-        android:id="@+id/load_progress"
-        android:clickable="false"
-        android:layout_gravity="center"
-        android:focusable="false"
-        android:visibility="gone"
-        android:progressDrawable="@drawable/circle_progress"/>
+    <!--<ProgressBar-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="200dp"-->
+        <!--style="@android:style/Widget.ProgressBar.Horizontal"-->
+        <!--android:max="100"-->
+        <!--android:id="@+id/load_progress"-->
+        <!--android:clickable="false"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:focusable="false"-->
+        <!--android:visibility="gone"-->
+        <!--android:progressDrawable="@drawable/circle_progress"/>-->
 
 </FrameLayout>

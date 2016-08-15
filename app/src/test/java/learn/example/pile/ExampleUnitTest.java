@@ -5,6 +5,8 @@ import com.google.gson.JsonArray;
 
 import org.junit.Test;
 
+import learn.example.pile.object.NetEase;
+
 
 /**
  * To work on unit tests, switch the Test Artifact in the Build Variants view.
@@ -19,6 +21,7 @@ public class ExampleUnitTest {
 
     @Test
     public void addition_isCorrect() {
+        System.out.println(NetEase.generateHotCommentUrl("BUGNB8RD00031H2L",null,20,20));
 
     }
 

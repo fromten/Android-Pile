@@ -36,7 +36,6 @@ public class NetEaseHtml {
         body=insertImages(body,array);
         builder.append(body);
         builder.append("</div>");
-        Log.d("html", builder.toString());;
         return builder.toString();
     }
     private String insertHead()

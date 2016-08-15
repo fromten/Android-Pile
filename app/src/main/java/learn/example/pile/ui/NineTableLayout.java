@@ -2,6 +2,7 @@ package learn.example.pile.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,17 +36,16 @@ public class NineTableLayout extends TableLayout implements View.OnClickListener
     private TableRow createRow()
     {
         TableRow rowView=new TableRow(getContext());
-        TableRow.LayoutParams rowParams=new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        rowParams.gravity= Gravity.CENTER;
-        rowView.setLayoutParams(rowParams);
         for (int i = 0; i < 3; i++) {
             ImageView imageView = new ImageView(getContext());
             TableRow.LayoutParams  params = new TableRow.LayoutParams (0, getWidth()/3);
-            imageView.setLayoutParams(params);
             params.weight=1;
             params.setMargins(0,0,20,20);
+            imageView.setLayoutParams(params);
             rowView.addView(imageView);
         }
+        TableLayout.LayoutParams rowParams=new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        rowView.setLayoutParams(rowParams);
         return rowView;
     }
 
@@ -56,6 +56,7 @@ public class NineTableLayout extends TableLayout implements View.OnClickListener
             removeAllViews();
             return;
         }
+
         final int urlLen = urls.length;
         final int rowNum=urlLen/3+(urlLen%3==0?0:1);
         int i=0;
@@ -75,12 +76,14 @@ public class NineTableLayout extends TableLayout implements View.OnClickListener
                 if (index<urlLen)
                 {
                     image.setVisibility(View.VISIBLE);
-                    Glide.with(getContext()).load(urls[index]).centerCrop().into(image);
+                    Log.d("tag", urls[index]);
+                    Glide.with(getContext()).load(urls[index]).into(image);
                 }else {
                     image.setVisibility(View.INVISIBLE);
                 }
             }
         }
+        if (i<getChildCount())
         removeViews(i,getChildCount()-rowNum);
     }
 

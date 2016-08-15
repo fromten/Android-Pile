@@ -76,6 +76,20 @@ public class ActivityLauncher {
     }
 
     /**
+     * 启动图片查看Activity
+     * @param context
+     * @param url 图片的URL
+     */
+
+    public static void startPhotoActivityForMuliti(@NonNull Context context, @NonNull String[] url,int position)
+    {
+        Intent intent=new Intent(context, PhotoActivity.class);
+        intent.putExtra(PhotoActivity.KEY_MULITI_IMAGE,url);
+        intent.putExtra(PhotoActivity.KEY_SCROLL_POSITION,position);
+        startActivity(context,intent,makeExplodeAnimation(context));
+    }
+
+    /**
      * 启动图片查看器,查看网易新闻多图片新闻
      * @param context
      * @param skipID  @see learn.example.pile.jsonbean.NetEaseNews

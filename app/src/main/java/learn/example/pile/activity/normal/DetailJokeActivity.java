@@ -13,10 +13,10 @@ import android.widget.FrameLayout;
 import com.google.gson.Gson;
 
 import learn.example.pile.R;
+import learn.example.pile.activity.base.FullScreenActivity;
 import learn.example.pile.activity.base.ToolBarActivity;
 import learn.example.pile.adapters.JokeListAdapter2;
 import learn.example.pile.fragment.JokeCommentFragment;
-import learn.example.pile.fragment.RVListFragment;
 import learn.example.pile.jsonbean.JokeBean;
 
 /**
@@ -42,12 +42,13 @@ public class DetailJokeActivity extends ToolBarActivity {
         if (groupJson!=null)
         {
             group=new Gson().fromJson(groupJson, JokeBean.DataBean.DataListBean.GroupBean.class);
-            init();
+            if (savedInstanceState==null)
+            showCompleteFragment();
         }
 
     }
 
-    private void init()
+    private void showCompleteFragment()
     {
 
         mFragment=new ExtraHeadCommentFragment();
@@ -56,42 +57,38 @@ public class DetailJokeActivity extends ToolBarActivity {
         mFragment.setArguments(args);
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.joke_comment,mFragment).commit();
+                .replace(R.id.joke_comment, mFragment).commit();
 
     }
 
     public static class ExtraHeadCommentFragment extends JokeCommentFragment{
 
-        public static final String KEY_POSITION="scroll_position";
+        public final static String KEY_SAVE_SCROLL_POSITION="scrollposition";
 
         @Override
         public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
-            if (savedInstanceState==null)
-            {
-                JokeBean.DataBean.DataListBean.GroupBean group=((DetailJokeActivity)getActivity()).group;
-                //复用
-                JokeListAdapter2 adapter2=new JokeListAdapter2();
-                adapter2.getList().add(group);
-                int type=adapter2.getItemViewType(0);
-                final JokeListAdapter2.JokeViewHolder holder=adapter2.onCreateViewHolder(getRecyclerView(),type);
-                View bottomView=holder.itemView.findViewById(R.id.joke_bottom);
-                adapter2.onBindViewHolder(holder,0);
-                if (bottomView!=null)
-                {    //移除底部
-                    ((ViewGroup)holder.itemView).removeView(bottomView);
-                }
-                //添加头部
-                addHeadHolder(new HeadHolder(holder.itemView) {
-                    @Override
-                    public void onBindHolder(RecyclerView.Adapter adapter) {
 
-                    }
-                });
+            JokeBean.DataBean.DataListBean.GroupBean group=((DetailJokeActivity)getActivity()).group;
+            //复用
+            JokeListAdapter2 adapter2=new JokeListAdapter2();
+            adapter2.getList().add(group);
+            int type=adapter2.getItemViewType(0);
+            final JokeListAdapter2.JokeViewHolder holder=adapter2.onCreateViewHolder(getRecyclerView(),type);
+            View bottomView=holder.itemView.findViewById(R.id.joke_bottom);
+            adapter2.onBindViewHolder(holder,0);
+            if (bottomView!=null)
+            {    //移除底部
+                ((ViewGroup)holder.itemView).removeView(bottomView);
             }
+            //添加Adapter头部
+            addHeadHolder(new HeadHolder(holder.itemView) {
+                @Override
+                public void onBindHolder(RecyclerView.Adapter adapter) {
+
+                }
+            });
         }
-
-
     }
 
 }

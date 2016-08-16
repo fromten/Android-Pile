@@ -1,6 +1,5 @@
 package learn.example.pile.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -14,6 +13,7 @@ import java.util.List;
 
 import learn.example.pile.R;
 import learn.example.pile.adapters.VideoListAdapter;
+import learn.example.pile.factory.OpenEyeCommentFactory;
 import learn.example.pile.factory.OpenEyeVideoFactory;
 import learn.example.pile.jsonbean.OpenEyeVideo;
 import learn.example.pile.net.IService;
@@ -83,7 +83,7 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
         List<OpenEyes.VideoInfo> mList = null;
         if (data.getIssueList()!=null)
         {
-           mList=new OpenEyeVideoFactory().parseIssueList(data.getIssueList());
+            mList=new OpenEyeVideoFactory().parseIssueList(data.getIssueList());
         }else if (data.getItemList()!=null){
             mList=new ArrayList<>();
             new OpenEyeVideoFactory().parseItemList(data.getItemList(),mList);

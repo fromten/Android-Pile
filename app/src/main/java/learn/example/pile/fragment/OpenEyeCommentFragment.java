@@ -4,22 +4,26 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import com.google.gson.JsonObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import learn.example.pile.factory.CommentFactory;
 import learn.example.pile.jsonbean.OpenEyeComment;
 import learn.example.pile.net.IService;
 import learn.example.pile.net.OpenEyeService;
 import learn.example.pile.object.Comment;
+import learn.example.pile.util.GsonHelper;
 import learn.example.pile.util.TimeUtil;
 
 /**
  * Created on 2016/8/5.
  */
-public class OpenEyeCommentFragment  extends CommentFragment implements IService.Callback<OpenEyeComment>{
+public class OpenEyeCommentFragment extends CommentFragment implements IService.Callback<String> {
 
-    public static final String KEY_NEXT_PAGE_URL="url";
-    private static final String KEY_VIDEO_ID="id";
+    public static final String KEY_NEXT_PAGE_URL = "url";
+    private static final String KEY_VIDEO_ID = "id";
     private OpenEyeService mOpenEyeService;
     private int id;
     private String nextPageUrl;
@@ -27,7 +31,7 @@ public class OpenEyeCommentFragment  extends CommentFragment implements IService
     public static OpenEyeCommentFragment newInstance(int videoId) {
 
         Bundle args = new Bundle();
-        args.putInt(KEY_VIDEO_ID,videoId);
+        args.putInt(KEY_VIDEO_ID, videoId);
         OpenEyeCommentFragment fragment = new OpenEyeCommentFragment();
         fragment.setArguments(args);
         return fragment;
@@ -36,31 +40,36 @@ public class OpenEyeCommentFragment  extends CommentFragment implements IService
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Bundle args=getArguments();
-        if (args!=null)
-        {
-            id=args.getInt(KEY_VIDEO_ID);
-            mOpenEyeService=new OpenEyeService();
-            if (savedInstanceState!=null)
-            {
-                nextPageUrl=savedInstanceState.getString(KEY_NEXT_PAGE_URL);
-            }else {
-                mOpenEyeService.getComments(id,this);
+        Bundle args = getArguments();
+        if (args != null) {
+            id = args.getInt(KEY_VIDEO_ID);
+            mOpenEyeService = new OpenEyeService();
+            if (savedInstanceState != null) {
+                nextPageUrl = savedInstanceState.getString(KEY_NEXT_PAGE_URL);
+            } else {
+                mOpenEyeService.getComments(id, this);
             }
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putString(KEY_NEXT_PAGE_URL,nextPageUrl);
+        outState.putString(KEY_NEXT_PAGE_URL, nextPageUrl);
         super.onSaveInstanceState(outState);
     }
 
     @Override
-    public void onSuccess(OpenEyeComment data) {
-       nextPageUrl=data.getNextPageUrl();
-       addComments(new OpenEyeCommentFactory().getCommentList(data));
-       notifySuccess();
+    public void onSuccess(String data) {
+        Comment comment = CommentFactory.newInstance().produceOpenEyeComment(data);
+        if (comment != null) {
+            JsonObject object = comment.getExtraMsg();
+            if (object != null) {
+                nextPageUrl = GsonHelper.getAsString(object.get("nextPageUrl"), null);
+            }
+            addComments(comment.getComments());
+        }
+
+        notifySuccess();
     }
 
     @Override
@@ -70,10 +79,9 @@ public class OpenEyeCommentFragment  extends CommentFragment implements IService
 
     @Override
     public void onLoadMore() {
-        if (nextPageUrl!=null)
-        {
-            mOpenEyeService.nextCommentList(nextPageUrl,this);
-        }else {
+        if (nextPageUrl != null) {
+            mOpenEyeService.nextCommentList(nextPageUrl, this);
+        } else {
             notifyRequestEnd();
         }
     }
@@ -84,27 +92,4 @@ public class OpenEyeCommentFragment  extends CommentFragment implements IService
         super.onDestroy();
     }
 
-    public static class OpenEyeCommentFactory{
-
-        public List<Comment> getCommentList(OpenEyeComment data)
-        {
-            if (data==null)
-            {
-                return null;
-            }
-            List<Comment> list=new ArrayList<>();
-            for (OpenEyeComment.ReplyListBean item:data.getReplyList())
-            {
-                String content=item.getMessage();
-                String time= TimeUtil.formatYMD(item.getCreateTime()/1000);
-                int likeCount=item.getLikeCount();
-
-                OpenEyeComment.ReplyListBean.UserBean user=item.getUser();
-                String author=user.getNickname();
-                String userPic=user.getAvatar();
-                list.add(new Comment(author,likeCount,time,userPic,null,content));
-            }
-            return list;
-        }
-    }
 }

@@ -15,7 +15,7 @@ import java.util.List;
 import learn.example.net.OkHttpRequest;
 import learn.example.pile.R;
 import learn.example.pile.activity.base.FullScreenActivity;
-import learn.example.pile.adpter.NetEasePhotoAdapter;
+import learn.example.pile.adapters.NetEasePhotoAdapter;
 import learn.example.pile.object.NetEase;
 import learn.example.pile.object.PhotosMessage;
 import learn.example.pile.ui.PhotoWatcherLayout;

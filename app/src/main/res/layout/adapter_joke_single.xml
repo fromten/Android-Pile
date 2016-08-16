@@ -8,33 +8,38 @@
              android:layout_width="match_parent"
              android:layout_height="wrap_content"/>
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/content"
+        android:background="@color/joke_background"
         android:padding="@dimen/small_padding"
         android:layout_below="@+id/text">
 
         <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/joke_img_width"
+            android:layout_height="@dimen/joke_img_height"
+            android:background="@color/joke_background"
             android:scaleType="centerCrop"
+            android:layout_centerHorizontal="true"
             android:id="@+id/cover"/>
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_centerInParent="true"
             android:id="@+id/ic_play"
             android:background="@android:drawable/ic_media_play"/>
         <TextView
             style="@style/SmallText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
             android:background="@color/blue_light"
             android:textColor="@color/white"
-            android:id="@+id/hint"/>
-    </FrameLayout>
+            android:id="@+id/hint"
+            android:layout_alignBottom="@id/cover"
+            android:layout_alignEnd="@id/cover"
+            android:layout_alignRight="@id/cover"/>
+    </RelativeLayout>
 
     <include layout="@layout/adapter_joke_bottom"
              android:layout_below="@+id/content"

@@ -24,7 +24,7 @@ import okhttp3.Request;
  */
 public class JokeListFragment extends BaseListFragment implements IService.Callback<JokeBean> {
 
-    public static final String KEY_SAVE_LIST_DATA="jokedata";
+
 
     private JokeListAdapter2 mJokeListAdapter;
 
@@ -44,21 +44,10 @@ public class JokeListFragment extends BaseListFragment implements IService.Callb
          {
              setRefreshing(true);
              mJokeService.getTuijianJoke(requestCount,new DeviceInfo(getActivity()).SCREEN_WIDTH,this);
-         }else {
-
-             String json=savedInstanceState.getString(KEY_SAVE_LIST_DATA);
-             List<JokeBean.DataBean.DataListBean.GroupBean> bean=new Gson().fromJson(json,new TypeToken<ArrayList<JokeBean.DataBean.DataListBean.GroupBean>>(){}.getType());
-             mJokeListAdapter.addList(bean);
          }
 
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        String json=new Gson().toJson(mJokeListAdapter.getList(), new TypeToken<ArrayList<JokeBean.DataBean.DataListBean.GroupBean>>(){}.getType());
-        outState.putString(KEY_SAVE_LIST_DATA,json);
-        super.onSaveInstanceState(outState);
-    }
 
     @Override
     public void onDestroy() {

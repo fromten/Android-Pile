@@ -20,15 +20,15 @@ public class ZhihuContentService extends NetService {
         newRequest(TAG_CONTENT,ZhihuNewsContent.class,url,callback);
     }
 
-    public void getLongComment(int id, Callback<ZhihuComment> callback)
+    public void getLongComment(int id, Callback<String> callback)
     {
         String url=Zhihu.COMMENT_LONG.replace("?",String.valueOf(id));
-        newRequest(TAG_COMMENT_LONG,ZhihuComment.class,url,callback);
+        newStringRequest(TAG_COMMENT_LONG,url,callback);
     }
 
-    public void getShortComment(int id, Callback<ZhihuComment> callback)
+    public void getShortComment(int id, Callback<String> callback)
     {
         String url=Zhihu.COMMENT_SHORT.replace("?",String.valueOf(id));
-        newRequest(TAG_COMMENT_SHORT,ZhihuComment.class,url,callback);
+        newStringRequest(TAG_COMMENT_SHORT,url,callback);
     }
 }

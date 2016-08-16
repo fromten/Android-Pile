@@ -29,15 +29,15 @@ public class NetEaseNewsService extends NetService {
         newRequest(TAG,NetEaseNews.class,url,callback);
     }
 
-    public void getHotComment(String boradId, String docId, int start, int length, Callback<NetEaseComment> callback)
+    public void getHotComment(String boradId, String docId, int start, int length, Callback<String> callback)
     {
        String url=NetEase.generateHotCommentUrl(boradId,docId,start,length);
-       newRequest(TAG,NetEaseComment.class,url,callback);
+       newStringRequest(TAG,url,callback);
     }
 
-    public void getNormalComment(String boradId, String docId, int start, int length, Callback<NetEaseComment> callback)
+    public void getNormalComment(String boradId, String docId, int start, int length, Callback<String> callback)
     {
         String url=NetEase.generateNormalCommentUrl(boradId,docId,start,length);
-        newRequest(TAG,NetEaseComment.class,url,callback);
+        newStringRequest(TAG,url,callback);
     }
 }

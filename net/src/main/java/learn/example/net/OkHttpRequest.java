@@ -95,11 +95,10 @@ public class OkHttpRequest{
                         deliverSuccessResult(ser,callback);
                     }catch (JsonSyntaxException e)
                     {
-                        deliverFailureResult(call.request().toString(),callback);
-
+                        deliverFailureResult(call.request().toString()+"response: "+response.toString(),callback);
                     }
                 }else {
-                    deliverFailureResult(call.request().toString(),callback);
+                    deliverFailureResult(call.request().toString()+" response: "+response.toString(),callback);
                 }
                 response.close();
             }

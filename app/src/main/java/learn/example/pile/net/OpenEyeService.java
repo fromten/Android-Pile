@@ -30,10 +30,10 @@ public class OpenEyeService extends NetService {
     }
 
 
-    public void getComments(int id, Callback<OpenEyeComment> callback)
+    public void getComments(int id, Callback<String> callback)
     {
         String url=OpenEyes.COMMENT_URL+"?id="+id+OpenEyes.APP_PARAMS;
-        newRequest(TAG,OpenEyeComment.class,buildRequest(url),callback);
+        newStringRequest(TAG,buildRequest(url),callback);
     }
 
 
@@ -45,10 +45,10 @@ public class OpenEyeService extends NetService {
     }
 
 
-    public void nextCommentList(String nextUrl,Callback<OpenEyeComment> callback)
+    public void nextCommentList(String nextUrl,Callback<String> callback)
     {
         String url=OpenEyes.getNextUrl(nextUrl);
-        newRequest(TAG,OpenEyeComment.class,buildRequest(url),callback);
+        newStringRequest(TAG,buildRequest(url),callback);
     }
 
     private Request buildRequest(String url)

@@ -22,6 +22,7 @@ import java.util.List;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import learn.example.pile.R;
+import learn.example.pile.adapters.GsonSaveStateAdapter;
 import learn.example.pile.adapters.SaveStateAbleAdapter;
 import learn.example.uidesign.DividerItemDecoration;
 
@@ -32,7 +33,8 @@ public class BaseListFragment extends  RVListFragment {
 
 
 
-    private static final String TAG = "BaseListFragment";
+    public static final String KEY_SAVE_PARCELABLE = "base_parcelable";
+    public static final String KEY_SAVE_JSON = "base_json";
 
 
     private TextView mTopLogView;
@@ -128,23 +130,31 @@ public class BaseListFragment extends  RVListFragment {
 
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
         if (savedInstanceState!=null)
         {
             if (mAdapter instanceof SaveStateAbleAdapter)
             {  //恢复适配器状态
-                List<? extends Parcelable> list=savedInstanceState.getParcelableArrayList(TAG);
+                List<? extends Parcelable> list=savedInstanceState.getParcelableArrayList(KEY_SAVE_PARCELABLE);
                 ((SaveStateAbleAdapter) mAdapter).addAll(list);
+            }else if (mAdapter instanceof GsonSaveStateAdapter)
+            {
+                String json=savedInstanceState.getString(KEY_SAVE_JSON);
+                ((GsonSaveStateAdapter) mAdapter).restoreSaveState(json);
             }
         }
+        super.onViewStateRestored(savedInstanceState);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         if (mAdapter instanceof SaveStateAbleAdapter)
         {   //保存适配器状态
-            outState.putParcelableArrayList(TAG, (ArrayList<? extends Parcelable>) ((SaveStateAbleAdapter) mAdapter).saveState());
+            outState.putParcelableArrayList(KEY_SAVE_PARCELABLE, (ArrayList<? extends Parcelable>) ((SaveStateAbleAdapter) mAdapter).saveState());
+        }else if (mAdapter instanceof GsonSaveStateAdapter)
+        {
+            outState.putString(KEY_SAVE_JSON,((GsonSaveStateAdapter) mAdapter).saveState());
         }
+
         super.onSaveInstanceState(outState);
     }
 
@@ -157,6 +167,10 @@ public class BaseListFragment extends  RVListFragment {
 
     public void setAdapter(SaveStateAbleAdapter saveStateAdapter) {
         this.setAdapter((RecyclerView.Adapter) saveStateAdapter);
+    }
+
+    public void setAdapter(GsonSaveStateAdapter gsonSateAdapter) {
+        this.setAdapter((RecyclerView.Adapter) gsonSateAdapter);
     }
 
 

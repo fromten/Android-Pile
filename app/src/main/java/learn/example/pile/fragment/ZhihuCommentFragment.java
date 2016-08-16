@@ -5,19 +5,23 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 
+import com.google.gson.JsonObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import learn.example.pile.factory.CommentFactory;
 import learn.example.pile.jsonbean.ZhihuComment;
 import learn.example.pile.net.IService;
 import learn.example.pile.net.ZhihuContentService;
 import learn.example.pile.object.Comment;
+import learn.example.pile.util.GsonHelper;
 import learn.example.pile.util.TimeUtil;
 
 /**
  * Created on 2016/8/3.
  */
-public class ZhihuCommentFragment extends CommentFragment implements IService.Callback<ZhihuComment> {
+public class ZhihuCommentFragment extends CommentFragment implements IService.Callback<String> {
 
     private static final String KEY_DOCID="zhihudocid";
 
@@ -52,8 +56,14 @@ public class ZhihuCommentFragment extends CommentFragment implements IService.Ca
     }
 
     @Override
-    public void onSuccess(ZhihuComment data) {
-        addComments(new ZhihuCommentFactory().getCommentList(data));
+    public void onSuccess(String data) {
+        Comment comment=CommentFactory.newInstance().produceZhihuComment(data);
+        if (comment!=null)
+        {
+            addComments(comment.getComments());
+        }
+
+
         notifySuccess();
 
         //请求长评论成功后请求短评论
@@ -85,25 +95,4 @@ public class ZhihuCommentFragment extends CommentFragment implements IService.Ca
         }
     }
 
-
-    public static class ZhihuCommentFactory{
-        public List<Comment> getCommentList(ZhihuComment zhihuComment) {
-            List<Comment> list = new ArrayList<>();
-            for (ZhihuComment.CommentsBean item : zhihuComment.getComments()) {
-                Comment comment = getComment(item);
-                if (comment != null)
-                    list.add(comment);
-            }
-            return list;
-        }
-        public Comment getComment(ZhihuComment.CommentsBean zhihuCommentItem) {
-            String timeStr = TimeUtil.formatYMD(zhihuCommentItem.getTime());
-            Comment comment = new Comment
-                    (zhihuCommentItem.getAuthor(),
-                            zhihuCommentItem.getLikes(), timeStr,
-                            zhihuCommentItem.getAvatar(), null,
-                            zhihuCommentItem.getContent());
-            return comment;
-        }
-    }
 }

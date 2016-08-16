@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
@@ -21,6 +22,7 @@ public class NineGridLayout extends GridLayout implements View.OnClickListener{
     private int screenWidth;
     private int childWidth;
     private int childHeight;
+    private int childMargin;
 
     private OnItemClickListener mItemClickListener;
 
@@ -36,10 +38,12 @@ public class NineGridLayout extends GridLayout implements View.OnClickListener{
     private void init()
     {
         screenWidth=new DeviceInfo((Activity) getContext()).SCREEN_WIDTH;
-        childWidth=screenWidth/4;
+        childWidth=screenWidth/3;
         childHeight=childWidth+20;
-
-        int paddingLeft=(screenWidth-(childWidth*getColumnCount()))/2-16;
+        childMargin=childWidth/40;
+        Log.d("childMargin", String.valueOf(childMargin));
+        int columnCount=getColumnCount();
+        int paddingLeft=(screenWidth-(childWidth*columnCount))/2-columnCount*childMargin;
         setPadding(paddingLeft,0,0,0);
 
     }
@@ -55,7 +59,7 @@ public class NineGridLayout extends GridLayout implements View.OnClickListener{
                 addView(image);
                 image.setOnClickListener(this);
             }
-            Glide.with(getContext()).load(urls[i]).asBitmap().centerCrop().into(image);
+            Glide.with(getContext()).load(urls[i]).asBitmap().fitCenter().into(image);
         }
         int childCount=getChildCount();
         if (i < childCount)
@@ -66,9 +70,10 @@ public class NineGridLayout extends GridLayout implements View.OnClickListener{
     {
         ImageView imageView = new ImageView(getContext());
         ViewGroup.MarginLayoutParams marginParams=new ViewGroup.MarginLayoutParams(childWidth,childHeight);
-        marginParams.setMargins(0,8,position+1%3==0?0:8,8);//第三列不加MarginRight
+        marginParams.setMargins(0,childMargin,childMargin,childMargin);
         GridLayout.LayoutParams  params = new GridLayout.LayoutParams (marginParams);
         imageView.setLayoutParams(params);
+        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         imageView.setBackgroundColor(Color.GRAY);
         return imageView;
     }

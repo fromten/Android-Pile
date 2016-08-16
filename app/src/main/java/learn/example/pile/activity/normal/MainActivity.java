@@ -49,7 +49,7 @@ public class MainActivity extends ToolBarActivity {
         OkHttpRequest.getInstance(this);
 
 
-        //如果版本大于23和外部存储可以用时需要请求权限
+        //如果版本大于23和外部存储可以用时,需要请求权限
         if (Build.VERSION.SDK_INT>=23&& DeviceInfo.checkExternalStorageState())
         {
             requirePermission();
@@ -81,6 +81,9 @@ public class MainActivity extends ToolBarActivity {
         }
     }
 
+    /**
+     * 显示FragmentViewPager
+     */
     public void showView()
     {
         FragmentManager manager=getSupportFragmentManager();
@@ -98,7 +101,6 @@ public class MainActivity extends ToolBarActivity {
         getMenuInflater().inflate(R.menu.main_menu,menu);
         return true;
     }
-
 
 
     @Override
@@ -129,7 +131,6 @@ public class MainActivity extends ToolBarActivity {
     @Override
     protected void onPerformExitAnim() {
         //不执行退出动画
-
     }
     public static class ViewPagerFragment extends Fragment  {
         private TabLayout mTabLayout;
@@ -156,7 +157,7 @@ public class MainActivity extends ToolBarActivity {
                 public void onTabReselected(TabLayout.Tab tab) {
                     Fragment fragment= (Fragment) mFragmentPagerAdapter.instantiateItem(mViewPager,tab.getPosition());
                     if (fragment!=null&&fragment instanceof RVListFragment)
-                    {
+                    {    //滚动到顶部
                         ((RVListFragment) fragment).getRecyclerView().scrollToPosition(0);
                     }
                 }

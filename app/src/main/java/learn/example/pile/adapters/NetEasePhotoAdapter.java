@@ -1,4 +1,4 @@
-package learn.example.pile.adpter;
+package learn.example.pile.adapters;
 
 import android.widget.TextView;
 

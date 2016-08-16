@@ -19,9 +19,8 @@ public class JokeCommentFactory implements CommentFactory.ProduceInterface {
     }
 
     @Override
-        public List<Comment> produceComment(String responseStr) {
+        public Comment produceComment(String responseStr) {
             JsonReader reader=new JsonReader(new StringReader(responseStr));
-            List<Comment> list = null;
             try {
                 reader.beginObject();
                 while (reader.hasNext())
@@ -29,7 +28,7 @@ public class JokeCommentFactory implements CommentFactory.ProduceInterface {
                     String name=reader.nextName();
                     if (name.equals("data"))
                     {
-                        list=new ArrayList<>();
+                        List<Comment.CommentItem> list = null;list=new ArrayList<>();
                         reader.beginObject();
                         while (reader.hasNext())
                         {
@@ -42,19 +41,27 @@ public class JokeCommentFactory implements CommentFactory.ProduceInterface {
                             }
                         }
                         reader.endObject();
+                        Comment comment=new Comment();
+                        comment.setComments(list);
+                        return comment;
                     }else {
                         reader.skipValue();
                     }
                 }
                 reader.endObject();
-                return list;
             } catch (IOException e) {
                 e.printStackTrace();
+            }finally {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
             return null;
         }
 
-        private void readArray(JsonReader reader,List<Comment> outList) throws IOException {
+        private void readArray(JsonReader reader,List<Comment.CommentItem> outList) throws IOException {
 
             reader.beginArray();
             while (reader.hasNext())
@@ -64,7 +71,7 @@ public class JokeCommentFactory implements CommentFactory.ProduceInterface {
             reader.endArray();
         }
 
-       private Comment readComment(JsonReader reader) throws IOException {
+       private Comment.CommentItem readComment(JsonReader reader) throws IOException {
              reader.beginObject();
              String avatar = null;
              String userName = null;
@@ -74,26 +81,28 @@ public class JokeCommentFactory implements CommentFactory.ProduceInterface {
              while (reader.hasNext())
              {
                  String name=reader.nextName();
-                 if (name.equals("avatar_url"))
-                 {
-                     avatar=reader.nextString();
-                 }else if (name.equals("digg_count"))
-                 {
-                     likeCount=reader.nextInt();
-                 }else if (name.equals("text"))
-                 {
-                     text=reader.nextString();
-                 }else if (name.equals("create_time"))
-                 {
-                     time=reader.nextLong();
-                 }else if (name.equals("user_name"))
-                 {
-                     userName=reader.nextString();
-                 }else {
-                     reader.skipValue();
+                 switch (name) {
+                     case "avatar_url":
+                         avatar = reader.nextString();
+                         break;
+                     case "digg_count":
+                         likeCount = reader.nextInt();
+                         break;
+                     case "text":
+                         text = reader.nextString();
+                         break;
+                     case "create_time":
+                         time = reader.nextLong();
+                         break;
+                     case "user_name":
+                         userName = reader.nextString();
+                         break;
+                     default:
+                         reader.skipValue();
+                         break;
                  }
              }
             reader.endObject();
-            return new Comment(userName,likeCount, TimeUtil.formatYMD(time),avatar,null,text);
+            return new Comment.CommentItem(userName,likeCount, TimeUtil.formatYMD(time),avatar,null,text);
         }
 }

@@ -11,5 +11,8 @@
     <dimen name="news_img_width">100dp</dimen>
     <dimen name="news_img_height">74dp</dimen>
     <dimen name="avatar_img_width">40dp</dimen>
-    <dimen name="avatar_img_height">40dp</dimen>
+    <dimen name="avatar_img_height">35dp</dimen>
+
+    <dimen name="joke_img_height">200dp</dimen>
+    <dimen name="joke_img_width">280dp</dimen>
 </resources>

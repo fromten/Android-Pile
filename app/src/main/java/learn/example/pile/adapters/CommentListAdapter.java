@@ -28,7 +28,7 @@ import learn.example.pile.ui.CircleViewTarget;
 /**
  * Created on 2016/7/13.
  */
-public class CommentListAdapter extends SaveStateAbleAdapter<CommentListAdapter.CommentViewHolder,Comment> {
+public class CommentListAdapter extends SaveStateAbleAdapter<CommentListAdapter.CommentViewHolder,Comment.CommentItem> {
 
 
     @Override
@@ -40,10 +40,11 @@ public class CommentListAdapter extends SaveStateAbleAdapter<CommentListAdapter.
 
     @Override
     public void onBindViewHolder(final CommentViewHolder holder, int position) {
-        Comment c = getItem(position);
+        Comment.CommentItem c = getItem(position);
         final Context context = holder.itemView.getContext();
         holder.content.setText(c.getContent());
-        holder.author.setText(c.getAuthor());
+        String author=c.getAuthor();
+        holder.author.setText(author==null?"网友":author);
 
         Glide.with(context).load(c.getUsePic()).asBitmap()
                 .error(R.mipmap.ic_def_show_user)

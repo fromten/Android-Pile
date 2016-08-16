@@ -14,17 +14,45 @@ import learn.example.pile.object.Comment;
  */
 public class CommentFactory {
 
-    public interface ProduceInterface{
-         List<Comment> produceComment(String responseStr);
+    private CommentFactory()
+    {
+
     }
 
+    public interface ProduceInterface{
+        /**
+         * 生成评论
+         * @param responseStr 网络请求响应的数据
+         * @return 新的Comment
+         */
+         Comment produceComment(String responseStr);
+    }
+
+    //网易
     public static CommentFactory newInstance() {
         return new CommentFactory();
     }
-
-    public List<Comment> produceJokeComment(String responseStr)
+    //笑话
+    public Comment produceJokeComment(String responseStr)
     {
          return new JokeCommentFactory().produceComment(responseStr);
+    }
+
+    public Comment produceNetEaseComment(String responseStr)
+    {
+        return new NetEaseCommentFactory().produceComment(responseStr);
+    }
+
+    //知乎
+    public Comment produceZhihuComment(String responseStr)
+    {
+        return new ZhihuCommentFactory().produceComment(responseStr);
+    }
+
+    //开眼
+    public Comment produceOpenEyeComment(String responseStr)
+    {
+        return new OpenEyeCommentFactory().produceComment(responseStr);
     }
 
 

@@ -1,15 +1,11 @@
 package learn.example.pile.adapters;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridLayout;
 import android.widget.ImageView;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -22,59 +18,41 @@ import learn.example.pile.R;
 import learn.example.pile.jsonbean.JokeBean;
 import learn.example.pile.ui.CircleViewTarget;
 import learn.example.pile.ui.NineGridLayout;
-import learn.example.pile.ui.NineTableLayout;
 import learn.example.pile.util.ActivityLauncher;
-import learn.example.pile.util.DeviceInfo;
 import learn.example.pile.util.GsonHelper;
 
 /**
  * Created on 2016/8/11.
  */
-public class JokeListAdapter2 extends RecyclerView.Adapter<JokeListAdapter2.JokeViewHolder> implements View.OnClickListener{
+public class JokeListAdapter2 extends GsonSaveStateAdapter<JokeBean.DataBean.DataListBean.GroupBean,JokeListAdapter2.JokeViewHolder> implements View.OnClickListener{
 
     private final int TYPE_MULTI = 2;
     private final int TYPE_SINGLE = 4;
     private final int TYPE_NORMAL = 6;
 
-    List<JokeBean.DataBean.DataListBean.GroupBean> list = new ArrayList<>();
     private Context mContext;
 
     public JokeListAdapter2() {
 
     }
 
-    public void addList(List<JokeBean.DataBean.DataListBean.GroupBean> list)
-    {
-        if (list!=null&&!list.isEmpty())
-        {
-            this.list.addAll(list);
-            notifyItemInserted(list.size());
-        }
-    }
-    public List<JokeBean.DataBean.DataListBean.GroupBean> getList()
-    {
-        return list;
-    }
 
-    public void clear()
-    {
-        if (!list.isEmpty())
-        {
-            list.clear();
-            notifyDataSetChanged();
-        }
-
+    @Override
+    public Class<JokeBean.DataBean.DataListBean.GroupBean> getActualClass() {
+        return JokeBean.DataBean.DataListBean.GroupBean.class;
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (list.get(position).getIs_multi_image() == 1) {
+        if (getItem(position).getIs_multi_image() == 1) {
             return TYPE_MULTI;
-        }else if (list.get(position).getImages()!=null){
+        }else if (getItem(position).getImages()!=null){
             return TYPE_SINGLE;
         }
         return TYPE_NORMAL;
     }
+
+
 
     @Override
     public JokeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -98,7 +76,7 @@ public class JokeListAdapter2 extends RecyclerView.Adapter<JokeListAdapter2.Joke
 
     @Override
     public void onBindViewHolder(JokeViewHolder holder, int position) {
-        JokeBean.DataBean.DataListBean.GroupBean item = list.get(position);
+        JokeBean.DataBean.DataListBean.GroupBean item = getItem(position);
         String avatarUrl = item.getUser().getAvatar_url();
         String name = item.getUser().getName();
         String text=item.getText();
@@ -125,11 +103,6 @@ public class JokeListAdapter2 extends RecyclerView.Adapter<JokeListAdapter2.Joke
 
     }
 
-    @Override
-    public int getItemCount() {
-        return list.size();
-    }
-
 
     public void bindMulti(JokeMultipleViewHolder holder, JokeBean.DataBean.DataListBean.GroupBean item) {
         int len = item.getThumb_image_list().length;
@@ -143,7 +116,7 @@ public class JokeListAdapter2 extends RecyclerView.Adapter<JokeListAdapter2.Joke
     }
 
     public void bindSingle(JokeSingleViewHolder holder, JokeBean.DataBean.DataListBean.GroupBean item) {
-        String url=item.getImages().getUrl_list()[0].getUrl();
+        String url=item.getImages().getUrl_list()[1].getUrl();
         if (item.getIs_gif()==1)
         {
             holder.hint.setText(" gif ");
@@ -226,7 +199,6 @@ public class JokeListAdapter2 extends RecyclerView.Adapter<JokeListAdapter2.Joke
 
     public static class JokeMultipleViewHolder extends JokeViewHolder {
 
-        //private NineTableLayout mTableLayout;
         private NineGridLayout mGridLayout;
         private String urls[];
 

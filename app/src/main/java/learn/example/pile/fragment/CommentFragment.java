@@ -31,7 +31,7 @@ public class CommentFragment extends BaseListFragment {
         setAdapter(mCommentListAdapter);
     }
 
-    public void addComments(List<Comment> comments)
+    public void addComments(List<Comment.CommentItem> comments)
     {
         mCommentListAdapter.addAll(comments);
     }

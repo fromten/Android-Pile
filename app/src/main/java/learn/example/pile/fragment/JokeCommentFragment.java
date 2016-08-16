@@ -61,7 +61,11 @@ public class JokeCommentFragment extends CommentFragment implements IService.Cal
 
     @Override
     public void onSuccess(String data) {
-        addComments(CommentFactory.newInstance().produceJokeComment(data));
+        Comment comment=CommentFactory.newInstance().produceJokeComment(data);
+        if (comment!=null)
+        {
+            addComments(comment.getComments());
+        }
         start+=count;
         notifySuccess();
     }

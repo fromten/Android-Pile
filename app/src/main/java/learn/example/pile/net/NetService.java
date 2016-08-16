@@ -17,11 +17,14 @@ public class NetService implements IService{
         Request request=new Request.Builder().url(url).build();
         newRequest(tag,clazz,request,callback);
     }
-
-
-    public <T> void newStringRequest(final String tag, String url, final IService.Callback<String> callback)
+    public void newStringRequest(final String tag, String url, final IService.Callback<String> callback)
     {
         Request request=new Request.Builder().url(url).build();
+        newStringRequest(tag,request,callback);
+    }
+
+    public void newStringRequest(final String tag, Request request, final IService.Callback<String> callback)
+    {
         Call call=OkHttpRequest.getInstanceUnsafe().newStringRequest(request, new OkHttpRequest.RequestCallback<String>() {
             @Override
             public void onSuccess(String res) {

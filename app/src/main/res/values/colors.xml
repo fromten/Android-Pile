@@ -20,5 +20,7 @@
     <color name="orange">#f7642c</color>
     <color name="weakorange">#96f44806</color>
     <color name="titleColor">#363636</color>
+    <color name="subColor">#515151</color>
     <color name="secondary">#8d8d8d</color>
+    <color name="joke_background">#f1f1f1</color>
 </resources>

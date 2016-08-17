@@ -22,9 +22,10 @@ public class OpenEyeCommentFactory implements CommentFactory.ProduceInterface {
     @Override
     public Comment produceComment(String responseStr) {
         JsonReader reader = new JsonReader(new StringReader(responseStr));
+        reader.setLenient(true);
+        Comment comment=new Comment();
         try {
             reader.beginObject();
-            Comment comment=new Comment();
             while (reader.hasNext()) {
                 String name = reader.nextName();
                 switch (name) {
@@ -42,7 +43,6 @@ public class OpenEyeCommentFactory implements CommentFactory.ProduceInterface {
                 }
             }
             reader.endObject();
-            return comment;
         } catch (IOException e) {
             e.printStackTrace();
         }finally {
@@ -52,7 +52,7 @@ public class OpenEyeCommentFactory implements CommentFactory.ProduceInterface {
                 e.printStackTrace();
             }
         }
-        return null;
+        return comment;
     }
 
     private List<Comment.CommentItem> readArray(JsonReader reader) throws IOException {
@@ -71,7 +71,7 @@ public class OpenEyeCommentFactory implements CommentFactory.ProduceInterface {
         {   String name=reader.nextName();
             switch (name) {
                 case "createTime":
-                    commentItem.setTime(TimeUtil.formatYMD(reader.nextLong()/1000));
+                    commentItem.setTime(TimeUtil.formatTimeFull(reader.nextLong()/1000));
                     break;
                 case "likeCount":
                     commentItem.setLikeNumber(reader.nextInt());

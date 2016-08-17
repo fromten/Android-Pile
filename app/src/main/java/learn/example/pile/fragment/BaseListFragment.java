@@ -61,6 +61,12 @@ public class BaseListFragment extends  RVListFragment {
         addItemDecoration(new DividerItemDecoration(getContext()));
         setRefreshSchemeColors(ResourcesCompat.getColor(getResources(),R.color.colorPrimary,null));
 
+        createEmptyView();
+    }
+
+
+    protected void createEmptyView()
+    {
         mSimpleEmptyViewHolder=new SimpleEmptyViewHolder();
         setEmptyView(mSimpleEmptyViewHolder.getView());
     }
@@ -233,11 +239,21 @@ public class BaseListFragment extends  RVListFragment {
         {
             setRefreshing(false);
         }
+        int adapterItemCount=mAdapter.getItemCount();
+
+        if (mSimpleEmptyViewHolder!=null)
+        {
+            mSimpleEmptyViewHolder.isClicked=false;
+
+            if (adapterItemCount<=0)
+            {
+                mSimpleEmptyViewHolder.showErrorText();
+            }
+        }
+
         cancelLoadMore();
-        mSimpleEmptyViewHolder.isClicked=false;
-        mSimpleEmptyViewHolder.showErrorText();
-        int count=mAdapter.getItemCount();
-        if (count>0)
+
+        if (adapterItemCount>0)
             mFooterHolder.mFooterText.setText("请求失败,点击重试");
 
     }
@@ -254,7 +270,11 @@ public class BaseListFragment extends  RVListFragment {
             setRefreshing(false);
             showTopView("成功更新"+mAdapter.getItemCount()+"内容");
         }
-        mSimpleEmptyViewHolder.isClicked=false;
+        if (mSimpleEmptyViewHolder!=null)
+        {
+            mSimpleEmptyViewHolder.isClicked=false;
+        }
+
         cancelLoadMore();
     }
 
@@ -356,13 +376,19 @@ public class BaseListFragment extends  RVListFragment {
             mEmptyView.setGravity(Gravity.CENTER);
             mEmptyView.setCompoundDrawablesWithIntrinsicBounds(0,R.mipmap.ic_refresh,0,0);
             mEmptyView.setOnClickListener(this);
+
+            //刚创建时隐藏View,并设置文本
             mEmptyView.setVisibility(View.INVISIBLE);
-            showErrorText();
+            mEmptyView.setText("加载错误,点击重新加载...");
             return mEmptyView;
         }
 
         public void showErrorText()
         {
+            if (mEmptyView.getVisibility()!=View.VISIBLE)
+            {
+                mEmptyView.setVisibility(View.VISIBLE);
+            }
             mEmptyView.setText("加载错误,点击重新加载...");
         }
 

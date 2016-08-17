@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import learn.example.pile.factory.CommentFactory;
+import learn.example.pile.factory.OpenEyeCommentFactory;
 import learn.example.pile.jsonbean.OpenEyeComment;
 import learn.example.pile.net.IService;
 import learn.example.pile.net.OpenEyeService;
@@ -60,7 +61,7 @@ public class OpenEyeCommentFragment extends CommentFragment implements IService.
 
     @Override
     public void onSuccess(String data) {
-        Comment comment = CommentFactory.newInstance().produceOpenEyeComment(data);
+        Comment comment = CommentFactory.newInstance().produceComment(OpenEyeCommentFactory.class,data);
         if (comment != null) {
             JsonObject object = comment.getExtraMsg();
             if (object != null) {

@@ -1,10 +1,12 @@
 package learn.example.pile.factory;
 
+import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import learn.example.pile.object.Comment;
@@ -21,31 +23,36 @@ public class JokeCommentFactory implements CommentFactory.ProduceInterface {
     @Override
         public Comment produceComment(String responseStr) {
             JsonReader reader=new JsonReader(new StringReader(responseStr));
+            Comment comment = new Comment();
             try {
                 reader.beginObject();
                 while (reader.hasNext())
                 {
                     String name=reader.nextName();
-                    if (name.equals("data"))
-                    {
-                        List<Comment.CommentItem> list = null;list=new ArrayList<>();
-                        reader.beginObject();
-                        while (reader.hasNext())
-                        {
-                            String n=reader.nextName();
-                            if (n.equals("recent_comments")||n.equals("top_comments"))
-                            {
-                               readArray(reader,list);
-                            }else {
-                               reader.skipValue();
+                    switch (name) {
+                        case "data":
+                            reader.beginObject();
+                            List<Comment.CommentItem> list = new ArrayList<>();
+                            while (reader.hasNext()) {
+                                String n = reader.nextName();
+                                if (n.equals("recent_comments")||n.equals("top_comments")) {
+
+                                    readArray(reader, list);
+                                    comment.setComments(list);
+                                } else {
+                                    reader.skipValue();
+                                }
                             }
-                        }
-                        reader.endObject();
-                        Comment comment=new Comment();
-                        comment.setComments(list);
-                        return comment;
-                    }else {
-                        reader.skipValue();
+                            reader.endObject();
+                            break;
+                        case "has_more":
+                            JsonObject object = new JsonObject();
+                            object.addProperty("has_more", reader.nextBoolean());
+                            comment.setExtraMsg(object);
+                            break;
+                        default:
+                            reader.skipValue();
+                            break;
                     }
                 }
                 reader.endObject();
@@ -58,7 +65,7 @@ public class JokeCommentFactory implements CommentFactory.ProduceInterface {
                     e.printStackTrace();
                 }
             }
-            return null;
+            return comment;
         }
 
         private void readArray(JsonReader reader,List<Comment.CommentItem> outList) throws IOException {
@@ -103,6 +110,6 @@ public class JokeCommentFactory implements CommentFactory.ProduceInterface {
                  }
              }
             reader.endObject();
-            return new Comment.CommentItem(userName,likeCount, TimeUtil.formatYMD(time),avatar,null,text);
+            return new Comment.CommentItem(userName,likeCount, TimeUtil.formatTimeFull(time),avatar,null,text);
         }
 }

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import learn.example.pile.factory.CommentFactory;
+import learn.example.pile.factory.ZhihuCommentFactory;
 import learn.example.pile.jsonbean.ZhihuComment;
 import learn.example.pile.net.IService;
 import learn.example.pile.net.ZhihuContentService;
@@ -57,13 +58,11 @@ public class ZhihuCommentFragment extends CommentFragment implements IService.Ca
 
     @Override
     public void onSuccess(String data) {
-        Comment comment=CommentFactory.newInstance().produceZhihuComment(data);
+        Comment comment=CommentFactory.newInstance().produceComment(ZhihuCommentFactory.class,data);
         if (comment!=null)
         {
             addComments(comment.getComments());
         }
-
-
         notifySuccess();
 
         //请求长评论成功后请求短评论

@@ -15,9 +15,14 @@ import learn.example.pile.util.TimeUtil;
  */
 public class ZhihuCommentFactory implements CommentFactory.ProduceInterface {
 
+    ZhihuCommentFactory()
+    {
+
+    }
     @Override
     public Comment produceComment(String responseStr) {
         JsonReader reader=new JsonReader(new StringReader(responseStr));
+        Comment comment=null;
         try {
             reader.beginObject();
             while (reader.hasNext())
@@ -33,9 +38,8 @@ public class ZhihuCommentFactory implements CommentFactory.ProduceInterface {
                     }
                     reader.endArray();
 
-                    Comment comment=new Comment();
+                    comment=new Comment();
                     comment.setComments(list);
-                    return comment;
                 }else {
                     reader.skipValue();
                 }
@@ -50,8 +54,7 @@ public class ZhihuCommentFactory implements CommentFactory.ProduceInterface {
                 e.printStackTrace();
             }
         }
-
-        return null;
+        return comment;
     }
 
 
@@ -72,7 +75,7 @@ public class ZhihuCommentFactory implements CommentFactory.ProduceInterface {
                     comment.setLikeNumber(reader.nextInt());
                     break;
                 case "time":
-                    comment.setTime(TimeUtil.formatYMD(reader.nextInt()));
+                    comment.setTime(TimeUtil.formatTimeFull(reader.nextInt()));
                     break;
                 case "avatar":
                     comment.setUsePic(reader.nextString());

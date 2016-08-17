@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import learn.example.pile.factory.CommentFactory;
+import learn.example.pile.factory.NetEaseCommentFactory;
 import learn.example.pile.jsonbean.NetEaseComment;
 import learn.example.pile.net.NetEaseNewsService;
 import learn.example.pile.object.Comment;
@@ -74,7 +75,7 @@ public class NetEaseCommentFragment extends CommentFragment implements NetEaseNe
 
     @Override
     public void onSuccess(String data) {
-        Comment comment=CommentFactory.newInstance().produceNetEaseComment(data);
+        Comment comment=CommentFactory.newInstance().produceComment(NetEaseCommentFactory.class,data);
         if (comment!=null)
         {
             addComments(comment.getComments());

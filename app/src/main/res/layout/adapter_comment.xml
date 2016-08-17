@@ -28,6 +28,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/like"
+        android:drawableRight="@mipmap/ic_like"
+        android:drawableEnd="@mipmap/ic_like"
         android:layout_alignBottom="@+id/author"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"/>
@@ -38,6 +40,7 @@
         android:layout_height="wrap_content"
         android:paddingLeft="@dimen/small_padding"
         android:paddingStart="@dimen/small_padding"
+        android:paddingRight="@dimen/small_padding"
         android:paddingBottom="@dimen/small_padding"
         android:id="@+id/adress_and_time"
         android:layout_below="@+id/author"

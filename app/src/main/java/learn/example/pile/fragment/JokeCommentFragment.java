@@ -4,7 +4,13 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import com.google.gson.JsonObject;
+
+import java.util.Collections;
+import java.util.Comparator;
+
 import learn.example.pile.factory.CommentFactory;
+import learn.example.pile.factory.JokeCommentFactory;
 import learn.example.pile.net.IService;
 import learn.example.pile.net.JokeService;
 import learn.example.pile.object.Comment;
@@ -32,7 +38,7 @@ public class JokeCommentFragment extends CommentFragment implements IService.Cal
     private long groupId;
     private int start;
     private final int count=20;
-
+    private boolean hasMore;
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -61,10 +67,22 @@ public class JokeCommentFragment extends CommentFragment implements IService.Cal
 
     @Override
     public void onSuccess(String data) {
-        Comment comment=CommentFactory.newInstance().produceJokeComment(data);
+        Comment comment=CommentFactory.newInstance().produceComment(JokeCommentFactory.class,data);
         if (comment!=null)
         {
+            Collections.sort(comment.getComments(), new Comparator<Comment.CommentItem>() {
+                @Override
+                public int compare(Comment.CommentItem lhs, Comment.CommentItem rhs) {
+                    return rhs.getLikeNumber()-lhs.getLikeNumber();
+                }
+            });
             addComments(comment.getComments());
+
+            JsonObject extra=comment.getExtraMsg();
+            if (extra!=null)
+            {
+                hasMore=extra.get("has_more").getAsBoolean();
+            }
         }
         start+=count;
         notifySuccess();
@@ -77,6 +95,12 @@ public class JokeCommentFragment extends CommentFragment implements IService.Cal
 
     @Override
     public void onLoadMore() {
-        mJokeService.getComment(start,count,groupId,this);
+        if (hasMore)
+        {
+            mJokeService.getComment(start,count,groupId,this);
+        }else {
+            notifyRequestEnd();
+        }
+
     }
 }

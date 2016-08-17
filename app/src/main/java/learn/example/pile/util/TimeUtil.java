@@ -14,7 +14,7 @@ public class TimeUtil {
 
     /**
      * 转换成 年-月-日
-     * @param timestamp 时间戳 秒格式
+     * @param timestamp 时间戳
      * @return string
      */
     public static String formatYMD(long timestamp)
@@ -24,6 +24,12 @@ public class TimeUtil {
         return format.format(date);
     }
 
+
+    /**
+     * 转换成 年-月-日 小时-分钟-秒
+     * @param timestamp 时间戳
+     * @return 字符串
+     */
     public static String formatTimeFull(long timestamp)
     {
         SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd  HH:mm:ss",Locale.CHINA);

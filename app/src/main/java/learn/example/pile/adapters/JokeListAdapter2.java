@@ -70,7 +70,7 @@ public class JokeListAdapter2 extends GsonSaveStateAdapter<JokeBean.DataBean.Dat
             View view=LayoutInflater.from(mContext).inflate(R.layout.adapter_joke_normal,parent,false);
             holder=new JokeViewHolder(view);
         }
-        holder.commentCount.setOnClickListener(this);
+        holder.itemView.setOnClickListener(this);
         return holder;
     }
 
@@ -87,13 +87,13 @@ public class JokeListAdapter2 extends GsonSaveStateAdapter<JokeBean.DataBean.Dat
         holder.contentText.setText(text);
         holder.likeCount.setText(String.valueOf(likeCount));
         holder.dislikeCount.setText(String.valueOf(dislikeCount));
-        holder.commentCount.setText(String.valueOf(commentCount));
+        holder.commentCount.setText("评论:"+String.valueOf(commentCount));
         Glide.with(mContext)
                 .load(avatarUrl)
                 .asBitmap()
                 .into(new CircleViewTarget(holder.avatar));
 
-        holder.commentCount.setTag(R.id.view_tag1,item);
+        holder.itemView.setTag(R.id.view_tag1,item);
         if (holder instanceof JokeMultipleViewHolder) {
             bindMulti((JokeMultipleViewHolder) holder, item);
         }else if (holder instanceof JokeSingleViewHolder)
@@ -136,10 +136,7 @@ public class JokeListAdapter2 extends GsonSaveStateAdapter<JokeBean.DataBean.Dat
     @Override
     public void onClick(View v) {
         JokeBean.DataBean.DataListBean.GroupBean item= (JokeBean.DataBean.DataListBean.GroupBean) v.getTag(R.id.view_tag1);
-        if (v.getId()==R.id.comment_num)
-        {
-            ActivityLauncher.startDetailActivity(mContext,new Gson().toJson(item));
-        }else if (v.getId()==R.id.cover){
+        if (v.getId()==R.id.cover){
             if (item.getIs_video()==1)
             {
                 String url=item.getMp4_url();
@@ -157,8 +154,9 @@ public class JokeListAdapter2 extends GsonSaveStateAdapter<JokeBean.DataBean.Dat
                 String url=item.getImages().getUrl_list()[0].getUrl();
                 ActivityLauncher.startPhotoActivityForSingle(mContext,url);
             }
+        }else {
+            ActivityLauncher.startDetailActivity(mContext,new Gson().toJson(item));
         }
-
     }
 
     public static class JokeViewHolder extends RecyclerView.ViewHolder {

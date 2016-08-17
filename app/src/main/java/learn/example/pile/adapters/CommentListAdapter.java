@@ -51,13 +51,10 @@ public class CommentListAdapter extends SaveStateAbleAdapter<CommentListAdapter.
                 .placeholder(R.mipmap.ic_def_show_user)
                 .fitCenter()
                 .into(new CircleViewTarget(holder.user_pic));
-        String address=c.getAddress()==null?"":c.getAddress();
+        String address=c.getAddress()==null?"":c.getAddress()+"\n";
         holder.addressAndTime.setText(address+c.getTime());
 
-        SpannableString spanStr=new SpannableString(String.valueOf(c.getLikeNumber())+"l");
-        ImageSpan span=new ImageSpan(context,R.mipmap.ic_like, DynamicDrawableSpan.ALIGN_BASELINE);
-        spanStr.setSpan(span,spanStr.length()-1,spanStr.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        holder.like.setText(spanStr);
+        holder.like.setText(String.valueOf(c.getLikeNumber()));
 
     }
 

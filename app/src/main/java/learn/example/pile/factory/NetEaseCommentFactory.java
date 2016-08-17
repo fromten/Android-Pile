@@ -20,6 +20,7 @@ public class NetEaseCommentFactory implements CommentFactory.ProduceInterface {
     @Override
     public Comment produceComment(String responseStr) {
         JsonReader reader=new JsonReader(new StringReader(responseStr));
+        Comment comment = null;
         try {
             reader.beginObject();
             while (reader.hasNext())
@@ -29,9 +30,10 @@ public class NetEaseCommentFactory implements CommentFactory.ProduceInterface {
                 {
                     List<Comment.CommentItem> list=new ArrayList<>();
                     readArray(reader,list);
-                    Comment comment=new Comment();
+
+                    comment=new Comment();
                     comment.setComments(list);
-                    return comment;
+
                 }else {
                     reader.skipValue();
                 }
@@ -46,7 +48,7 @@ public class NetEaseCommentFactory implements CommentFactory.ProduceInterface {
                 e.printStackTrace();
             }
         }
-        return null;
+        return comment;
     }
 
     private void readArray(JsonReader reader,List<Comment.CommentItem> outList) throws IOException {

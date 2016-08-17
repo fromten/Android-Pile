@@ -13,9 +13,10 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center_vertical"
-        android:drawableLeft="@mipmap/ic_like_big"
-        android:drawableStart="@mipmap/ic_like_big"
-        android:id="@+id/like"/>
+        android:drawableLeft="@drawable/ic_like2"
+        android:drawableStart="@drawable/ic_like2"
+        android:id="@+id/like"
+        />
 
     <TextView
         style="@style/SmallText"
@@ -23,9 +24,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center_vertical"
-        android:text="@string/art"
-        android:drawableLeft="@mipmap/ic_dislike"
-        android:drawableStart="@mipmap/ic_dislike"
+        android:drawableLeft="@drawable/ic_dislike"
+        android:drawableStart="@drawable/ic_dislike"
         android:id="@+id/dislike"/>
 
     <TextView
@@ -34,8 +34,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center_vertical"
-        android:drawableLeft="@mipmap/ic_comment"
-        android:drawableStart="@mipmap/ic_comment"
         android:id="@+id/comment_num"/>
 
 </LinearLayout>

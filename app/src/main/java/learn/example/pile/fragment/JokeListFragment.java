@@ -4,20 +4,16 @@ import android.os.Bundle;
 
 import android.view.View;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import learn.example.pile.adapters.JokeListAdapter2;
+import learn.example.pile.adapters.JokeListAdapter;
 import learn.example.pile.database.JokeDatabase;
 import learn.example.pile.jsonbean.JokeBean;
 import learn.example.pile.net.IService;
 import learn.example.pile.net.JokeService;
 
 import learn.example.pile.util.DeviceInfo;
-import okhttp3.Request;
 
 /**
  * Created on 2016/5/5.
@@ -26,7 +22,7 @@ public class JokeListFragment extends BaseListFragment implements IService.Callb
 
 
 
-    private JokeListAdapter2 mJokeListAdapter;
+    private JokeListAdapter mJokeListAdapter;
 
     private JokeDatabase mJokeDataBase;
 
@@ -37,7 +33,7 @@ public class JokeListFragment extends BaseListFragment implements IService.Callb
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
          super.onViewCreated(view,savedInstanceState);
-         mJokeListAdapter=new JokeListAdapter2();
+         mJokeListAdapter=new JokeListAdapter();
          setAdapter(mJokeListAdapter);
          mJokeService=new JokeService();
          if (savedInstanceState==null)

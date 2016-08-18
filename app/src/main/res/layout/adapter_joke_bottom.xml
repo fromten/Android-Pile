@@ -3,9 +3,7 @@
               android:orientation="horizontal"
               android:id="@+id/joke_bottom"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_marginLeft="@dimen/big_padding"
-              android:layout_marginRight="@dimen/big_padding">
+              android:layout_height="wrap_content">
 
     <TextView
         style="@style/SmallText"
@@ -15,8 +13,7 @@
         android:gravity="center_vertical"
         android:drawableLeft="@drawable/ic_like2"
         android:drawableStart="@drawable/ic_like2"
-        android:id="@+id/like"
-        />
+        android:id="@+id/like"/>
 
     <TextView
         style="@style/SmallText"
@@ -31,7 +28,7 @@
     <TextView
         style="@style/SmallText"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center_vertical"
         android:id="@+id/comment_num"/>

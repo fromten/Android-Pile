@@ -34,7 +34,7 @@ public abstract class GsonSaveStateAdapter<T,VH extends RecyclerView.ViewHolder>
         if (list!=null&&!list.isEmpty())
         {
             mList.addAll(list);
-            notifyItemInserted(list.size());
+            notifyItemInserted(getItemCount());
         }
     }
     public List<T> getList()

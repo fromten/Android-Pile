@@ -2,10 +2,7 @@ package learn.example.pile.activity.normal;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -13,9 +10,8 @@ import android.widget.FrameLayout;
 import com.google.gson.Gson;
 
 import learn.example.pile.R;
-import learn.example.pile.activity.base.FullScreenActivity;
 import learn.example.pile.activity.base.ToolBarActivity;
-import learn.example.pile.adapters.JokeListAdapter2;
+import learn.example.pile.adapters.JokeListAdapter;
 import learn.example.pile.fragment.JokeCommentFragment;
 import learn.example.pile.jsonbean.JokeBean;
 
@@ -71,10 +67,10 @@ public class DetailJokeActivity extends ToolBarActivity {
 
             JokeBean.DataBean.DataListBean.GroupBean group=((DetailJokeActivity)getActivity()).group;
             //复用
-            JokeListAdapter2 adapter2=new JokeListAdapter2();
+            JokeListAdapter adapter2=new JokeListAdapter();
             adapter2.getList().add(group);
             int type=adapter2.getItemViewType(0);
-            final JokeListAdapter2.JokeViewHolder holder=adapter2.onCreateViewHolder(getRecyclerView(),type);
+            final JokeListAdapter.JokeViewHolder holder=adapter2.onCreateViewHolder(getRecyclerView(),type);
             View bottomView=holder.itemView.findViewById(R.id.joke_bottom);
             adapter2.onBindViewHolder(holder,0);
             if (bottomView!=null)

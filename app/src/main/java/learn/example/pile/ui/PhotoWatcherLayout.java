@@ -1,8 +1,14 @@
 package learn.example.pile.ui;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -12,12 +18,23 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
+import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
+import com.bumptech.glide.load.resource.bitmap.TransformationUtils;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.load.resource.transcode.BitmapToGlideDrawableTranscoder;
+import com.bumptech.glide.request.RequestFutureTarget;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.BaseTarget;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.bumptech.glide.request.target.SizeReadyCallback;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import learn.example.pile.R;
 import learn.example.pile.adapters.ViewPagerAdapter;
+import learn.example.pile.util.GlideUtil;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
@@ -39,6 +56,9 @@ public class PhotoWatcherLayout extends FrameLayout implements ViewPager.OnPageC
     private PhotoWatcherAdapter mPhotoWatcherAdapter;
 
 
+    private FitTransform mFitTransform;
+
+
     public PhotoWatcherLayout(Context context) {
         this(context,null);
     }
@@ -56,6 +76,8 @@ public class PhotoWatcherLayout extends FrameLayout implements ViewPager.OnPageC
         title= (TextView) findViewById(R.id.title);
         number= (TextView) findViewById(R.id.number);
         content= (TextView)findViewById(R.id.content);
+
+        mFitTransform=new FitTransform(getContext());
     }
 
 
@@ -74,7 +96,12 @@ public class PhotoWatcherLayout extends FrameLayout implements ViewPager.OnPageC
                 PhotoView imageView= createPhotoView();
                 viewList.add(imageView);
                 String url=adapter.getUrl(i);
-                Glide.with(getContext()).load(url).diskCacheStrategy(DiskCacheStrategy.SOURCE).error(R.mipmap.img_error).fitCenter().into(imageView);
+                Glide.with(getContext())
+                        .load(url)
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .error(R.mipmap.img_error)
+                        .bitmapTransform(mFitTransform)
+                        .into(imageView);
             }
             mViewPagerAdapter=new ViewPagerAdapter(viewList);
             mViewPager.setAdapter(mViewPagerAdapter);
@@ -98,7 +125,7 @@ public class PhotoWatcherLayout extends FrameLayout implements ViewPager.OnPageC
     }
 
     public PhotoView createPhotoView(){
-        PhotoView photoView = new PhotoView(getContext());
+        PhotoView photoView = new FitScalePhotoView(getContext());
         photoView.setMinimumScale(0.5f);
         photoView.setOnViewTapListener(mOnViewTapListener);
         photoView.setScaleType(ImageView.ScaleType.CENTER);
@@ -205,6 +232,36 @@ public class PhotoWatcherLayout extends FrameLayout implements ViewPager.OnPageC
         @Override
         public void onPageScrollStateChanged(int state) {
 
+        }
+    }
+
+    public static class FitTransform extends BitmapTransformation {
+
+
+        public FitTransform(Context context) {
+            super(context);
+        }
+
+        @Override
+        protected Bitmap transform(BitmapPool pool, Bitmap toTransform, int outWidth, int outHeight) {
+            int height=toTransform.getHeight();
+            if (height>outHeight)
+            {
+                return GlideUtil.matchViewWidth(toTransform,pool,outWidth,outHeight);
+            }
+            return TransformationUtils.fitCenter(toTransform,pool,outWidth,outHeight);
+        }
+
+        public Bitmap.Config getSafeConfig(Bitmap toFit)
+        {
+            return toFit.getConfig()==null? Bitmap.Config.ARGB_8888:toFit.getConfig();
+        }
+
+
+
+        @Override
+        public String getId() {
+            return "fit.view.transform";
         }
     }
 }

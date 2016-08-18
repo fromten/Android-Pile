@@ -2,6 +2,7 @@ package learn.example.pile.ui;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -11,8 +12,13 @@ import android.widget.GridLayout;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.Transformation;
+import com.bumptech.glide.load.engine.Resource;
+import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
+import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 
 import learn.example.pile.util.DeviceInfo;
+import learn.example.pile.util.GlideUtil;
 
 /**
  * Created on 2016/8/15.
@@ -38,10 +44,11 @@ public class NineGridLayout extends GridLayout implements View.OnClickListener{
     private void init()
     {
         screenWidth=new DeviceInfo((Activity) getContext()).SCREEN_WIDTH;
+
+
         childWidth=screenWidth/3;
         childHeight=childWidth+20;
         childMargin=childWidth/40;
-        Log.d("childMargin", String.valueOf(childMargin));
         int columnCount=getColumnCount();
         int paddingLeft=(screenWidth-(childWidth*columnCount))/2-columnCount*childMargin;
         setPadding(paddingLeft,0,0,0);
@@ -55,22 +62,36 @@ public class NineGridLayout extends GridLayout implements View.OnClickListener{
         for (i = 0; i < urlLen; i++) {
             ImageView image = (ImageView) getChildAt(i);
             if (image == null) {
-                image = addView(i);
+                image = createView(i);
                 addView(image);
                 image.setOnClickListener(this);
             }
-            Glide.with(getContext()).load(urls[i]).asBitmap().fitCenter().into(image);
+            Glide.with(getContext())
+                    .load(urls[i])
+                    .asBitmap()
+                    .transform(new BitmapTransformation(getContext()) {
+                        @Override
+                        protected Bitmap transform(BitmapPool pool, Bitmap toTransform, int outWidth, int outHeight) {
+                            return GlideUtil.matchView(toTransform,pool,outWidth,outHeight);
+                        }
+
+                        @Override
+                        public String getId() {
+                            return "com.my";
+                        }
+                    })
+                    .into(image);
         }
         int childCount=getChildCount();
         if (i < childCount)
             removeViews(i, Math.abs(childCount-urlLen));
     }
 
-    public ImageView addView(int position)
+    public ImageView createView(int position)
     {
         ImageView imageView = new ImageView(getContext());
         ViewGroup.MarginLayoutParams marginParams=new ViewGroup.MarginLayoutParams(childWidth,childHeight);
-        marginParams.setMargins(0,childMargin,childMargin,childMargin);
+        marginParams.setMargins(0,0,childMargin,childMargin);
         GridLayout.LayoutParams  params = new GridLayout.LayoutParams (marginParams);
         imageView.setLayoutParams(params);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);

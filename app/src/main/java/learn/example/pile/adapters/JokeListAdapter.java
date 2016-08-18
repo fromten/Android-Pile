@@ -9,10 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import learn.example.pile.R;
 import learn.example.pile.jsonbean.JokeBean;
@@ -24,7 +22,7 @@ import learn.example.pile.util.GsonHelper;
 /**
  * Created on 2016/8/11.
  */
-public class JokeListAdapter2 extends GsonSaveStateAdapter<JokeBean.DataBean.DataListBean.GroupBean,JokeListAdapter2.JokeViewHolder> implements View.OnClickListener{
+public class JokeListAdapter extends GsonSaveStateAdapter<JokeBean.DataBean.DataListBean.GroupBean,JokeListAdapter.JokeViewHolder> implements View.OnClickListener{
 
     private final int TYPE_MULTI = 2;
     private final int TYPE_SINGLE = 4;
@@ -32,7 +30,7 @@ public class JokeListAdapter2 extends GsonSaveStateAdapter<JokeBean.DataBean.Dat
 
     private Context mContext;
 
-    public JokeListAdapter2() {
+    public JokeListAdapter() {
 
     }
 
@@ -130,7 +128,11 @@ public class JokeListAdapter2 extends GsonSaveStateAdapter<JokeBean.DataBean.Dat
             holder.ic_play.setVisibility(View.INVISIBLE);
         }
         holder.cover.setTag(R.id.view_tag1,item);
-        Glide.with(mContext).load(url).fitCenter().into(holder.cover);
+        Glide.with(mContext).load(url).asBitmap()
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .dontTransform()
+                .into(holder.cover);
+
     }
 
     @Override

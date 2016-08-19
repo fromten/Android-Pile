@@ -4,11 +4,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import learn.example.pile.fragment.JokeCommentFragment;
-import learn.example.pile.fragment.JokeListFragment;
-import learn.example.pile.fragment.NewsListFragment;
-import learn.example.pile.fragment.ReadListFragment;
-import learn.example.pile.fragment.VideoListFragment;
+import learn.example.pile.fragment.caterogy.JokeListFragment;
+import learn.example.pile.fragment.caterogy.NewsListFragment;
+import learn.example.pile.fragment.caterogy.ReadListFragment;
+import learn.example.pile.fragment.caterogy.VideoListFragment;
 
 /**
  * Created on 2016/5/6.

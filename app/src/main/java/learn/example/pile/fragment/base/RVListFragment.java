@@ -1,4 +1,4 @@
-package learn.example.pile.fragment;
+package learn.example.pile.fragment.base;
 
 
 import android.os.Bundle;
@@ -13,8 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-
-import java.lang.annotation.Retention;
 
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 

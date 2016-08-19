@@ -1,4 +1,4 @@
-package learn.example.pile.fragment;
+package learn.example.pile.fragment.caterogy;
 
 import android.os.Bundle;
 
@@ -9,6 +9,7 @@ import java.util.List;
 
 import learn.example.pile.adapters.JokeListAdapter;
 import learn.example.pile.database.JokeDatabase;
+import learn.example.pile.fragment.base.BaseListFragment;
 import learn.example.pile.jsonbean.JokeBean;
 import learn.example.pile.net.IService;
 import learn.example.pile.net.JokeService;

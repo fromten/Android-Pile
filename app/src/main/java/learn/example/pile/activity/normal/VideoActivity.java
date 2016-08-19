@@ -20,7 +20,7 @@ import android.widget.VideoView;
 
 import learn.example.pile.R;
 import learn.example.pile.activity.base.FullScreenActivity;
-import learn.example.pile.fragment.OpenEyeCommentFragment;
+import learn.example.pile.fragment.comment.OpenEyeCommentFragment;
 import learn.example.pile.object.OpenEyes;
 import learn.example.uidesign.VolumeProgressView;
 

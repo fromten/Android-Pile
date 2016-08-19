@@ -12,7 +12,7 @@ import com.google.gson.Gson;
 import learn.example.pile.R;
 import learn.example.pile.activity.base.ToolBarActivity;
 import learn.example.pile.adapters.JokeListAdapter;
-import learn.example.pile.fragment.JokeCommentFragment;
+import learn.example.pile.fragment.comment.JokeCommentFragment;
 import learn.example.pile.jsonbean.JokeBean;
 
 /**

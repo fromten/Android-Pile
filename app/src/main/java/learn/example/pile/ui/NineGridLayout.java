@@ -17,6 +17,7 @@ import com.bumptech.glide.load.engine.Resource;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 
+import jp.wasabeef.glide.transformations.CropSquareTransformation;
 import learn.example.pile.util.DeviceInfo;
 import learn.example.pile.util.GlideUtil;
 
@@ -32,6 +33,7 @@ public class NineGridLayout extends GridLayout implements View.OnClickListener{
 
     private OnItemClickListener mItemClickListener;
 
+    private CropSquareTransformation mCropSquareTransformation;
     public NineGridLayout(Context context) {
         this(context,null);
     }
@@ -53,6 +55,12 @@ public class NineGridLayout extends GridLayout implements View.OnClickListener{
         int paddingLeft=(screenWidth-(childWidth*columnCount))/2-columnCount*childMargin;
         setPadding(paddingLeft,0,0,0);
 
+        mCropSquareTransformation=new CropSquareTransformation(getContext());
+    }
+
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
     }
 
     public void updateViews(String[] urls)
@@ -69,17 +77,7 @@ public class NineGridLayout extends GridLayout implements View.OnClickListener{
             Glide.with(getContext())
                     .load(urls[i])
                     .asBitmap()
-                    .transform(new BitmapTransformation(getContext()) {
-                        @Override
-                        protected Bitmap transform(BitmapPool pool, Bitmap toTransform, int outWidth, int outHeight) {
-                            return GlideUtil.matchView(toTransform,pool,outWidth,outHeight);
-                        }
-
-                        @Override
-                        public String getId() {
-                            return "com.my";
-                        }
-                    })
+                    .transform(mCropSquareTransformation)
                     .into(image);
         }
         int childCount=getChildCount();

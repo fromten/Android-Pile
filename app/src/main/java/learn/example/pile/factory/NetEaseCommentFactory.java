@@ -20,6 +20,7 @@ public class NetEaseCommentFactory implements CommentFactory.ProduceInterface {
     @Override
     public Comment produceComment(String responseStr) {
         JsonReader reader=new JsonReader(new StringReader(responseStr));
+        reader.setLenient(true);
         Comment comment = null;
         try {
             reader.beginObject();

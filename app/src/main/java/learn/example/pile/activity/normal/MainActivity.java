@@ -24,7 +24,7 @@ import learn.example.net.OkHttpRequest;
 import learn.example.pile.R;
 import learn.example.pile.activity.base.ToolBarActivity;
 import learn.example.pile.adapters.FragmentPagerAdapter;
-import learn.example.pile.fragment.RVListFragment;
+import learn.example.pile.fragment.base.RVListFragment;
 import learn.example.pile.fragment.SettingFragment;
 import learn.example.pile.util.ActivityLauncher;
 import learn.example.pile.util.DeviceInfo;

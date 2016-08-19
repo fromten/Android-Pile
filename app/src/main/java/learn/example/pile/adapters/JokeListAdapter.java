@@ -12,6 +12,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 
+import jp.wasabeef.glide.transformations.CropSquareTransformation;
+import jp.wasabeef.glide.transformations.CropTransformation;
 import learn.example.pile.R;
 import learn.example.pile.jsonbean.JokeBean;
 import learn.example.pile.ui.CircleViewTarget;
@@ -29,6 +31,7 @@ public class JokeListAdapter extends GsonSaveStateAdapter<JokeBean.DataBean.Data
     private final int TYPE_NORMAL = 6;
 
     private Context mContext;
+    private CropSquareTransformation mCropSquareTransformation;
 
     public JokeListAdapter() {
 
@@ -56,6 +59,7 @@ public class JokeListAdapter extends GsonSaveStateAdapter<JokeBean.DataBean.Data
     public JokeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (mContext == null) {
             mContext = parent.getContext();
+            mCropSquareTransformation=new CropSquareTransformation(mContext);
         }
         JokeViewHolder holder;
         if (viewType == TYPE_MULTI) {
@@ -89,6 +93,7 @@ public class JokeListAdapter extends GsonSaveStateAdapter<JokeBean.DataBean.Data
         Glide.with(mContext)
                 .load(avatarUrl)
                 .asBitmap()
+                .error(R.mipmap.ic_def_show_user)
                 .into(new CircleViewTarget(holder.avatar));
 
         holder.itemView.setTag(R.id.view_tag1,item);
@@ -128,9 +133,11 @@ public class JokeListAdapter extends GsonSaveStateAdapter<JokeBean.DataBean.Data
             holder.ic_play.setVisibility(View.INVISIBLE);
         }
         holder.cover.setTag(R.id.view_tag1,item);
-        Glide.with(mContext).load(url).asBitmap()
+        Glide.with(mContext)
+                .load(url)
+                .asBitmap()
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                .dontTransform()
+                .transform(mCropSquareTransformation)
                 .into(holder.cover);
 
     }

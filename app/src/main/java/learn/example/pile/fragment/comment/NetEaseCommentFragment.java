@@ -1,23 +1,13 @@
-package learn.example.pile.fragment;
+package learn.example.pile.fragment.comment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.View;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import learn.example.pile.factory.CommentFactory;
 import learn.example.pile.factory.NetEaseCommentFactory;
-import learn.example.pile.jsonbean.NetEaseComment;
 import learn.example.pile.net.NetEaseNewsService;
 import learn.example.pile.object.Comment;
-import learn.example.pile.util.GsonHelper;
 
 /**
  * Created on 2016/8/3.

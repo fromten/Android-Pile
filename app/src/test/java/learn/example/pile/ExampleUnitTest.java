@@ -2,9 +2,12 @@ package learn.example.pile;
 
 
 import com.google.gson.JsonArray;
+import com.google.gson.stream.JsonReader;
 
 import org.junit.Test;
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.List;
 
 import learn.example.pile.factory.CommentFactory;
@@ -18,10 +21,7 @@ import learn.example.pile.object.NetEase;
  */
 public class ExampleUnitTest {
 
-    public static final String json="{ 'urls':[{\"url\": " +
-            "\"http://p3.pstatp.com/w356/78f002033060a15d691\"}, " +
-            "{\"url\": \"http://pb2.pstatp.com/w356/78f002033060a15d691\"}, " +
-            "{\"url\": \"http://pb3.pstatp.com/w356/78f002033060a15d691\"}]}";
+    public static final String json="{ \"url\" : \"hhhh\",\"image\": null}";
     private JsonArray urls;
 
     @Test

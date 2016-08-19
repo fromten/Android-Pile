@@ -36,7 +36,6 @@ public class JokeCommentFactory implements CommentFactory.ProduceInterface {
                             while (reader.hasNext()) {
                                 String n = reader.nextName();
                                 if (n.equals("recent_comments")||n.equals("top_comments")) {
-
                                     readArray(reader, list);
                                     comment.setComments(list);
                                 } else {

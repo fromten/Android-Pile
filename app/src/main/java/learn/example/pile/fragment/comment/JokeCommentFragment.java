@@ -1,4 +1,4 @@
-package learn.example.pile.fragment;
+package learn.example.pile.fragment.comment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -55,9 +55,7 @@ public class JokeCommentFragment extends CommentFragment implements IService.Cal
         }else {
             start=savedInstanceState.getInt(KEY_LAST_POSITION);
         }
-
     }
-
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -68,21 +66,17 @@ public class JokeCommentFragment extends CommentFragment implements IService.Cal
     @Override
     public void onSuccess(String data) {
         Comment comment=CommentFactory.newInstance().produceComment(JokeCommentFactory.class,data);
-        if (comment!=null)
-        {
+        if (comment!=null) {
             Collections.sort(comment.getComments(), new Comparator<Comment.CommentItem>() {
                 @Override
                 public int compare(Comment.CommentItem lhs, Comment.CommentItem rhs) {
-                    return rhs.getLikeNumber()-lhs.getLikeNumber();
+                    return rhs.getLikeNumber() - lhs.getLikeNumber();
                 }
             });
             addComments(comment.getComments());
 
-            JsonObject extra=comment.getExtraMsg();
-            if (extra!=null)
-            {
-                hasMore=extra.get("has_more").getAsBoolean();
-            }
+            JsonObject extra = comment.getExtraMsg();
+            hasMore = extra != null && extra.get("has_more").getAsBoolean();
         }
         start+=count;
         notifySuccess();

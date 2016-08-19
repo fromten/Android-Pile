@@ -1,26 +1,25 @@
 package learn.example.pile.adapters;
 
-import android.support.annotation.NonNull;
+
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import com.google.gson.Gson;
-import com.google.gson.TypeAdapter;
-import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
-import learn.example.pile.jsonbean.JokeBean;
 
 /**
  * Created on 2016/8/16.
+ *
+ * 与 SaveStateAbleAdapter 不同之处是,
+ * 保存数据为Json格式,恢复时利用Gson 反序列 添加保存的数据
+ * @see #saveState()
+ * @see #restoreSaveState(String)
+ * @see #getActualClass()
  */
 public abstract class GsonSaveStateAdapter<T,VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH>{
     private List<T> mList;
@@ -58,9 +57,8 @@ public abstract class GsonSaveStateAdapter<T,VH extends RecyclerView.ViewHolder>
 
 
     /**
-     * 返后一个序列化后的数据
      * @see #restoreSaveState(String)
-     * @return 序列化字符串
+     * @return 一个序列化后的Json格式数据
      */
     public String saveState()
     {
@@ -68,8 +66,8 @@ public abstract class GsonSaveStateAdapter<T,VH extends RecyclerView.ViewHolder>
     }
 
     /**
-     * 添加元素,可以使用toJson()保存状态后,使用此方法序列化添加数据,
-     * @param json 调用saveState()给定的序列化后的数据
+     * 添加元素,可以使用toJson()保存状态后,使用此方法反序列化添加数据,
+     * @param json 调用saveState()给予的序列化数据
      * @see #saveState()
      */
     public void  restoreSaveState(String json)
@@ -99,6 +97,9 @@ public abstract class GsonSaveStateAdapter<T,VH extends RecyclerView.ViewHolder>
         return mList.size();
     }
 
+
+
+    //由于泛型擦除,需要告诉Gson 真正的参数类型
     private static class ListOfSomething<X> implements ParameterizedType {
 
         private Class<?> wrapped;

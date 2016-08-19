@@ -2,6 +2,7 @@ package learn.example.pile.factory;
 
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -33,9 +34,15 @@ public class OpenEyeCommentFactory implements CommentFactory.ProduceInterface {
                         comment.setComments(readArray(reader));
                         break;
                     case "nextPageUrl":
-                        JsonObject object = new JsonObject();
-                        object.addProperty("nextPageUrl", reader.nextString());
-                        comment.setExtraMsg(object);
+                        JsonToken token=reader.peek();
+                        if (token==JsonToken.STRING)
+                        {
+                            JsonObject object = new JsonObject();
+                            object.addProperty("nextPageUrl", reader.nextString());
+                            comment.setExtraMsg(object);
+                        }else if (token==JsonToken.NULL){
+                            reader.nextNull();
+                        }
                         break;
                     default:
                         reader.skipValue();

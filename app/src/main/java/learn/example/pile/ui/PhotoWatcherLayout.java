@@ -257,8 +257,6 @@ public class PhotoWatcherLayout extends FrameLayout implements ViewPager.OnPageC
             return toFit.getConfig()==null? Bitmap.Config.ARGB_8888:toFit.getConfig();
         }
 
-
-
         @Override
         public String getId() {
             return "fit.view.transform";

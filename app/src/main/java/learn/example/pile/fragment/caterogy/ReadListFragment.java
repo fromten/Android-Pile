@@ -1,4 +1,4 @@
-package learn.example.pile.fragment;
+package learn.example.pile.fragment.caterogy;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -6,10 +6,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import learn.example.pile.adapters.ZhiHuStoriesListAdapter;
+import learn.example.pile.fragment.base.BaseListFragment;
 import learn.example.pile.jsonbean.ZhihuStories;
 import learn.example.pile.net.IService;
 import learn.example.pile.net.ZhihuStoryService;
-import learn.example.pile.object.Zhihu;
 
 /**
  * Created on 2016/6/3.
@@ -70,6 +70,10 @@ public class ReadListFragment extends BaseListFragment implements IService.Callb
     //只能传递 ZhihuStories.date 网络得到的日期
     private String formatDate(String date)
     {
+        if (date==null)
+        {
+            return null;
+        }
         return date.substring(0,4)+"-"+date.substring(4,6)+"-"+date.substring(6);
     }
 

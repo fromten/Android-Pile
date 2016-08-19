@@ -1,10 +1,9 @@
-package learn.example.pile.fragment;
+package learn.example.pile.fragment.base;
 
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,25 +15,16 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import learn.example.pile.R;
-import learn.example.pile.adapters.GsonSaveStateAdapter;
-import learn.example.pile.adapters.SaveStateAbleAdapter;
 import learn.example.uidesign.DividerItemDecoration;
 
 /**
  * Created on 2016/7/17.
  */
-public class BaseListFragment extends  RVListFragment {
+public class BaseListFragment extends  SaveAdapterStateFragment {
 
-
-
-    public static final String KEY_SAVE_PARCELABLE = "base_parcelable";
-    public static final String KEY_SAVE_JSON = "base_json";
 
 
     private TextView mTopLogView;
@@ -50,8 +40,15 @@ public class BaseListFragment extends  RVListFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        addTopView();
         initView();
+        setEmptyView(createEmptyView());
+
+        View topView=createTopView();
+        if (topView!=null)
+        {
+            ViewGroup root= (ViewGroup) view;
+            root.addView(topView);
+        }
     }
 
     protected void initView()
@@ -60,28 +57,39 @@ public class BaseListFragment extends  RVListFragment {
         setLayoutManager(mLinearLayoutManager);
         addItemDecoration(new DividerItemDecoration(getContext()));
         setRefreshSchemeColors(ResourcesCompat.getColor(getResources(),R.color.colorPrimary,null));
-
-        createEmptyView();
     }
 
 
-    protected void createEmptyView()
+    /**
+     * 添加布局EmptyView,子类可以覆盖此方法,使用自己的EmptyView
+     * 方法会在initView()中调用
+     * 调用此方法后自动调用setEmptyView();
+     */
+    protected View createEmptyView()
     {
         mSimpleEmptyViewHolder=new SimpleEmptyViewHolder();
-        setEmptyView(mSimpleEmptyViewHolder.getView());
+        return mSimpleEmptyViewHolder.getView();
+    }
+
+
+    /**
+     * 创建适配器底部视图,子类可以覆盖此方法,创建自己的底部视图
+     * 调用方法后自动调用addFooterHolder();
+     * @see #setAdapter(RecyclerView.Adapter)  方法中调用此方法
+     * @return FooterHolder
+     */
+    protected FooterHolder createAdapterFooterHolder()
+    {
+        mFooterHolder=new CommonFooterHolder();
+        return mFooterHolder;
     }
 
     /**
-     * 添加一个顶部视图
+     * 添加一个顶部视图,这不是添加在Adapter中,而是直接在Fragment Root布局中添加
+     * 在onViewCreated()中调用
      */
-    protected void addTopView()
+    protected View createTopView()
     {
-        View root=getView();
-        if (!(root instanceof ViewGroup))
-        {
-            return;
-        }
-        ViewGroup viewGroup= (ViewGroup) root;
         mTopLogView=new TextView(getContext());
         mTopLogView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         mTopLogView.setGravity(Gravity.CENTER);
@@ -91,9 +99,15 @@ public class BaseListFragment extends  RVListFragment {
         mTopLogView.setClickable(false);
         mTopLogView.setFocusable(false);
         mTopLogView.setVisibility(View.INVISIBLE);
-        viewGroup.addView(mTopLogView);
+        return mTopLogView;
     }
 
+
+    /**
+     * 动画显示顶部视图
+     * 如果覆盖createTopView()方法,此方法无效
+     * @param text 显示的文本
+     */
     public void showTopView(String text)
     {
         if (mTopLogView==null)
@@ -130,64 +144,15 @@ public class BaseListFragment extends  RVListFragment {
             }
         });
         mTopLogView.setText(text);
-
     }
 
-
-    @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        if (savedInstanceState!=null)
-        {
-            if (mAdapter instanceof SaveStateAbleAdapter)
-            {  //恢复适配器状态
-                List<? extends Parcelable> list=savedInstanceState.getParcelableArrayList(KEY_SAVE_PARCELABLE);
-                ((SaveStateAbleAdapter) mAdapter).addAll(list);
-            }else if (mAdapter instanceof GsonSaveStateAdapter)
-            {
-                String json=savedInstanceState.getString(KEY_SAVE_JSON);
-                ((GsonSaveStateAdapter) mAdapter).restoreSaveState(json);
-            }
-        }
-        super.onViewStateRestored(savedInstanceState);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        if (mAdapter instanceof SaveStateAbleAdapter)
-        {   //保存适配器状态
-            outState.putParcelableArrayList(KEY_SAVE_PARCELABLE, (ArrayList<? extends Parcelable>) ((SaveStateAbleAdapter) mAdapter).saveState());
-        }else if (mAdapter instanceof GsonSaveStateAdapter)
-        {
-            outState.putString(KEY_SAVE_JSON,((GsonSaveStateAdapter) mAdapter).saveState());
-        }
-
-        super.onSaveInstanceState(outState);
-    }
 
     @Override
     public void setAdapter(RecyclerView.Adapter adapter) {
         super.setAdapter(adapter);
         mAdapter=adapter;
-        createFooterHolder();
+        addFooterHolder(createAdapterFooterHolder());
     }
-
-    public void setAdapter(SaveStateAbleAdapter saveStateAdapter) {
-        this.setAdapter((RecyclerView.Adapter) saveStateAdapter);
-    }
-
-    public void setAdapter(GsonSaveStateAdapter gsonSateAdapter) {
-        this.setAdapter((RecyclerView.Adapter) gsonSateAdapter);
-    }
-
-
-    //创建底部视图
-    private void createFooterHolder()
-    {
-        View view= LayoutInflater.from(getContext()).inflate(R.layout.footerview,getRecyclerView(),false);
-        mFooterHolder=new CommonFooterHolder(view);
-        addFooterHolder(mFooterHolder);
-    }
-
 
 
     @Override
@@ -229,18 +194,27 @@ public class BaseListFragment extends  RVListFragment {
     }
 
 
+    /**
+     * 清除刷新和加载更多状态
+     */
+    public void clearRequestState()
+    {
+        if (isRefreshing())
+        {
+            setRefreshing(false);
+        }
+        cancelLoadMore();
+    }
+
     protected void handleRequestError()
     {
         if (isRemoving())
         {
             return;
         }
-        if (isRefreshing())
-        {
-            setRefreshing(false);
-        }
-        int adapterItemCount=mAdapter.getItemCount();
+        clearRequestState();
 
+        int adapterItemCount=mAdapter.getItemCount();
         if (mSimpleEmptyViewHolder!=null)
         {
             mSimpleEmptyViewHolder.isClicked=false;
@@ -250,13 +224,13 @@ public class BaseListFragment extends  RVListFragment {
                 mSimpleEmptyViewHolder.showErrorText();
             }
         }
-
-        cancelLoadMore();
-
-        if (adapterItemCount>0)
-            mFooterHolder.mFooterText.setText("请求失败,点击重试");
-
+        if (mFooterHolder!=null)
+        {
+            if (adapterItemCount>0)
+                mFooterHolder.mFooterText.setText("请求失败,点击重试");
+        }
     }
+
 
 
     protected void handleRequestSuccess()
@@ -265,17 +239,17 @@ public class BaseListFragment extends  RVListFragment {
         {
             return;
         }
+
         if (isRefreshing())
         {
-            setRefreshing(false);
             showTopView("成功更新"+mAdapter.getItemCount()+"内容");
         }
+        clearRequestState();
+
         if (mSimpleEmptyViewHolder!=null)
         {
             mSimpleEmptyViewHolder.isClicked=false;
         }
-
-        cancelLoadMore();
     }
 
 
@@ -286,7 +260,10 @@ public class BaseListFragment extends  RVListFragment {
      */
     public void notifyRequestEnd(CharSequence footerText)
     {
-        mFooterHolder.end(footerText);
+        if (mFooterHolder!=null)
+        {
+            mFooterHolder.end(footerText);
+        }
         disableLoadMore();
     }
 
@@ -376,7 +353,6 @@ public class BaseListFragment extends  RVListFragment {
             mEmptyView.setGravity(Gravity.CENTER);
             mEmptyView.setCompoundDrawablesWithIntrinsicBounds(0,R.mipmap.ic_refresh,0,0);
             mEmptyView.setOnClickListener(this);
-
             //刚创建时隐藏View,并设置文本
             mEmptyView.setVisibility(View.INVISIBLE);
             mEmptyView.setText("加载错误,点击重新加载...");

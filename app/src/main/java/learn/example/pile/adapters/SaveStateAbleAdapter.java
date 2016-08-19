@@ -57,7 +57,7 @@ public abstract class SaveStateAbleAdapter<VH extends RecyclerView.ViewHolder,D 
         return mDataList;
     }
 
-    public List<D> saveState()
+    public  List<D> saveState()
     {
         return mDataList;
     }

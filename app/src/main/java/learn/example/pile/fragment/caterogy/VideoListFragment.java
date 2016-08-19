@@ -1,4 +1,4 @@
-package learn.example.pile.fragment;
+package learn.example.pile.fragment.caterogy;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,8 +13,8 @@ import java.util.List;
 
 import learn.example.pile.R;
 import learn.example.pile.adapters.VideoListAdapter;
-import learn.example.pile.factory.OpenEyeCommentFactory;
 import learn.example.pile.factory.OpenEyeVideoFactory;
+import learn.example.pile.fragment.base.BaseListFragment;
 import learn.example.pile.jsonbean.OpenEyeVideo;
 import learn.example.pile.net.IService;
 import learn.example.pile.net.OpenEyeService;

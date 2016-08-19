@@ -1,4 +1,4 @@
-package learn.example.pile.fragment;
+package learn.example.pile.fragment.comment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -6,17 +6,12 @@ import android.view.View;
 
 import com.google.gson.JsonObject;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import learn.example.pile.factory.CommentFactory;
 import learn.example.pile.factory.OpenEyeCommentFactory;
-import learn.example.pile.jsonbean.OpenEyeComment;
 import learn.example.pile.net.IService;
 import learn.example.pile.net.OpenEyeService;
 import learn.example.pile.object.Comment;
 import learn.example.pile.util.GsonHelper;
-import learn.example.pile.util.TimeUtil;
 
 /**
  * Created on 2016/8/5.
@@ -66,6 +61,8 @@ public class OpenEyeCommentFragment extends CommentFragment implements IService.
             JsonObject object = comment.getExtraMsg();
             if (object != null) {
                 nextPageUrl = GsonHelper.getAsString(object.get("nextPageUrl"), null);
+            }else {
+                nextPageUrl=null;
             }
             addComments(comment.getComments());
         }

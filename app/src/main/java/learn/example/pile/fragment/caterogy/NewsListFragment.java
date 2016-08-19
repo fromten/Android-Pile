@@ -1,4 +1,4 @@
-package learn.example.pile.fragment;
+package learn.example.pile.fragment.caterogy;
 
 
 import android.os.Bundle;
@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 
 import learn.example.pile.adapters.NewsListAdapter;
+import learn.example.pile.fragment.base.BaseListFragment;
 import learn.example.pile.jsonbean.NetEaseNews;
 import learn.example.pile.net.NetService;
 import learn.example.pile.net.NetEaseNewsService;

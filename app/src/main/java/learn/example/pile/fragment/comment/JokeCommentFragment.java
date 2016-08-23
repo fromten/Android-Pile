@@ -41,12 +41,12 @@ public class JokeCommentFragment extends CommentFragment implements IService.Cal
     private boolean hasMore;
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         Bundle args=getArguments();
         if (args==null)
         {
             return;
         }
+        super.onViewCreated(view, savedInstanceState);
         mJokeService=new JokeService();
         groupId=args.getLong(KEY_GROUP_ID);
         if (savedInstanceState==null)
@@ -85,6 +85,13 @@ public class JokeCommentFragment extends CommentFragment implements IService.Cal
     @Override
     public void onFailure(String message) {
         notifyError();
+    }
+
+
+    @Override
+    public void onRefresh() {
+        //重头开始
+        mJokeService.getComment(0,20,groupId,this);
     }
 
     @Override

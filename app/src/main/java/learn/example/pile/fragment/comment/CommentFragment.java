@@ -35,26 +35,51 @@ public class CommentFragment extends BaseListFragment {
         setAdapter(mCommentListAdapter);
     }
 
-    public void addComments(List<Comment.CommentItem> comments)
+    public final void addComments(List<Comment.CommentItem> comments)
     {
         mCommentListAdapter.addAll(comments);
     }
 
     @Override
-    protected View createTopView() {
+    protected final View createTopView() {
         return null;
     }
 
     @Override
-    protected View createEmptyView() {
+    protected final View createEmptyView() {
        mWaitEmptyViewHolder=new WaitEmptyViewHolder((ViewGroup) getView());
        return mWaitEmptyViewHolder.mRoot;
     }
 
-   
-    public void setEmptyViewText(CharSequence charSequence)
-    {
-        mWaitEmptyViewHolder.mEmptyView.setText(charSequence);
+    @Override
+    protected void handleRequestError() {
+        super.handleRequestError();
+
+        //当前不可见时,意味着当前adapter数据不为空,忽略处理
+        if (mWaitEmptyViewHolder.mRoot.getVisibility()==View.INVISIBLE)
+        {
+            return;
+        }
+        mWaitEmptyViewHolder.mEmptyView.setText("请求失败点击重试");
+        mWaitEmptyViewHolder.mRoot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //如果长度小于等于7,表示当前的文本为 "重新加载..."
+                if (mWaitEmptyViewHolder.mEmptyView.getText().length()<=7)
+                {
+                    return;
+                }
+                mWaitEmptyViewHolder.mEmptyView.setText("重新加载...");
+                onRefresh();
+            }
+        });
+    }
+
+    @Override
+    protected void handleRequestSuccess() {
+        super.handleRequestSuccess();
+        mWaitEmptyViewHolder.mEmptyView.setText(null);
+        mWaitEmptyViewHolder.mRoot.setOnClickListener(null);
     }
 
 

@@ -34,7 +34,7 @@ public class NetService implements IService{
 
             @Override
             public void onFailure(String msg) {
-                callback.onSuccess(msg);
+                callback.onFailure(msg);
                 remove(tag);
             }
         });

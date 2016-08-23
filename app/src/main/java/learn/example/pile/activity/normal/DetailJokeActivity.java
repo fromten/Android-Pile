@@ -59,12 +59,11 @@ public class DetailJokeActivity extends ToolBarActivity {
 
     public static class ExtraHeadCommentFragment extends JokeCommentFragment{
 
-        public final static String KEY_SAVE_SCROLL_POSITION="scrollposition";
+
 
         @Override
         public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
-
             JokeBean.DataBean.DataListBean.GroupBean group=((DetailJokeActivity)getActivity()).group;
             //复用
             JokeListAdapter adapter2=new JokeListAdapter();

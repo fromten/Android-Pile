@@ -1,5 +1,4 @@
 <resources>
-    <attr name="activityAnimationStyle" format="reference"/>
 
     <style name="SlideAnimationStyle">
         <item name="android:activityCloseEnterAnimation">@anim/anim_slide_left_in</item>
@@ -44,9 +43,11 @@
         　<item name="android:textColor">@color/black_light</item>
     </style>
 
-    <style name="CircleProgress" parent="Base.Widget.AppCompat.ProgressBar">
-        <item name="android:clickable">false</item>
-        <item name="android:focusable">false</item>
-        <item name="android:background">@drawable/circle_progress</item>
+    <style name="CircleProgress" parent="Widget.AppCompat.ProgressBar">
+        <item name="android:indeterminate">true</item>
+        <item name="android:indeterminateOnly">true</item>
+        <item name="android:duration">1000</item>
+        <item name="android:indeterminateBehavior">repeat</item>
+        <item name="android:indeterminateDrawable">@drawable/circle_progress</item>
     </style>
 </resources>

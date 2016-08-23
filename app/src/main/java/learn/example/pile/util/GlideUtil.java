@@ -21,9 +21,12 @@ public class GlideUtil {
 
 
     public static Bitmap matchViewWidth(Bitmap toFit, BitmapPool pool, int viewWidth, int viewHeight) {
-
+        Log.d("vrect", " viewWidth = [" + viewWidth + "], viewHeight = [" + viewHeight + "]");
         int bitmapWidth = toFit.getWidth();
         int bitmapHeight = toFit.getHeight();
+
+        Log.d("brect", " bitmapWidth = [" + bitmapWidth + "], bitmapHeight = [" + bitmapHeight + "]");
+
         if (bitmapWidth == viewWidth) {
             return toFit;
         }
@@ -32,7 +35,7 @@ public class GlideUtil {
         final float widthPercent = viewWidth / bitmapWidth;
         final int desireHeight = (int) (bitmapHeight*widthPercent);
 
-        Bitmap.Config config = getSafeConfig(toFit);
+        Bitmap.Config config = Bitmap.Config.ARGB_4444 ;
         Bitmap toReuse = pool.get(viewWidth, desireHeight, config);
         if (toReuse == null) {
             toReuse = Bitmap.createBitmap(viewWidth, desireHeight, config);
@@ -46,9 +49,6 @@ public class GlideUtil {
         return toReuse;
     }
 
-    private static Bitmap.Config getSafeConfig(Bitmap toFit) {
-        return toFit.getConfig() == null ? Bitmap.Config.ARGB_8888 : toFit.getConfig();
-    }
 
 
 }

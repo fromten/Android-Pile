@@ -9,6 +9,7 @@ import android.graphics.Rect;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -23,15 +24,18 @@ import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.bumptech.glide.load.resource.bitmap.TransformationUtils;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.load.resource.transcode.BitmapToGlideDrawableTranscoder;
+import com.bumptech.glide.request.FutureTarget;
 import com.bumptech.glide.request.RequestFutureTarget;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.BaseTarget;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.bumptech.glide.request.target.ImageViewTarget;
 import com.bumptech.glide.request.target.SizeReadyCallback;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.wasabeef.glide.transformations.CropTransformation;
 import learn.example.pile.R;
 import learn.example.pile.adapters.ViewPagerAdapter;
 import learn.example.pile.util.GlideUtil;
@@ -56,8 +60,6 @@ public class PhotoWatcherLayout extends FrameLayout implements ViewPager.OnPageC
     private PhotoWatcherAdapter mPhotoWatcherAdapter;
 
 
-    private FitTransform mFitTransform;
-
 
     public PhotoWatcherLayout(Context context) {
         this(context,null);
@@ -77,7 +79,6 @@ public class PhotoWatcherLayout extends FrameLayout implements ViewPager.OnPageC
         number= (TextView) findViewById(R.id.number);
         content= (TextView)findViewById(R.id.content);
 
-        mFitTransform=new FitTransform(getContext());
     }
 
 
@@ -99,9 +100,39 @@ public class PhotoWatcherLayout extends FrameLayout implements ViewPager.OnPageC
                 Glide.with(getContext())
                         .load(url)
                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                        .error(R.mipmap.img_error)
-                        .bitmapTransform(mFitTransform)
-                        .into(imageView);
+                        .dontTransform()
+                        .into(new GlideDrawableImageViewTarget(imageView)
+                        {
+                            @Override
+                            protected void setResource(GlideDrawable resource) {
+                                PhotoView photoView= (PhotoView) this.getView();
+                                int dwidth=resource.getIntrinsicWidth();
+                                int dheight=resource.getIntrinsicHeight();
+                                int vwidth=photoView.getWidth();
+                                int vheight=photoView.getHeight();
+
+                                float widthPercentage=vwidth/(float)dwidth;
+                                float heightPercentage= vheight/(float)dheight;
+
+                                float minPercentage=Math.min(widthPercentage,heightPercentage);
+
+                                float scale;
+                                if (dheight>vheight)
+                                {   //如果图片大于view高度,缩放图片到view宽度
+                                    //因为photoView,默认矩阵缩放类型会适应屏幕宽高度,最后除于minPercentage
+                                    scale=(float) vwidth/dwidth/minPercentage;
+                                }else {
+                                    //fitCenter
+                                    int desireWidth = (int) (minPercentage * dwidth);
+                                    scale= (float)vwidth/desireWidth;
+                                }
+                                Log.d("tag", String.valueOf(scale));
+                                photoView.setImageDrawable(resource);
+                                photoView.setScaleLevels(scale*0.5f,scale*1,scale*2);
+                                photoView.setScale(scale,0,0,false);
+                            }
+                        });
+
             }
             mViewPagerAdapter=new ViewPagerAdapter(viewList);
             mViewPager.setAdapter(mViewPagerAdapter);
@@ -128,8 +159,6 @@ public class PhotoWatcherLayout extends FrameLayout implements ViewPager.OnPageC
         PhotoView photoView = new FitScalePhotoView(getContext());
         photoView.setMinimumScale(0.5f);
         photoView.setOnViewTapListener(mOnViewTapListener);
-        photoView.setScaleType(ImageView.ScaleType.CENTER);
-        photoView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         return photoView;
     }
 
@@ -235,31 +264,5 @@ public class PhotoWatcherLayout extends FrameLayout implements ViewPager.OnPageC
         }
     }
 
-    public static class FitTransform extends BitmapTransformation {
 
-
-        public FitTransform(Context context) {
-            super(context);
-        }
-
-        @Override
-        protected Bitmap transform(BitmapPool pool, Bitmap toTransform, int outWidth, int outHeight) {
-            int height=toTransform.getHeight();
-            if (height>outHeight)
-            {
-                return GlideUtil.matchViewWidth(toTransform,pool,outWidth,outHeight);
-            }
-            return TransformationUtils.fitCenter(toTransform,pool,outWidth,outHeight);
-        }
-
-        public Bitmap.Config getSafeConfig(Bitmap toFit)
-        {
-            return toFit.getConfig()==null? Bitmap.Config.ARGB_8888:toFit.getConfig();
-        }
-
-        @Override
-        public String getId() {
-            return "fit.view.transform";
-        }
-    }
 }

@@ -26,8 +26,8 @@ public class FitScalePhotoView extends PhotoView {
     public void setImageDrawable(Drawable drawable) {
         if (drawable!=null)
         {
-            int screenWidth=new DeviceInfo((Activity) getContext()).SCREEN_WIDTH;
-            float scale=screenWidth/drawable.getIntrinsicWidth();
+            int width=getWidth()-getPaddingLeft()-getPaddingRight();
+            float scale=width/drawable.getIntrinsicWidth();
             setMaximumScale(Math.max(DEFAULT_MAX_SCALE,scale));
         }
         super.setImageDrawable(drawable);

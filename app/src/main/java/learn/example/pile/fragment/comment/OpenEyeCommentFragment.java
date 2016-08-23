@@ -35,17 +35,19 @@ public class OpenEyeCommentFragment extends CommentFragment implements IService.
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         Bundle args = getArguments();
-        if (args != null) {
-            id = args.getInt(KEY_VIDEO_ID);
-            mOpenEyeService = new OpenEyeService();
-            if (savedInstanceState != null) {
-                nextPageUrl = savedInstanceState.getString(KEY_NEXT_PAGE_URL);
-            } else {
-                mOpenEyeService.getComments(id, this);
-            }
+        if (args == null) {
+            return;
         }
+        super.onViewCreated(view, savedInstanceState);
+        id = args.getInt(KEY_VIDEO_ID);
+        mOpenEyeService = new OpenEyeService();
+        if (savedInstanceState != null) {
+            nextPageUrl = savedInstanceState.getString(KEY_NEXT_PAGE_URL);
+        } else {
+            mOpenEyeService.getComments(id, this);
+        }
+
     }
 
     @Override
@@ -56,13 +58,13 @@ public class OpenEyeCommentFragment extends CommentFragment implements IService.
 
     @Override
     public void onSuccess(String data) {
-        Comment comment = CommentFactory.newInstance().produceComment(OpenEyeCommentFactory.class,data);
+        Comment comment = CommentFactory.newInstance().produceComment(OpenEyeCommentFactory.class, data);
         if (comment != null) {
             JsonObject object = comment.getExtraMsg();
             if (object != null) {
                 nextPageUrl = GsonHelper.getAsString(object.get("nextPageUrl"), null);
-            }else {
-                nextPageUrl=null;
+            } else {
+                nextPageUrl = null;
             }
             addComments(comment.getComments());
         }
@@ -73,6 +75,11 @@ public class OpenEyeCommentFragment extends CommentFragment implements IService.
     @Override
     public void onFailure(String message) {
         notifyError();
+    }
+
+    @Override
+    public void onRefresh() {
+        mOpenEyeService.getComments(id, this);
     }
 
     @Override

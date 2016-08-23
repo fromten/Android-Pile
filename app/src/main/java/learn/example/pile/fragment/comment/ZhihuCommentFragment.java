@@ -15,7 +15,7 @@ import learn.example.pile.object.Comment;
  */
 public class ZhihuCommentFragment extends CommentFragment implements IService.Callback<String> {
 
-    private static final String KEY_DOCID="zhihudocid";
+    private static final String KEY_DOCID = "zhihudocid";
 
     private int docID;
     private ZhihuContentService mCommentService;
@@ -25,7 +25,7 @@ public class ZhihuCommentFragment extends CommentFragment implements IService.Ca
     public static ZhihuCommentFragment newInstance(int zhihuDocID) {
 
         Bundle args = new Bundle();
-        args.putInt(KEY_DOCID,zhihuDocID);
+        args.putInt(KEY_DOCID, zhihuDocID);
         ZhihuCommentFragment fragment = new ZhihuCommentFragment();
         fragment.setArguments(args);
         return fragment;
@@ -33,25 +33,22 @@ public class ZhihuCommentFragment extends CommentFragment implements IService.Ca
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        Bundle args=getArguments();
-        if (args!=null)
-        {
-            docID=args.getInt(KEY_DOCID);
-            mCommentService=new ZhihuContentService();
-            if (savedInstanceState==null)
-            {
-                mCommentService.getLongComment(docID,this);
-            }
+        Bundle args = getArguments();
+        if (args == null) {
+            return;
         }
-
+        super.onViewCreated(view, savedInstanceState);
+        docID = args.getInt(KEY_DOCID);
+        mCommentService = new ZhihuContentService();
+        if (savedInstanceState == null) {
+            mCommentService.getLongComment(docID, this);
+        }
     }
 
     @Override
     public void onSuccess(String data) {
-        Comment comment=CommentFactory.newInstance().produceComment(ZhihuCommentFactory.class,data);
-        if (comment!=null)
-        {
+        Comment comment = CommentFactory.newInstance().produceComment(ZhihuCommentFactory.class, data);
+        if (comment != null) {
             addComments(comment.getComments());
         }
         notifySuccess();
@@ -62,25 +59,28 @@ public class ZhihuCommentFragment extends CommentFragment implements IService.Ca
 
     @Override
     public void onFailure(String message) {
-         notifyError();
+        notifyError();
 
         //请求长评论失败后请求短评论
-         requestShortComment();
+        requestShortComment();
     }
 
     @Override
     public void onDestroy() {
-        if (mCommentService!=null)
-         mCommentService.cancelAll();
+        if (mCommentService != null)
+            mCommentService.cancelAll();
         super.onDestroy();
     }
 
-    private void requestShortComment()
-    {
-        if (!hadRequestedShortComment&&mCommentService!=null)
-        {
-            mCommentService.getShortComment(docID,this);
-            hadRequestedShortComment=true;
+    @Override
+    public void onRefresh() {
+        mCommentService.getLongComment(docID, this);
+    }
+
+    private void requestShortComment() {
+        if (!hadRequestedShortComment && mCommentService != null) {
+            mCommentService.getShortComment(docID, this);
+            hadRequestedShortComment = true;
             notifyRequestEnd();
         }
     }

@@ -80,6 +80,12 @@ public class NetEaseCommentFragment extends CommentFragment implements NetEaseNe
     }
 
     @Override
+    public void onRefresh() {
+        if (mNetEaseNewsService!=null)
+        mNetEaseNewsService.getHotComment(boardId,docId,0,10,this);
+    }
+
+    @Override
     public void onLoadMore() {
        currentPos+=MAX_LEN;
        if (mNetEaseNewsService!=null)

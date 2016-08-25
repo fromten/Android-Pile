@@ -13,7 +13,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 
 import jp.wasabeef.glide.transformations.CropSquareTransformation;
-import jp.wasabeef.glide.transformations.CropTransformation;
 import learn.example.pile.R;
 import learn.example.pile.jsonbean.JokeBean;
 import learn.example.pile.ui.CircleViewTarget;
@@ -108,14 +107,16 @@ public class JokeListAdapter extends GsonSaveStateAdapter<JokeBean.DataBean.Data
 
 
     public void bindMulti(JokeMultipleViewHolder holder, JokeBean.DataBean.DataListBean.GroupBean item) {
-        int len = item.getThumb_image_list().length;
+        int len = item.getLarge_image_list().length;
 
         String[] urls = new String[len];
+        boolean[] isGif=new boolean[len];
         for (int i = 0; i < len; i++) {
-            JokeBean.DataBean.DataListBean.GroupBean.ImagesBean u = item.getThumb_image_list()[i];
-            urls[i] = u.getUrl_list()[0].getUrl();
+            JokeBean.DataBean.DataListBean.GroupBean.ImagesBean u = item.getLarge_image_list()[i];
+            urls[i] = u.getUrl()!=null?u.getUrl():u.getUrl_list()[1].getUrl();
+            isGif[i]=u.is_gif();
         }
-        holder.updateViews(urls);
+        holder.updateViews(urls,isGif);
     }
 
     public void bindSingle(JokeSingleViewHolder holder, JokeBean.DataBean.DataListBean.GroupBean item) {
@@ -207,7 +208,7 @@ public class JokeListAdapter extends GsonSaveStateAdapter<JokeBean.DataBean.Data
     public static class JokeMultipleViewHolder extends JokeViewHolder {
 
         private NineGridLayout mGridLayout;
-        private String urls[];
+
 
         public JokeMultipleViewHolder(ViewGroup parent) {
             this(LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_joke_multiple, parent, false));
@@ -218,20 +219,19 @@ public class JokeListAdapter extends GsonSaveStateAdapter<JokeBean.DataBean.Data
             mGridLayout= (NineGridLayout) itemView.findViewById(R.id.table);
             mGridLayout.setItemClickListener(new NineGridLayout.OnItemClickListener() {
                 @Override
-                public void onItemClick(View view, ViewGroup parent, int position) {
-                    ActivityLauncher.startPhotoActivityForMuliti(view.getContext(),urls,position);
+                public void onItemClick(View view, ViewGroup parent, int position, String[] url) {
+                    ActivityLauncher.startPhotoActivityForMuliti(view.getContext(),url,position);
                 }
             });
         }
 
-        public void updateViews(String[] urls)
+        public void updateViews(String[] urls,boolean[] isgif)
         {
             if (urls==null||urls.length<0)
             {
                 return;
             }
-            this.urls=urls;
-            mGridLayout.updateViews(urls);
+            mGridLayout.updateViews(urls,isgif);
         }
 
     }

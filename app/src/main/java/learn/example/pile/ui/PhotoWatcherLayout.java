@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -105,31 +106,15 @@ public class PhotoWatcherLayout extends FrameLayout implements ViewPager.OnPageC
                         {
                             @Override
                             protected void setResource(GlideDrawable resource) {
+
                                 PhotoView photoView= (PhotoView) this.getView();
-                                int dwidth=resource.getIntrinsicWidth();
-                                int dheight=resource.getIntrinsicHeight();
-                                int vwidth=photoView.getWidth();
-                                int vheight=photoView.getHeight();
-
-                                float widthPercentage=vwidth/(float)dwidth;
-                                float heightPercentage= vheight/(float)dheight;
-
-                                float minPercentage=Math.min(widthPercentage,heightPercentage);
-
-                                float scale;
-                                if (dheight>vheight)
-                                {   //如果图片大于view高度,缩放图片到view宽度
-                                    //因为photoView,默认矩阵缩放类型会适应屏幕宽高度,最后除于minPercentage
-                                    scale=(float) vwidth/dwidth/minPercentage;
-                                }else {
-                                    //fitCenter
-                                    int desireWidth = (int) (minPercentage * dwidth);
-                                    scale= (float)vwidth/desireWidth;
-                                }
-                                Log.d("tag", String.valueOf(scale));
                                 photoView.setImageDrawable(resource);
-                                photoView.setScaleLevels(scale*0.5f,scale*1,scale*2);
-                                photoView.setScale(scale,0,0,false);
+
+                                RectF rectF=photoView.getDisplayRect();
+                                int vwidth=photoView.getWidth();
+                                float widthPercent=(float)vwidth/rectF.width();
+                                photoView.setScaleLevels(widthPercent*0.5f,widthPercent*1,widthPercent*2);
+                                photoView.setScale(widthPercent,0,0,false);//缩放匹配宽度
                             }
                         });
 

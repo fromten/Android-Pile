@@ -147,15 +147,24 @@ public class JokeBean {
                     return is_video;
                 }
 
-                public ImagesBean[] getThumb_image_list() {
+                public ImagesBean[] getLarge_image_list() {
                     return large_image_list;
                 }
 
                 public static class ImagesBean {
                     UrlBean[] url_list;
-
+                    boolean is_gif;
+                    String url;
                     public UrlBean[] getUrl_list() {
                         return url_list;
+                    }
+
+                    public boolean is_gif() {
+                        return is_gif;
+                    }
+
+                    public String getUrl() {
+                        return url;
                     }
 
                     public static class UrlBean{

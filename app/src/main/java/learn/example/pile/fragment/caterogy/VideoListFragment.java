@@ -19,6 +19,7 @@ import learn.example.pile.jsonbean.OpenEyeVideo;
 import learn.example.pile.net.IService;
 import learn.example.pile.net.OpenEyeService;
 import learn.example.pile.object.OpenEyes;
+import learn.example.pile.ui.RecyclerViewImprove;
 import learn.example.pile.util.TimeUtil;
 
 /**
@@ -143,7 +144,7 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
         mService.getCategoryVideoDateSort(categoryId,VideoListFragment.this);
     }
 
-    public class CategoryViewHolder extends HeadHolder implements View.OnClickListener{
+    public class CategoryViewHolder extends RecyclerViewImprove.HeadHolder implements View.OnClickListener{
 
         public CategoryViewHolder()
         {
@@ -160,7 +161,7 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
         }
 
         @Override
-        public void onBindHolder(RecyclerView.Adapter adapter) {
+        public void viewAppear(RecyclerView.Adapter adapter) {
 
         }
 

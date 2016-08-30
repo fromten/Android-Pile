@@ -6,10 +6,9 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
+
+
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,8 +34,7 @@ import learn.example.pile.util.GlideUtil;
 public class NineGridLayout extends ViewGroup implements View.OnClickListener{
 
 
-    private static final String TAG = "NineGridLayout";
-    private int screenWidth;
+
     private int childWidth;
     private int childHeight;
     private int childMargin;
@@ -46,7 +44,7 @@ public class NineGridLayout extends ViewGroup implements View.OnClickListener{
     private CropSquareTransformation mCropSquareTransformation;
 
     private String[] urls;
-    private boolean[] isGif;
+
 
 
     private static final int ROW_COUNT=3;
@@ -70,9 +68,12 @@ public class NineGridLayout extends ViewGroup implements View.OnClickListener{
     @Override
     protected void onMeasure(int widthSpec, int heightSpec) {
         int width=MeasureSpec.getSize(widthSpec);
+        int hPadding=getPaddingLeft()+getPaddingRight();
+        width=width-hPadding;
 
-        childWidth=width/3;
+        childWidth=width/COLUMN_COUNT;
         childMargin=childWidth/40;
+
 
         childHeight=childWidth+20;
 
@@ -88,24 +89,18 @@ public class NineGridLayout extends ViewGroup implements View.OnClickListener{
             int childHeightSpec= MeasureSpec.makeMeasureSpec(childHeight,MeasureSpec.EXACTLY);
             getChildAt(i).measure(childWidthSpec,childHeightSpec);
         }
-
-
-        int hPadding=getPaddingLeft()+getPaddingRight();
         int vPadding=getPaddingTop()+getPaddingBottom();
-        setMeasuredDimension(width+hPadding,height+vPadding);
-
-
+        setMeasuredDimension(width,height+vPadding);
     }
+
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         int childCount=getChildCount();
 
-
         int pl=getPaddingLeft();
-        int pr=getPaddingRight();
         int pt=getPaddingTop();
-        int pb=getPaddingBottom();
+
         for (int i=0;i<childCount;i++)
         {
             View child=getChildAt(i);
@@ -113,12 +108,12 @@ public class NineGridLayout extends ViewGroup implements View.OnClickListener{
             int column=i%COLUMN_COUNT;
             int row=i/COLUMN_COUNT;
 
-            int childLeft=column*childWidth+childMargin;
-            int childTop=row*childHeight+childMargin;
+            int childLeft=column*childWidth;
+            int childTop=row*childHeight;
             int childRight=childLeft+childWidth-childMargin;
             int childBottom=childTop+childHeight-childMargin;
 
-            child.layout(childLeft+pl,childTop+pt,childRight-pr,childBottom-pb);
+            child.layout(childLeft+pl,childTop+pt,childRight,childBottom);
         }
     }
 
@@ -173,7 +168,6 @@ public class NineGridLayout extends ViewGroup implements View.OnClickListener{
 
 
         this.addView(frameLayout);
-     //   frameLayout.setPadding(0,0,childMargin,childMargin);
 
         return frameLayout;
     }

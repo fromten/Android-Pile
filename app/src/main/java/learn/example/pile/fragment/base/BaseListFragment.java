@@ -18,7 +18,8 @@ import android.widget.TextView;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import learn.example.pile.R;
-import learn.example.uidesign.DividerItemDecoration;
+import learn.example.pile.ui.RecyclerViewImprove;
+import learn.example.pile.ui.decoration.DividerItemDecoration;
 
 /**
  * Created on 2016/7/17.
@@ -78,7 +79,7 @@ public class BaseListFragment extends  SaveAdapterStateFragment {
      * @see #setAdapter(RecyclerView.Adapter)  方法中调用此方法
      * @return FooterHolder
      */
-    protected FooterHolder createAdapterFooterHolder()
+    protected RecyclerViewImprove.FooterHolder createAdapterFooterHolder()
     {
         mFooterHolder=new CommonFooterHolder();
         return mFooterHolder;
@@ -274,14 +275,14 @@ public class BaseListFragment extends  SaveAdapterStateFragment {
     }
 
 
-    private class CommonFooterHolder extends FooterHolder implements View.OnClickListener{
+    private class CommonFooterHolder extends RecyclerViewImprove.FooterHolder implements View.OnClickListener{
         public ProgressBar mFooterProgress;
         public TextView mFooterText;
         private boolean inEnd=false;
 
         public CommonFooterHolder()
         {
-            this(LayoutInflater.from(getContext()).inflate(R.layout.footerview,getRecyclerView(),false));
+            this(LayoutInflater.from(getContext()).inflate(R.layout.rv_footerview,getRecyclerView(),false));
         }
 
         private CommonFooterHolder(View itemView) {
@@ -292,7 +293,7 @@ public class BaseListFragment extends  SaveAdapterStateFragment {
         }
 
         @Override
-        public void onBindHolder(RecyclerView.Adapter adapter) {
+        public void viewAppear(RecyclerView.Adapter adapter) {
             if (adapter.getItemCount()==0)
             {
                 hide();

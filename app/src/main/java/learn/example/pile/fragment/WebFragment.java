@@ -1,19 +1,27 @@
 package learn.example.pile.fragment;
 
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.DownloadListener;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
+import java.io.IOException;
+
 import learn.example.pile.R;
+import learn.example.pile.util.HtmlTagBuild;
+import learn.example.pile.util.IOutil;
 
 /**
  * Created on 2016/7/27.
@@ -23,6 +31,7 @@ public class WebFragment extends Fragment {
     private WebView mWebView;
     private FrameLayout mRootLayout;
     private ProgressBar mProgressBar;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -53,6 +62,22 @@ public class WebFragment extends Fragment {
     public void loadLocalData(String html) {
         mWebView.loadDataWithBaseURL(null, html, "text/html", "UTF-8", null);
     }
+
+
+    /**
+     * 加载Html进入webview,不同loadLocalData()这会应用App基础的css样式
+     * @param html
+     * @see assets folder  app.css
+     */
+    public void loadDataWithDefCss(String html)
+    {
+        String link= HtmlTagBuild.cssLinkTag("app.css");
+        String insertCss=html.replaceFirst("</head>",link+"</head>");
+        Log.d("html",insertCss );
+        mWebView.loadDataWithBaseURL("file:///android_asset/", insertCss, "text/html", "UTF-8", null);
+    }
+
+
 
     public void loadUrl(String url) {
         mWebView.loadUrl(url);

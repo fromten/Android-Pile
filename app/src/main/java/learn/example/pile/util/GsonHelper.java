@@ -10,7 +10,7 @@ public class GsonHelper {
     public static String getAsString(JsonElement element,String defString)
     {
         try {
-            return element==null?defString:element.getAsString();
+            return element==null||element.isJsonNull()?defString:element.getAsString();
         }catch (ClassCastException e)
         {
             e.printStackTrace();

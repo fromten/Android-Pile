@@ -14,7 +14,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/content"
         android:background="@color/joke_background"
-        android:padding="@dimen/small_padding"
         android:layout_below="@+id/text">
 
         <ImageView

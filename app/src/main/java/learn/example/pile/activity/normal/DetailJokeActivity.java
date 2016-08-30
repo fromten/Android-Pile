@@ -14,6 +14,7 @@ import learn.example.pile.activity.base.ToolBarActivity;
 import learn.example.pile.adapters.JokeListAdapter;
 import learn.example.pile.fragment.comment.JokeCommentFragment;
 import learn.example.pile.jsonbean.JokeBean;
+import learn.example.pile.ui.RecyclerViewImprove;
 
 /**
  * Created on 2016/8/14.
@@ -77,9 +78,9 @@ public class DetailJokeActivity extends ToolBarActivity {
                 ((ViewGroup)holder.itemView).removeView(bottomView);
             }
             //添加Adapter头部
-            addHeadHolder(new HeadHolder(holder.itemView) {
+            addHeadHolder(new RecyclerViewImprove.HeadHolder(holder.itemView) {
                 @Override
-                public void onBindHolder(RecyclerView.Adapter adapter) {
+                public void viewAppear(RecyclerView.Adapter adapter) {
 
                 }
             });

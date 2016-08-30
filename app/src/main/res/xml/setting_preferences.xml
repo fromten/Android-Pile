@@ -7,9 +7,5 @@
         <Preference android:title="磁盘缓存大小:"/>
     </PreferenceCategory>
 
-    <learn.example.uidesign.SpinnerPreference
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        app:entries="@array/setting_spinner"
-        app:entryValues="@array/setting_spinner"/>
 
 </PreferenceScreen>

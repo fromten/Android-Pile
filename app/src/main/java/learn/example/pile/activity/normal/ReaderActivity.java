@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -31,6 +32,7 @@ import learn.example.pile.fragment.WebFragment;
 import learn.example.pile.fragment.comment.ZhihuCommentFragment;
 import learn.example.pile.html.ImageClickHandler;
 import learn.example.pile.html.NetEaseHtml;
+import learn.example.pile.html.VideoClickHandler;
 import learn.example.pile.html.ZhihuHtml;
 import learn.example.pile.jsonbean.ZhihuNewsContent;
 import learn.example.pile.net.IService;
@@ -331,13 +333,21 @@ public class ReaderActivity extends AppCompatActivity  {
                     setWebProgressVisibility(View.INVISIBLE);
 
 
-                    //添加网页图片点击监听
+                    //启动JS交互
                     mWebFragment.getWebView().getSettings().setJavaScriptEnabled(true);
-                    ImageClickHandler handler=new ImageClickHandler(ReaderActivity.this);
-                    mWebFragment.getWebView().addJavascriptInterface(handler,handler.getName());
-                    String html=new NetEaseHtml(netEaseDocId,res).getHtml();
-                    html+= HtmlTagBuild.jsTag(handler.getClickJS());
-                    mWebFragment.loadLocalData(html);
+
+                    String originHtml=new NetEaseHtml(netEaseDocId,res).toString();
+
+
+                    ImageClickHandler imageHandler=new ImageClickHandler(ReaderActivity.this);
+                    mWebFragment.getWebView().addJavascriptInterface(imageHandler,imageHandler.getName());
+                    String imageClickJs= HtmlTagBuild.jsTag(imageHandler.getClickJS());
+
+                    VideoClickHandler videoHandler=new VideoClickHandler(ReaderActivity.this);
+                    String videoClickJs=HtmlTagBuild.jsTag(videoHandler.videoClickJS());
+                    mWebFragment.getWebView().addJavascriptInterface(videoHandler,videoHandler.getName());
+
+                    mWebFragment.loadDataWithDefCss(originHtml+imageClickJs+videoClickJs);
                     showMenuItem();
                 }
                 @Override

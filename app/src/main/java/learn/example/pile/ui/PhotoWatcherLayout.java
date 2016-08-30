@@ -114,7 +114,7 @@ public class PhotoWatcherLayout extends FrameLayout implements ViewPager.OnPageC
                                 int vwidth=photoView.getWidth();
                                 float widthPercent=(float)vwidth/rectF.width();
                                 photoView.setScaleLevels(widthPercent*0.5f,widthPercent*1,widthPercent*2);
-                                photoView.setScale(widthPercent,0,0,false);//缩放匹配宽度
+                                photoView.setScale(widthPercent,0,0,false);//缩放匹配view宽度
                             }
                         });
 
@@ -141,7 +141,7 @@ public class PhotoWatcherLayout extends FrameLayout implements ViewPager.OnPageC
     }
 
     public PhotoView createPhotoView(){
-        PhotoView photoView = new FitScalePhotoView(getContext());
+        PhotoView photoView = new PhotoView(getContext());
         photoView.setMinimumScale(0.5f);
         photoView.setOnViewTapListener(mOnViewTapListener);
         return photoView;

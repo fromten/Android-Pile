@@ -22,7 +22,7 @@ import learn.example.pile.R;
 import learn.example.pile.activity.base.FullScreenActivity;
 import learn.example.pile.fragment.comment.OpenEyeCommentFragment;
 import learn.example.pile.object.OpenEyes;
-import learn.example.uidesign.VolumeProgressView;
+import learn.example.pile.ui.VolumeProgressView;
 
 /**
  * Created on 2016/5/26.

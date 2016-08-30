@@ -22,47 +22,33 @@ public class NetEaseHtml {
         this.docID=docID;
     }
 
-    public String getHtml()
+    @Override
+    public String toString()
     {
         StringBuilder builder=new StringBuilder();
         JsonObject object=new JsonParser().parse(res).getAsJsonObject();
         object=object.getAsJsonObject(docID);
+
+        builder.append("<html lang=\"zh-cn\">\n");
         builder.append(insertHead());
-        builder.append("<div>");
+
+        builder.append("<body>");
+        builder.append("<div class='main'>");
         String title= GsonHelper.getAsString(object.get("title"),null);
         builder.append(insertTitle(title));
         String body= GsonHelper.getAsString(object.get("body"),null);
         JsonArray array=object.getAsJsonArray("img");
         body=insertImages(body,array);
+        body=insertVideo(body,object.getAsJsonArray("video"));
         builder.append(body);
         builder.append("</div>");
+        builder.append("</body>");
+        builder.append("</html>");
         return builder.toString();
     }
     private String insertHead()
     {
-        String css="img{\n" +
-                "  border: 0;\n" +
-                "  vertical-align: middle;\n" +
-                "  color: transparent;\n" +
-                "  font-size: 0;\n" +
-                "  max-width: 100%;\n" +
-                "  display: block;\n" +
-                "  marginTop: 20px auto;\n"+
-                "}"+
-                " p{" +
-                " text-align: justify;\n"+
-                " color: #333333;}\n"
-                +"div div.p{\n" +
-                " text-align:justify;\n" +
-                " text-justify: inter-word;"+
-                " overflow: hidden;"+
-                " display: inline-block;"+
-                " margin-left : 10px;\n" +
-                " margin-right: 10px;\n" +
-                " align : justify;\n" +
-                " }";
-
-        return HtmlTagBuild.headTag(HtmlTagBuild.styleTag(css));
+        return HtmlTagBuild.headTag("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">");
     }
 
     private String insertTitle(String title)
@@ -82,14 +68,43 @@ public class NetEaseHtml {
         {
             JsonObject object= (JsonObject) element;
             String alt=GsonHelper.getAsString(object.get("alt"),null);
-            String pixel=GsonHelper.getAsString(object.get("pixel"),null);
             String ref=GsonHelper.getAsString(object.get("ref"),null);
             String src=GsonHelper.getAsString(object.get("src"),null);
 
             String imageTag=HtmlTagBuild.imageTag(0,0,src);
-            imageTag+=HtmlTagBuild.tag("strong",null,alt);
+            imageTag+=HtmlTagBuild.tag("b",null,"(图片)"+alt);
             oldBody=oldBody.replace(ref,imageTag);
+        }
+        newBody=oldBody;
+        return newBody;
+    }
 
+    private String insertVideo(String oldBody,JsonArray array)
+    {
+        if (array==null)
+        {
+            return oldBody;
+        }
+        String newBody;
+        for (JsonElement element:array)
+        {
+            JsonObject object= (JsonObject) element;
+            String alt=GsonHelper.getAsString(object.get("alt"),null);
+            String ref=GsonHelper.getAsString(object.get("ref"),null);
+            String cover=GsonHelper.getAsString(object.get("cover"),null);
+            String mp4=GsonHelper.getAsString(object.get("mp4_url"),null);
+
+            String image1Attr=HtmlTagBuild.attrs("class","videoic","src","image_playbutton.png");
+            String image1Tag=HtmlTagBuild.tag("image",image1Attr,null);
+
+            String image2Attr=HtmlTagBuild.attrs("class","cover","src",cover);
+            String image2Tag=HtmlTagBuild.tag("image",image2Attr,null);
+
+            String divAttr=HtmlTagBuild.attrs("class","videowrap","mp4",mp4);
+            String div=HtmlTagBuild.tag("div",divAttr,image1Tag+image2Tag);
+
+            div+=HtmlTagBuild.tag("b",null,"(视频)"+alt);
+            oldBody=oldBody.replace(ref,div);
         }
         newBody=oldBody;
         return newBody;

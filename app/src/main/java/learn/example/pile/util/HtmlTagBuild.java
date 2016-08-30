@@ -1,14 +1,12 @@
 package learn.example.pile.util;
 
-import java.util.Locale;
 
 /**
  * Created on 2016/7/27.
  */
 public class HtmlTagBuild {
 
-    private static final String TAG="<%s %s>%s </%s>";
-    private static final String ATTR="%s='%s'";
+
 
     public static String styleTag(String css)
     {
@@ -48,25 +46,58 @@ public class HtmlTagBuild {
      * 生成Xml标签
      * @param tagName 标签名字
      * @param attrs 标签属性
-     * @param wrapContent 标签内容
+     * @param wrapContent 标签文本
      * @return 完整的XML标签
      */
     public static String tag(String tagName,String attrs,String wrapContent)
     {
-
-        String wrap=TextUtil.checkString(wrapContent,"");
-        return String.format(Locale.CHINA,TAG,tagName,attrs,wrap,tagName);
+        String tag;
+        if (attrs==null)
+        {
+            tag="<"+tagName+">";
+        }else {
+            tag="<"+tagName+" "+attrs+">";
+        }
+        if (wrapContent!=null)
+        {
+            tag+=wrapContent;
+        }
+        return tag+"</"+tagName+">";
     }
 
+
     /**
-     * 生成属性参数,如 attr("width","50") ,return width='50'
+     * 生成属性,默认对应 属性-值
+     * @param args[偶数] 属性名字
+     * @param args[奇数] 属性值
+     * @return 完整的属性
+     * @throws IllegalArgumentException 如果args数量不等于偶数,无法匹配
+     */
+    public static String attrs(String... args)
+    {
+        if (args.length%2!=0)
+        {
+            throw new IllegalArgumentException("Expect valid count but count of the args is "+ args.length);
+        }
+        int count=args.length;
+        String result="";
+        for (int i=0;i<count;i+=2)
+        {
+            result+=attr(args[i],args[i+1]);
+        }
+        return result;
+    }
+
+
+    /**
+     * 生成属性,默认对应 属性-值
      * @param attrName 属性名字
      * @param value 属性值
      * @return 完整的属性
      */
     public static String attr(String attrName,String value)
     {
-        return String.format(Locale.CHINA,ATTR,attrName,value);
+        return String.format("%s='%s' ",attrName,value);
     }
 
 

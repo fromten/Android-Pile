@@ -43,7 +43,7 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
               {
                   len+=file.length();
               }
-              if (len>=10485760)//10M
+              if (len>=3145728)//3M
               {
                   for (File file:mDir.listFiles())
                   {

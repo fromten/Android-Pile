@@ -5,7 +5,7 @@ package learn.example.pile.util;
  */
 public class TextUtil {
 
-    public static String firstSentence(String text)
+    public static String splitFirstSentence(String text)
     {
         String[] str=sentenceSub(text);
         if (str!=null&&str.length>0)

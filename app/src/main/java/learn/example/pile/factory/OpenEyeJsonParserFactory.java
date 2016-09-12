@@ -15,7 +15,7 @@ import learn.example.pile.util.GsonHelper;
 /**
  * Created on 2016/8/5.
  */
-public class OpenEyeVideoFactory {
+public class OpenEyeJsonParserFactory {
 
 
     public List<OpenEyes.VideoInfo> parseIssueList(JsonArray issueList) {

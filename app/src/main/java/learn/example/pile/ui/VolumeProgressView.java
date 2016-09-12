@@ -40,23 +40,10 @@ public class VolumeProgressView extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int width=MeasureSpec.getSize(widthMeasureSpec);
-        int widthMode=MeasureSpec.getMode(widthMeasureSpec);
-        int height=MeasureSpec.getSize(heightMeasureSpec);
-        int heightMode=MeasureSpec.getMode(heightMeasureSpec);
 
-        int viewWidth=width;
-        int viewHeight=height;
+        int viewWidth=resolveSize(defWidth,widthMeasureSpec);
+        int viewHeight=resolveSize(defHeight,heightMeasureSpec);
 
-        if (widthMode==MeasureSpec.AT_MOST)
-        {
-            viewWidth=Math.min(defWidth,width);
-        }
-        if (heightMode==MeasureSpec.AT_MOST)
-        {
-
-            viewHeight=Math.min(defHeight,height);
-        }
         setMeasuredDimension(viewWidth,viewHeight);
     }
 
@@ -74,7 +61,7 @@ public class VolumeProgressView extends View {
         for(int i = 0; i< VOLUME_MAX_VALUE; ++i){
             mRect[i]=new Rect(0,0,0,0);
         }
-        rectColor=Color.RED;
+        rectColor=Color.GRAY;
         borderColor=Color.BLACK;
 
         //View的高度默认为屏幕3分之一,宽度为 高度 ÷ 音量最大值
@@ -131,6 +118,11 @@ public class VolumeProgressView extends View {
     }
 
     public void setCurrentValue(int currentValue) {
+        if (this.currentValue==currentValue)
+        {
+            return;
+        }
+
         int value=currentValue;
         if(currentValue>= VOLUME_MAX_VALUE)
         {
@@ -144,14 +136,26 @@ public class VolumeProgressView extends View {
         invalidate();
     }
 
+    public void increase() {
+        setCurrentValue(currentValue+1);
+    }
+
+    public void decrease() {
+        setCurrentValue(currentValue-1);
+    }
+
+
+
     public void show()
     {
+        if (getVisibility()!=View.VISIBLE)
         setVisibility(VISIBLE);
     }
 
     public void hide()
     {
-        setVisibility(INVISIBLE);
+        if (getVisibility()!=View.INVISIBLE)
+           setVisibility(INVISIBLE);
     }
 
     public int getBorderColor() {

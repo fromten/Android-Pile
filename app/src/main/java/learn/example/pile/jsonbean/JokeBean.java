@@ -84,7 +84,7 @@ public class JokeBean {
                 private int digg_count;
                 private int bury_count;
                 private int create_time;
-                private long group_id;
+                private String id_str;
                 private int is_gif=-1;
                 private int is_video=-1;
                 private String mp4_url;
@@ -115,12 +115,12 @@ public class JokeBean {
                     return create_time;
                 }
 
-                public long getGroup_id() {
-                    return group_id;
+                public String getGroup_id() {
+                    return id_str;
                 }
 
-                public int getIs_gif() {
-                    return is_gif;
+                public boolean is_gif() {
+                    return is_gif==1;
                 }
 
                 public String getMp4_url() {
@@ -135,16 +135,26 @@ public class JokeBean {
                     return gifvideo;
                 }
 
+                public String getGifUrl() {
+                    if (gifvideo==null)
+                    {
+                        return null;
+                    }
+                    JsonObject origin=gifvideo.getAsJsonObject("origin_video");
+                    JsonArray array=origin.getAsJsonArray("url_list");
+                    return array==null||array.size()<=0?null:array.get(0).getAsJsonObject().get("url").getAsString();
+                }
+
                 public ImagesBean getImages() {
                     return images;
                 }
 
-                public int getIs_multi_image() {
-                    return is_multi_image;
+                public boolean is_multi_image() {
+                    return is_multi_image==1;
                 }
 
-                public int getIs_video() {
-                    return is_video;
+                public boolean is_video() {
+                    return is_video==1;
                 }
 
                 public ImagesBean[] getLarge_image_list() {
@@ -165,6 +175,11 @@ public class JokeBean {
 
                     public String getUrl() {
                         return url;
+                    }
+
+                    public String getFirstUrl()
+                    {
+                        return url_list==null||url_list.length<=0?null:url_list[0].url;
                     }
 
                     public static class UrlBean{

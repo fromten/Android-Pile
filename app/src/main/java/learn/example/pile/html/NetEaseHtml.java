@@ -44,7 +44,8 @@ public class NetEaseHtml {
         builder.append("</div>");
         builder.append("</body>");
         builder.append("</html>");
-        return builder.toString();
+
+        return  builder.toString().replaceAll("(?<=<p>)\\s*","");//最后把所有的p标签内空格去掉
     }
     private String insertHead()
     {
@@ -53,7 +54,7 @@ public class NetEaseHtml {
 
     private String insertTitle(String title)
     {
-        return "<h2 color='#202020' >"+title+"</h2>";
+        return "<h2>"+title+"</h2>";
     }
 
 

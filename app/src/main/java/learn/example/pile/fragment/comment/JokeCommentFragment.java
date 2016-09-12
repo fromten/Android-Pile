@@ -26,16 +26,15 @@ public class JokeCommentFragment extends CommentFragment implements IService.Cal
      public final static String KEY_GROUP_ID="group_id";
 
 
-    public static JokeCommentFragment newInstance(long groupId) {
-
+    public static JokeCommentFragment newInstance(String groupId) {
         Bundle args = new Bundle();
-        args.putLong(KEY_GROUP_ID,groupId);
+        args.putString(KEY_GROUP_ID,groupId);
         JokeCommentFragment fragment = new JokeCommentFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
-    private long groupId;
+    private String groupId;
     private int start;
     private final int count=20;
     private boolean hasMore;
@@ -48,7 +47,7 @@ public class JokeCommentFragment extends CommentFragment implements IService.Cal
         }
         super.onViewCreated(view, savedInstanceState);
         mJokeService=new JokeService();
-        groupId=args.getLong(KEY_GROUP_ID);
+        groupId=args.getString(KEY_GROUP_ID);
         if (savedInstanceState==null)
         {
             mJokeService.getComment(start,20,groupId,this);

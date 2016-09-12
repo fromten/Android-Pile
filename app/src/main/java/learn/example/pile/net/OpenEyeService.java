@@ -17,13 +17,13 @@ public class OpenEyeService extends NetService {
         newRequest(TAG,OpenEyeVideo.class,buildRequest(url),callback);
     }
 
-    public void getCategoryVideoDateSort(int categoryID,Callback<OpenEyeVideo> callback)
+    public void getCategoryVideoInDateSort(int categoryID, Callback<OpenEyeVideo> callback)
     {
         String url=OpenEyes.getCategoryUrl(categoryID,OpenEyes.Strategy.DATE);
         newRequest(TAG,OpenEyeVideo.class,buildRequest(url),callback);
     }
 
-    public void getCategoryVideoShareCountSort(int categoryID,Callback<OpenEyeVideo> callback)
+    public void getCategoryVideoInShareCountSort(int categoryID, Callback<OpenEyeVideo> callback)
     {
         String url=OpenEyes.getCategoryUrl(categoryID,OpenEyes.Strategy.SHARE_COUNT);
         newRequest(TAG,OpenEyeVideo.class,buildRequest(url),callback);

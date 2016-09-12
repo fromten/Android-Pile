@@ -1,7 +1,9 @@
 package learn.example.pile.activity.normal;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.Menu;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -15,7 +17,9 @@ import java.util.List;
 import learn.example.net.OkHttpRequest;
 import learn.example.pile.R;
 import learn.example.pile.activity.base.FullScreenActivity;
+import learn.example.pile.activity.base.SupportCommentActivity;
 import learn.example.pile.adapters.NetEasePhotoAdapter;
+import learn.example.pile.fragment.comment.NetEaseCommentFragment;
 import learn.example.pile.object.NetEase;
 import learn.example.pile.object.PhotosMessage;
 import learn.example.pile.ui.PhotoWatcherLayout;
@@ -27,32 +31,35 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 /**
  * Created on 2016/6/1.
  */
-public class PhotoActivity extends FullScreenActivity {
+public class PhotoActivity extends SupportCommentActivity {
 
 
 
-    public static final String KEY_IMG_URL ="photoactivity_img_url_key";
-    public static final String KEY_MULITI_IMAGE ="muliti_image";
+
+
     public static final String KEY_NETEASE_SKIPID ="key_netease_skipid";
-    public static final String KEY_SCROLL_POSITION="scroll_position";
+
+    public static final String KEY_IMAGE_URLS ="muliti_image";
+    public static final String KEY_SCROLL_TO_POSITION ="scroll_position";
 
     private ProgressBar mProgressBar;
 
     private PhotoWatcherLayout mPhotoWatcherLayout;
 
     private NetEasePhotoWatcher mNetEasePhotoWatcher;
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo);
+        setTitle(null);
         mPhotoWatcherLayout= (PhotoWatcherLayout) findViewById(R.id.photo_layout);
-        String url=getIntent().getStringExtra(KEY_IMG_URL);
+
         String skipId=getIntent().getStringExtra(KEY_NETEASE_SKIPID);
-        String[] urlArray=getIntent().getStringArrayExtra(KEY_MULITI_IMAGE);
-        if (url!=null)
-        {
-            initPhotoView(new String[]{url});
-        }else if (urlArray!=null)
+        String[] urlArray=getIntent().getStringArrayExtra(KEY_IMAGE_URLS);
+
+        if (urlArray!=null)
         {
             initPhotoView(urlArray);
         }else if (skipId!=null){
@@ -72,14 +79,14 @@ public class PhotoActivity extends FullScreenActivity {
         });
 
         //滚动到请求的位置
-        int position=getIntent().getIntExtra(KEY_SCROLL_POSITION,0);
+        int position=getIntent().getIntExtra(KEY_SCROLL_TO_POSITION,0);
         if (position>0)
         {
             mPhotoWatcherLayout.getViewPager().setCurrentItem(position);
         }
 
         //手动调用,显示图片的位置
-        if (getIntent().hasExtra(KEY_MULITI_IMAGE))
+        if (getIntent().hasExtra(KEY_IMAGE_URLS))
         {
             mPhotoWatcherLayout.onPageSelected(position);
         }
@@ -105,7 +112,19 @@ public class PhotoActivity extends FullScreenActivity {
         overridePendingTransition(0,R.anim.anim_center_close);
     }
 
+    @Override
+    protected int getReplaceId() {
+        return R.id.root;
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (menu.findItem(R.id.menu_comment)!=null)
+        {  //菜单早已显示,不需要重新创建
+            return true;
+        }
+        return super.onCreateOptionsMenu(menu);
+    }
 
     public class NetEasePhotoWatcher implements OkHttpRequest.RequestCallback<String>
     {
@@ -137,8 +156,10 @@ public class PhotoActivity extends FullScreenActivity {
                     public void onViewTap(View view, float v, float v1) {
                         if (click%2==0)
                         {
+                            showActionBar();
                             mPhotoWatcherLayout.showDigestArea();
                         }else {
+                            hideActionBar();
                             mPhotoWatcherLayout.hideDigestArea();
                         }
                         click++;
@@ -151,6 +172,7 @@ public class PhotoActivity extends FullScreenActivity {
 
         public List<PhotosMessage> getMessageList(JsonObject jsonObject)
         {
+            setCommentMenu(jsonObject);
             JsonArray array = jsonObject.getAsJsonArray("photos");
             if (array != null) {
                 List<PhotosMessage> mMessagesList=new ArrayList<>();
@@ -170,6 +192,30 @@ public class PhotoActivity extends FullScreenActivity {
         @Override
         public void onFailure(String msg) {
 
+        }
+
+        /**
+         * 网易新闻图集新闻,和其他新闻不同,在请求结束后,手动添加评论
+         * @param object
+         */
+        private void setCommentMenu(JsonObject object)
+        {
+            String postId=GsonHelper.getAsString(object.get("postid"),null);
+            if (postId!=null)
+            {
+                Intent intent=getIntent();
+
+                Bundle args=new Bundle();
+                args.putString(SupportCommentActivity.KEY_FRAGMENT_CLASS_NAME, NetEaseCommentFragment.class.getName());
+                args.putString(NetEaseCommentFragment.KEY_DOCID,postId);
+                String board=GsonHelper.getAsString(object.get("boardid"),null);
+                args.putString(NetEaseCommentFragment.KEY_BOARDID,board);
+
+                intent.putExtra(SupportCommentActivity.KEY_APPLY_COMMENT,args);
+
+                //可能网络请求慢,导致菜单不能创建,需要重新创建菜单
+                invalidateOptionsMenu();
+            }
         }
 
     }

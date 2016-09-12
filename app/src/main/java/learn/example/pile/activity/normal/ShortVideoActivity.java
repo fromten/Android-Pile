@@ -73,6 +73,9 @@ public class ShortVideoActivity extends FullScreenActivity  implements MediaPlay
     @Override
     protected void onDestroy() {
         mVideoView.stopPlayback();
+        mVideoView.setOnPreparedListener(null);
+        mVideoView.setOnCompletionListener(null);
+        mVideoView=null;
         super.onDestroy();
     }
 }

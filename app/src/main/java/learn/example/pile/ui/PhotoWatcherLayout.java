@@ -1,11 +1,7 @@
 package learn.example.pile.ui;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.Rect;
+
 import android.graphics.RectF;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
@@ -36,7 +32,6 @@ import com.bumptech.glide.request.target.SizeReadyCallback;
 import java.util.ArrayList;
 import java.util.List;
 
-import jp.wasabeef.glide.transformations.CropTransformation;
 import learn.example.pile.R;
 import learn.example.pile.adapters.ViewPagerAdapter;
 import learn.example.pile.util.GlideUtil;
@@ -101,6 +96,8 @@ public class PhotoWatcherLayout extends FrameLayout implements ViewPager.OnPageC
                 Glide.with(getContext())
                         .load(url)
                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .placeholder(R.mipmap.ic_defplacer)
+                        .dontAnimate()
                         .dontTransform()
                         .into(new GlideDrawableImageViewTarget(imageView)
                         {
@@ -143,7 +140,6 @@ public class PhotoWatcherLayout extends FrameLayout implements ViewPager.OnPageC
     public PhotoView createPhotoView(){
         PhotoView photoView = new PhotoView(getContext());
         photoView.setMinimumScale(0.5f);
-        photoView.setOnViewTapListener(mOnViewTapListener);
         return photoView;
     }
 
@@ -152,7 +148,7 @@ public class PhotoWatcherLayout extends FrameLayout implements ViewPager.OnPageC
     }
 
     public void setOnViewTapListener(PhotoViewAttacher.OnViewTapListener onViewTapListener) {
-          mOnViewTapListener = onViewTapListener;
+         mOnViewTapListener = onViewTapListener;
          int count=mViewPagerAdapter.getCount();
          for (int i = 0; i < count; i++) {
             ((PhotoView)mViewPagerAdapter.getView(i)).setOnViewTapListener(onViewTapListener);
@@ -224,7 +220,7 @@ public class PhotoWatcherLayout extends FrameLayout implements ViewPager.OnPageC
 
         @Override
         public int getItemCount() {
-            return urls.length;
+            return urls==null||urls.length==0?0:urls.length;
         }
 
         @Override

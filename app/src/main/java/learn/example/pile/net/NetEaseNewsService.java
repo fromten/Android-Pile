@@ -1,7 +1,5 @@
 package learn.example.pile.net;
 
-import learn.example.pile.MyURI;
-import learn.example.pile.jsonbean.NetEaseComment;
 import learn.example.pile.jsonbean.NetEaseNews;
 import learn.example.pile.jsonbean.NewsJsonData;
 import learn.example.pile.object.NetEase;
@@ -13,12 +11,6 @@ import okhttp3.Request;
 public class NetEaseNewsService extends NetService {
     private static final String TAG = "NetEaseNewsService";
 
-
-    public void getNews(Callback<NewsJsonData> callback)
-    {
-        Request request=new Request.Builder().url(MyURI.NEW_DATA_REQUEST_URL).addHeader("apikey", MyURI.API_KEY).build();
-        newRequest(TAG,NewsJsonData.class,request,callback);
-    }
 
 
     public void getNetEaseNews(int page,Callback<NetEaseNews> callback)

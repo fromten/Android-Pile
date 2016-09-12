@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 public class RecyclerViewImprove extends RecyclerView {
 
     private AdapterWrapper adapterWrap;
-    private onItemClickListener mItemClickListener;
+
 
     public RecyclerViewImprove(Context context) {
         super(context);
@@ -51,7 +51,7 @@ public class RecyclerViewImprove extends RecyclerView {
         public AdapterWrapper(RecyclerView.Adapter adapter) {
             if (adapter==null)
             {
-                throw new NullPointerException("Adapter must not be null");
+                throw new NullPointerException("Adapter be null");
             }
             mInnerAdapter = adapter;
         }
@@ -116,7 +116,7 @@ public class RecyclerViewImprove extends RecyclerView {
         public void setHeadHolder(HeadHolder holder)
         {
             mHeadHolder=holder;
-            notifyItemRangeChanged(0,1);
+            notifyDataSetChanged();
         }
 
         public FooterHolder getFooterHolder() {
@@ -129,9 +129,7 @@ public class RecyclerViewImprove extends RecyclerView {
     }
 
 
-    public interface onItemClickListener{
-        void onItemClick(int position,View view,Adapter adapter,ViewGroup parent);
-    }
+
 
     public static abstract class FooterHolder extends RecyclerView.ViewHolder{
         public FooterHolder(View itemView) {

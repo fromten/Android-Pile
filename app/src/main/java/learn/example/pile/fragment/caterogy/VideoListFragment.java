@@ -13,7 +13,7 @@ import java.util.List;
 
 import learn.example.pile.R;
 import learn.example.pile.adapters.VideoListAdapter;
-import learn.example.pile.factory.OpenEyeVideoFactory;
+import learn.example.pile.factory.OpenEyeJsonParserFactory;
 import learn.example.pile.fragment.base.BaseListFragment;
 import learn.example.pile.jsonbean.OpenEyeVideo;
 import learn.example.pile.net.IService;
@@ -41,7 +41,7 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
 
     private CategoryViewHolder mCategoryViewHolder;;
 
-    private boolean isRequireClear=false;
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view,savedInstanceState);
@@ -51,13 +51,10 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
         createCategoryHead();
 
         mService=new OpenEyeService();
-
-
         if (savedInstanceState==null)
         {
             setRefreshing(true);
-            mService.getHotVideo(this);
-            nextPushTime=TimeUtil.getNextDayTime(0);
+            onRefresh();
         }else {
             nextUrl=savedInstanceState.getString(KEY_NEXT_URL);
             nextPushTime=savedInstanceState.getLong(KEY_NEXT_PUSH_TIME);
@@ -84,19 +81,26 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
         List<OpenEyes.VideoInfo> mList = null;
         if (data.getIssueList()!=null)
         {
-            mList=new OpenEyeVideoFactory().parseIssueList(data.getIssueList());
+            mList=new OpenEyeJsonParserFactory().parseIssueList(data.getIssueList());
         }else if (data.getItemList()!=null){
             mList=new ArrayList<>();
-            new OpenEyeVideoFactory().parseItemList(data.getItemList(),mList);
+            new OpenEyeJsonParserFactory().parseItemList(data.getItemList(),mList);
+        }
+
+        //再次确认,如果数据没有成功添加,表明请求失败
+        if(mList==null||mList.isEmpty())
+        {
+            notifyError();
+            return;
+        }
+
+        //在刷新状态下,adapter元素不为空,清空数据
+        if (isRefreshing()&&mAdapter.getItemCount()>0)
+        {
+            mAdapter.clear();
         }
 
         nextUrl=data.getNextPageUrl();
-
-        if (isRequireClear)
-        {
-            mAdapter.clear();
-            isRequireClear=false;
-        }
         mAdapter.addAll(mList);
         notifySuccess();
     }
@@ -114,7 +118,6 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
         boolean requireRequest=second<0||mAdapter.getItemCount()==0;
         if (requireRequest)
         {
-            isRequireClear=true;
             mService.getHotVideo(this);
             nextPushTime=TimeUtil.getNextDayTime(0);
         }else {
@@ -133,15 +136,18 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
         }
     }
 
+    //创建需要的头部
     private void createCategoryHead()
     {
         mCategoryViewHolder=new CategoryViewHolder();
         addHeadHolder(mCategoryViewHolder);
     }
+
+
     private void requestCategoryVideo(int categoryId)
     {
         setRefreshing(true);
-        mService.getCategoryVideoDateSort(categoryId,VideoListFragment.this);
+        mService.getCategoryVideoInDateSort(categoryId,VideoListFragment.this);
     }
 
     public class CategoryViewHolder extends RecyclerViewImprove.HeadHolder implements View.OnClickListener{
@@ -188,7 +194,7 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
                     requestCategoryVideo(OpenEyes.Category.PREVIEW);
                     break;
             }
-            isRequireClear=true;
+
         }
     }
 }

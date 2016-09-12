@@ -19,11 +19,12 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.Transformation;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.Resource;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 
-import jp.wasabeef.glide.transformations.CropSquareTransformation;
+
 import learn.example.pile.R;
 import learn.example.pile.util.DeviceInfo;
 import learn.example.pile.util.GlideUtil;
@@ -41,7 +42,7 @@ public class NineGridLayout extends ViewGroup implements View.OnClickListener{
 
     private OnItemClickListener mItemClickListener;
 
-    private CropSquareTransformation mCropSquareTransformation;
+    private GlideUtil.CropSquareTransformation mCropSquareTransformation;
 
     private String[] urls;
 
@@ -62,7 +63,7 @@ public class NineGridLayout extends ViewGroup implements View.OnClickListener{
     private void init()
     {
 
-        mCropSquareTransformation=new CropSquareTransformation(getContext());
+        mCropSquareTransformation=new GlideUtil.CropSquareTransformation(getContext());
     }
 
     @Override
@@ -108,6 +109,18 @@ public class NineGridLayout extends ViewGroup implements View.OnClickListener{
             int column=i%COLUMN_COUNT;
             int row=i/COLUMN_COUNT;
 
+            if (childCount==4)
+            {   //第三格移动到下一行
+                if (column==2) {
+                    column=0;
+                    row=1;
+                }else if (row==1)//第四格向右移
+                {
+                    column=1;
+                }
+            }
+
+
             int childLeft=column*childWidth;
             int childTop=row*childHeight;
             int childRight=childLeft+childWidth-childMargin;
@@ -140,6 +153,7 @@ public class NineGridLayout extends ViewGroup implements View.OnClickListener{
             Glide.with(getContext())
                     .load(urls[i])
                     .asBitmap()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .transform(mCropSquareTransformation)
                     .into(image);
             type.setText(isGif[i]?" gif ":null);
@@ -179,7 +193,7 @@ public class NineGridLayout extends ViewGroup implements View.OnClickListener{
         ViewGroup.LayoutParams params=new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
         imageView.setLayoutParams(params);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        imageView.setBackgroundColor(Color.GRAY);
+        imageView.setBackgroundResource(R.color.image_placer);
         return imageView;
     }
 

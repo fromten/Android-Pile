@@ -70,7 +70,7 @@ public class RVListFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     /**
      * 使用Wrap模式添加Adapter,
-     * @see RecyclerView.setAdapter();
+     * @see RecyclerView#setAdapter(RecyclerView.Adapter)
      */
     public void setAdapter(RecyclerView.Adapter adapter)
     {

@@ -34,7 +34,7 @@ public class JokeListFragment extends BaseListFragment implements IService.Callb
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
          super.onViewCreated(view,savedInstanceState);
-         mJokeListAdapter=new JokeListAdapter();
+         mJokeListAdapter=new JokeListAdapter(getActivity());
          setAdapter(mJokeListAdapter);
          mJokeService=new JokeService();
          if (savedInstanceState==null)

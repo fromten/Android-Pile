@@ -19,7 +19,7 @@ import learn.example.pile.util.GsonHelper;
 public class OpenEyeCommentFragment extends CommentFragment implements IService.Callback<String> {
 
     public static final String KEY_NEXT_PAGE_URL = "url";
-    private static final String KEY_VIDEO_ID = "id";
+    public static final String KEY_VIDEO_ID = "id";
     private OpenEyeService mOpenEyeService;
     private int id;
     private String nextPageUrl;

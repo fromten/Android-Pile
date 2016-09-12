@@ -50,7 +50,7 @@ public class WebFragment extends Fragment {
     private void initWebView() {
         mWebView.setWebViewClient(new WebViewClient());
         mWebView.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.grey_light, null));
-        mWebView.getSettings().setSupportZoom(true);
+        mWebView.getSettings().setSupportZoom(false);
         mWebView.getSettings().setBuiltInZoomControls(true);
         mWebView.getSettings().setDisplayZoomControls(false);
         mWebView.getSettings().setLoadsImagesAutomatically(true);
@@ -73,7 +73,6 @@ public class WebFragment extends Fragment {
     {
         String link= HtmlTagBuild.cssLinkTag("app.css");
         String insertCss=html.replaceFirst("</head>",link+"</head>");
-        Log.d("html",insertCss );
         mWebView.loadDataWithBaseURL("file:///android_asset/", insertCss, "text/html", "UTF-8", null);
     }
 

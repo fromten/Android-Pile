@@ -29,8 +29,8 @@ public class OpenEyes {
 
     //视频策略
     public static class Strategy{
-        public static String SHARE_COUNT="shareCount";//按分享总数获得视频列表
-        public static String DATE="date";//按时间获得视频列表
+        public final static String SHARE_COUNT="shareCount";//按分享总数获得视频列表
+        public final static String DATE="date";//按时间获得视频列表
     }
 
     //分类视频

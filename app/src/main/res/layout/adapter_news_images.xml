@@ -4,7 +4,7 @@
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:focusable="true"
-                android:padding="@dimen/medium_padding"
+                android:padding="@dimen/medium"
                 android:background="?android:attr/selectableItemBackground">
 
     <TextView
@@ -12,28 +12,37 @@
         android:layout_height="wrap_content"
         style="@style/TitleText"
         android:id="@+id/news_title"
-        android:padding="@dimen/small_padding"/>
+        android:padding="@dimen/small"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/news_title"
-        android:paddingTop="@dimen/small_padding"
-        android:paddingBottom="@dimen/small_padding"
+        android:paddingTop="@dimen/small"
+        android:paddingBottom="@dimen/small"
+        android:orientation="horizontal"
         android:id="@+id/images_show">
         <ImageView
             android:layout_width="0dp"
-            android:layout_height="@dimen/news_img_height"
+            android:layout_height="90dp"
             android:id="@+id/image_extra1"
+            android:layout_marginEnd="4dp"
+            android:layout_marginRight="4dp"
+            android:background="@color/image_placer"
             android:layout_weight="1"/>
         <ImageView
             android:layout_width="0dp"
-            android:layout_height="@dimen/news_img_height"
+            android:layout_height="90dp"
             android:id="@+id/image_extra2"
-            android:layout_weight="1"/>
+            android:background="@color/image_placer"
+            android:layout_marginEnd="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_weight="1"
+           />
         <ImageView
             android:layout_width="0dp"
-            android:layout_height="@dimen/news_img_height"
+            android:layout_height="90dp"
+            android:background="@color/image_placer"
             android:id="@+id/image_extra3"
             android:layout_weight="1"/>
     </LinearLayout>
@@ -42,7 +51,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="@dimen/small_padding"
+        android:padding="@dimen/small"
         android:id="@+id/comment_num"
         android:layout_below="@+id/images_show"
         android:layout_alignParentRight="true"
@@ -53,7 +62,7 @@
         style="@style/SmallText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="@dimen/small_padding"
+        android:padding="@dimen/small"
         android:id="@+id/doc_source"
         android:layout_below="@+id/images_show"
         android:layout_alignLeft="@+id/images_show"

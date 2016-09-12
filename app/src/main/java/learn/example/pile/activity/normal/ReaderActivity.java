@@ -9,11 +9,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.webkit.JavascriptInterface;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,9 +30,9 @@ import learn.example.pile.fragment.comment.CommentFragment;
 import learn.example.pile.fragment.comment.NetEaseCommentFragment;
 import learn.example.pile.fragment.WebFragment;
 import learn.example.pile.fragment.comment.ZhihuCommentFragment;
-import learn.example.pile.html.ImageClickHandler;
+import learn.example.pile.html.ImageClickInserter;
 import learn.example.pile.html.NetEaseHtml;
-import learn.example.pile.html.VideoClickHandler;
+import learn.example.pile.html.VideoClickInserter;
 import learn.example.pile.html.ZhihuHtml;
 import learn.example.pile.jsonbean.ZhihuNewsContent;
 import learn.example.pile.net.IService;
@@ -71,6 +71,8 @@ public class ReaderActivity extends AppCompatActivity  {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        setTitle(null);
         setContentView(R.layout.activity_reader);
         setView();
         setSupportActionBar(mToolbar);
@@ -166,7 +168,7 @@ public class ReaderActivity extends AppCompatActivity  {
     /**
      * 显示菜单向上回退按钮
      */
-    private void showMenuBackUp()
+    private void showMenuBackUpButton()
     {
         if (getSupportActionBar()!=null)
         {
@@ -229,7 +231,7 @@ public class ReaderActivity extends AppCompatActivity  {
                 {
                     item.setVisible(true);
                 }
-                showMenuBackUp();
+                showMenuBackUpButton();
             }
         },500);
     }
@@ -250,7 +252,7 @@ public class ReaderActivity extends AppCompatActivity  {
 
 
 
-    private class MoveEvent {
+    private  class MoveEvent {
         private boolean inPress;
         private float downX;
         private float downY;
@@ -339,12 +341,12 @@ public class ReaderActivity extends AppCompatActivity  {
                     String originHtml=new NetEaseHtml(netEaseDocId,res).toString();
 
 
-                    ImageClickHandler imageHandler=new ImageClickHandler(ReaderActivity.this);
+                    ImageClickInserter imageHandler=new ImageClickInserter(ReaderActivity.this);
                     mWebFragment.getWebView().addJavascriptInterface(imageHandler,imageHandler.getName());
-                    String imageClickJs= HtmlTagBuild.jsTag(imageHandler.getClickJS());
+                    String imageClickJs= HtmlTagBuild.jsTag(imageHandler.getJavaScript());
 
-                    VideoClickHandler videoHandler=new VideoClickHandler(ReaderActivity.this);
-                    String videoClickJs=HtmlTagBuild.jsTag(videoHandler.videoClickJS());
+                    VideoClickInserter videoHandler=new VideoClickInserter(ReaderActivity.this);
+                    String videoClickJs=HtmlTagBuild.jsTag(videoHandler.getJavaScript());
                     mWebFragment.getWebView().addJavascriptInterface(videoHandler,videoHandler.getName());
 
                     mWebFragment.loadDataWithDefCss(originHtml+imageClickJs+videoClickJs);
@@ -392,11 +394,11 @@ public class ReaderActivity extends AppCompatActivity  {
                     mWebFragment.getWebView().addJavascriptInterface(new HtmlClick(),"ReaderActivity");
 
                     //添加图片点击监听
-                    ImageClickHandler imageClickHandler=new ImageClickHandler(ReaderActivity.this);
-                    mWebFragment.getWebView().addJavascriptInterface(imageClickHandler,imageClickHandler.getName());
+                    ImageClickInserter imageClickInserter =new ImageClickInserter(ReaderActivity.this);
+                    mWebFragment.getWebView().addJavascriptInterface(imageClickInserter, imageClickInserter.getName());
 
                     ZhihuHtml html=new ZhihuHtml(data.getBody(),data.getCss(),data.getJs());
-                    html.setJs(imageClickHandler.getClickJS()+"\n"+getCommentClickJs());
+                    html.setJs(imageClickInserter.getJavaScript()+"\n"+getCommentClickJs());
                     mWebFragment.loadLocalData(html.generateHtml());
                 }
 

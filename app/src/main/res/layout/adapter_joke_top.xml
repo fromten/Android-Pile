@@ -24,8 +24,8 @@
         android:layout_below="@+id/avatar"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="@dimen/normal_padding"
-        android:layout_marginBottom="@dimen/normal_padding"
+        android:layout_marginTop="@dimen/normal"
+        android:layout_marginBottom="@dimen/normal"
         android:textColor="@color/subColor"
         android:id="@+id/text"/>
 

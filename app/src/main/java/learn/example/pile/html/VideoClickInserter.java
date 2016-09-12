@@ -9,9 +9,9 @@ import learn.example.pile.util.ActivityLauncher;
 /**
  * Created on 2016/8/27.
  */
-public class VideoClickHandler {
+public class VideoClickInserter implements JavaScriptInserter {
     Context mContext;
-    public VideoClickHandler(Context context) {
+    public VideoClickInserter(Context context) {
         mContext=context;
     }
 
@@ -22,7 +22,7 @@ public class VideoClickHandler {
         ActivityLauncher.startVideoActivity(mContext,url);
     }
 
-    public String videoClickJS()
+    public String getJavaScript()
     {
         return
                 "var objs = document.getElementsByClassName(\"videowrap\");\n" +
@@ -36,7 +36,7 @@ public class VideoClickHandler {
                 "      objs[i].onclick=function()\n" +
                 "      {\n" +
                 "         var url=this.getAttribute(\"mp4\"); \n" +
-                "         VideoClickHandler.openVideo(url)\n" +
+                "         VideoClickInserter.openVideo(url)\n" +
                 "      }  \n" +
                 "      \n" +
                 "    }\n";
@@ -44,6 +44,7 @@ public class VideoClickHandler {
 
     public String getName()
     {
-        return "VideoClickHandler";
+        return "VideoClickInserter";
     }
+
 }

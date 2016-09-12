@@ -3,7 +3,7 @@
               android:background="?android:attr/selectableItemBackground"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:padding="@dimen/normal_padding">
+              android:padding="@dimen/normal">
 
     <include layout="@layout/adapter_joke_top"
              android:layout_width="match_parent"
@@ -15,8 +15,7 @@
         android:id="@+id/table"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/text"
-        android:columnCount="3">
-    </learn.example.pile.ui.NineGridLayout>
+        android:columnCount="3"/>
 
     <include layout="@layout/adapter_joke_bottom"
              android:layout_below="@+id/table"

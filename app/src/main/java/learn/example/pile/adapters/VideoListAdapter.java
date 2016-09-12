@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import learn.example.pile.R;
+import learn.example.pile.fragment.comment.OpenEyeCommentFragment;
 import learn.example.pile.object.OpenEyes;
 import learn.example.pile.util.ActivityLauncher;
 import learn.example.pile.util.TimeUtil;
@@ -33,7 +34,10 @@ public class VideoListAdapter extends SaveStateAbleAdapter<VideoListAdapter.Vide
         OpenEyes.VideoInfo item=getItem(position);
         String timeAndTitle=item.getTitle()+"\n"+TimeUtil.formatMS(item.getDuration());
         holder.title.setText(timeAndTitle);
-        Glide.with(holder.itemView.getContext()).load(item.getImgUrl()).fitCenter().into(holder.videoImg);
+        Glide.with(holder.itemView.getContext())
+                .load(item.getImgUrl())
+                .fitCenter()
+                .into(holder.videoImg);
         holder.itemView.setTag(position);
     }
 
@@ -44,8 +48,11 @@ public class VideoListAdapter extends SaveStateAbleAdapter<VideoListAdapter.Vide
         OpenEyes.VideoInfo info=getItem(pos);
         if (info!=null)
         {
-
-            ActivityLauncher.startVideoActivityForOpenEye(v.getContext(),info);
+            String uri=info.getPlayUrl();
+            Bundle argus=new Bundle();
+            argus.putString(learn.example.pile.video.VideoActivity.KEY_FRAGMENT_CLASS_NAME, OpenEyeCommentFragment.class.getName());
+            argus.putInt(OpenEyeCommentFragment.KEY_VIDEO_ID,info.getId());
+            ActivityLauncher.startVideoActivitySupportCommentMenu(v.getContext(),uri,argus);
         }
     }
 

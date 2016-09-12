@@ -23,8 +23,9 @@ public class NetEaseNews {
         private int clkNum;
         private String digest;
 
-        @SerializedName(value = "id",alternate = "docid")
+
         private String docid;
+        private String id;
 
         private int downTimes;
         private int imgType;
@@ -88,6 +89,19 @@ public class NetEaseNews {
         }
 
         public String getDocid() {
+
+            if (id!=null&&id.length()>0)
+            {
+                return id;
+            }
+            if (docid!=null)
+            {
+                int i=docid.indexOf('_');
+                if (i>0&&i<docid.length())
+                {
+                    return docid.substring(0,i);
+                }
+            }
             return docid;
         }
 

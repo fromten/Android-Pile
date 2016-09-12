@@ -6,11 +6,12 @@ div.main{
      margin: auto;
      margin-top: 10px;
      margin-bottom: 10px;
-     width: 90%;
+     width: 95%;
 }
 p{
-     display : inline-block;
+     display:inline-block;
      margin:4px 0px 4px 0px;
+     font-family: sans-serif;
      padding:0;
 }
 

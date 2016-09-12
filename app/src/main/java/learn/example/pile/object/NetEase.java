@@ -8,7 +8,7 @@ import learn.example.pile.util.TimeUtil;
  * Created on 2016/7/19.
  */
 public class NetEase {
-    //头条新闻,%d-%d 页数-个数
+    //头条新闻,%d-%d start-length
     public static final String TOUTAI_URL="http://c.m.163.com/nc/article/headline/T1348647909107/%d-%d.html";
 
 
@@ -45,7 +45,7 @@ public class NetEase {
     public static String generateParamsUrl(int page,String sign)
     {   //EdhK6XoROwO4zVDtZT7s3CbpOEaotwy5nGQGUH2n6yB48ErR02zJ6/KXOnxX046I
         String queryUrl="http://c.3g.163.com/nc/article/headline/T1348647909107/"+page+"-20.html?";
-        String normalParam= "from=toutiao&size=20&prog=LTitleA&fn=1&passport=&devId=kKD8pCd0XRRW7xWYqMiVpEdxCGl%2F7BNok2%2FsiNT73k5TdKiqocj0eExU0s49fzqe&lat=&lon=&version=20.0&net=wifi&canal=news_lljc1&mac=racUMC0A9havm%2BHe6jH3YAvVdjgSXYDtwEDZ03eH1l8%3D";
+        String normalParam= "from=toutiao&size=20&prog=LMA1&fn=1&passport=&devId=kKD8pCd0XRRW7xWYqMiVpEdxCGl%2F7BNok2%2FsiNT73k5TdKiqocj0eExU0s49fzqe&lat=&lon=&version=16.0&net=wifi&canal=netease_gw&mac=racUMC0A9havm%2BHe6jH3YAvVdjgSXYDtwEDZ03eH1l8%3D";
         String tsParam="&ts="+String.valueOf(TimeUtil.getTime()/1000);
         String signParam="&sign="+sign;
         return queryUrl+normalParam+tsParam+signParam;

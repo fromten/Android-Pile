@@ -3,12 +3,13 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:background="?android:attr/selectableItemBackground"
-              android:paddingBottom="@dimen/normal_padding"
-              android:paddingTop="@dimen/normal_padding">
+              android:padding="@dimen/normal">
 
     <ImageView
         android:layout_width="@dimen/avatar_img_width"
         android:layout_height="@dimen/avatar_img_width"
+        android:layout_marginRight="@dimen/small"
+        android:layout_marginEnd="@dimen/small"
         android:id="@+id/user_pic"/>
 
     <TextView
@@ -16,8 +17,6 @@
         android:layout_height="wrap_content"
         android:maxLines="1"
         android:id="@+id/author"
-        android:paddingLeft="@dimen/small_padding"
-        android:paddingStart="@dimen/small_padding"
         android:textColor="@color/blue_light"
         android:layout_toRightOf="@+id/user_pic"
         android:layout_toEndOf="@+id/user_pic"
@@ -38,10 +37,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/small_padding"
-        android:paddingStart="@dimen/small_padding"
-        android:paddingRight="@dimen/small_padding"
-        android:paddingBottom="@dimen/small_padding"
         android:id="@+id/adress_and_time"
         android:layout_below="@+id/author"
         android:layout_alignLeft="@+id/author"
@@ -50,7 +45,7 @@
 
     <TextView
         style="@style/ContentText"
-        android:padding="@dimen/small_padding"
+        android:paddingTop="@dimen/small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/content"

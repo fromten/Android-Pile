@@ -15,7 +15,7 @@
         android:id="@+id/container"
         android:gravity="bottom"
         android:layout_gravity="bottom"
-        android:paddingBottom="@dimen/normal_padding">
+        android:paddingBottom="@dimen/normal">
         <TextView
             style="@style/TitleText"
             android:textColor="@color/white"

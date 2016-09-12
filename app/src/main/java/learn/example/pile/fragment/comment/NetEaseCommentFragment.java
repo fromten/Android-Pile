@@ -15,8 +15,8 @@ import learn.example.pile.object.Comment;
 public class NetEaseCommentFragment extends CommentFragment implements NetEaseNewsService.Callback<String>{
 
     private static final String KEY_POSITION="position";
-    private static final String KEY_DOCID="docId";
-    private static final String KEY_BOARDID="boardID";
+    public static final String KEY_DOCID="docId";
+    public static final String KEY_BOARDID="boardID";
 
     private String docId;
     private String boardId;

@@ -1,55 +1,46 @@
 package learn.example.pile.activity.normal;
 
 
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.view.GestureDetector;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.MediaController;
-import android.widget.TextView;
-import android.widget.VideoView;
 
 import learn.example.pile.R;
-import learn.example.pile.activity.base.FullScreenActivity;
-import learn.example.pile.fragment.comment.OpenEyeCommentFragment;
-import learn.example.pile.object.OpenEyes;
+import learn.example.pile.activity.base.SupportCommentActivity;
 import learn.example.pile.ui.VolumeProgressView;
+import learn.example.pile.video.ExoVideoView;
+import learn.example.pile.video.MediaControlViewHolder;
 
 /**
  * Created on 2016/5/26.
  */
-public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnCompletionListener,
-        MediaPlayer.OnErrorListener, MediaPlayer.OnPreparedListener {
+public class VideoActivity extends SupportCommentActivity {
 
-    private static final String KEY_SAVE_STATE_POSITION = "key_save_state_position";
-    public static final String KEY_VIDEO_OPEN_EYE="open_eye";
-
-    private final String TAG_COMMENT_FRAGMENT="tag_comment_fragment";
-
-    private Fragment.SavedState mCommentState;
+    private static final String KEY_SAVE_VIDEO_POSITION = "video_position";
 
 
-    private VideoView mVideoView;
-    private MediaController mMediaController;
+
+    private ExoVideoView mExoVideoView;
+    private MediaControlViewHolder mControlView;
     private VolumeProgressView mVolumeProgressView;
-    private TextView mLogView;
+    private LinearLayout mRetryRoot;
+    private MediaController.MediaPlayerControl mPlayControl;
 
-    private int seekPosition;
+    private RetryViewHolder mRetryViewHolder;
+
+    private int mSavedSeekPosition=-1;
 
     private GestureDetector mScreenTouchListener;
 
     public static final int HIDE_VOLUME_PROGERESSBAR=0;
     public static final int HIDE_ACTIONBAR=1;
-    public static final int REMOVE_LOG_TEXT=2;
     private Handler mHandler=new Handler()
     {
         @Override
@@ -62,190 +53,175 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
                case HIDE_ACTIONBAR:
                     hideActionBar();
                    break;
-               case REMOVE_LOG_TEXT:
-                   mLogView.setText(null);
-                   break;
            }
         }
     };
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_video);
+        setContentView(R.layout.activity_video_exo);
 
-        seekPosition=savedInstanceState==null?-1:savedInstanceState.getInt(KEY_SAVE_STATE_POSITION,-1);
-        setTitle();
-        initView();
-        Uri uri = getIntent().getData();
-        if (uri != null) {
-            mLogView.setText("加载中....");
-            mVideoView.setVideoURI(uri);
-        } else {
-            mLogView.setText("无效的地址");
-        }
+        mExoVideoView= (ExoVideoView) findViewById(R.id.video);
+        mControlView= (MediaControlViewHolder) findViewById(R.id.control);
+        mRetryRoot= (LinearLayout) findViewById(R.id.retry_root);
+        mVolumeProgressView= (VolumeProgressView) findViewById(R.id.video_volume);
+
+        setListener();
+
+        mSavedSeekPosition=savedInstanceState==null?-1:savedInstanceState.getInt(KEY_SAVE_VIDEO_POSITION);
+
+        playVideo();
+
+
     }
 
-    private void setTitle()
+    private void playVideo()
     {
-        OpenEyes.VideoInfo info=getIntent().getParcelableExtra(KEY_VIDEO_OPEN_EYE);
-        if (info!=null)
-        {
-            setTitle(info.getTitle());
+        Uri uri=getIntent().getData();
+        if (uri!=null) {
+            mExoVideoView.setVideoUri(uri);
         }
-    }
-
-    public void initView() {
-        mVideoView = (VideoView) findViewById(R.id.video_view);
-        mVolumeProgressView = (VolumeProgressView) findViewById(R.id.video_volume);
-        mLogView = (TextView) findViewById(R.id.video_logmsg);
-        mVolumeProgressView.setRectColor(getResources().getColor(R.color.grey));
-        mMediaController = new MediaController(this);
-        mVideoView.setMediaController(mMediaController);
-        mVideoView.setOnPreparedListener(this);
-        mVideoView.setOnCompletionListener(this);
-        mVideoView.setOnErrorListener(this);
-
-        mScreenTouchListener=new GestureDetector(this,mSimpleOnGestureListener);
-        mVideoView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                mScreenTouchListener.onTouchEvent(event);
-                return true;//截断MediaController的事件
-            }
-        });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (getIntent().hasExtra(KEY_VIDEO_OPEN_EYE))
-        {
-            getMenuInflater().inflate(R.menu.video_menu,menu);
-            return true;
-        }
-        return false;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId()==R.id.menu_comment)
         {
-            //打开评论Fragment
-            OpenEyes.VideoInfo info=getIntent().getParcelableExtra(KEY_VIDEO_OPEN_EYE);
-            if (info!=null)
+            if (mPlayControl!=null)
             {
-                FragmentManager manager=getSupportFragmentManager();
-                Fragment commentFragment= OpenEyeCommentFragment.newInstance(info.getId());
-                commentFragment.setInitialSavedState(mCommentState);
-                manager.beginTransaction().add(R.id.root,commentFragment,TAG_COMMENT_FRAGMENT).addToBackStack(null).commit();
+                mPlayControl.pause();
             }
-            mVideoView.pause();
-            mMediaController.hide();
         }
-
         return super.onOptionsItemSelected(item);
-    }
-
-
-    @Override
-    protected void onResume() {
-        mVideoView.seekTo(seekPosition);
-        mVideoView.start();
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        seekPosition=mVideoView.getCurrentPosition();
-        mVideoView.pause();
-        super.onPause();
     }
 
     @Override
     public void onBackPressed() {
-        if (getSupportFragmentManager().findFragmentByTag(TAG_COMMENT_FRAGMENT)!=null)
+        if (getCommentFragmentIfShowing()!=null&&mPlayControl!=null)
         {
-
-            saveCommentFragmentState();
+            mPlayControl.start();
         }
         super.onBackPressed();
     }
 
 
 
+
+    public void setListener() {
+        mRetryViewHolder=new RetryViewHolder(mRetryRoot);
+
+        mExoVideoView.setPlayInfoListener(mPlayInfoListener);
+
+        mScreenTouchListener=new GestureDetector(this,mSimpleOnGestureListener);
+        mExoVideoView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mScreenTouchListener.onTouchEvent(event);
+                return true;
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        if (mPlayControl!=null)
+        {
+            mPlayControl.start();
+        }
+
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        if (mPlayControl!=null)
+        {
+            mPlayControl.pause();
+        }
+        super.onPause();
+    }
+
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         //保存现在的播放位置
-        outState.putInt(KEY_SAVE_STATE_POSITION, mVideoView.getCurrentPosition());
+        outState.putInt(KEY_SAVE_VIDEO_POSITION,mPlayControl==null?0:mPlayControl.getCurrentPosition() );
         super.onSaveInstanceState(outState);
     }
 
-    private void saveCommentFragmentState()
-    {
-        FragmentManager manager=getSupportFragmentManager();
-        Fragment commentFragment=manager.findFragmentByTag(TAG_COMMENT_FRAGMENT);
-        mCommentState=commentFragment!=null?manager.saveFragmentInstanceState(commentFragment):null;
+    @Override
+    protected int getReplaceId() {
+        return R.id.root;
     }
 
 
     @Override
     protected void onDestroy() {
-        mCommentState=null;
 
         mHandler.removeMessages(HIDE_ACTIONBAR);
         mHandler.removeMessages(HIDE_VOLUME_PROGERESSBAR);
-        mHandler.removeMessages(REMOVE_LOG_TEXT);
         mHandler=null;
 
-
-        mVideoView.stopPlayback();
-        mVideoView.setOnPreparedListener(null);
-        mVideoView.setOnCompletionListener(null);
-        mVideoView.setOnErrorListener(null);
-        mVideoView.setOnTouchListener(null);
-        mVideoView = null;
+        mExoVideoView.release();
+        mExoVideoView.setPlayInfoListener(null);
+        mExoVideoView.setOnTouchListener(null);
+        mExoVideoView=null;
+        mPlayControl=null;
+        mPlayInfoListener=null;
         mSimpleOnGestureListener=null;
-        mMediaController = null;
         super.onDestroy();
     }
 
-    @Override
-    public void onPrepared(MediaPlayer mp) {
-        //跳到旋转之前的播放位置
-        if (seekPosition>0) {
-            mVideoView.seekTo(seekPosition);
+    private ExoVideoView.OnPlayInfoListener mPlayInfoListener=new ExoVideoView.OnPlayInfoListener() {
+        @Override
+        public void onPrepare(ExoVideoView view) {
+            mPlayControl=view.getPlayerControl();
+            if (mSavedSeekPosition>0)
+            {
+                mPlayControl.seekTo(mSavedSeekPosition);
+            }
+            mControlView.setMediaPlayerControl(mPlayControl);
+            mRetryViewHolder.hide();
+
+            if (getCommentFragmentIfShowing()!=null)
+            {
+                mPlayControl.pause();
+            }
+
+            mHandler.sendEmptyMessageDelayed(HIDE_ACTIONBAR,3000);
         }
-        mVideoView.start();
-        mLogView.setText(null);
-        hideActionBar();
-    }
 
-    @Override
-    public void onCompletion(MediaPlayer mp) {
-        mLogView.setText("播放结束");
-        //十秒后移除logView
-        mHandler.sendEmptyMessage(REMOVE_LOG_TEXT);
-    }
+        @Override
+        public void onCompleted(ExoVideoView view) {
+            mRetryViewHolder.show();
+        }
 
-    @Override
-    public boolean onError(MediaPlayer mp, int what, int extra) {
-        mLogView.setText("发生错误了...");
-        return true;
-    }
+        @Override
+        public void onError(ExoVideoView view, Exception error) {
+            mRetryViewHolder.show();
+        }
+    } ;
 
     private GestureDetector.SimpleOnGestureListener mSimpleOnGestureListener=new GestureDetector.SimpleOnGestureListener(){
 
         private void toggleControlsVisible()
         {
-            if (mMediaController.isShowing()) {
-                mMediaController.hide();
+            if (mControlView.isShown()) {
+                mControlView.hide();
                 hideActionBar();
             } else {
-                mMediaController.show(3000);
+                mControlView.show(3000);
                 showActionBar();
             }
-            //在事件时间内如果重新点击,移除msg
+
+            if (mVolumeProgressView.isShown())//确保view隐藏
+            {
+                mHandler.sendEmptyMessage(HIDE_VOLUME_PROGERESSBAR);
+            }
+
+           // 在事件时间内如果重新点击,移除msg
             mHandler.removeMessages(HIDE_ACTIONBAR);
-            //3秒后隐藏ActionBar
+          //  3秒后隐藏ActionBar
             mHandler.sendEmptyMessageDelayed(HIDE_ACTIONBAR,3000);
         }
 
@@ -255,11 +231,14 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
         }
         @Override
         public boolean onDoubleTap(MotionEvent e) {
-            if (mVideoView.isPlaying() && mVideoView.canPause()) {
-                mVideoView.pause();
+            if (mPlayControl==null)return false;
+
+            if (mPlayControl.isPlaying()) {
+                mPlayControl.pause();
             } else {
-                mVideoView.start();
+                mPlayControl.start();
             }
+            mControlView.updatePauseDrawable();
             toggleControlsVisible();
             return true;
         }
@@ -277,20 +256,62 @@ public class VideoActivity extends FullScreenActivity implements MediaPlayer.OnC
 
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            if (Math.abs(distanceY) >= 20) {
+
+            if (Math.abs(distanceY)>Math.abs(distanceX)&&Math.abs(distanceY)>15)
+            {
+                //  int distance=y1-y2;
                 mVolumeProgressView.show();
-                int value = mVolumeProgressView.getCurrentValue();
-                if (distanceY > 0) {
-                    mVolumeProgressView.setCurrentValue(value + 1);
-                } else {
-                    mVolumeProgressView.setCurrentValue(value - 1);
+                if (distanceY>0)
+                {
+                    mVolumeProgressView.increase();
+                }else {
+
+                    mVolumeProgressView.decrease();
                 }
-                //发送消息隐藏音量进度条
                 mHandler.removeMessages(HIDE_VOLUME_PROGERESSBAR);
-                mHandler.sendEmptyMessageDelayed(HIDE_VOLUME_PROGERESSBAR, 3000);
+                mHandler.sendEmptyMessageDelayed(HIDE_VOLUME_PROGERESSBAR,3000);
                 return true;
             }
+
             return false;
         }
     };
+
+    private  class RetryViewHolder {
+        private View mView;
+
+        public RetryViewHolder(View view) {
+            mView = view;
+            mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mPlayControl!=null)
+                    {
+                        mPlayControl.seekTo(0);
+                        hide();
+                    }else {
+                        playVideo();
+                    }
+                }
+            });
+        }
+
+        public void show()
+        {
+            mView.setVisibility(View.VISIBLE);
+            mView.setFocusable(true);
+            mView.setClickable(true);
+            mView.requestFocus();
+        }
+
+        public void hide()
+        {
+            mView.setVisibility(View.INVISIBLE);
+            mView.setFocusable(false);
+            mView.setClickable(false);
+        }
+
+    }
+
+
 }

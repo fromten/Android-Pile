@@ -16,7 +16,7 @@ public class JokeProvider {
         return TUIJIAN_URL+APP_PARAMS+"&count="+count+"&screen_width="+screenWidth+"&min_time="+ TimeUtil.getTime()/1000;
     }
 
-    public static String createCommentUrl(int start,int length,long groupId)
+    public static String createCommentUrl(int start,int length,String groupId)
     {
         return COMMENT_URL+APP_PARAMS+"&offset="+start+"&count="+length+"&group_id="+groupId;
     }

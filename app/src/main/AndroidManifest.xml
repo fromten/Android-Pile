@@ -27,19 +27,16 @@
         <activity android:name=".activity.normal.WebViewActivity"
                   android:process="learn.example.pile.PileApplication.WebActivity"
                   android:label=" "/>
-        <activity android:name=".activity.normal.VideoActivity"
+        <activity android:name=".video.VideoActivity"
                   android:configChanges="orientation|screenSize"
                   android:label="视频"/>
-        <activity android:name=".activity.normal.PhotoActivity"
-                  android:label=" "/>
+        <activity android:name=".activity.normal.PhotoActivity"/>
         <activity android:name=".activity.normal.ChatActivity"
                   android:label="机器聊天"
                   android:windowSoftInputMode="adjustResize">
         </activity>
-        <activity android:name=".activity.normal.ReaderActivity"
-                  android:label=" "/>
-        <activity android:name=".activity.normal.ShortVideoActivity"
-                  android:label=" "/>
+        <activity android:name=".activity.normal.ReaderActivity"/>
+        <activity android:name=".activity.normal.ShortVideoActivity"/>
         <activity android:name=".activity.normal.DetailJokeActivity"
                   android:label="详细"/>
     </application>

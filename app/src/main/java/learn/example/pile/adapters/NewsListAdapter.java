@@ -114,7 +114,11 @@ public class NewsListAdapter extends SaveStateAbleAdapter<NewsListAdapter.BaseNe
     private void setNormalViews(NewsNormalViewHolder holder,int position)
     {
         NetEaseNews.T1348647909107Bean item=getItem(position);
-        Glide.with(holder.itemView.getContext()).load(item.getImgsrc()).centerCrop().into(holder.img);
+        Glide.with(holder.itemView.getContext())
+                .load(item.getImgsrc())
+                .asBitmap()
+                .centerCrop()
+                .into(holder.img);
     }
 
 
@@ -123,7 +127,10 @@ public class NewsListAdapter extends SaveStateAbleAdapter<NewsListAdapter.BaseNe
     {
         NetEaseNews.T1348647909107Bean item=getItem(position);
         Context context=holder.itemView.getContext();
-        Glide.with(context).load(item.getImgsrc()).fitCenter().into(holder.mImageView1);
+        Glide.with(context).load(item.getImgsrc())
+                .asBitmap()
+                .centerCrop()
+                .into(holder.mImageView1);
         NetEaseNews.T1348647909107Bean.ImageExtraBean[] images=item.getImgnewextra();
         if (images!=null)
         {
@@ -131,10 +138,17 @@ public class NewsListAdapter extends SaveStateAbleAdapter<NewsListAdapter.BaseNe
             for (int i = 0; i < size; i++) {
                 if (i==0)
                 {
-                    Glide.with(context).load(images[i].getImgsrc()).fitCenter().into(holder.mImageView2);
+                    Glide.with(context).load(images[i]
+                            .getImgsrc())
+                            .asBitmap()
+                            .centerCrop()
+                            .into(holder.mImageView2);
                 }else if (i==1)
                 {
-                    Glide.with(context).load(images[i].getImgsrc()).fitCenter().into(holder.mImageView3);
+                    Glide.with(context).load(images[i].getImgsrc())
+                            .asBitmap()
+                            .centerCrop()
+                            .into(holder.mImageView3);
                 }
             }
         }

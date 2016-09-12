@@ -21,8 +21,6 @@ import learn.example.pile.object.NetEase;
  */
 public class ExampleUnitTest {
 
-    public static final String json="{ \"url\" : \"hhhh\",\"image\": null}";
-    private JsonArray urls;
 
     @Test
     public void addition_isCorrect() {
@@ -31,23 +29,4 @@ public class ExampleUnitTest {
 
 
 
-
-    public String scriptTag(String js)
-    {
-        return "<script src='"+js+"'>"+"</script>";
-    }
-
-
-
-    public static class UrlBean {
-        private String url;
-
-        public String getUrl() {
-            return url;
-        }
-
-        public void setUrl(String url) {
-            this.url = url;
-        }
-    }
 }

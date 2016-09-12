@@ -3,7 +3,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?android:attr/selectableItemBackground"
-                android:padding="@dimen/normal_padding">
+                android:padding="@dimen/normal">
 
     <include layout="@layout/adapter_joke_top"
              android:layout_width="match_parent"
@@ -13,22 +13,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/content"
-        android:background="@color/joke_background"
         android:layout_below="@+id/text">
 
         <ImageView
-            android:layout_width="@dimen/joke_img_width"
-            android:layout_height="@dimen/joke_img_height"
-            android:background="@color/joke_background"
-            android:scaleType="centerCrop"
-            android:layout_centerHorizontal="true"
-            android:id="@+id/cover"/>
-        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:scaleType="fitStart"
+            android:id="@+id/cover"/>
+        <ImageView
+            android:layout_width="@dimen/avatar_img_width"
+            android:layout_height="@dimen/avatar_img_height"
             android:layout_centerInParent="true"
             android:id="@+id/ic_play"
-            android:background="@android:drawable/ic_media_play"/>
+            android:src="@drawable/image_playbutton"/>
         <TextView
             style="@style/SmallText"
             android:layout_width="wrap_content"

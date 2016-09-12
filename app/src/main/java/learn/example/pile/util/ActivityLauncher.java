@@ -10,14 +10,15 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 
 import learn.example.pile.R;
+import learn.example.pile.activity.base.SupportCommentActivity;
 import learn.example.pile.activity.normal.ChatActivity;
 import learn.example.pile.activity.normal.DetailJokeActivity;
 import learn.example.pile.activity.normal.PhotoActivity;
 import learn.example.pile.activity.normal.ReaderActivity;
 import learn.example.pile.activity.normal.ShortVideoActivity;
-import learn.example.pile.activity.normal.VideoActivity;
 import learn.example.pile.activity.normal.WebViewActivity;
-import learn.example.pile.object.OpenEyes;
+import learn.example.pile.fragment.comment.NetEaseCommentFragment;
+import learn.example.pile.object.NetEase;
 
 /**
  * Created on 2016/6/23.
@@ -38,26 +39,28 @@ public class ActivityLauncher {
 
 
     /**
-     * 启动视频播放器Activity
+     * 启动视频播放器Activity,普通的显示视频
      * @param context
      * @param url
      */
     public static void startVideoActivity(@NonNull Context context, @NonNull String url)
     {
-        Intent intent=new Intent(context, VideoActivity.class);
+        Intent intent=new Intent(context, learn.example.pile.video.VideoActivity.class);
         intent.setData(Uri.parse(url));
         startActivity(context,intent, makeSlideAnimation(context));
     }
 
 
     /**
-     * 启动视频播放器Activity()(开眼视频)
+     * 启动视频播放器Activity, 将会应用评论菜单
+     * @see SupportCommentActivity
+     * @see learn.example.pile.video.VideoActivity
      */
-    public static void startVideoActivityForOpenEye(@NonNull Context context, OpenEyes.VideoInfo info)
+    public static void startVideoActivitySupportCommentMenu(@NonNull Context context,String uri,Bundle argus)
     {
-        Intent intent=new Intent(context, VideoActivity.class);
-        intent.setData(Uri.parse(info.getPlayUrl()));
-        intent.putExtra(VideoActivity.KEY_VIDEO_OPEN_EYE,info);
+        Intent intent=new Intent(context, learn.example.pile.video.VideoActivity.class);
+        intent.setData(Uri.parse(uri));
+        intent.putExtra(SupportCommentActivity.KEY_APPLY_COMMENT,argus);
         startActivity(context,intent, makeSlideAnimation(context));
     }
 
@@ -70,9 +73,7 @@ public class ActivityLauncher {
 
     public static void startPhotoActivityForSingle(@NonNull Context context, @NonNull String url)
     {
-        Intent intent=new Intent(context, PhotoActivity.class);
-        intent.putExtra(PhotoActivity.KEY_IMG_URL,url);
-        startActivity(context,intent,makeExplodeAnimation(context));
+       startPhotoActivityForMulti(context,new String[]{url},0);
     }
 
     /**
@@ -81,11 +82,11 @@ public class ActivityLauncher {
      * @param url 图片的URL
      */
 
-    public static void startPhotoActivityForMuliti(@NonNull Context context, @NonNull String[] url,int position)
+    public static void startPhotoActivityForMulti(@NonNull Context context, @NonNull String[] url, int position)
     {
         Intent intent=new Intent(context, PhotoActivity.class);
-        intent.putExtra(PhotoActivity.KEY_MULITI_IMAGE,url);
-        intent.putExtra(PhotoActivity.KEY_SCROLL_POSITION,position);
+        intent.putExtra(PhotoActivity.KEY_IMAGE_URLS,url);
+        intent.putExtra(PhotoActivity.KEY_SCROLL_TO_POSITION,position);
         startActivity(context,intent,makeExplodeAnimation(context));
     }
 
@@ -114,7 +115,7 @@ public class ActivityLauncher {
     }
 
     /**
-     * 启动阅读器,显示知乎内容
+     * 启动显示详细笑话内容Activity
      * @param groupJson  groupBean class 反序列的json 数据
      */
     public static void startDetailActivity(@NonNull Context context, @NonNull String groupJson)
@@ -126,7 +127,7 @@ public class ActivityLauncher {
 
     /**
      * 启动阅读器,显示网易内容
-     * @param array  所需要的消息,array[0]=boardID,=array[1]=docID
+     * @param array  所需要的消息,array[0]=boardID,array[1]=docID
      */
     public static void startReaderActivityForNetEase(@NonNull Context context, String[] array)
     {

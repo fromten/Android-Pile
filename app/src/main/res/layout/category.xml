@@ -8,41 +8,41 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        style="@style/Category"
+        style="@style/Video_Category_Button"
         android:id="@+id/art"
         android:text="@string/art"/>
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        style="@style/Category"
+        style="@style/Video_Category_Button"
         android:id="@+id/ads"
         android:text="@string/ads"/>
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        style="@style/Category"
+        style="@style/Video_Category_Button"
         android:id="@+id/drama"
         android:text="@string/drama"/>
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        style="@style/Category"
+        style="@style/Video_Category_Button"
         android:id="@+id/preview"
         android:text="@string/preview"/>
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        style="@style/Category"
+        style="@style/Video_Category_Button"
         android:id="@+id/record"
         android:text="@string/record"/>
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        style="@style/Category"
+        style="@style/Video_Category_Button"
         android:layout_weight="1"
         android:id="@+id/trip"
         android:text="@string/trip"/>

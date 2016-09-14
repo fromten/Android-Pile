@@ -49,7 +49,7 @@ public class TimeUtil {
         return minute+"'"+s;
     }
 
-
+    //return ms
     public static long getTime()
     {
         return new Date().getTime();

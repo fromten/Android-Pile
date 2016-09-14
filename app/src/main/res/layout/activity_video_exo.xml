@@ -12,7 +12,7 @@
         android:layout_gravity="center"
         android:id="@+id/video"/>
 
-    <learn.example.pile.video.MediaControlViewHolder
+    <learn.example.pile.video.MediaPlayControlView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
@@ -27,23 +27,22 @@
         android:id="@+id/video_volume"/>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/half_transparent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center"
         android:id="@+id/retry_root"
+        android:layout_gravity="center"
         android:visibility="gone">
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleType="center"
+            android:layout_gravity="center"
             android:src="@mipmap/ic_refresh_grey"
             android:id="@+id/retry"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="点击重试"
             android:textColor="@android:color/white"
             android:textStyle="bold"
             android:id="@+id/hint"/>

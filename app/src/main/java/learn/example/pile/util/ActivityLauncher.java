@@ -17,8 +17,7 @@ import learn.example.pile.activity.normal.PhotoActivity;
 import learn.example.pile.activity.normal.ReaderActivity;
 import learn.example.pile.activity.normal.ShortVideoActivity;
 import learn.example.pile.activity.normal.WebViewActivity;
-import learn.example.pile.fragment.comment.NetEaseCommentFragment;
-import learn.example.pile.object.NetEase;
+import learn.example.pile.activity.normal.VideoActivity;
 
 /**
  * Created on 2016/6/23.
@@ -45,7 +44,7 @@ public class ActivityLauncher {
      */
     public static void startVideoActivity(@NonNull Context context, @NonNull String url)
     {
-        Intent intent=new Intent(context, learn.example.pile.video.VideoActivity.class);
+        Intent intent=new Intent(context, VideoActivity.class);
         intent.setData(Uri.parse(url));
         startActivity(context,intent, makeSlideAnimation(context));
     }
@@ -54,13 +53,15 @@ public class ActivityLauncher {
     /**
      * 启动视频播放器Activity, 将会应用评论菜单
      * @see SupportCommentActivity
-     * @see learn.example.pile.video.VideoActivity
+     * @see VideoActivity
      */
-    public static void startVideoActivitySupportCommentMenu(@NonNull Context context,String uri,Bundle argus)
+    public static void startVideoActivitySupportCommentMenu(@NonNull Context context,String uri,Bundle argus,@Nullable String title)
     {
-        Intent intent=new Intent(context, learn.example.pile.video.VideoActivity.class);
+        Intent intent=new Intent(context, VideoActivity.class);
         intent.setData(Uri.parse(uri));
         intent.putExtra(SupportCommentActivity.KEY_APPLY_COMMENT,argus);
+        intent.putExtra(VideoActivity.KEY_TITLE,title);
+
         startActivity(context,intent, makeSlideAnimation(context));
     }
 

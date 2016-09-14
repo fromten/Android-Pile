@@ -45,6 +45,7 @@ public class ZhihuCommentFragment extends CommentFragment implements IService.Ca
         }
     }
 
+
     @Override
     public void onSuccess(String data) {
         Comment comment = CommentFactory.newInstance().produceComment(ZhihuCommentFactory.class, data);

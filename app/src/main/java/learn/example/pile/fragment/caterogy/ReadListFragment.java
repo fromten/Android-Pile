@@ -60,6 +60,11 @@ public class ReadListFragment extends BaseListFragment implements IService.Callb
 
     @Override
     public void onSuccess(ZhihuStories data) {
+        if (isRefreshing())
+        {
+            mAdapter.clear();
+        }
+
         date=data.getDate();
 
         mAdapter.setDate(formatDate(date));
@@ -84,7 +89,6 @@ public class ReadListFragment extends BaseListFragment implements IService.Callb
 
     @Override
     public void onRefresh() {
-        mAdapter.clear();
         mService.getStories(this);
     }
 

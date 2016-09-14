@@ -60,6 +60,24 @@ public class BaseListFragment extends  SaveAdapterStateFragment {
         setRefreshSchemeColors(ResourcesCompat.getColor(getResources(),R.color.colorPrimary,null));
     }
 
+    @Override
+    public void setAdapter(RecyclerView.Adapter adapter) {
+        super.setAdapter(adapter);
+        mAdapter=adapter;
+        addFooterHolder(createAdapterFooterHolder());
+    }
+
+
+    @Override
+    public void onDestroy() {
+        if (mTopAniamtor!=null)
+        {
+            mTopAniamtor.cancel();
+            mTopAniamtor.removeAllListeners();
+        }
+        super.onDestroy();
+    }
+
 
     /**
      * 添加布局EmptyView,子类可以覆盖此方法,使用自己的EmptyView
@@ -148,23 +166,7 @@ public class BaseListFragment extends  SaveAdapterStateFragment {
     }
 
 
-    @Override
-    public void setAdapter(RecyclerView.Adapter adapter) {
-        super.setAdapter(adapter);
-        mAdapter=adapter;
-        addFooterHolder(createAdapterFooterHolder());
-    }
 
-
-    @Override
-    public void onDestroy() {
-        if (mTopAniamtor!=null)
-        {
-            mTopAniamtor.cancel();
-            mTopAniamtor.removeAllListeners();
-        }
-        super.onDestroy();
-    }
 
     @Override
     public void onRefresh() {

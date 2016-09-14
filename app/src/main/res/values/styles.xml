@@ -19,12 +19,12 @@
         <item name="drawerArrowStyle">@style/Widget.AppCompat.DrawerArrowToggle</item>
     </style>
 
-    <style name="Category">
-        <item name="android:textColor">@color/white_dark</item>
+    <style name="Video_Category_Button">
         <item name="android:padding">5dp</item>
         <item name="android:layout_margin">5dp</item>
         <item name="android:gravity">center</item>
-        <item name="android:background">@drawable/video_category_selector</item>
+        <item name="android:textColor">@drawable/selector_video_category</item>
+        <item name="android:background">@color/grey_dark</item>
     </style>
 
     <style name="TitleText" parent="TextAppearance.AppCompat.Medium">
@@ -34,10 +34,8 @@
     <style name="SummaryText" parent="TextAppearance.AppCompat.Small">
     </style>
 
-
     <style name="SmallText" parent="TextAppearance.AppCompat.Small">
     </style>
-
 
     <style name="ContentText" parent="TextAppearance.AppCompat.Small.Inverse">
         　<item name="android:textColor">@color/black_light</item>

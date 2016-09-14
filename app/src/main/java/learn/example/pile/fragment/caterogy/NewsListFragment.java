@@ -52,12 +52,15 @@ public class NewsListFragment extends BaseListFragment implements NetService.Cal
 
     @Override
     public void onSuccess(NetEaseNews data) {
+        if (isRefreshing())
+        {
+            mNewsListAdapter.clear();
+        }
+
         page+=20;
         mNewsListAdapter.addAll(data.getT1348647909107());
         notifySuccess();
     }
-
-
 
     @Override
     public void onFailure(String msg) {
@@ -66,7 +69,6 @@ public class NewsListFragment extends BaseListFragment implements NetService.Cal
 
     @Override
     public void onRefresh() {
-        mNewsListAdapter.clear();
         mService.getNetEaseNews(page,this);
     }
 

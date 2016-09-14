@@ -4,6 +4,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import learn.example.pile.R;
 import learn.example.pile.object.PhotosMessage;
 import learn.example.pile.ui.PhotoWatcherLayout;
 
@@ -34,12 +35,18 @@ public class NetEasePhotoAdapter implements PhotoWatcherLayout.PhotoWatcherAdapt
     }
 
     @Override
-    public void onPageSelected(int position, TextView title, TextView content, TextView order) {
+    public void onPageSelected(int position, PhotoWatcherLayout viewGroup) {
+
         PhotosMessage message=mMessagesList.get(position);
+
+        TextView title= (TextView) viewGroup.findViewById(R.id.title);
+        TextView content= (TextView) viewGroup.findViewById(R.id.content);
+        TextView page= (TextView) viewGroup.findViewById(R.id.page);
         title.setText(message.getTitle());
         content.setText(message.getContent());
-        order.setText(position+1+"/"+mMessagesList.size());
+        page.setText(position+1+"/"+mMessagesList.size());
     }
+
 
     @Override
     public void onPageScrollStateChanged(int state) {

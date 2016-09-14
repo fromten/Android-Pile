@@ -48,6 +48,7 @@ public class PhotoActivity extends SupportCommentActivity {
 
     private NetEasePhotoWatcher mNetEasePhotoWatcher;
 
+    private PhotoViewAttacher.OnViewTapListener mPhotoViewTapListener;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,16 +68,19 @@ public class PhotoActivity extends SupportCommentActivity {
         }
     }
 
+
+
     private void initPhotoView(String[] url)
     {
         PhotoWatcherLayout.SimplePhotoWatcherAdapter adapter=new PhotoWatcherLayout.SimplePhotoWatcherAdapter(url);
         mPhotoWatcherLayout.setAdapter(adapter);
-        mPhotoWatcherLayout.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+        mPhotoViewTapListener= new PhotoViewAttacher.OnViewTapListener() {
             @Override
             public void onViewTap(View view, float v, float v1) {
                 finish();
             }
-        });
+        };
+        mPhotoWatcherLayout.setOnViewTapListener(mPhotoViewTapListener);
 
         //滚动到请求的位置
         int position=getIntent().getIntExtra(KEY_SCROLL_TO_POSITION,0);
@@ -151,7 +155,7 @@ public class PhotoActivity extends SupportCommentActivity {
             {
                 NetEasePhotoAdapter adapter=new NetEasePhotoAdapter(list);
                 mPhotoWatcherLayout.setAdapter(adapter);
-                mPhotoWatcherLayout.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+                mPhotoViewTapListener=new PhotoViewAttacher.OnViewTapListener() {
                     @Override
                     public void onViewTap(View view, float v, float v1) {
                         if (click%2==0)
@@ -164,7 +168,8 @@ public class PhotoActivity extends SupportCommentActivity {
                         }
                         click++;
                     }
-                });
+                };
+                mPhotoWatcherLayout.setOnViewTapListener(mPhotoViewTapListener);
                 //手动调用
                 mPhotoWatcherLayout.onPageSelected(0);
             }

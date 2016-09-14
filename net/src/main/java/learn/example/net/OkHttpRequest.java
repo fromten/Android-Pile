@@ -145,23 +145,23 @@ public class OkHttpRequest{
 
     private  <T>void deliverSuccessResult(final T data, final RequestCallback<T> callBack)
     {
-       mHandler.postDelayed(new Runnable() {
+       mHandler.post(new Runnable() {
           @Override
           public void run() {
               callBack.onSuccess(data);
           }
-      },200);
+      });
     }
 
     private void deliverFailureResult(final String msg, final RequestCallback callBack)
     {
 
-        mHandler.postDelayed(new Runnable() {
+        mHandler.post(new Runnable() {
             @Override
             public void run() {
                callBack.onFailure(msg);
             }
-        },200);
+        });
     }
 
 

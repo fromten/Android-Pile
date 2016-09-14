@@ -48,11 +48,15 @@ public class JokeCommentFragment extends CommentFragment implements IService.Cal
         super.onViewCreated(view, savedInstanceState);
         mJokeService=new JokeService();
         groupId=args.getString(KEY_GROUP_ID);
-        if (savedInstanceState==null)
+
+        if (savedInstanceState!=null)
+        {
+            start=savedInstanceState.getInt(KEY_LAST_POSITION,0);
+        }
+
+        if (start<=0)
         {
             mJokeService.getComment(start,20,groupId,this);
-        }else {
-            start=savedInstanceState.getInt(KEY_LAST_POSITION);
         }
     }
 

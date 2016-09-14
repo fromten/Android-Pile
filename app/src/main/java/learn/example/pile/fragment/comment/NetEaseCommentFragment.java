@@ -46,11 +46,14 @@ public class NetEaseCommentFragment extends CommentFragment implements NetEaseNe
             boardId=argument.getString(KEY_BOARDID);
 
             mNetEaseNewsService =new NetEaseNewsService();
-            if (savedInstanceState==null)
+            if (savedInstanceState!=null)
+            {
+                currentPos=savedInstanceState.getInt(KEY_POSITION,0);
+            }
+
+            if (currentPos<=0)
             {
                 mNetEaseNewsService.getHotComment(boardId,docId,currentPos,10,this);
-            }else {
-                currentPos=savedInstanceState.getInt(KEY_POSITION);
             }
         }
 

@@ -5,36 +5,21 @@ import android.content.Context;
 import android.graphics.RectF;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
-import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
-import com.bumptech.glide.load.resource.bitmap.TransformationUtils;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.load.resource.transcode.BitmapToGlideDrawableTranscoder;
-import com.bumptech.glide.request.FutureTarget;
-import com.bumptech.glide.request.RequestFutureTarget;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.BaseTarget;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
-import com.bumptech.glide.request.target.ImageViewTarget;
-import com.bumptech.glide.request.target.SizeReadyCallback;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import learn.example.pile.R;
 import learn.example.pile.adapters.ViewPagerAdapter;
-import learn.example.pile.util.GlideUtil;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
@@ -48,7 +33,7 @@ public class PhotoWatcherLayout extends FrameLayout implements ViewPager.OnPageC
     private RelativeLayout mRelativeLayout;
 
     private TextView title;
-    private TextView number;
+    private TextView page;
     private TextView content;
 
 
@@ -72,10 +57,12 @@ public class PhotoWatcherLayout extends FrameLayout implements ViewPager.OnPageC
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
         mRelativeLayout= (RelativeLayout) findViewById(R.id.container);
         title= (TextView) findViewById(R.id.title);
-        number= (TextView) findViewById(R.id.number);
+        page = (TextView) findViewById(R.id.page);
         content= (TextView)findViewById(R.id.content);
 
     }
+
+
 
 
     public void setAdapter(PhotoWatcherAdapter adapter)
@@ -129,7 +116,7 @@ public class PhotoWatcherLayout extends FrameLayout implements ViewPager.OnPageC
 
     @Override
     public void onPageSelected(int position) {
-        mPhotoWatcherAdapter.onPageSelected(position,title,content,number);
+        mPhotoWatcherAdapter.onPageSelected(position,this);
     }
 
     @Override
@@ -202,11 +189,9 @@ public class PhotoWatcherLayout extends FrameLayout implements ViewPager.OnPageC
         /**
          * ViewPager选择时调用
          * @param position 现在位置
-         * @param title 标题
-         * @param content 内容
-         * @param order 顺序
+         * @param viewGroud view容器
          */
-        void onPageSelected(int position,TextView title,TextView content,TextView order);
+        void onPageSelected(int position,PhotoWatcherLayout viewGroud);
 
         void onPageScrollStateChanged(int state);
     }
@@ -234,9 +219,11 @@ public class PhotoWatcherLayout extends FrameLayout implements ViewPager.OnPageC
         }
 
         @Override
-        public void onPageSelected(int position, TextView title, TextView content, TextView order) {
+        public void onPageSelected(int position, PhotoWatcherLayout viewGroud) {
             String str=position+1+"/"+getItemCount();
-            order.setText(str);
+
+            TextView textView= (TextView) viewGroud.findViewById(R.id.page);
+            textView.setText(str);
         }
 
         @Override

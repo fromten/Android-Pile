@@ -20,7 +20,7 @@ import learn.example.pile.R;
 /**
  * Created on 2016/9/7.
  */
-public class MediaControlViewHolder extends FrameLayout implements View.OnClickListener,
+public class MediaPlayControlView extends FrameLayout implements View.OnClickListener,
         SeekBar.OnSeekBarChangeListener{
 
 
@@ -42,11 +42,11 @@ public class MediaControlViewHolder extends FrameLayout implements View.OnClickL
     private MediaController.MediaPlayerControl mControl;
 
 
-    public MediaControlViewHolder(Context context) {
+    public MediaPlayControlView(Context context) {
         this(context,null);
     }
 
-    public MediaControlViewHolder(Context context, AttributeSet attrs) {
+    public MediaPlayControlView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }

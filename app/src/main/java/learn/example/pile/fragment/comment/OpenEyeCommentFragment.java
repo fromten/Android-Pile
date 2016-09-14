@@ -44,8 +44,11 @@ public class OpenEyeCommentFragment extends CommentFragment implements IService.
         mOpenEyeService = new OpenEyeService();
         if (savedInstanceState != null) {
             nextPageUrl = savedInstanceState.getString(KEY_NEXT_PAGE_URL);
-        } else {
-            mOpenEyeService.getComments(id, this);
+        }
+
+        if (nextPageUrl==null)
+        {
+            mOpenEyeService.getComments(id,this);
         }
 
     }

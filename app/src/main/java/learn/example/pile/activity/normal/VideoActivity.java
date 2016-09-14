@@ -9,14 +9,17 @@ import android.view.GestureDetector;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import learn.example.pile.R;
 import learn.example.pile.activity.base.SupportCommentActivity;
 import learn.example.pile.ui.VolumeProgressView;
 import learn.example.pile.video.ExoVideoView;
-import learn.example.pile.video.MediaControlViewHolder;
+import learn.example.pile.video.MediaPlayControlView;
 
 /**
  * Created on 2016/5/26.
@@ -25,10 +28,10 @@ public class VideoActivity extends SupportCommentActivity {
 
     private static final String KEY_SAVE_VIDEO_POSITION = "video_position";
 
-
+    public static final String KEY_TITLE="title";
 
     private ExoVideoView mExoVideoView;
-    private MediaControlViewHolder mControlView;
+    private MediaPlayControlView mPlayerControlView;
     private VolumeProgressView mVolumeProgressView;
     private LinearLayout mRetryRoot;
     private MediaController.MediaPlayerControl mPlayControl;
@@ -62,17 +65,27 @@ public class VideoActivity extends SupportCommentActivity {
         setContentView(R.layout.activity_video_exo);
 
         mExoVideoView= (ExoVideoView) findViewById(R.id.video);
-        mControlView= (MediaControlViewHolder) findViewById(R.id.control);
+        mPlayerControlView = (MediaPlayControlView) findViewById(R.id.control);
         mRetryRoot= (LinearLayout) findViewById(R.id.retry_root);
         mVolumeProgressView= (VolumeProgressView) findViewById(R.id.video_volume);
 
         setListener();
+        showTitle();
 
-        mSavedSeekPosition=savedInstanceState==null?-1:savedInstanceState.getInt(KEY_SAVE_VIDEO_POSITION);
+        if (savedInstanceState != null) {
+            mSavedSeekPosition=savedInstanceState.getInt(KEY_SAVE_VIDEO_POSITION,-1);
+        }
+
 
         playVideo();
 
 
+    }
+
+    private void showTitle()
+    {
+        String title=getIntent().getStringExtra(KEY_TITLE);
+        setTitle(title);
     }
 
     private void playVideo()
@@ -95,32 +108,6 @@ public class VideoActivity extends SupportCommentActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onBackPressed() {
-        if (getCommentFragmentIfShowing()!=null&&mPlayControl!=null)
-        {
-            mPlayControl.start();
-        }
-        super.onBackPressed();
-    }
-
-
-
-
-    public void setListener() {
-        mRetryViewHolder=new RetryViewHolder(mRetryRoot);
-
-        mExoVideoView.setPlayInfoListener(mPlayInfoListener);
-
-        mScreenTouchListener=new GestureDetector(this,mSimpleOnGestureListener);
-        mExoVideoView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                mScreenTouchListener.onTouchEvent(event);
-                return true;
-            }
-        });
-    }
 
     @Override
     protected void onResume() {
@@ -141,6 +128,14 @@ public class VideoActivity extends SupportCommentActivity {
         super.onPause();
     }
 
+    @Override
+    public void onBackPressed() {
+        if (getCommentFragmentIfShowing()!=null&&mPlayControl!=null)
+        {
+            mPlayControl.start();
+        }
+        super.onBackPressed();
+    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -149,9 +144,70 @@ public class VideoActivity extends SupportCommentActivity {
         super.onSaveInstanceState(outState);
     }
 
-    @Override
-    protected int getReplaceId() {
-        return R.id.root;
+    private ExoVideoView.OnPlayInfoListener mPlayInfoListener=new ExoVideoView.OnPlayInfoListener() {
+        @Override
+        public void onPrepare(ExoVideoView view) {
+            mPlayControl=view.getPlayerControl();
+            if (mSavedSeekPosition>0)
+            {
+                mPlayControl.seekTo(mSavedSeekPosition);
+            }
+            mPlayerControlView.setMediaPlayerControl(mPlayControl);
+            enableView(mPlayerControlView,true);
+
+            if (mRetryViewHolder.mRoot.isShown()) mRetryViewHolder.hide();
+
+            //可能在网络请求响应之前,评论菜单被点击显示,暂停播放
+            if (getCommentFragmentIfShowing()!=null)
+            {
+                mPlayControl.pause();
+            }
+
+            mHandler.sendEmptyMessageDelayed(HIDE_ACTIONBAR,3000);
+        }
+
+        @Override
+        public void onCompleted(ExoVideoView view) {
+            mRetryViewHolder.show("重新播放");
+            enableView(mPlayerControlView,false);
+        }
+
+        @Override
+        public void onError(ExoVideoView view, Exception error) {
+            mRetryViewHolder.show("播放错误,重试");
+            enableView(mPlayerControlView,false);
+            mPlayControl=null;
+        }
+    } ;
+
+
+    public void setListener() {
+        mRetryViewHolder=new RetryViewHolder(mRetryRoot);
+
+        mExoVideoView.setPlayInfoListener(mPlayInfoListener);
+
+        mScreenTouchListener=new GestureDetector(this,mSimpleOnGestureListener);
+        mExoVideoView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mScreenTouchListener.onTouchEvent(event);
+                return true;
+            }
+        });
+    }
+
+
+
+    private void enableView(View view,boolean enable)
+    {
+        view.setEnabled(enable);
+        if (view instanceof ViewGroup)
+        {
+            ViewGroup viewGroup= (ViewGroup) view;
+            for (int i = viewGroup.getChildCount()-1; i >=0; i--) {
+                enableView(viewGroup.getChildAt(i),enable);
+            }
+        }
     }
 
 
@@ -172,45 +228,17 @@ public class VideoActivity extends SupportCommentActivity {
         super.onDestroy();
     }
 
-    private ExoVideoView.OnPlayInfoListener mPlayInfoListener=new ExoVideoView.OnPlayInfoListener() {
-        @Override
-        public void onPrepare(ExoVideoView view) {
-            mPlayControl=view.getPlayerControl();
-            if (mSavedSeekPosition>0)
-            {
-                mPlayControl.seekTo(mSavedSeekPosition);
-            }
-            mControlView.setMediaPlayerControl(mPlayControl);
-            mRetryViewHolder.hide();
 
-            if (getCommentFragmentIfShowing()!=null)
-            {
-                mPlayControl.pause();
-            }
-
-            mHandler.sendEmptyMessageDelayed(HIDE_ACTIONBAR,3000);
-        }
-
-        @Override
-        public void onCompleted(ExoVideoView view) {
-            mRetryViewHolder.show();
-        }
-
-        @Override
-        public void onError(ExoVideoView view, Exception error) {
-            mRetryViewHolder.show();
-        }
-    } ;
 
     private GestureDetector.SimpleOnGestureListener mSimpleOnGestureListener=new GestureDetector.SimpleOnGestureListener(){
 
         private void toggleControlsVisible()
         {
-            if (mControlView.isShown()) {
-                mControlView.hide();
+            if (mPlayerControlView.isShown()) {
+                mPlayerControlView.hide();
                 hideActionBar();
             } else {
-                mControlView.show(3000);
+                mPlayerControlView.show(3000);
                 showActionBar();
             }
 
@@ -238,7 +266,7 @@ public class VideoActivity extends SupportCommentActivity {
             } else {
                 mPlayControl.start();
             }
-            mControlView.updatePauseDrawable();
+            mPlayerControlView.updatePauseDrawable();
             toggleControlsVisible();
             return true;
         }
@@ -253,21 +281,25 @@ public class VideoActivity extends SupportCommentActivity {
             return true;
         }
 
-
+        int previousDownY;
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            int downY= (int) e2.getY();
 
-            if (Math.abs(distanceY)>Math.abs(distanceX)&&Math.abs(distanceY)>15)
+            int lenY= previousDownY-downY;
+            int increase=0;
+            if (lenY>=20)
             {
-                //  int distance=y1-y2;
+                increase=1;
+            }else if (Math.abs(lenY)>=20){
+                increase=-1;
+            }
+            if (increase!=0)
+            {
                 mVolumeProgressView.show();
-                if (distanceY>0)
-                {
-                    mVolumeProgressView.increase();
-                }else {
+                mVolumeProgressView.setCurrentValue(mVolumeProgressView.getCurrentValue()+increase);
 
-                    mVolumeProgressView.decrease();
-                }
+                previousDownY=downY;
                 mHandler.removeMessages(HIDE_VOLUME_PROGERESSBAR);
                 mHandler.sendEmptyMessageDelayed(HIDE_VOLUME_PROGERESSBAR,3000);
                 return true;
@@ -277,38 +309,48 @@ public class VideoActivity extends SupportCommentActivity {
         }
     };
 
+    @Override
+    protected int getReplaceId() {
+        return R.id.root;
+    }
+
     private  class RetryViewHolder {
-        private View mView;
+        private View mRoot;
+        private TextView mTextView;
 
         public RetryViewHolder(View view) {
-            mView = view;
-            mView.setOnClickListener(new View.OnClickListener() {
+            mRoot = view;
+            mTextView= (TextView) mRoot.findViewById(R.id.hint);
+            mRoot.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mPlayControl!=null)
-                    {
+                    {   //播放器实例还存在
                         mPlayControl.seekTo(0);
-                        hide();
-                    }else {
+                    }else {//重新播放视频
                         playVideo();
                     }
+                    hide();
+                    enableView(mPlayerControlView,true);
                 }
             });
         }
 
-        public void show()
+        public void show(CharSequence hintText)
         {
-            mView.setVisibility(View.VISIBLE);
-            mView.setFocusable(true);
-            mView.setClickable(true);
-            mView.requestFocus();
+            mRoot.setVisibility(View.VISIBLE);
+            mRoot.setFocusable(true);
+            mRoot.setClickable(true);
+            mRoot.requestFocus();
+
+            mTextView.setText(hintText);
         }
 
         public void hide()
         {
-            mView.setVisibility(View.INVISIBLE);
-            mView.setFocusable(false);
-            mView.setClickable(false);
+            mRoot.setVisibility(View.INVISIBLE);
+            mRoot.setFocusable(false);
+            mRoot.setClickable(false);
         }
 
     }

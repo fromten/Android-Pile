@@ -1,5 +1,6 @@
 package learn.example.pile.fragment.caterogy;
 
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -7,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,7 +97,7 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
         }
 
         //在刷新状态下,adapter元素不为空,清空数据
-        if (isRefreshing()&&mAdapter.getItemCount()>0)
+        if (isRefreshing())
         {
             mAdapter.clear();
         }
@@ -115,7 +117,7 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
         long second=nextPushTime-TimeUtil.getTime();
 
         //如果到下一次推送时间,或者当前的Adapter 没有元素,需要再次请求
-        boolean requireRequest=second<0||mAdapter.getItemCount()==0;
+        boolean requireRequest=second<=0||mAdapter.getItemCount()==0;
         if (requireRequest)
         {
             mService.getHotVideo(this);
@@ -152,6 +154,7 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
 
     public class CategoryViewHolder extends RecyclerViewImprove.HeadHolder implements View.OnClickListener{
 
+
         public CategoryViewHolder()
         {
             this(LayoutInflater.from(getContext()).inflate(R.layout.category,getRecyclerView(),false));
@@ -162,7 +165,8 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
             ViewGroup viewGroup= (ViewGroup) view;
             int count=viewGroup.getChildCount();
             for (int i = 0; i < count; i++) {
-                viewGroup.getChildAt(i).setOnClickListener(this);
+                TextView text= (TextView) viewGroup.getChildAt(i);
+                text.setOnClickListener(this);
             }
         }
 

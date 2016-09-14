@@ -27,7 +27,7 @@
         <activity android:name=".activity.normal.WebViewActivity"
                   android:process="learn.example.pile.PileApplication.WebActivity"
                   android:label=" "/>
-        <activity android:name=".video.VideoActivity"
+        <activity android:name=".activity.normal.VideoActivity"
                   android:configChanges="orientation|screenSize"
                   android:label="视频"/>
         <activity android:name=".activity.normal.PhotoActivity"/>

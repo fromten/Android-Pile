@@ -44,8 +44,12 @@ public abstract class SaveStateAbleAdapter<VH extends RecyclerView.ViewHolder,D 
     }
     public void clear()
     {
-        mDataList.clear();
-        notifyDataSetChanged();
+        if (!mDataList.isEmpty())
+        {
+            mDataList.clear();
+            notifyDataSetChanged();
+        }
+
     }
     public D getItem (int position)
     {

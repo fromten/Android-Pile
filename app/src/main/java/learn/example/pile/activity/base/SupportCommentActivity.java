@@ -38,7 +38,7 @@ public abstract class SupportCommentActivity extends FullScreenActivity {
             String fragmentClassName=bundle.getString(KEY_FRAGMENT_CLASS_NAME);
             if (fragmentClassName==null)
             {
-                throw new RuntimeException("Must pass on a fragment class name,KEY is VideoActivity.KEY_FRAGMENT_CLASS_NAME");
+                throw new RuntimeException("Must pass on a fragment class name,KEY is SupportCommentActivity.KEY_FRAGMENT_CLASS_NAME");
             }
             try {
                 Class<Fragment> fragment= (Class<Fragment>) Class.forName(fragmentClassName);

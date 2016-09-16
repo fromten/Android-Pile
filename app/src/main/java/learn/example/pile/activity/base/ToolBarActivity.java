@@ -130,17 +130,4 @@ public class ToolBarActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    public void finish() {
-        super.finish();
-        onPerformExitAnim();
-    }
-
-    /**
-     * 退出动画,子类可以覆盖此方法
-     */
-    protected void onPerformExitAnim()
-    {
-       overridePendingTransition(R.anim.anim_slide_left_in,R.anim.anim_slide_left_to_end);//添加一个右边退出动画
-    }
 }

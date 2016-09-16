@@ -122,7 +122,6 @@ public class ExoVideoView extends SurfaceView implements SurfaceHolder.Callback
 
     /**
      * 是否默认播放,默认是true
-     * @param autoPlay
      */
     public void setAutoPlay(boolean autoPlay) {
         this.autoPlay = autoPlay;

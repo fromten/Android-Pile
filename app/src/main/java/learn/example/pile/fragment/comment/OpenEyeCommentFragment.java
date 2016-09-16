@@ -2,6 +2,8 @@ package learn.example.pile.fragment.comment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 
 import com.google.gson.JsonObject;
@@ -52,6 +54,9 @@ public class OpenEyeCommentFragment extends CommentFragment implements IService.
         }
 
     }
+
+
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

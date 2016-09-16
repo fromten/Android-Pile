@@ -16,8 +16,7 @@ import java.util.List;
 
 import learn.example.net.OkHttpRequest;
 import learn.example.pile.R;
-import learn.example.pile.activity.base.FullScreenActivity;
-import learn.example.pile.activity.base.SupportCommentActivity;
+import learn.example.pile.activity.base.CommentMenuActivity;
 import learn.example.pile.adapters.NetEasePhotoAdapter;
 import learn.example.pile.fragment.comment.NetEaseCommentFragment;
 import learn.example.pile.object.NetEase;
@@ -31,7 +30,7 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 /**
  * Created on 2016/6/1.
  */
-public class PhotoActivity extends SupportCommentActivity {
+public class PhotoActivity extends CommentMenuActivity {
 
 
 
@@ -116,10 +115,7 @@ public class PhotoActivity extends SupportCommentActivity {
         overridePendingTransition(0,R.anim.anim_center_close);
     }
 
-    @Override
-    protected int getReplaceId() {
-        return R.id.root;
-    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -210,13 +206,16 @@ public class PhotoActivity extends SupportCommentActivity {
             {
                 Intent intent=getIntent();
 
+                intent.putExtra(CommentActivity.KEY_FRAGMENT_CLASS_NAME,NetEaseCommentFragment.class.getName());
+
                 Bundle args=new Bundle();
-                args.putString(SupportCommentActivity.KEY_FRAGMENT_CLASS_NAME, NetEaseCommentFragment.class.getName());
-                args.putString(NetEaseCommentFragment.KEY_DOCID,postId);
                 String board=GsonHelper.getAsString(object.get("boardid"),null);
+
+                args.putString(NetEaseCommentFragment.KEY_DOCID,postId);
                 args.putString(NetEaseCommentFragment.KEY_BOARDID,board);
 
-                intent.putExtra(SupportCommentActivity.KEY_APPLY_COMMENT,args);
+                intent.putExtra(CommentActivity.KEY_FRAGMENT_ARGUMENTS,args);
+
 
                 //可能网络请求慢,导致菜单不能创建,需要重新创建菜单
                 invalidateOptionsMenu();

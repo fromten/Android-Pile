@@ -51,9 +51,9 @@ public class VideoListAdapter extends SaveStateAbleAdapter<VideoListAdapter.Vide
         {
             String uri=info.getPlayUrl();
             Bundle argus=new Bundle();
-            argus.putString(VideoActivity.KEY_FRAGMENT_CLASS_NAME, OpenEyeCommentFragment.class.getName());
             argus.putInt(OpenEyeCommentFragment.KEY_VIDEO_ID,info.getId());
-            ActivityLauncher.startVideoActivitySupportCommentMenu(v.getContext(),uri,argus,info.getTitle());
+            String fragmentClassName=OpenEyeCommentFragment.class.getName();
+            ActivityLauncher.startVideoActivitySupportCommentMenu(v.getContext(),uri,info.getTitle(),fragmentClassName,argus);
         }
     }
 

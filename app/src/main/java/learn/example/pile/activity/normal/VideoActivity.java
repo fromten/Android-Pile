@@ -1,6 +1,7 @@
 package learn.example.pile.activity.normal;
 
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,11 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import learn.example.pile.R;
-import learn.example.pile.activity.base.SupportCommentActivity;
+import learn.example.pile.activity.base.CommentMenuActivity;
+import learn.example.pile.activity.base.FullScreenActivity;
+import learn.example.pile.fragment.comment.OpenEyeCommentFragment;
 import learn.example.pile.ui.VolumeProgressView;
 import learn.example.pile.video.ExoVideoView;
 import learn.example.pile.video.MediaPlayControlView;
@@ -24,11 +26,13 @@ import learn.example.pile.video.MediaPlayControlView;
 /**
  * Created on 2016/5/26.
  */
-public class VideoActivity extends SupportCommentActivity {
+public class VideoActivity extends CommentMenuActivity {
+
+
 
     private static final String KEY_SAVE_VIDEO_POSITION = "video_position";
-
     public static final String KEY_TITLE="title";
+
 
     private ExoVideoView mExoVideoView;
     private MediaPlayControlView mPlayerControlView;
@@ -41,6 +45,8 @@ public class VideoActivity extends SupportCommentActivity {
     private int mSavedSeekPosition=-1;
 
     private GestureDetector mScreenTouchListener;
+
+    private boolean isPause;
 
     public static final int HIDE_VOLUME_PROGERESSBAR=0;
     public static final int HIDE_ACTIONBAR=1;
@@ -69,6 +75,8 @@ public class VideoActivity extends SupportCommentActivity {
         mRetryRoot= (LinearLayout) findViewById(R.id.retry_root);
         mVolumeProgressView= (VolumeProgressView) findViewById(R.id.video_volume);
 
+        mExoVideoView.setAutoPlay(false);
+
         setListener();
         showTitle();
 
@@ -96,31 +104,23 @@ public class VideoActivity extends SupportCommentActivity {
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId()==R.id.menu_comment)
-        {
-            if (mPlayControl!=null)
-            {
-                mPlayControl.pause();
-            }
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
 
     @Override
     protected void onResume() {
+        isPause=false;
         if (mPlayControl!=null)
         {
             mPlayControl.start();
-        }
 
+            //确保显示正确的drawable
+            mPlayerControlView.updatePauseDrawable();
+        }
         super.onResume();
     }
 
     @Override
     protected void onPause() {
+        isPause=true;
         if (mPlayControl!=null)
         {
             mPlayControl.pause();
@@ -128,14 +128,7 @@ public class VideoActivity extends SupportCommentActivity {
         super.onPause();
     }
 
-    @Override
-    public void onBackPressed() {
-        if (getCommentFragmentIfShowing()!=null&&mPlayControl!=null)
-        {
-            mPlayControl.start();
-        }
-        super.onBackPressed();
-    }
+
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -155,15 +148,15 @@ public class VideoActivity extends SupportCommentActivity {
             mPlayerControlView.setMediaPlayerControl(mPlayControl);
             enableView(mPlayerControlView,true);
 
-            if (mRetryViewHolder.mRoot.isShown()) mRetryViewHolder.hide();
-
-            //可能在网络请求响应之前,评论菜单被点击显示,暂停播放
-            if (getCommentFragmentIfShowing()!=null)
+            //可能回调时,当前Activity不可见
+            if (!isPause)
             {
-                mPlayControl.pause();
+                mPlayControl.start();
+                mHandler.sendEmptyMessageDelayed(HIDE_ACTIONBAR,3000);
             }
 
-            mHandler.sendEmptyMessageDelayed(HIDE_ACTIONBAR,3000);
+            if (mRetryViewHolder.mRoot.isShown()) mRetryViewHolder.hide();
+
         }
 
         @Override
@@ -309,10 +302,7 @@ public class VideoActivity extends SupportCommentActivity {
         }
     };
 
-    @Override
-    protected int getReplaceId() {
-        return R.id.root;
-    }
+
 
     private  class RetryViewHolder {
         private View mRoot;

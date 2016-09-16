@@ -128,10 +128,6 @@ public class MainActivity extends ToolBarActivity {
         //取消显示菜单向上回退按钮
     }
 
-    @Override
-    protected void onPerformExitAnim() {
-        //不执行退出动画
-    }
     public static class ViewPagerFragment extends Fragment  {
         private TabLayout mTabLayout;
         private ViewPager mViewPager;

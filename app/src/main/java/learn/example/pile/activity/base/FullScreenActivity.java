@@ -52,10 +52,4 @@ public class FullScreenActivity extends AppCompatActivity{
     }
 
 
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(R.anim.anim_slide_left_in,R.anim.anim_slide_left_to_end);//添加一个右边退出动画
-    }
 }

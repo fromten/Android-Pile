@@ -4,14 +4,11 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 
 
 import learn.example.pile.R;
@@ -57,7 +54,7 @@ public class ChatActivity extends ToolBarActivity implements IService.Callback<T
                 mListView.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                       smoothListBottom();
+                       smoothScrollListBottom();
                     }
                 },100);
             }
@@ -77,7 +74,7 @@ public class ChatActivity extends ToolBarActivity implements IService.Callback<T
         ChatInfo info=new ChatInfo(ChatInfo.GRAVITY_LEFT,data.getText());
         mChatListAdapter.addItem(info);
 
-        smoothListBottom();
+        smoothScrollListBottom();
     }
 
     @Override
@@ -110,7 +107,7 @@ public class ChatActivity extends ToolBarActivity implements IService.Callback<T
         imm.hideSoftInputFromWindow(mMsgEdit.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 
-    private void smoothListBottom()
+    private void smoothScrollListBottom()
     {
         mListView.smoothScrollToPosition(mChatListAdapter.getCount()-1);
     }

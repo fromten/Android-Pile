@@ -63,7 +63,6 @@ public class JokeListFragment extends BaseListFragment implements IService.Callb
             mJokeListAdapter.clear();
         }
 
-
         List<JokeBean.DataBean.DataListBean.GroupBean> list=new ArrayList<>();
         int count=data.getData().getData().size();
 

@@ -39,6 +39,7 @@
         <activity android:name=".activity.normal.ShortVideoActivity"/>
         <activity android:name=".activity.normal.DetailJokeActivity"
                   android:label="详细"/>
+        <activity android:name=".activity.normal.CommentActivity"/>
     </application>
 
 </manifest>

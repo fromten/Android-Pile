@@ -78,7 +78,6 @@ public class WebViewActivity extends ToolBarActivity {
 
     @Override
     protected void onDestroy() {
-        mWebView.destroy();
         Process.killProcess(Process.myPid());
         super.onDestroy();
     }

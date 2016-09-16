@@ -1,13 +1,13 @@
 <resources>
 
-    <style name="SlideAnimationStyle">
+    <style name="SlideAnimationStyle" parent="@android:style/Animation.Activity">
         <item name="android:activityCloseEnterAnimation">@anim/anim_slide_left_in</item>
         <item name="android:activityCloseExitAnimation">@anim/anim_slide_left_to_end</item>
         <item name="android:activityOpenEnterAnimation">@anim/anim_slide_right_to_start</item>
         <item name="android:activityOpenExitAnimation">@anim/anim_slide_out_to_right</item>
     </style>
 
-    <style name="ExplodeAnimationStyle">
+    <style name="ExplodeAnimationStyle" parent="@android:style/Animation.Activity">
         <item name="android:activityCloseEnterAnimation">@null</item>
         <item name="android:activityCloseExitAnimation">@anim/anim_center_close</item>
         <item name="android:activityOpenEnterAnimation">@anim/anim_center_open</item>

@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorPrimary</item>
+        <item name="android:windowAnimationStyle">@style/SlideAnimationStyle</item>
         <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
         <item name="android:progressBarStyleLarge">@style/Widget.AppCompat.ProgressBar</item>
@@ -19,6 +20,7 @@
 
     <style name="FullScreenTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="windowActionBarOverlay">true</item>
+        <item name="android:windowAnimationStyle">@style/SlideAnimationStyle</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/black</item>

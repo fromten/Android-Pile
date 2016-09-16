@@ -10,8 +10,9 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 
 import learn.example.pile.R;
-import learn.example.pile.activity.base.SupportCommentActivity;
+import learn.example.pile.activity.base.CommentMenuActivity;
 import learn.example.pile.activity.normal.ChatActivity;
+import learn.example.pile.activity.normal.CommentActivity;
 import learn.example.pile.activity.normal.DetailJokeActivity;
 import learn.example.pile.activity.normal.PhotoActivity;
 import learn.example.pile.activity.normal.ReaderActivity;
@@ -33,7 +34,7 @@ public class ActivityLauncher {
     {
         Intent intent=new Intent(context, WebViewActivity.class);
         intent.setData(Uri.parse(url));
-        startActivity(context,intent, makeSlideAnimation(context));
+        startActivity(context,intent,null);
     }
 
 
@@ -46,23 +47,27 @@ public class ActivityLauncher {
     {
         Intent intent=new Intent(context, VideoActivity.class);
         intent.setData(Uri.parse(url));
-        startActivity(context,intent, makeSlideAnimation(context));
+        startActivity(context,intent,null);
     }
 
 
     /**
-     * 启动视频播放器Activity, 将会应用评论菜单
-     * @see SupportCommentActivity
-     * @see VideoActivity
+     * 开启视频播放器,这会显示评论菜单项
+     * @param uri 视频播放Uri地址
+     * @param title 视频显示的标题
+     * @param fragmentClassName 评论菜单点击后会开启新的CommentActivity,Activity 所需要的值;
+     * @param argus fragment对应参数{@code Fragment.setArguments(argus);}
+     * @see CommentActivity
      */
-    public static void startVideoActivitySupportCommentMenu(@NonNull Context context,String uri,Bundle argus,@Nullable String title)
+    public static void startVideoActivitySupportCommentMenu(@NonNull Context context,@NonNull String uri,@Nullable String title,
+                                                            String fragmentClassName,Bundle argus)
     {
         Intent intent=new Intent(context, VideoActivity.class);
         intent.setData(Uri.parse(uri));
-        intent.putExtra(SupportCommentActivity.KEY_APPLY_COMMENT,argus);
+        intent.putExtra(CommentActivity.KEY_FRAGMENT_CLASS_NAME,fragmentClassName);
         intent.putExtra(VideoActivity.KEY_TITLE,title);
-
-        startActivity(context,intent, makeSlideAnimation(context));
+        intent.putExtra(CommentActivity.KEY_FRAGMENT_ARGUMENTS,argus);
+        startActivity(context,intent,null);
     }
 
 
@@ -112,7 +117,7 @@ public class ActivityLauncher {
     {
         Intent intent=new Intent(context, ReaderActivity.class);
         intent.putExtra(ReaderActivity.KEY_ZHIHU_CONTENT_ID,id);
-        startActivity(context,intent,makeSlideAnimation(context));
+        startActivity(context,intent,null);
     }
 
     /**
@@ -123,7 +128,7 @@ public class ActivityLauncher {
     {
         Intent intent=new Intent(context, DetailJokeActivity.class);
         intent.putExtra(DetailJokeActivity.KEY_GROUP_JSON,groupJson);
-        startActivity(context,intent,makeSlideAnimation(context));
+        startActivity(context,intent,null);
     }
 
     /**
@@ -134,13 +139,13 @@ public class ActivityLauncher {
     {
         Intent intent=new Intent(context, ReaderActivity.class);
         intent.putExtra(ReaderActivity.KEY_NETEASE_CONTENT_ID,array);
-        startActivity(context,intent,makeSlideAnimation(context));
+        startActivity(context,intent,null);
     }
 
     public static void startChatActivity(@NonNull Context context)
     {
         Intent intent=new Intent(context, ChatActivity.class);
-        startActivity(context,intent,makeSlideAnimation(context));
+        startActivity(context,intent,null);
     }
 
 
@@ -163,7 +168,7 @@ public class ActivityLauncher {
     {
         Intent intent=new Intent(context, ShortVideoActivity.class);
         intent.setData(Uri.parse(url));
-        startActivity(context,intent,makeSlideAnimation(context));
+        startActivity(context,intent,null);
     }
 
 

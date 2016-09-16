@@ -148,11 +148,6 @@ public class ReaderActivity extends AppCompatActivity  {
         super.onDestroy();
     }
 
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(R.anim.anim_slide_left_in,R.anim.anim_slide_left_to_end);//添加一个右边退出动画
-    }
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {

@@ -4,13 +4,14 @@ import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
 
+import com.activeandroid.ActiveAndroid;
 import com.squareup.leakcanary.LeakCanary;
 
 
 /**
  * Created on 2016/6/9.
  */
-public class PileApplication extends Application {
+public class PileApplication extends com.activeandroid.app.Application {
 
     @Override
     public void onCreate() {

@@ -2,6 +2,7 @@ package learn.example.pile.html;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.webkit.JavascriptInterface;
 
 import learn.example.pile.util.ActivityLauncher;
@@ -20,6 +21,7 @@ public class ImageClickInserter  implements JavaScriptInserter{
     @JavascriptInterface
     public void openPhotoActivity(String src)
     {
+
         ActivityLauncher.startPhotoActivityForSingle(mContext,src);
     }
 

@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import learn.example.pile.R;
-import learn.example.pile.activity.normal.VideoActivity;
 import learn.example.pile.fragment.comment.OpenEyeCommentFragment;
 import learn.example.pile.object.OpenEyes;
 import learn.example.pile.util.ActivityLauncher;
@@ -51,7 +50,7 @@ public class VideoListAdapter extends SaveStateAbleAdapter<VideoListAdapter.Vide
         {
             String uri=info.getPlayUrl();
             Bundle argus=new Bundle();
-            argus.putInt(OpenEyeCommentFragment.KEY_VIDEO_ID,info.getId());
+            argus.putInt(OpenEyeCommentFragment.KEY_VIDEO_ID,info.getVideoId());
             String fragmentClassName=OpenEyeCommentFragment.class.getName();
             ActivityLauncher.startVideoActivitySupportCommentMenu(v.getContext(),uri,info.getTitle(),fragmentClassName,argus);
         }

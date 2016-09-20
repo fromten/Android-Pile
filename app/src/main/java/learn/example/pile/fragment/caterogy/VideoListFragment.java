@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.activeandroid.ActiveAndroid;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +24,8 @@ import learn.example.pile.net.IService;
 import learn.example.pile.net.OpenEyeService;
 import learn.example.pile.object.OpenEyes;
 import learn.example.pile.ui.RecyclerViewImprove;
+import learn.example.pile.util.ActiveAndroidHelper;
+import learn.example.pile.util.DeviceInfo;
 import learn.example.pile.util.TimeUtil;
 
 /**
@@ -33,6 +37,7 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
     //save state key
     private static final String KEY_NEXT_URL="next_url";
     private static final String KEY_NEXT_PUSH_TIME="next_push_time";
+    private static final String KEY_DATABASE_INDEX="database_index";
 
 
     private VideoListAdapter mAdapter;
@@ -43,6 +48,8 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
 
     private CategoryViewHolder mCategoryViewHolder;;
 
+    private int databaseIndex;
+    private static final int MAX_READ_COUNT=10;
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -60,6 +67,7 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
         }else {
             nextUrl=savedInstanceState.getString(KEY_NEXT_URL);
             nextPushTime=savedInstanceState.getLong(KEY_NEXT_PUSH_TIME);
+            databaseIndex=savedInstanceState.getInt(KEY_DATABASE_INDEX);
         }
     }
 
@@ -67,6 +75,7 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
     public void onSaveInstanceState(Bundle outState) {
         outState.putString(KEY_NEXT_URL,nextUrl);
         outState.putLong(KEY_NEXT_PUSH_TIME,nextPushTime);
+        outState.putLong(KEY_DATABASE_INDEX,databaseIndex);
         super.onSaveInstanceState(outState);
     }
 
@@ -105,36 +114,56 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
         nextUrl=data.getNextPageUrl();
         mAdapter.addAll(mList);
         notifySuccess();
+
+        ActiveAndroidHelper.saveItemsToDatabase(mList);
     }
 
     @Override
     public void onFailure(String message) {
         notifyError();
+
+        if(mAdapter.getItemCount()<=0)
+        {
+            addDatabaseItemsToAdapter();
+        }
     }
 
     @Override
     public void onRefresh() {
-        long second=nextPushTime-TimeUtil.getTime();
-
-        //如果到下一次推送时间,或者当前的Adapter 没有元素,需要再次请求
-        boolean requireRequest=second<=0||mAdapter.getItemCount()==0;
-        if (requireRequest)
+        if (DeviceInfo.checkNetConnected(getContext()))
         {
-            mService.getHotVideo(this);
-            nextPushTime=TimeUtil.getNextDayTime(0);
-        }else {
-            setRefreshing(false);
-            showTopView("下次更新时间为"+TimeUtil.formatYMD(nextPushTime/1000));
+            long second=nextPushTime-TimeUtil.getTime();
+            //如果到下一次推送时间,或者当前的Adapter 没有元素,需要再次请求
+            boolean requireRequest=second<=0||mAdapter.getItemCount()==0;
+            if (requireRequest)
+            {
+                mService.getHotVideo(this);
+                nextPushTime=TimeUtil.getNextDayTime(0);
+            }else {
+                setRefreshing(false);
+                showTopView("下次更新时间为"+TimeUtil.formatYMD(nextPushTime/1000));
+            }
+        }else{
+            if (mAdapter.getItemCount()<=0){//没有网络,而且adapter没有任何元素
+                addDatabaseItemsToAdapter();
+                notifySuccess();
+            }else {
+                clearRequestState();
+            }
         }
     }
 
     @Override
     public void onLoadMore() {
-        if (nextUrl!=null)
+        if (DeviceInfo.checkNetConnected(getContext()))
         {
-            mService.nextVideoList(nextUrl,this);
+            if (nextUrl!=null)
+            {
+                mService.nextVideoList(nextUrl,this);
+            }
         }else {
-            notifyRequestEnd();
+            addDatabaseItemsToAdapter();
+            notifySuccess();
         }
     }
 
@@ -143,6 +172,24 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
     {
         mCategoryViewHolder=new CategoryViewHolder();
         addHeadHolder(mCategoryViewHolder);
+    }
+
+
+    /**
+     * 读取数据库元素添加的adapter
+     * @return 如果成功添加返回true,elsewise
+     */
+    private boolean addDatabaseItemsToAdapter()
+    {
+        List<OpenEyes.VideoInfo> list= ActiveAndroidHelper.getItemsFromDatabase(OpenEyes.VideoInfo.class,
+                                                true,databaseIndex,MAX_READ_COUNT);
+        if (list!=null&&!list.isEmpty())
+        {
+            mAdapter.addAll(list);
+            databaseIndex+=list.size();
+            return true;
+        }
+        return false;
     }
 
 

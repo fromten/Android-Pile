@@ -1,5 +1,6 @@
 package learn.example.pile.util;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 
 /**
@@ -32,5 +33,15 @@ public class GsonHelper {
             e.printStackTrace();
         }
         return defInteger;
+    }
+
+    public static String serialize(Object o)
+    {
+        return new Gson().toJson(o);
+    }
+
+    public static<T> T deserialize(String string,Class<T> clazz)
+    {
+        return new Gson().fromJson(string,clazz);
     }
  }

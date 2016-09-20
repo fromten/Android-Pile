@@ -32,6 +32,11 @@ public class WebFragment extends Fragment {
     private FrameLayout mRootLayout;
     private ProgressBar mProgressBar;
 
+
+    private boolean supportProgressBar;
+    private int progressBarStyle;
+    private boolean indeterminateProgressBar;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -45,6 +50,10 @@ public class WebFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initWebView();
+        if (supportProgressBar)
+        {
+            addProgressBar();
+        }
     }
 
     private void initWebView() {
@@ -69,7 +78,7 @@ public class WebFragment extends Fragment {
      * @param html
      * @see assets folder  app.css
      */
-    public void loadDataWithDefCss(String html)
+    public void loadLocalDataWithDefCss(String html)
     {
         String link= HtmlTagBuild.cssLinkTag("app.css");
         String insertCss=html.replaceFirst("</head>",link+"</head>");
@@ -82,6 +91,8 @@ public class WebFragment extends Fragment {
         mWebView.loadUrl(url);
     }
 
+
+
     /**
      * 请求添加进度栏,不确定进度栏将布局在中间. 确定进度栏布局在顶部
      * @param indeterminate 是否为不确定进度栏
@@ -89,15 +100,23 @@ public class WebFragment extends Fragment {
      */
     public void requestProgressBar(boolean indeterminate,int style)
     {
+        supportProgressBar=true;
+        progressBarStyle=style;
+        indeterminateProgressBar=indeterminate;
+    }
+
+
+    private void addProgressBar()
+    {
         FrameLayout.LayoutParams params=new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        if (indeterminate)
+        if (indeterminateProgressBar)
         {
             params.gravity=Gravity.CENTER;
         }else {
             params.gravity= Gravity.TOP;
         }
-        int defStyle=indeterminate?android.R.attr.progressBarStyleLarge:android.R.attr.progressBarStyleHorizontal;
-        style=style==0?defStyle:style;
+        int defStyle=indeterminateProgressBar?android.R.attr.progressBarStyleLarge:android.R.attr.progressBarStyleHorizontal;
+        int style=progressBarStyle==0?defStyle:progressBarStyle;
         mProgressBar=new ProgressBar(getContext(),null,style);
         mRootLayout.addView(mProgressBar,params);
     }

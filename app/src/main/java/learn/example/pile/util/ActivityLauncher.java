@@ -10,15 +10,14 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 
 import learn.example.pile.R;
-import learn.example.pile.activity.base.CommentMenuActivity;
 import learn.example.pile.activity.normal.ChatActivity;
 import learn.example.pile.activity.normal.CommentActivity;
 import learn.example.pile.activity.normal.DetailJokeActivity;
 import learn.example.pile.activity.normal.PhotoActivity;
-import learn.example.pile.activity.normal.ReaderActivity;
 import learn.example.pile.activity.normal.ShortVideoActivity;
 import learn.example.pile.activity.normal.WebViewActivity;
 import learn.example.pile.activity.normal.VideoActivity;
+import learn.example.pile.activity.normal.reader.ReaderActivity;
 
 /**
  * Created on 2016/6/23.

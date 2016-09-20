@@ -1,5 +1,6 @@
 package learn.example.pile.activity.normal;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,6 +22,7 @@ import learn.example.pile.fragment.comment.JokeCommentFragment;
 import learn.example.pile.jsonbean.JokeBean;
 import learn.example.pile.ui.RecyclerViewImprove;
 import learn.example.pile.util.ActivityLauncher;
+import learn.example.pile.util.DeviceInfo;
 import learn.example.pile.util.GlideUtil;
 import learn.example.pile.video.VideoTextureView;
 
@@ -154,8 +156,12 @@ public class DetailJokeActivity extends ToolBarActivity {
                 {
                     container.removeView(cover);
                     mVideoView=new VideoTextureView(context);
+
+                    int targetHeight= (int) (new DeviceInfo((Activity) context).SCREEN_WIDTH*0.7f);
                     mVideoView.setMinimumWidth(300);
-                    mVideoView.setMinimumHeight(300);
+                    mVideoView.setMinimumHeight(targetHeight);
+                    mVideoView.setMaxHeight(targetHeight);
+
                     mVideoView.setLoop(true);
                     params.addRule(RelativeLayout.CENTER_IN_PARENT,RelativeLayout.TRUE);
                     container.addView(mVideoView,params);

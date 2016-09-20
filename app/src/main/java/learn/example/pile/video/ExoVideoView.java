@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.VideoView;
 
 import com.google.android.exoplayer.util.PlayerControl;
 
@@ -51,6 +52,22 @@ public class ExoVideoView extends SurfaceView implements SurfaceHolder.Callback
         mVideoWidth =0;
         mVideoHeight =0;
         isInvokePrepareListener=false;
+    }
+
+
+    public void start()
+    {
+        if (mExoVideo!=null)
+        {
+            mExoVideo.setPlayWhenReady(true);
+        }
+    }
+    public void pause()
+    {
+        if (mExoVideo!=null)
+        {
+            mExoVideo.setPlayWhenReady(false);
+        }
     }
 
 
@@ -110,7 +127,7 @@ public class ExoVideoView extends SurfaceView implements SurfaceHolder.Callback
                 }
             }
         } else {
-            // no size yet, just adopt the given spec sizes
+
         }
         setMeasuredDimension(width, height);
     }
@@ -203,16 +220,6 @@ public class ExoVideoView extends SurfaceView implements SurfaceHolder.Callback
 
     @Override
     public void onVideoSizeChanged(int width, int height, int unappliedRotationDegrees, float pixelWidthHeightRatio) {
-//        mVideoWidth =width;
-//        mVideoHeight =height;
-//
-//        int viewWidth=getWidth()-getPaddingRight()-getPaddingLeft();
-//        int viewHeight=getHeight()-getPaddingTop()-getPaddingBottom();
-//        boolean isLandscape=viewWidth>viewHeight;
-//
-//        int surfaceHeight=isLandscape?viewHeight: mVideoHeight;
-//        getHolder().setFixedSize(viewWidth,surfaceHeight);
-//        requestLayout();
 
         mVideoWidth = width;
         mVideoHeight = height;

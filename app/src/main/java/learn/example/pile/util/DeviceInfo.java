@@ -1,7 +1,10 @@
 package learn.example.pile.util;
 
 import android.app.Activity;
+import android.app.usage.NetworkStatsManager;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Environment;
 import android.util.DisplayMetrics;
 
@@ -28,6 +31,13 @@ public class DeviceInfo {
     {
         String state = Environment.getExternalStorageState();
         return state.equals(Environment.MEDIA_MOUNTED);
+    }
+
+    public static boolean checkNetConnected(Context context)
+    {
+        ConnectivityManager manager= (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info=manager.getActiveNetworkInfo();
+        return info!=null&&info.isConnectedOrConnecting();
     }
 
 

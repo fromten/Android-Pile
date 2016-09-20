@@ -2,12 +2,10 @@ package learn.example.pile.object;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.text.TextUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import learn.example.pile.jsonbean.OpenEyeVideo;
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
 
 /**
  * Created on 2016/7/22.
@@ -45,7 +43,7 @@ public class OpenEyes {
 
     /**
      *  参数使用 APP_PARAMS+ 视频Id
-     *  例如 id=8522,http://baobab.wandoujia.com/api/v1/replies/video?id=8522 + APP_PARAMS
+     *  例如 videoId=8522,http://baobab.wandoujia.com/api/v1/replies/video?id=8522 + APP_PARAMS
      *  @see #APP_PARAMS
      *
      */
@@ -67,19 +65,30 @@ public class OpenEyes {
         return CATEGORY_URL+"categoryId="+categoryID+"&strategy"+strategy+APP_PARAMS;
     }
 
-    public static class VideoInfo implements Parcelable {
+    @Table(name = "Videos")
+    public static class VideoInfo extends Model implements Parcelable {
+        @Column(name = "title")
         private String title;
+        @Column(name = "playUrl")
         private String playUrl;
+        @Column(name = "imgUrl")
         private String imgUrl;
+        @Column(name = "duration")
         private int  duration;
-        private int id;
+        @Column(name = "videoId",unique = true,onUniqueConflict = Column.ConflictAction.REPLACE)
+        private int videoId;
 
-        public VideoInfo(String title, String playUrl, String imgUrl,int duration,int id) {
+        public VideoInfo(String title, String playUrl, String imgUrl,int duration,int videoId) {
+            super();
             this.title = title;
             this.playUrl = playUrl;
             this.imgUrl = imgUrl;
             this.duration=duration;
-            this.id=id;
+            this.videoId = videoId;
+        }
+
+        public VideoInfo() {
+            super();
         }
 
         public int getDuration() {
@@ -98,8 +107,8 @@ public class OpenEyes {
             return imgUrl;
         }
 
-        public int getId() {
-            return id;
+        public int getVideoId() {
+            return videoId;
         }
 
         @Override
@@ -113,7 +122,7 @@ public class OpenEyes {
             dest.writeString(this.playUrl);
             dest.writeString(this.imgUrl);
             dest.writeInt(this.duration);
-            dest.writeInt(this.id);
+            dest.writeInt(this.videoId);
         }
 
         protected VideoInfo(Parcel in) {
@@ -121,7 +130,7 @@ public class OpenEyes {
             this.playUrl = in.readString();
             this.imgUrl = in.readString();
             this.duration = in.readInt();
-            this.id = in.readInt();
+            this.videoId = in.readInt();
         }
 
         public static final Creator<VideoInfo> CREATOR = new Creator<VideoInfo>() {

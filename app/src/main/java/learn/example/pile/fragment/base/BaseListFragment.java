@@ -202,10 +202,16 @@ public class BaseListFragment extends  SaveAdapterStateFragment {
      */
     public void clearRequestState()
     {
-        if (isRefreshing())
-        {
-            setRefreshing(false);
-        }
+        //确保正确关闭
+        getView().post(new Runnable() {
+            @Override
+            public void run() {
+                if (isRefreshing())
+                {
+                    setRefreshing(false);
+                }
+            }
+        });
         cancelLoadMore();
     }
 

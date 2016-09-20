@@ -21,10 +21,13 @@ public class VideoTextureView extends TextureView implements TextureView.Surface
     private ExoPlayer mExoVideo;
     private Uri mUri;
 
-    private int videoWidth;
-    private int videoHeight;
-    private float videoWHRatio;
-    private boolean aspectRatio;
+    private int mVideoWidth;
+    private int mVideoHeight;
+    private float mVideoWHRatio;
+    private int mMaxWidth=-1;
+    private int mMaxHeight=-1;
+
+
     private boolean isLoop;
 
     public VideoTextureView(Context context) {
@@ -38,33 +41,79 @@ public class VideoTextureView extends TextureView implements TextureView.Surface
 
     private void initView() {
         super.setSurfaceTextureListener(this);
-        aspectRatio =true;
         isLoop=false;
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         Log.d(TAG, "onMeasure() called with: " + "widthMeasureSpec = [" + widthMeasureSpec + "], heightMeasureSpec = [" + heightMeasureSpec + "]");
-        super.onMeasure(widthMeasureSpec,heightMeasureSpec);
-        int measureWidth=getMeasuredWidth();
-        int measureHeight=getMeasuredHeight();
+        int width = getDefaultSize(mVideoWidth, widthMeasureSpec);
+        int height = getDefaultSize(mVideoHeight, heightMeasureSpec);
+        if (mVideoWidth > 0 && mVideoHeight > 0) {
 
-        int w=measureWidth;
-        int h=measureHeight;
-        if (measureWidth<=0)
-        {
-           w=Math.max(getSuggestedMinimumWidth(),videoWidth);
+            int widthSpecMode = MeasureSpec.getMode(widthMeasureSpec);
+            int widthSpecSize = MeasureSpec.getSize(widthMeasureSpec);
+            int heightSpecMode = MeasureSpec.getMode(heightMeasureSpec);
+            int heightSpecSize = MeasureSpec.getSize(heightMeasureSpec);
+
+            if (widthSpecMode == MeasureSpec.EXACTLY && heightSpecMode == MeasureSpec.EXACTLY) {
+                // the size is fixed
+                width = widthSpecSize;
+                height = heightSpecSize;
+
+                // for compatibility, we adjust size based on aspect ratio
+                if ( mVideoWidth * height  < width * mVideoHeight ) {
+                    //Log.i("@@@", "image too wide, correcting");
+                    width = height * mVideoWidth / mVideoHeight;
+                } else if ( mVideoWidth * height  > width * mVideoHeight ) {
+                    //Log.i("@@@", "image too tall, correcting");
+                    height = width * mVideoHeight / mVideoWidth;
+                }
+            } else if (widthSpecMode == MeasureSpec.EXACTLY) {
+                // only the width is fixed, adjust the height to match aspect ratio if possible
+                width = widthSpecSize;
+                height = width * mVideoHeight / mVideoWidth;
+                if (heightSpecMode == MeasureSpec.AT_MOST && height > heightSpecSize) {
+                    // couldn't match aspect ratio within the constraints
+                    height = heightSpecSize;
+                }
+            } else if (heightSpecMode == MeasureSpec.EXACTLY) {
+                // only the height is fixed, adjust the width to match aspect ratio if possible
+                height = heightSpecSize;
+                width = height * mVideoWidth / mVideoHeight;
+                if (widthSpecMode == MeasureSpec.AT_MOST && width > widthSpecSize) {
+                    // couldn't match aspect ratio within the constraints
+                    width = widthSpecSize;
+                }
+            } else {
+                // neither the width nor the height are fixed, try to use actual video size
+                width = mVideoWidth;
+                height = mVideoHeight;
+                if (heightSpecMode == MeasureSpec.AT_MOST && height > heightSpecSize) {
+                    // too tall, decrease both width and height
+                    height = heightSpecSize;
+                    width = height * mVideoWidth / mVideoHeight;
+                }
+                if (widthSpecMode == MeasureSpec.AT_MOST && width > widthSpecSize) {
+                    // too wide, decrease both width and height
+                    width = widthSpecSize;
+                    height = width * mVideoHeight / mVideoWidth;
+                }
+            }
+        } else {
+            width=Math.max(getSuggestedMinimumWidth(),width);
+            height=Math.max(getSuggestedMinimumHeight(),height);
         }
-        if (measureHeight<=0)
+        if (mMaxHeight>=0&&height>mMaxHeight)
         {
-           h=Math.max(getSuggestedMinimumHeight(),videoHeight);
+            height=mMaxHeight;
+        }
+        if (mMaxWidth>=0&&width>mMaxWidth)
+        {
+            width=mMaxWidth;
         }
 
-        if (aspectRatio&&(videoHeight>0||videoWidth>0))
-        {
-            h= (int) (w*videoWHRatio);
-        }
-        setMeasuredDimension(w,h);
+        setMeasuredDimension(width, height);
     }
 
     public void release() {
@@ -165,9 +214,9 @@ public class VideoTextureView extends TextureView implements TextureView.Surface
     @Override
     public void onVideoSizeChanged(int width, int height, int unappliedRotationDegrees, float pixelWidthHeightRatio) {
         Log.d(TAG, "onVideoSizeChanged");
-        videoWidth=width;
-        videoHeight=height;
-        videoWHRatio=pixelWidthHeightRatio;
+        mVideoWidth =width;
+        mVideoHeight =height;
+        mVideoWHRatio =pixelWidthHeightRatio;
         requestLayout();
     }
 
@@ -176,10 +225,17 @@ public class VideoTextureView extends TextureView implements TextureView.Surface
         isLoop=loop;
     }
 
-    public void setAspectRatio(boolean aspectRatio)
+    public void setMaxWidth(int maxWidth)
     {
-        this.aspectRatio = aspectRatio;
+        mMaxWidth=maxWidth;
     }
+
+    public void setMaxHeight(int maxHeight)
+    {
+        mMaxHeight=maxHeight;
+    }
+
+
 
 }
 

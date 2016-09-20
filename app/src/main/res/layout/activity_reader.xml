@@ -49,10 +49,11 @@
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <FrameLayout
+    <fragment
         android:id="@+id/read_main_show"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:name="learn.example.pile.fragment.WebFragment"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 </android.support.design.widget.CoordinatorLayout>
 

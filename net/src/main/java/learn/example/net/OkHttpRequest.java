@@ -8,11 +8,14 @@ import android.util.Log;
 
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Modifier;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
 import okhttp3.Call;
@@ -34,22 +37,28 @@ public class OkHttpRequest{
 
     private Gson mGson;
     public static final int CACHE_SIZE=30*1024*1024;// 30 MIB
+    public static final int DEF_TIME_OUT=12;// second
     public static final String CAHDE_DIRECTORY="com.app.okhttp3_cache";
 
 
 
     private OkHttpRequest(Context context) {
 
+        OkHttpClient.Builder builder=new OkHttpClient.Builder();
         if (context!=null)
         {
             File file=new File(context.getCacheDir(),CAHDE_DIRECTORY);
             Cache cache=new Cache(file,CACHE_SIZE);
-            mOkhttpClient=new OkHttpClient.Builder().cache(cache).build();
-        }else {
-            mOkhttpClient=new OkHttpClient.Builder().build();
+            builder.cache(cache);
         }
+        mOkhttpClient=builder.connectTimeout(DEF_TIME_OUT,TimeUnit.SECONDS)
+                             .readTimeout(DEF_TIME_OUT,TimeUnit.SECONDS)
+                             .writeTimeout(DEF_TIME_OUT*2,TimeUnit.SECONDS)
+                             .build();
         mHandler=new Handler(Looper.getMainLooper());
-        mGson=new Gson();
+        mGson= new GsonBuilder()
+                .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                .create();
     }
 
 

@@ -2,6 +2,8 @@ package learn.example.pile.fragment.caterogy;
 
 import android.os.Bundle;
 
+import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -25,7 +27,6 @@ public class JokeListFragment extends BaseListFragment implements IService.Callb
 
     private JokeListAdapter mJokeListAdapter;
 
-    private JokeDatabase mJokeDataBase;
 
     private JokeService mJokeService;
 
@@ -45,6 +46,15 @@ public class JokeListFragment extends BaseListFragment implements IService.Callb
 
     }
 
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+
+        if (savedInstanceState!=null&&mJokeListAdapter.getItemCount()<=0) {
+            setRefreshing(true);
+            mJokeService.getTuijianJoke(requestCount,new DeviceInfo(getActivity()).SCREEN_WIDTH,this);
+        }
+    }
 
     @Override
     public void onDestroy() {
@@ -57,7 +67,7 @@ public class JokeListFragment extends BaseListFragment implements IService.Callb
 
     @Override
     public void onSuccess(JokeBean data) {
-
+        Log.d("joke", "onSuccess");
         if (isRefreshing())
         {
             mJokeListAdapter.clear();
@@ -85,6 +95,7 @@ public class JokeListFragment extends BaseListFragment implements IService.Callb
 
     @Override
     public void onFailure(String msg) {
+         Log.d("joke", "onSuccess");
          notifyError();
     }
 

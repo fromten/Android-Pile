@@ -97,7 +97,7 @@ public class NewsListAdapter extends SaveStateAbleAdapter<NewsListAdapter.BaseNe
     public void onBindViewHolder(BaseNewsViewHolder holder, int position) {
         NetEaseNews.T1348647909107Bean  item = getItem(position);
         holder.title.setText(item.getTitle());
-        holder.commentNum.setText(formatNumber(item.getReplyCount()));
+        holder.commentNum.setText(item.getReplayString());
         holder.docSource.setText(item.getSource());
 
         holder.itemView.setTag(position);

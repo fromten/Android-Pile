@@ -221,6 +221,7 @@ public class PhotoActivity extends CommentMenuActivity {
                 invalidateOptionsMenu();
             }
         }
-
     }
+
+
 }

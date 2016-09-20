@@ -18,7 +18,6 @@ public class VideoClickInserter implements JavaScriptInserter {
     @JavascriptInterface
     public void openVideo(String url)
     {
-        Log.d("video", url);
         ActivityLauncher.startVideoActivity(mContext,url);
     }
 

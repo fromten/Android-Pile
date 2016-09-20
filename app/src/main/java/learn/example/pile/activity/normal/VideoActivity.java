@@ -46,8 +46,6 @@ public class VideoActivity extends CommentMenuActivity {
 
     private GestureDetector mScreenTouchListener;
 
-    private boolean isPause;
-
     public static final int HIDE_VOLUME_PROGERESSBAR=0;
     public static final int HIDE_ACTIONBAR=1;
     private Handler mHandler=new Handler()
@@ -74,8 +72,6 @@ public class VideoActivity extends CommentMenuActivity {
         mPlayerControlView = (MediaPlayControlView) findViewById(R.id.control);
         mRetryRoot= (LinearLayout) findViewById(R.id.retry_root);
         mVolumeProgressView= (VolumeProgressView) findViewById(R.id.video_volume);
-
-        mExoVideoView.setAutoPlay(false);
 
         setListener();
         showTitle();
@@ -107,24 +103,14 @@ public class VideoActivity extends CommentMenuActivity {
 
     @Override
     protected void onResume() {
-        isPause=false;
-        if (mPlayControl!=null)
-        {
-            mPlayControl.start();
-
-            //确保显示正确的drawable
-            mPlayerControlView.updatePauseDrawable();
-        }
         super.onResume();
+        mExoVideoView.start();
+        mPlayerControlView.updatePauseDrawable();
     }
 
     @Override
     protected void onPause() {
-        isPause=true;
-        if (mPlayControl!=null)
-        {
-            mPlayControl.pause();
-        }
+        mExoVideoView.pause();
         super.onPause();
     }
 
@@ -148,13 +134,8 @@ public class VideoActivity extends CommentMenuActivity {
             mPlayerControlView.setMediaPlayerControl(mPlayControl);
             enableView(mPlayerControlView,true);
 
-            //可能回调时,当前Activity不可见
-            if (!isPause)
-            {
-                mPlayControl.start();
-                mHandler.sendEmptyMessageDelayed(HIDE_ACTIONBAR,3000);
-            }
 
+            mHandler.sendEmptyMessageDelayed(HIDE_ACTIONBAR,3000);
             if (mRetryViewHolder.mRoot.isShown()) mRetryViewHolder.hide();
 
         }

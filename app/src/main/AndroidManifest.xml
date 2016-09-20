@@ -18,28 +18,41 @@
         <meta-data
             android:name="learn.example.pile.AppGlideModule"
             android:value="GlideModule"/>
+        <meta-data android:name="AA_DB_NAME" android:value="store.db" />
+        <meta-data android:name="AA_DB_VERSION" android:value="1" />
+        <meta-data android:name="AA_SERIALIZERS"
+                   android:value="learn.example.pile.database.typeserializer.StringArraySerializer" />
+
         <activity android:name=".activity.normal.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".activity.normal.WebViewActivity"
                   android:process="learn.example.pile.PileApplication.WebActivity"
                   android:label=" "/>
+
         <activity android:name=".activity.normal.VideoActivity"
                   android:configChanges="orientation|screenSize"
                   android:label="视频"/>
+
         <activity android:name=".activity.normal.PhotoActivity"/>
+
         <activity android:name=".activity.normal.ChatActivity"
                   android:label="机器聊天"
                   android:windowSoftInputMode="adjustResize">
         </activity>
-        <activity android:name=".activity.normal.ReaderActivity"/>
+
         <activity android:name=".activity.normal.ShortVideoActivity"/>
+
         <activity android:name=".activity.normal.DetailJokeActivity"
                   android:label="详细"/>
+
         <activity android:name=".activity.normal.CommentActivity"/>
+
+        <activity android:name=".activity.normal.reader.ReaderActivity"/>
     </application>
 
 </manifest>

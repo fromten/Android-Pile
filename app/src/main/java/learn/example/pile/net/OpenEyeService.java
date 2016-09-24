@@ -1,6 +1,5 @@
 package learn.example.pile.net;
 
-import learn.example.pile.jsonbean.OpenEyeComment;
 import learn.example.pile.jsonbean.OpenEyeVideo;
 import learn.example.pile.object.OpenEyes;
 import okhttp3.Request;
@@ -17,13 +16,13 @@ public class OpenEyeService extends NetService {
         newRequest(TAG,OpenEyeVideo.class,buildRequest(url),callback);
     }
 
-    public void getCategoryVideoInDateSort(int categoryID, Callback<OpenEyeVideo> callback)
+    public void getCategoryVideoInDateSort(@OpenEyes.Category int categoryID, Callback<OpenEyeVideo> callback)
     {
         String url=OpenEyes.getCategoryUrl(categoryID,OpenEyes.Strategy.DATE);
         newRequest(TAG,OpenEyeVideo.class,buildRequest(url),callback);
     }
 
-    public void getCategoryVideoInShareCountSort(int categoryID, Callback<OpenEyeVideo> callback)
+    public void getCategoryVideoInShareCountSort(@OpenEyes.Category int categoryID, Callback<OpenEyeVideo> callback)
     {
         String url=OpenEyes.getCategoryUrl(categoryID,OpenEyes.Strategy.SHARE_COUNT);
         newRequest(TAG,OpenEyeVideo.class,buildRequest(url),callback);

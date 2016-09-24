@@ -1,7 +1,6 @@
 package learn.example.pile.util;
 
 import android.app.Activity;
-import android.app.usage.NetworkStatsManager;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;

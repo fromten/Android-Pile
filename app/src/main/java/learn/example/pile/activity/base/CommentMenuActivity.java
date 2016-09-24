@@ -1,11 +1,6 @@
 package learn.example.pile.activity.base;
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.AnimRes;
-import android.support.annotation.CheckResult;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuItem;
 

@@ -1,7 +1,6 @@
 package learn.example.pile.net;
 
 
-import learn.example.pile.jsonbean.ZhihuComment;
 import learn.example.pile.jsonbean.ZhihuNewsContent;
 import learn.example.pile.object.Zhihu;
 

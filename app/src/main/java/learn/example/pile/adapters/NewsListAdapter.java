@@ -1,7 +1,6 @@
 package learn.example.pile.adapters;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,8 +22,8 @@ import learn.example.pile.util.ActivityLauncher;
  */
 public class NewsListAdapter extends SaveStateAbleAdapter<NewsListAdapter.BaseNewsViewHolder, NetEaseNews.T1348647909107Bean> {
 
-    private final int TYPE_NORMAL=5;
-    private final int TYPE_IMAGES=6;
+    private static final int TYPE_NORMAL=5;
+    private static final int TYPE_IMAGES=6;
 
     private View.OnClickListener mItemClick = new View.OnClickListener() {
         @Override

@@ -157,10 +157,10 @@ public class PhotoActivity extends CommentMenuActivity {
                         if (click%2==0)
                         {
                             showActionBar();
-                            mPhotoWatcherLayout.showDigestArea();
+                            mPhotoWatcherLayout.showSummaryArea();
                         }else {
                             hideActionBar();
-                            mPhotoWatcherLayout.hideDigestArea();
+                            mPhotoWatcherLayout.hideSummaryArea();
                         }
                         click++;
                     }

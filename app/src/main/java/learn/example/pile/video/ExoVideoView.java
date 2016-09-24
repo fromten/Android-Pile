@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.widget.VideoView;
 
 import com.google.android.exoplayer.util.PlayerControl;
 
@@ -22,7 +21,6 @@ public class ExoVideoView extends SurfaceView implements SurfaceHolder.Callback
     }
 
 
-    private static final String TAG = "ExoVideoView";
 
 
     private ExoPlayer mExoVideo;

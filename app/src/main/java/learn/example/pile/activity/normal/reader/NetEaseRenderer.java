@@ -1,7 +1,6 @@
 package learn.example.pile.activity.normal.reader;
 
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.webkit.WebView;
 
 import com.activeandroid.query.Select;
@@ -11,7 +10,6 @@ import java.util.Locale;
 import learn.example.net.OkHttpRequest;
 import learn.example.pile.database.model.NewsArticle;
 import learn.example.pile.fragment.comment.NetEaseCommentFragment;
-import learn.example.pile.html.ContentGetInserter;
 import learn.example.pile.html.ImageClickInserter;
 import learn.example.pile.html.NetEaseHtml;
 import learn.example.pile.html.VideoClickInserter;
@@ -60,6 +58,11 @@ public class NetEaseRenderer  implements ContentRenderer {
              mCall.cancel();
          }
         mReaderActivity=null;
+    }
+
+    @Override
+    public boolean onHasCommentMenu() {
+        return true;
     }
 
     @Override

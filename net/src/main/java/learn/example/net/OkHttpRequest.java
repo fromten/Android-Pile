@@ -4,9 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
-import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
@@ -20,7 +18,6 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.Cache;
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.Dispatcher;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -30,13 +27,15 @@ import okhttp3.Response;
  * Created on 2016/7/1.
  */
 public class OkHttpRequest{
+
+
+    private static OkHttpRequest sInstance;
+
+
     private Handler mHandler;
-    private OkHttpClient mOkhttpClient;
-
-    private static OkHttpRequest mInstance;
-
+    private OkHttpClient mOkHttpClient;
     private Gson mGson;
-    public static final int CACHE_SIZE=30*1024*1024;// 30 MIB
+    public static final int CACHE_SIZE=50*1024*1024;// 50 MIB
     public static final int DEF_TIME_OUT=12;// second
     public static final String CAHDE_DIRECTORY="com.app.okhttp3_cache";
 
@@ -51,7 +50,7 @@ public class OkHttpRequest{
             Cache cache=new Cache(file,CACHE_SIZE);
             builder.cache(cache);
         }
-        mOkhttpClient=builder.connectTimeout(DEF_TIME_OUT,TimeUnit.SECONDS)
+        mOkHttpClient =builder.connectTimeout(DEF_TIME_OUT,TimeUnit.SECONDS)
                              .readTimeout(DEF_TIME_OUT,TimeUnit.SECONDS)
                              .writeTimeout(DEF_TIME_OUT*2,TimeUnit.SECONDS)
                              .build();
@@ -68,7 +67,7 @@ public class OkHttpRequest{
      */
     public synchronized static OkHttpRequest getInstanceUnsafe()
     {
-        return mInstance;
+        return sInstance;
     }
 
 
@@ -79,16 +78,16 @@ public class OkHttpRequest{
      */
     public synchronized static OkHttpRequest getInstance(@Nullable Context context)
     {
-        if (mInstance==null)
+        if (sInstance ==null)
         {
-            mInstance=new OkHttpRequest(context);
+            sInstance =new OkHttpRequest(context);
         }
-        return mInstance;
+        return sInstance;
     }
 
     public <T> Call newGsonRequest(final Class<T> clazz, final Request request, final RequestCallback<T> callback)
     {
-        Call call=mOkhttpClient.newCall(request);
+        Call call= mOkHttpClient.newCall(request);
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -117,7 +116,7 @@ public class OkHttpRequest{
 
     public Call newStringRequest(Request request, final RequestCallback<String> callback)
     {
-        Call call=mOkhttpClient.newCall(request);
+        Call call= mOkHttpClient.newCall(request);
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -147,7 +146,7 @@ public class OkHttpRequest{
 
     public Call newCall(Request request)
     {
-        return mOkhttpClient.newCall(request);
+        return mOkHttpClient.newCall(request);
     }
 
 

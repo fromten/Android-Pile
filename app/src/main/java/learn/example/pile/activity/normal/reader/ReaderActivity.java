@@ -14,34 +14,12 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
-import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.target.ImageViewTarget;
-
-import java.util.Locale;
-
-import learn.example.net.OkHttpRequest;
 import learn.example.pile.R;
 import learn.example.pile.fragment.WebFragment;
-import learn.example.pile.fragment.comment.CommentFragment;
-import learn.example.pile.fragment.comment.NetEaseCommentFragment;
-import learn.example.pile.fragment.comment.ZhihuCommentFragment;
-import learn.example.pile.html.ImageClickInserter;
-import learn.example.pile.html.NetEaseHtml;
-import learn.example.pile.html.VideoClickInserter;
-import learn.example.pile.html.ZhihuHtml;
-import learn.example.pile.jsonbean.ZhihuNewsContent;
-import learn.example.pile.net.IService;
-import learn.example.pile.net.ZhihuContentService;
-import learn.example.pile.object.NetEase;
-import learn.example.pile.util.HtmlTagBuild;
-import okhttp3.Call;
-import okhttp3.Request;
 
 /**
  * Created on 2016/7/10.
@@ -115,7 +93,10 @@ public class ReaderActivity extends AppCompatActivity implements RendererComplet
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        mToolbar.inflateMenu(R.menu.reader_menu);
+        if (mContentRenderer!=null&&mContentRenderer.onHasCommentMenu())
+        {
+            mToolbar.inflateMenu(R.menu.reader_menu);
+        }
         return true;
     }
 
@@ -174,7 +155,7 @@ public class ReaderActivity extends AppCompatActivity implements RendererComplet
     public void  showCommentFragment()
     {
         //还没有创建或创建失败
-        if (mContentRenderer==null)return;
+        if (mContentRenderer==null||!mContentRenderer.onHasCommentMenu())return;
 
         mAppBarLayout.setExpanded(false,true);
         FragmentTransaction mAnimationTransaction=getSupportFragmentManager()

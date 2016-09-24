@@ -1,27 +1,20 @@
 package learn.example.pile.fragment;
 
-import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.DownloadListener;
-import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
-import java.io.IOException;
-
 import learn.example.pile.R;
 import learn.example.pile.util.HtmlTagBuild;
-import learn.example.pile.util.IOutil;
 
 /**
  * Created on 2016/7/27.

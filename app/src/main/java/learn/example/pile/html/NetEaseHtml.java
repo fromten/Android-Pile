@@ -1,7 +1,5 @@
 package learn.example.pile.html;
 
-import android.util.Log;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

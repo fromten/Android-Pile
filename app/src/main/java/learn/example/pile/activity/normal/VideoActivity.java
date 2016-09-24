@@ -1,13 +1,11 @@
 package learn.example.pile.activity.normal;
 
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.GestureDetector;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +15,6 @@ import android.widget.TextView;
 
 import learn.example.pile.R;
 import learn.example.pile.activity.base.CommentMenuActivity;
-import learn.example.pile.activity.base.FullScreenActivity;
-import learn.example.pile.fragment.comment.OpenEyeCommentFragment;
 import learn.example.pile.ui.VolumeProgressView;
 import learn.example.pile.video.ExoVideoView;
 import learn.example.pile.video.MediaPlayControlView;
@@ -31,7 +27,8 @@ public class VideoActivity extends CommentMenuActivity {
 
 
     private static final String KEY_SAVE_VIDEO_POSITION = "video_position";
-    public static final String KEY_TITLE="title";
+    public static final String KEY_TITLE="video_title";
+
 
 
     private ExoVideoView mExoVideoView;
@@ -48,6 +45,7 @@ public class VideoActivity extends CommentMenuActivity {
 
     public static final int HIDE_VOLUME_PROGERESSBAR=0;
     public static final int HIDE_ACTIONBAR=1;
+    private static final int RESUME_PLAY = 4;
     private Handler mHandler=new Handler()
     {
         @Override
@@ -59,6 +57,10 @@ public class VideoActivity extends CommentMenuActivity {
                    break;
                case HIDE_ACTIONBAR:
                     hideActionBar();
+                   break;
+               case RESUME_PLAY:
+                   mExoVideoView.start();
+                   mPlayerControlView.updatePauseDrawable();
                    break;
            }
         }
@@ -104,8 +106,7 @@ public class VideoActivity extends CommentMenuActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        mExoVideoView.start();
-        mPlayerControlView.updatePauseDrawable();
+        mHandler.sendEmptyMessageDelayed(RESUME_PLAY,1000);
     }
 
     @Override
@@ -190,6 +191,7 @@ public class VideoActivity extends CommentMenuActivity {
 
         mHandler.removeMessages(HIDE_ACTIONBAR);
         mHandler.removeMessages(HIDE_VOLUME_PROGERESSBAR);
+        mHandler.removeMessages(RESUME_PLAY);
         mHandler=null;
 
         mExoVideoView.release();

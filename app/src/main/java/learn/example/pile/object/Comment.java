@@ -7,9 +7,6 @@ import com.google.gson.JsonObject;
 
 import java.util.List;
 
-import learn.example.pile.jsonbean.NetEaseComment;
-import learn.example.pile.jsonbean.ZhihuComment;
-
 /**
  * Created on 2016/7/20.
  */

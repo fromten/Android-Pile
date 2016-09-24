@@ -16,7 +16,7 @@ import java.util.List;
  * Created on 2016/8/16.
  *
  * 与 SaveStateAbleAdapter 不同之处是,
- * 保存数据为Json格式,恢复时利用Gson 反序列 添加保存的数据
+ * 保存数据为Json格式,恢复时利用Gson 反序列保存的数据
  * @see #saveState()
  * @see #restoreSaveState(String)
  * @see #getActualClass()

@@ -45,7 +45,7 @@ public class TimeUtil {
     public static String formatMS(int second)
     {
         int minute=second/60;
-        int s=second-minute*60;
+        int s=second%60;
         return minute+"'"+s;
     }
 

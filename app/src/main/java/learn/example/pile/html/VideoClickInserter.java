@@ -1,7 +1,6 @@
 package learn.example.pile.html;
 
 import android.content.Context;
-import android.util.Log;
 import android.webkit.JavascriptInterface;
 
 import learn.example.pile.util.ActivityLauncher;
@@ -37,7 +36,6 @@ public class VideoClickInserter implements JavaScriptInserter {
                 "         var url=this.getAttribute(\"mp4\"); \n" +
                 "         VideoClickInserter.openVideo(url)\n" +
                 "      }  \n" +
-                "      \n" +
                 "    }\n";
     }
 

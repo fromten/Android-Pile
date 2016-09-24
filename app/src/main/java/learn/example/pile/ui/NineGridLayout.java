@@ -1,33 +1,26 @@
 package learn.example.pile.ui;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.res.TypedArray;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
 
 
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.Transformation;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.Resource;
-import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
-import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 
 
 import learn.example.pile.R;
-import learn.example.pile.util.DeviceInfo;
 import learn.example.pile.util.GlideUtil;
+
+import static android.R.attr.type;
 
 /**
  * Created on 2016/8/15.
@@ -163,6 +156,10 @@ public class NineGridLayout extends ViewGroup implements View.OnClickListener{
             removeViews(i, Math.abs(childCount-urlLen));
     }
 
+
+    /**
+     * 创建child,并返回
+     */
     public ViewGroup addChild()
     {
         FrameLayout frameLayout=new FrameLayout(getContext());
@@ -171,14 +168,8 @@ public class NineGridLayout extends ViewGroup implements View.OnClickListener{
         //添加imageview
         frameLayout.addView(createImageView());
 
-        TextView type=new TextView(getContext(),null,R.style.SmallText);
-        type.setBackgroundColor(getResources().getColor(R.color.blue_light));
-        type.setTextColor(Color.WHITE);
-        FrameLayout.LayoutParams typeParams=new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        typeParams.gravity= Gravity.BOTTOM |Gravity.END;
-
         //添加textView
-        frameLayout.addView(type,typeParams);
+        frameLayout.addView(createImageTypeView());
 
 
         this.addView(frameLayout);
@@ -195,6 +186,17 @@ public class NineGridLayout extends ViewGroup implements View.OnClickListener{
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         imageView.setBackgroundResource(R.color.image_placer);
         return imageView;
+    }
+
+    private TextView createImageTypeView()
+    {
+        TextView type=new TextView(getContext(),null,R.style.SmallText);
+        type.setBackgroundColor(ResourcesCompat.getColor(getResources(),R.color.blue_light,null));
+        type.setTextColor(Color.WHITE);
+        FrameLayout.LayoutParams typeParams=new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        typeParams.gravity= Gravity.BOTTOM |Gravity.END;
+        type.setLayoutParams(typeParams);
+        return type;
     }
 
     @Override

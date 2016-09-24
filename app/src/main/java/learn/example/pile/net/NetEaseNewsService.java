@@ -1,9 +1,7 @@
 package learn.example.pile.net;
 
 import learn.example.pile.jsonbean.NetEaseNews;
-import learn.example.pile.jsonbean.NewsJsonData;
 import learn.example.pile.object.NetEase;
-import okhttp3.Request;
 
 /**
  * Created on 2016/7/1.

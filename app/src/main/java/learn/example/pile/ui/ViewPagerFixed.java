@@ -20,7 +20,7 @@ public class ViewPagerFixed extends ViewPager {
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        try {
+        try {//修复ViewPager Bug
             return super.onTouchEvent(ev);
         } catch (IllegalArgumentException ex) {
             ex.printStackTrace();
@@ -30,7 +30,7 @@ public class ViewPagerFixed extends ViewPager {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        try {
+        try {//修复ViewPager Bug
             return super.onInterceptTouchEvent(ev);
         } catch (IllegalArgumentException ex) {
             ex.printStackTrace();

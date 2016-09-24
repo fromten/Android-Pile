@@ -1,8 +1,6 @@
 package learn.example.pile.html;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.util.Log;
 import android.webkit.JavascriptInterface;
 
 import learn.example.pile.util.ActivityLauncher;

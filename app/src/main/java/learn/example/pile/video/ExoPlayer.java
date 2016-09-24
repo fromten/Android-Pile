@@ -60,16 +60,16 @@ public class ExoPlayer implements com.google.android.exoplayer.ExoPlayer.Listene
         /**
          * Builds renderers for playback.
          *
-         * @param player The player for which renderers are being built. {@link DemoPlayer#onRenderers}
+         * @param player The player for which renderers are being built. {@link ExoPlayer#onRenderers}
          *     should be invoked once the renderers have been built. If building fails,
-         *     {@link DemoPlayer#onRenderersError} should be invoked.
+         *     {@link ExoPlayer#onRenderersError} should be invoked.
          */
         void buildRenderers(ExoPlayer player);
         /**
          * Cancels the current build operation, if there is one. Else does nothing.
          * <p>
-         * A canceled build operation must not invoke {@link DemoPlayer#onRenderers} or
-         * {@link DemoPlayer#onRenderersError} on the player, which may have been released.
+         * A canceled build operation must not invoke {@link ExoPlayer#onRenderers} or
+         * {@link ExoPlayer#onRenderersError} on the player, which may have been released.
          */
         void cancel();
     }

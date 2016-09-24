@@ -1,6 +1,5 @@
 package learn.example.pile.fragment.caterogy;
 
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -9,8 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.activeandroid.ActiveAndroid;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +34,7 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
     //save state key
     private static final String KEY_NEXT_URL="next_url";
     private static final String KEY_NEXT_PUSH_TIME="next_push_time";
-    private static final String KEY_DATABASE_INDEX="database_index";
+    private static final String KEY_DATABASE_INDEX="video_database_index";
 
 
     private VideoListAdapter mAdapter;
@@ -75,7 +72,7 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
     public void onSaveInstanceState(Bundle outState) {
         outState.putString(KEY_NEXT_URL,nextUrl);
         outState.putLong(KEY_NEXT_PUSH_TIME,nextPushTime);
-        outState.putLong(KEY_DATABASE_INDEX,databaseIndex);
+        outState.putInt(KEY_DATABASE_INDEX,databaseIndex);
         super.onSaveInstanceState(outState);
     }
 
@@ -114,6 +111,7 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
         nextUrl=data.getNextPageUrl();
         mAdapter.addAll(mList);
         notifySuccess();
+
 
         ActiveAndroidHelper.saveItemsToDatabase(mList);
     }
@@ -193,7 +191,7 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
     }
 
 
-    private void requestCategoryVideo(int categoryId)
+    private void requestCategoryVideo(@OpenEyes.Category int categoryId)
     {
         setRefreshing(true);
         mService.getCategoryVideoInDateSort(categoryId,VideoListFragment.this);
@@ -202,7 +200,7 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
     public class CategoryViewHolder extends RecyclerViewImprove.HeadHolder implements View.OnClickListener{
 
 
-        public CategoryViewHolder()
+        CategoryViewHolder()
         {
             this(LayoutInflater.from(getContext()).inflate(R.layout.category,getRecyclerView(),false));
         }

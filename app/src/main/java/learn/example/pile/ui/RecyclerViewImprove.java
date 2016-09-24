@@ -51,7 +51,7 @@ public class RecyclerViewImprove extends RecyclerView {
         public AdapterWrapper(RecyclerView.Adapter adapter) {
             if (adapter==null)
             {
-                throw new NullPointerException("Adapter be null");
+                throw new NullPointerException("Adapter may be null");
             }
             mInnerAdapter = adapter;
         }

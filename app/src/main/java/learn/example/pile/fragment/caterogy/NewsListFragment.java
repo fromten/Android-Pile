@@ -77,9 +77,8 @@ public class NewsListFragment extends BaseListFragment implements NetService.Cal
 
 
         checkDatabaseCapacity();
-        Log.d(TAG, "start");
+
         saveItemsToDatabase(data.getT1348647909107());
-        Log.d(TAG,"end" );
     }
 
     @Override

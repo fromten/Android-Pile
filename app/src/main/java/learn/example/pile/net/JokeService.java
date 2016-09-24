@@ -1,7 +1,6 @@
 package learn.example.pile.net;
 
 import learn.example.pile.jsonbean.JokeBean;
-import learn.example.pile.jsonbean.JokeJsonData;
 import learn.example.pile.object.JokeProvider;
 import okhttp3.Request;
 

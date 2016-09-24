@@ -22,8 +22,5 @@ public class TextUtil {
         return text==null?null:text.split("\\。");
     }
 
-    public static String checkString(String string,String defValue)
-    {
-       return string==null?defValue:string;
-    }
+
 }

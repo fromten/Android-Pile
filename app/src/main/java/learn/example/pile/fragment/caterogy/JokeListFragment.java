@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import learn.example.pile.adapters.JokeListAdapter;
-import learn.example.pile.database.JokeDatabase;
 import learn.example.pile.fragment.base.BaseListFragment;
 import learn.example.pile.jsonbean.JokeBean;
 import learn.example.pile.net.IService;
@@ -95,7 +94,7 @@ public class JokeListFragment extends BaseListFragment implements IService.Callb
 
     @Override
     public void onFailure(String msg) {
-         Log.d("joke", "onSuccess");
+         Log.d("joke", "onFailure");
          notifyError();
     }
 

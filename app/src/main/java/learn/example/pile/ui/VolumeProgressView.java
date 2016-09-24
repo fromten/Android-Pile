@@ -8,9 +8,7 @@ import android.graphics.Rect;
 import android.media.AudioManager;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 
 /**

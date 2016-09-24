@@ -15,6 +15,7 @@ import learn.example.pile.activity.base.ToolBarActivity;
 /**
  * Created on 2016/5/7.
  */
+@Deprecated
 public class WebViewActivity extends ToolBarActivity {
 
 

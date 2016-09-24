@@ -146,9 +146,9 @@ public class PhotoWatcherLayout extends FrameLayout implements ViewPager.OnPageC
     /**
      * 显示底部内容区域,
      * @see #mRelativeLayout
-     * @see #hideDigestArea()
+     * @see #hideSummaryArea()
      */
-    public void showDigestArea()
+    public void showSummaryArea()
     {
         if (mRelativeLayout.getVisibility() != View.VISIBLE) {
             mRelativeLayout.setVisibility(View.VISIBLE);
@@ -159,9 +159,9 @@ public class PhotoWatcherLayout extends FrameLayout implements ViewPager.OnPageC
     /**
      * 隐藏底部内容区域,
      * @see #mRelativeLayout
-     * @see #hideDigestArea()
+     * @see #hideSummaryArea()
      */
-    public void hideDigestArea()
+    public void hideSummaryArea()
     {
         if (mRelativeLayout.getVisibility() != View.INVISIBLE) {
             mRelativeLayout.setVisibility(View.INVISIBLE);

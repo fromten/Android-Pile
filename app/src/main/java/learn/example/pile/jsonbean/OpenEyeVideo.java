@@ -1,12 +1,7 @@
 package learn.example.pile.jsonbean;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 
 import com.google.gson.JsonArray;
-
-import java.util.List;
 
 /**
  * Created on 2016/7/22.

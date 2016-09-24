@@ -138,12 +138,12 @@ public class VideoTextureView extends TextureView implements TextureView.Surface
 
     private void openVideo()
     {
-        Log.d(TAG, "openVideo invoke");
+
         if (mUri==null||getSurfaceTexture()==null)
         {
             return;
         }
-        Log.d(TAG, "openVideo start set ");
+
         release();
         ExtractorRendererBuilder builder=new ExtractorRendererBuilder(getContext(),"test",mUri);
         mExoVideo=new ExoPlayer(builder);

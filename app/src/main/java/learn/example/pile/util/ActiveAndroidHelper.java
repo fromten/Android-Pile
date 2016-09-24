@@ -1,8 +1,6 @@
 package learn.example.pile.util;
 
 
-import android.content.ClipData;
-
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.Model;
 import com.activeandroid.query.Delete;
@@ -17,7 +15,12 @@ import java.util.List;
  */
 public class ActiveAndroidHelper {
 
-    public  static boolean saveItemsToDatabase(List<? extends Model> items)
+    /**
+     * 保存数据到数据库
+     * @param items {@link com.activeandroid.Model}
+     * @return true 保存成功,else wise
+     */
+    public static boolean saveItemsToDatabase(List<? extends Model> items)
     {
         if (items==null||items.isEmpty())return false;
 
@@ -34,6 +37,14 @@ public class ActiveAndroidHelper {
         return true;
     }
 
+    /**
+     * 从数据库获取元素List
+     * @param items {@link com.activeandroid.Model}
+     * @param desc 是否倒序查询
+     * @param start 开始行位置
+     * @param length 相对起始位置的长度
+     * @return list可能为Null
+     */
     public static <T extends Model> List<T> getItemsFromDatabase(Class<T> items,boolean desc,int start, int length)
     {
         From from=new Select().from(items);
@@ -41,7 +52,7 @@ public class ActiveAndroidHelper {
         {
             from.orderBy("id DESC");
         }
-        from.where("id between "+start).and(String.valueOf(length));
+        from.limit(start+","+length);
         return from.execute();
     }
 

@@ -7,8 +7,6 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import learn.example.pile.jsonbean.NetEaseNews;
-
 /**
  * Created on 2016/6/29.
  */

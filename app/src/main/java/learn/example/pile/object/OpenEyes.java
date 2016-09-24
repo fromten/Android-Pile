@@ -2,10 +2,22 @@ package learn.example.pile.object;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.IntDef;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+import static learn.example.pile.object.OpenEyes.Category.ADVERTISEMENT;
+import static learn.example.pile.object.OpenEyes.Category.ART;
+import static learn.example.pile.object.OpenEyes.Category.DRAMA;
+import static learn.example.pile.object.OpenEyes.Category.PREVIEW;
+import static learn.example.pile.object.OpenEyes.Category.RECORD;
+import static learn.example.pile.object.OpenEyes.Category.TRIP;
+
 
 /**
  * Created on 2016/7/22.
@@ -31,14 +43,21 @@ public class OpenEyes {
         public final static String DATE="date";//按时间获得视频列表
     }
 
-    //分类视频
-    public static class Category{
-        public static final int DRAMA=12;//剧情
-        public static final int ART=2;//创意
-        public static final int ADVERTISEMENT=14;//广告
-        public static final int RECORD=22;//记录
-        public static final int PREVIEW=8;//预告
-        public static final int TRIP=6;//旅行
+
+    @IntDef({DRAMA,
+            ART,
+            ADVERTISEMENT,
+            RECORD,
+            PREVIEW,
+            TRIP})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface Category {
+        int DRAMA=12;//剧情
+        int ART=2;//创意
+        int ADVERTISEMENT=14;//广告
+        int RECORD=22;//记录
+        int PREVIEW=8;//预告
+        int TRIP=6;//旅行
     }
 
     /**
@@ -60,7 +79,7 @@ public class OpenEyes {
         return nextUrl+APP_PARAMS;
     }
 
-    public static String getCategoryUrl(int categoryID,String strategy)
+    public static String getCategoryUrl(@Category int categoryID,String strategy)
     {
         return CATEGORY_URL+"categoryId="+categoryID+"&strategy"+strategy+APP_PARAMS;
     }

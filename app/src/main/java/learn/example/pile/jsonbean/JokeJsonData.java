@@ -11,6 +11,7 @@ import java.util.List;
 /**
  * Created on 2016/5/5.
  */
+@Deprecated
 public class JokeJsonData {
 
     @SerializedName("showapi_res_code")

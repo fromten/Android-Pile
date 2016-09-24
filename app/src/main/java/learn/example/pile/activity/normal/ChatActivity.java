@@ -54,7 +54,7 @@ public class ChatActivity extends ToolBarActivity implements IService.Callback<T
                 mListView.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                       smoothScrollListBottom();
+                       smoothScrollToListBottom();
                     }
                 },100);
             }
@@ -74,7 +74,7 @@ public class ChatActivity extends ToolBarActivity implements IService.Callback<T
         ChatInfo info=new ChatInfo(ChatInfo.GRAVITY_LEFT,data.getText());
         mChatListAdapter.addItem(info);
 
-        smoothScrollListBottom();
+        smoothScrollToListBottom();
     }
 
     @Override
@@ -107,7 +107,7 @@ public class ChatActivity extends ToolBarActivity implements IService.Callback<T
         imm.hideSoftInputFromWindow(mMsgEdit.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 
-    private void smoothScrollListBottom()
+    private void smoothScrollToListBottom()
     {
         mListView.smoothScrollToPosition(mChatListAdapter.getCount()-1);
     }

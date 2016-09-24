@@ -1,7 +1,6 @@
 package learn.example.pile.activity.normal.reader;
 
 import android.support.v4.app.Fragment;
-import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 
@@ -40,6 +39,11 @@ public class ZhihuRenderer implements ContentRenderer
             mService.cancelAll();
         }
         mReaderActivity=null;
+    }
+
+    @Override
+    public boolean onHasCommentMenu() {
+        return true;
     }
 
     @Override

@@ -1,13 +1,5 @@
 package learn.example.pile.object;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import learn.example.pile.jsonbean.ZhihuStories;
-
 /**
  * Created on 2016/7/9.
  */

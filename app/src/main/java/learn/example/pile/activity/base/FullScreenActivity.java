@@ -21,9 +21,14 @@ public class FullScreenActivity extends AppCompatActivity{
         if (getSupportActionBar()!=null)
         {
             getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            enableSupportHomeUp();
         }
+    }
+
+    public void enableSupportHomeUp()
+    {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     @Override

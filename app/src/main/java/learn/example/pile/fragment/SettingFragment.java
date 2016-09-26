@@ -66,7 +66,7 @@ public class SettingFragment extends Fragment {
             }
         };
         mImgCache.setMovementMethod(LinkMovementMethod.getInstance());
-        SpannableStringBuilder builder = SpannableStringBuilder.valueOf(summary + size);
+        SpannableStringBuilder builder = SpannableStringBuilder.valueOf(summary+size);
         builder.setSpan(clickSpan, summary.length(), builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         mImgCache.setText(builder);
     }
@@ -111,7 +111,7 @@ public class SettingFragment extends Fragment {
      * @param positiveListener 确定点击监听
      * @param negativeListener 取消点击监听
      */
-    public static void showCommonDialog(Context context, CharSequence title, CharSequence msg,
+    public void showCommonDialog(Context context, CharSequence title, CharSequence msg,
                                         DialogInterface.OnClickListener positiveListener, DialogInterface.OnClickListener negativeListener) {
         if (context == null) return;
         new AlertDialog.Builder(context).setTitle(title).setMessage(msg)

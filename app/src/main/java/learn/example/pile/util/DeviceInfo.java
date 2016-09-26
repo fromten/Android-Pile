@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
 import android.util.DisplayMetrics;
+import android.view.WindowManager;
 
 /**
  * Created on 2016/6/4.
@@ -15,9 +16,10 @@ public class DeviceInfo {
      public   int SCREEN_WIDTH=-1;
      public   int SCREEN_HEIGHT=-1;
 
-    public DeviceInfo(Activity activity) {
+    public DeviceInfo(Context context) {
         DisplayMetrics displaymetrics = new DisplayMetrics();
-        activity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        WindowManager manager= (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        manager.getDefaultDisplay().getMetrics(displaymetrics);
         SCREEN_HEIGHT = displaymetrics.heightPixels;
         SCREEN_WIDTH = displaymetrics.widthPixels;
     }

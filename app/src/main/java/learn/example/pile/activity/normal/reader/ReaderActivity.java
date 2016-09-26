@@ -160,7 +160,7 @@ public class ReaderActivity extends AppCompatActivity implements RendererComplet
         mAppBarLayout.setExpanded(false,true);
         FragmentTransaction mAnimationTransaction=getSupportFragmentManager()
                  .beginTransaction()
-                 .setCustomAnimations(R.anim.anim_slide_right_to_start,R.anim.anim_slide_out_to_right);
+                 .setCustomAnimations(R.anim.anim_slide_right_in,R.anim.anim_slide_right_out);
         if (mCommentFragment==null)
         {
             Fragment fragment=mContentRenderer.onCreateCommentFragment();
@@ -186,7 +186,7 @@ public class ReaderActivity extends AppCompatActivity implements RendererComplet
     public void onBackPressed() {
         if (mCommentFragment!=null&&mCommentFragment.isVisible()) {
                 getSupportFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.anim.anim_slide_left_in,R.anim.anim_slide_left_to_end)
+                        .setCustomAnimations(R.anim.anim_slide_left_in,R.anim.anim_slide_left_out)
                         .hide(mCommentFragment).commit();
         }else {
             super.onBackPressed();

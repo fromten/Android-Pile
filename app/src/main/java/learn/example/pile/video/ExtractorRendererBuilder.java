@@ -28,10 +28,10 @@ public class ExtractorRendererBuilder implements ExoPlayer.RendererBuilder {
   private static final int BUFFER_SEGMENT_SIZE = 64 * 1024;
   private static final int BUFFER_SEGMENT_COUNT = 256;
 
-  private final Context context;
-  private final String userAgent;
-  private final Uri uri;
-
+  private Context context;
+  private String userAgent;
+  private Uri uri;
+  private boolean isCanceled;
   public ExtractorRendererBuilder(Context context, String userAgent, Uri uri) {
     this.context = context;
     this.userAgent = userAgent;
@@ -40,6 +40,8 @@ public class ExtractorRendererBuilder implements ExoPlayer.RendererBuilder {
 
   @Override
   public void buildRenderers(ExoPlayer player) {
+    if (isCanceled)return;
+
     Allocator allocator = new DefaultAllocator(BUFFER_SEGMENT_SIZE);
     Handler mainHandler = player.getMainHandler();
 
@@ -69,7 +71,8 @@ public class ExtractorRendererBuilder implements ExoPlayer.RendererBuilder {
 
   @Override
   public void cancel() {
-    // Do nothing.
+     isCanceled=true;
+     context=null;
   }
 
 }

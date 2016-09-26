@@ -1,7 +1,7 @@
 # Android-Pile
 ##简要:
   集合网易头条新闻,开眼视频,知乎日报...etc的App;
-###Used
+###Use
 <ul>
 <li>ExoPlayer播放视频</li>
 <li>OkHttp3网络请求</li>
@@ -26,7 +26,7 @@
 ##依赖Lib
 <ul>
 <li>Glide</li>
-<li>ExoPlayer>
+<li>ExoPlayer></li>
 <li>Gson</li>
 <li>ActiveAndroid</li>
 <li>Okhttp</li>

@@ -276,7 +276,6 @@ public class ExoPlayer implements com.google.android.exoplayer.ExoPlayer.Listene
         if (rendererBuildingState == RENDERER_BUILDING_STATE_BUILT) {
             player.stop();
         }
-        rendererBuilder.cancel();
         videoFormat = null;
         videoRenderer = null;
         rendererBuildingState = RENDERER_BUILDING_STATE_BUILDING;

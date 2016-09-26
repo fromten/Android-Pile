@@ -180,7 +180,7 @@ public class ActivityLauncher {
      */
     public static Bundle makeSlideAnimation(Context context)
     {
-        return ActivityOptionsCompat.makeCustomAnimation(context,R.anim.anim_slide_right_to_start,R.anim.anim_slide_out_to_right).toBundle();
+        return ActivityOptionsCompat.makeCustomAnimation(context,R.anim.anim_slide_right_in,R.anim.anim_slide_right_out).toBundle();
     }
 
 

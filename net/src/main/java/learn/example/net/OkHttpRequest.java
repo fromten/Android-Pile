@@ -36,7 +36,7 @@ public class OkHttpRequest{
     private OkHttpClient mOkHttpClient;
     private Gson mGson;
     public static final int CACHE_SIZE=50*1024*1024;// 50 MIB
-    public static final int DEF_TIME_OUT=12;// second
+    public static final int DEF_TIME_OUT=10;// second
     public static final String CAHDE_DIRECTORY="com.app.okhttp3_cache";
 
 

@@ -3,6 +3,7 @@ package learn.example.pile.activity.normal;
 import android.Manifest;
 import android.annotation.TargetApi;
 
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -18,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 
 
 import learn.example.net.OkHttpRequest;
@@ -126,6 +128,11 @@ public class MainActivity extends ToolBarActivity {
     @Override
     protected void onEnableActionBarHome() {
         //取消显示菜单向上回退按钮
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     public static class ViewPagerFragment extends Fragment  {

@@ -132,7 +132,7 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
         {
             long second=nextPushTime-TimeUtil.getTime();
             //如果到下一次推送时间,或者当前的Adapter 没有元素,需要再次请求
-            boolean requireRequest=second<=0||mAdapter.getItemCount()==0;
+            boolean requireRequest=second<=0||mAdapter.getItemCount()==0||nextUrl==null;
             if (requireRequest)
             {
                 mService.getHotVideo(this);
@@ -158,6 +158,8 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
             if (nextUrl!=null)
             {
                 mService.nextVideoList(nextUrl,this);
+            }else {
+                notifyError();
             }
         }else {
             addDatabaseItemsToAdapter();

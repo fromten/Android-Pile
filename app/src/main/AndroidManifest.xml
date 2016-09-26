@@ -23,12 +23,16 @@
         <meta-data android:name="AA_SERIALIZERS"
                    android:value="learn.example.pile.database.typeserializer.StringArraySerializer" />
 
-        <activity android:name=".activity.normal.MainActivity">
+        <activity android:name=".activity.normal.BootActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".activity.normal.MainActivity"
+                  android:launchMode="singleTask"/>
+
 
         <activity android:name=".activity.normal.WebViewActivity"
                   android:process="learn.example.pile.PileApplication.WebActivity"
@@ -53,6 +57,7 @@
         <activity android:name=".activity.normal.CommentActivity"/>
 
         <activity android:name=".activity.normal.reader.ReaderActivity"/>
+        <service android:name=".service.StartImageCacheService"/>
     </application>
 
 </manifest>

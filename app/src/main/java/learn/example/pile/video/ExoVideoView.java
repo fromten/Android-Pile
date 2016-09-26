@@ -20,9 +20,6 @@ public class ExoVideoView extends SurfaceView implements SurfaceHolder.Callback
         void onError(ExoVideoView view, Exception error);
     }
 
-
-
-
     private ExoPlayer mExoVideo;
     private ExoPlayer.RendererBuilder  mRendererBuilder;
     private SurfaceHolder mSurfaceHolder;
@@ -182,6 +179,8 @@ public class ExoVideoView extends SurfaceView implements SurfaceHolder.Callback
         {
             mExoVideo.release();
             mExoVideo.removeListener(this);
+            mRendererBuilder.cancel();
+            mRendererBuilder=null;
             isInvokePrepareListener=false;
             mExoVideo=null;
         }

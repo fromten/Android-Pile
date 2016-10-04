@@ -12,13 +12,14 @@ import com.bumptech.glide.Glide;
 
 
 import learn.example.pile.R;
+import learn.example.pile.adapters.base.ParcelableStateAdapter;
 import learn.example.pile.object.Comment;
 import learn.example.pile.ui.CircleViewTarget;
 
 /**
  * Created on 2016/7/13.
  */
-public class CommentListAdapter extends SaveStateAbleAdapter<CommentListAdapter.CommentViewHolder,Comment.CommentItem> {
+public class CommentListAdapter extends ParcelableStateAdapter<Comment.CommentItem,CommentListAdapter.CommentViewHolder> {
 
 
     @Override
@@ -30,7 +31,7 @@ public class CommentListAdapter extends SaveStateAbleAdapter<CommentListAdapter.
 
     @Override
     public void onBindViewHolder(final CommentViewHolder holder, int position) {
-        Comment.CommentItem c = getItem(position);
+        Comment.CommentItem c = get(position);
         final Context context = holder.itemView.getContext();
         holder.content.setText(c.getContent());
         String author=c.getAuthor();

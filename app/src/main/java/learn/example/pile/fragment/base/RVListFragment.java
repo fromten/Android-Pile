@@ -156,6 +156,7 @@ public class RVListFragment extends Fragment implements SwipeRefreshLayout.OnRef
         mSwipeRefreshLayout.post(new Runnable() {
             @Override
             public void run() {
+                if (mSwipeRefreshLayout!=null)
                 mSwipeRefreshLayout.setRefreshing(refreshing);
             }
         });

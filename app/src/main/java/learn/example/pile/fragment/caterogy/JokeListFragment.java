@@ -88,7 +88,7 @@ public class JokeListFragment extends BaseListFragment implements IService.Callb
                 list.add(listBean.getGroup());
         }
 
-        mJokeListAdapter.addList(list);
+        mJokeListAdapter.addAll(list);
         notifySuccess();
     }
 

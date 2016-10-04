@@ -10,9 +10,11 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.Collection;
 import java.util.List;
 
 import learn.example.pile.R;
+import learn.example.pile.adapters.base.ParcelableStateAdapter;
 import learn.example.pile.jsonbean.NetEaseNews;
 import learn.example.pile.util.ActivityLauncher;
 
@@ -20,7 +22,7 @@ import learn.example.pile.util.ActivityLauncher;
 /**
  * Created on 2016/5/24.
  */
-public class NewsListAdapter extends SaveStateAbleAdapter<NewsListAdapter.BaseNewsViewHolder, NetEaseNews.T1348647909107Bean> {
+public class NewsListAdapter extends ParcelableStateAdapter<NetEaseNews.NewsItem,NewsListAdapter.BaseNewsViewHolder> {
 
     private static final int TYPE_NORMAL=5;
     private static final int TYPE_IMAGES=6;
@@ -29,7 +31,7 @@ public class NewsListAdapter extends SaveStateAbleAdapter<NewsListAdapter.BaseNe
         @Override
         public void onClick(View v) {
             int position= (int) v.getTag();
-            NetEaseNews.T1348647909107Bean item=getItem(position);
+            NetEaseNews.NewsItem item=get(position);
 
             if (item.getSkipType()!=null&&item.getSkipType().equals("photoset"))
             {
@@ -44,28 +46,20 @@ public class NewsListAdapter extends SaveStateAbleAdapter<NewsListAdapter.BaseNe
         }
     };
 
-    @Override
-    public void addItem(NetEaseNews.T1348647909107Bean item) {
-        if (item!=null)
-        {
-            int replyCount=item.getReplyCount();
-            item.setReplayString(formatNumber(replyCount));
-        }
-        super.addItem(item);
-    }
 
     @Override
-    public void addAll(List<NetEaseNews.T1348647909107Bean> items) {
-        if (items!=null)
+    public boolean addAll(Collection<? extends NetEaseNews.NewsItem> collection) {
+        if (collection!=null)
         {
-            for (NetEaseNews.T1348647909107Bean item:items)
+            for (NetEaseNews.NewsItem item:collection)
             {
                 int replyCount=item.getReplyCount();
                 item.setReplayString(formatNumber(replyCount));
             }
         }
-        super.addAll(items);
+        return super.addAll(collection);
     }
+
 
     //格式化数字
     private String formatNumber(int num)
@@ -94,7 +88,7 @@ public class NewsListAdapter extends SaveStateAbleAdapter<NewsListAdapter.BaseNe
 
     @Override
     public void onBindViewHolder(BaseNewsViewHolder holder, int position) {
-        NetEaseNews.T1348647909107Bean  item = getItem(position);
+        NetEaseNews.NewsItem item = get(position);
         holder.title.setText(item.getTitle());
         holder.commentNum.setText(item.getReplayString());
         holder.docSource.setText(item.getSource());
@@ -112,7 +106,7 @@ public class NewsListAdapter extends SaveStateAbleAdapter<NewsListAdapter.BaseNe
 
     private void setNormalViews(NewsNormalViewHolder holder,int position)
     {
-        NetEaseNews.T1348647909107Bean item=getItem(position);
+        NetEaseNews.NewsItem item=get(position);
         Glide.with(holder.itemView.getContext())
                 .load(item.getImgsrc())
                 .asBitmap()
@@ -124,13 +118,13 @@ public class NewsListAdapter extends SaveStateAbleAdapter<NewsListAdapter.BaseNe
 
     private void setImageViews(NewsImagesViewHolder holder,int position)
     {
-        NetEaseNews.T1348647909107Bean item=getItem(position);
+        NetEaseNews.NewsItem item=get(position);
         Context context=holder.itemView.getContext();
         Glide.with(context).load(item.getImgsrc())
                 .asBitmap()
                 .centerCrop()
                 .into(holder.mImageView1);
-        NetEaseNews.T1348647909107Bean.ImageExtraBean[] images=item.getImgnewextra();
+        NetEaseNews.NewsItem.ImageExtraBean[] images=item.getImgnewextra();
         if (images!=null)
         {
             int size=images.length;
@@ -157,7 +151,7 @@ public class NewsListAdapter extends SaveStateAbleAdapter<NewsListAdapter.BaseNe
 
     @Override
     public int getItemViewType(int position) {
-        if (getItem(position).getImgnewextra()!=null)
+        if (get(position).getImgnewextra()!=null)
         {
             return TYPE_IMAGES;
         }

@@ -19,7 +19,6 @@ import learn.example.pile.R;
 import learn.example.pile.activity.base.FullScreenActivity;
 import learn.example.pile.service.StartImageCacheService;
 
-import static android.R.attr.value;
 import static learn.example.pile.service.StartImageCacheService.CACHE_FILE_NAME;
 import static learn.example.pile.service.StartImageCacheService.KEY_IMAGE_OWN;
 
@@ -32,7 +31,7 @@ public class BootActivity extends FullScreenActivity{
     private ProgressBar mProgressBar;
     private TextView mImageOwn;
     private ValueAnimator mValueAnimator;
-    public static final int SHOW_DURATION=2500;//second
+    public static final int SHOW_DURATION=2500;//2.5 second
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -127,8 +126,6 @@ public class BootActivity extends FullScreenActivity{
         long sevenHour=7*AlarmManager.INTERVAL_HOUR;
         Intent intent=new Intent(this,StartImageCacheService.class);
         PendingIntent pendingIntent=PendingIntent.getService(this,1,intent,PendingIntent.FLAG_CANCEL_CURRENT);
-        //取消之前的
-        manager.cancel(pendingIntent);
         manager.setRepeating(AlarmManager.ELAPSED_REALTIME,sevenHour,sevenHour,pendingIntent);
     }
 

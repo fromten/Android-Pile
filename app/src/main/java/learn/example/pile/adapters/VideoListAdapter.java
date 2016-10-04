@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import learn.example.pile.R;
+import learn.example.pile.adapters.base.ParcelableStateAdapter;
 import learn.example.pile.fragment.comment.OpenEyeCommentFragment;
 import learn.example.pile.object.OpenEyes;
 import learn.example.pile.util.ActivityLauncher;
@@ -19,7 +20,7 @@ import learn.example.pile.util.TimeUtil;
 /**
  * Created on 2016/5/25.
  */
-public class VideoListAdapter extends SaveStateAbleAdapter<VideoListAdapter.VideoViewHolder,OpenEyes.VideoInfo> implements View.OnClickListener{
+public class VideoListAdapter extends ParcelableStateAdapter<OpenEyes.VideoInfo,VideoListAdapter.VideoViewHolder> implements View.OnClickListener{
 
 
     @Override
@@ -31,7 +32,7 @@ public class VideoListAdapter extends SaveStateAbleAdapter<VideoListAdapter.Vide
 
     @Override
     public void onBindViewHolder(VideoViewHolder holder, int position) {
-        OpenEyes.VideoInfo item=getItem(position);
+        OpenEyes.VideoInfo item=get(position);
         String timeAndTitle=item.getTitle()+"\n"+TimeUtil.formatMS(item.getDuration());
         holder.title.setText(timeAndTitle);
         Glide.with(holder.itemView.getContext())
@@ -45,7 +46,7 @@ public class VideoListAdapter extends SaveStateAbleAdapter<VideoListAdapter.Vide
     public void onClick(View v) {
         int pos= (int) v.getTag();
 
-        OpenEyes.VideoInfo info=getItem(pos);
+        OpenEyes.VideoInfo info=get(pos);
         if (info!=null)
         {
             String uri=info.getPlayUrl();

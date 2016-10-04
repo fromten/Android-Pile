@@ -16,7 +16,7 @@ public class NewsImageExtraArraySerializer extends TypeSerializer {
 
     @Override
     public Class<?> getDeserializedType() {
-        return NetEaseNews.T1348647909107Bean.ImageExtraBean[].class;
+        return NetEaseNews.NewsItem.ImageExtraBean[].class;
     }
 
     @Override
@@ -34,8 +34,8 @@ public class NewsImageExtraArraySerializer extends TypeSerializer {
     @Override
     public Object deserialize(Object data) {
         if (data==null)return null;
-        NetEaseNews.T1348647909107Bean.ImageExtraBean[] images=
-                GsonHelper.deserialize(data.toString(),NetEaseNews.T1348647909107Bean.ImageExtraBean[].class);
+        NetEaseNews.NewsItem.ImageExtraBean[] images=
+                GsonHelper.deserialize(data.toString(),NetEaseNews.NewsItem.ImageExtraBean[].class);
         return images;
     }
 }

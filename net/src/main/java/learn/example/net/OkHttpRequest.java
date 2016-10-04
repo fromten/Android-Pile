@@ -91,7 +91,10 @@ public class OkHttpRequest{
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                deliverFailureResult(call.request().toString(),callback);
+                if (!call.isCanceled())
+                {
+                    deliverFailureResult(call.request().toString(),callback);
+                }
             }
 
             @Override

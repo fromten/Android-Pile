@@ -3,7 +3,6 @@ package learn.example.pile.activity.normal;
 import android.Manifest;
 import android.annotation.TargetApi;
 
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -35,7 +34,7 @@ import learn.example.pile.util.DeviceInfo;
 public class MainActivity extends ToolBarActivity {
 
     private final int permissionResultCode=99;
-    private static boolean is=false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +55,7 @@ public class MainActivity extends ToolBarActivity {
         {
             requirePermission();
         }else {
-            showView();
+            showMainFragment();
         }
     }
 
@@ -71,7 +70,7 @@ public class MainActivity extends ToolBarActivity {
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, permissionResultCode);
             }
         }else {
-            showView();
+            showMainFragment();
         }
     }
 
@@ -79,14 +78,14 @@ public class MainActivity extends ToolBarActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode==permissionResultCode)
         {
-            showView();
+            showMainFragment();
         }
     }
 
     /**
      * 显示FragmentViewPager
      */
-    public void showView()
+    public void showMainFragment()
     {
         FragmentManager manager=getSupportFragmentManager();
         Fragment fragment=manager.findFragmentByTag(ViewPagerFragment.TAG);

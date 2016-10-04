@@ -15,6 +15,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 
 import learn.example.pile.R;
+import learn.example.pile.adapters.base.GsonStateAdapter;
 import learn.example.pile.jsonbean.JokeBean;
 import learn.example.pile.ui.CircleViewTarget;
 import learn.example.pile.ui.NineGridLayout;
@@ -26,7 +27,7 @@ import learn.example.pile.util.GsonHelper;
 /**
  * Created on 2016/8/11.
  */
-public class JokeListAdapter extends GsonSaveStateAdapter<JokeBean.DataBean.DataListBean.GroupBean,JokeListAdapter.JokeViewHolder> implements View.OnClickListener{
+public class JokeListAdapter extends GsonStateAdapter<JokeBean.DataBean.DataListBean.GroupBean,JokeListAdapter.JokeViewHolder> implements View.OnClickListener{
 
     public static final int TYPE_MULTI = 2;
     public static final int TYPE_SINGLE = 4;
@@ -54,9 +55,9 @@ public class JokeListAdapter extends GsonSaveStateAdapter<JokeBean.DataBean.Data
 
     @Override
     public int getItemViewType(int position) {
-        if (getItem(position).is_multi_image()) {
+        if (get(position).is_multi_image()) {
             return TYPE_MULTI;
-        }else if (getItem(position).getImages()!=null){
+        }else if (get(position).getImages()!=null){
             return TYPE_SINGLE;
         }
         return TYPE_NORMAL;
@@ -83,7 +84,7 @@ public class JokeListAdapter extends GsonSaveStateAdapter<JokeBean.DataBean.Data
 
     @Override
     public void onBindViewHolder(JokeViewHolder holder, int position) {
-        JokeBean.DataBean.DataListBean.GroupBean item = getItem(position);
+        JokeBean.DataBean.DataListBean.GroupBean item = get(position);
         String avatarUrl = item.getUser().getAvatar_url();
         String name = item.getUser().getName();
         String text=item.getText();

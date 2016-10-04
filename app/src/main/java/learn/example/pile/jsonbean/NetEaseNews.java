@@ -15,14 +15,14 @@ import java.util.List;
  */
 public class NetEaseNews {
 
-    private List<T1348647909107Bean> T1348647909107;
+    private List<NewsItem> T1348647909107;
 
-    public List<T1348647909107Bean> getT1348647909107() {
+    public List<NewsItem> getNewsItems() {
         return T1348647909107;
     }
 
     @Table(name = "News")
-    public static class T1348647909107Bean extends Model implements Parcelable {
+    public static class NewsItem extends Model implements Parcelable {
 
         @Column(name = "boardId")
         private String boardid;
@@ -151,7 +151,7 @@ public class NetEaseNews {
             return skipID;
         }
 
-        public T1348647909107Bean() {
+        public NewsItem() {
             super();
         }
 
@@ -176,7 +176,7 @@ public class NetEaseNews {
             dest.writeTypedArray(this.imageUrls, flags);
         }
 
-        protected T1348647909107Bean(Parcel in) {
+        protected NewsItem(Parcel in) {
             this.boardid = in.readString();
             this.docid = in.readString();
             this.imgUrl = in.readString();
@@ -190,15 +190,15 @@ public class NetEaseNews {
             this.imageUrls = in.createTypedArray(ImageExtraBean.CREATOR);
         }
 
-        public static final Creator<T1348647909107Bean> CREATOR = new Creator<T1348647909107Bean>() {
+        public static final Creator<NewsItem> CREATOR = new Creator<NewsItem>() {
             @Override
-            public T1348647909107Bean createFromParcel(Parcel source) {
-                return new T1348647909107Bean(source);
+            public NewsItem createFromParcel(Parcel source) {
+                return new NewsItem(source);
             }
 
             @Override
-            public T1348647909107Bean[] newArray(int size) {
-                return new T1348647909107Bean[size];
+            public NewsItem[] newArray(int size) {
+                return new NewsItem[size];
             }
         };
     }

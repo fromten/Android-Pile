@@ -11,13 +11,14 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import learn.example.pile.R;
+import learn.example.pile.adapters.base.ParcelableStateAdapter;
 import learn.example.pile.jsonbean.ZhihuStories;
 import learn.example.pile.util.ActivityLauncher;
 
 /**
  * Created on 2016/7/9.
  */
-public class ZhiHuStoriesListAdapter extends SaveStateAbleAdapter<ZhiHuStoriesListAdapter.ZhihuListViewHolder,ZhihuStories.StoriesBean> {
+public class ZhiHuStoriesListAdapter extends ParcelableStateAdapter<ZhihuStories.StoriesBean,ZhiHuStoriesListAdapter.ZhihuListViewHolder> {
 
     private String date;
     private View.OnClickListener viewClick=new View.OnClickListener() {
@@ -42,7 +43,7 @@ public class ZhiHuStoriesListAdapter extends SaveStateAbleAdapter<ZhiHuStoriesLi
 
     @Override
     public void onBindViewHolder(ZhihuListViewHolder holder, int position) {
-        ZhihuStories.StoriesBean stories=getItem(position);
+        ZhihuStories.StoriesBean stories=get(position);
 
         String url = stories.getImage();
         if (url==null)

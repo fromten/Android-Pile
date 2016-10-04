@@ -14,8 +14,10 @@ import java.util.List;
 
 import learn.example.pile.R;
 import learn.example.pile.adapters.VideoListAdapter;
+import learn.example.pile.database.AADatabaseStore;
 import learn.example.pile.factory.OpenEyeJsonParserFactory;
 import learn.example.pile.fragment.base.BaseListFragment;
+import learn.example.pile.fragment.base.PersistentFragment;
 import learn.example.pile.jsonbean.OpenEyeVideo;
 import learn.example.pile.net.IService;
 import learn.example.pile.net.OpenEyeService;
@@ -28,30 +30,27 @@ import learn.example.pile.util.TimeUtil;
 /**
  * Created on 2016/5/25.
  */
-public class VideoListFragment extends BaseListFragment implements IService.Callback<OpenEyeVideo> {
+public class VideoListFragment extends PersistentFragment implements IService.Callback<OpenEyeVideo> {
 
 
     //save state key
     private static final String KEY_NEXT_URL="next_url";
     private static final String KEY_NEXT_PUSH_TIME="next_push_time";
-    private static final String KEY_DATABASE_INDEX="video_database_index";
 
 
     private VideoListAdapter mAdapter;
+    private CategoryViewHolder mCategoryViewHolder;
+
 
     private OpenEyeService mService;
     private String nextUrl;
     private long nextPushTime;
 
-    private CategoryViewHolder mCategoryViewHolder;;
 
-    private int databaseIndex;
-    private static final int MAX_READ_COUNT=10;
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view,savedInstanceState);
-        getRecyclerView().setItemAnimator(new DefaultItemAnimator());
         mAdapter=new VideoListAdapter();
         setAdapter(mAdapter);
         createCategoryHead();
@@ -64,7 +63,6 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
         }else {
             nextUrl=savedInstanceState.getString(KEY_NEXT_URL);
             nextPushTime=savedInstanceState.getLong(KEY_NEXT_PUSH_TIME);
-            databaseIndex=savedInstanceState.getInt(KEY_DATABASE_INDEX);
         }
     }
 
@@ -72,7 +70,6 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
     public void onSaveInstanceState(Bundle outState) {
         outState.putString(KEY_NEXT_URL,nextUrl);
         outState.putLong(KEY_NEXT_PUSH_TIME,nextPushTime);
-        outState.putInt(KEY_DATABASE_INDEX,databaseIndex);
         super.onSaveInstanceState(outState);
     }
 
@@ -113,7 +110,7 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
         notifySuccess();
 
 
-        ActiveAndroidHelper.saveItemsToDatabase(mList);
+        saveDataToDB(mList);
     }
 
     @Override
@@ -122,7 +119,7 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
 
         if(mAdapter.getItemCount()<=0)
         {
-            addDatabaseItemsToAdapter();
+            addDBItemsToAdapter();
         }
     }
 
@@ -143,7 +140,7 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
             }
         }else{
             if (mAdapter.getItemCount()<=0){//没有网络,而且adapter没有任何元素
-                addDatabaseItemsToAdapter();
+                addDBItemsToAdapter();
                 notifySuccess();
             }else {
                 clearRequestState();
@@ -162,7 +159,7 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
                 notifyError();
             }
         }else {
-            addDatabaseItemsToAdapter();
+            addDBItemsToAdapter();
             notifySuccess();
         }
     }
@@ -175,28 +172,17 @@ public class VideoListFragment extends BaseListFragment implements IService.Call
     }
 
 
-    /**
-     * 读取数据库元素添加的adapter
-     * @return 如果成功添加返回true,elsewise
-     */
-    private boolean addDatabaseItemsToAdapter()
-    {
-        List<OpenEyes.VideoInfo> list= ActiveAndroidHelper.getItemsFromDatabase(OpenEyes.VideoInfo.class,
-                                                true,databaseIndex,MAX_READ_COUNT);
-        if (list!=null&&!list.isEmpty())
-        {
-            mAdapter.addAll(list);
-            databaseIndex+=list.size();
-            return true;
-        }
-        return false;
-    }
 
 
     private void requestCategoryVideo(@OpenEyes.Category int categoryId)
     {
         setRefreshing(true);
         mService.getCategoryVideoInDateSort(categoryId,VideoListFragment.this);
+    }
+
+    @Override
+    public AADatabaseStore onCreateDataStore() {
+        return new AADatabaseStore(OpenEyes.VideoInfo.class);
     }
 
     public class CategoryViewHolder extends RecyclerViewImprove.HeadHolder implements View.OnClickListener{

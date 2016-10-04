@@ -89,7 +89,7 @@ public class DetailJokeActivity extends ToolBarActivity {
         public JokeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             if (viewType==JokeListAdapter.TYPE_SINGLE)
             {
-                return new FitSingleJokeViewHolder(parent,getItem(0).is_gif());
+                return new FitSingleJokeViewHolder(parent,get(0).is_gif());
             }
             return super.onCreateViewHolder(parent, viewType);
         }

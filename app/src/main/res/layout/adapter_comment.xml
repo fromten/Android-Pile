@@ -41,6 +41,7 @@
         android:layout_below="@+id/author"
         android:layout_alignLeft="@+id/author"
         android:layout_alignStart="@+id/author"
+        android:textSize="12sp"
         style="@style/SmallText"/>
 
     <TextView

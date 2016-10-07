@@ -36,6 +36,14 @@ public class OpenEyes {
     public static final String APP_PARAMS_OLD="&udid=5cf7bfcf19a84c618fd8d1e41f55518025ce2f94&vc=89&vn=1.13.1&deviceModel=Samsung%20Galaxy%20S6%20-%206.0.0%20-%20API%2023%20-%201440x2560&first_channel=eyepetizer_web&last_channel=eyepetizer_web";
     public static final String CATEGORY_URL="http://baobab.wandoujia.com/api/v3/videos?";
 
+    /**
+     *  参数使用 APP_PARAMS+ 视频Id
+     *  例如 videoId=8522,http://baobab.wandoujia.com/api/v1/replies/video?id=8522 + APP_PARAMS
+     *  @see #APP_PARAMS
+     *
+     */
+    public static final String COMMENT_URL="http://baobab.wandoujia.com/api/v1/replies/video";
+
 
     //视频策略
     public static class Strategy{
@@ -60,13 +68,7 @@ public class OpenEyes {
         int TRIP=6;//旅行
     }
 
-    /**
-     *  参数使用 APP_PARAMS+ 视频Id
-     *  例如 videoId=8522,http://baobab.wandoujia.com/api/v1/replies/video?id=8522 + APP_PARAMS
-     *  @see #APP_PARAMS
-     *
-     */
-    public static final String COMMENT_URL="http://baobab.wandoujia.com/api/v1/replies/video";
+
 
 
     public static String getHotUrl(int num)

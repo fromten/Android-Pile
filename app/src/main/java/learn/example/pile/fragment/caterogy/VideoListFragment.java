@@ -2,7 +2,6 @@ package learn.example.pile.fragment.caterogy;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,14 +15,12 @@ import learn.example.pile.R;
 import learn.example.pile.adapters.VideoListAdapter;
 import learn.example.pile.database.AADatabaseStore;
 import learn.example.pile.factory.OpenEyeJsonParserFactory;
-import learn.example.pile.fragment.base.BaseListFragment;
 import learn.example.pile.fragment.base.PersistentFragment;
 import learn.example.pile.jsonbean.OpenEyeVideo;
 import learn.example.pile.net.IService;
 import learn.example.pile.net.OpenEyeService;
 import learn.example.pile.object.OpenEyes;
 import learn.example.pile.ui.RecyclerViewImprove;
-import learn.example.pile.util.ActiveAndroidHelper;
 import learn.example.pile.util.DeviceInfo;
 import learn.example.pile.util.TimeUtil;
 
@@ -127,13 +124,16 @@ public class VideoListFragment extends PersistentFragment implements IService.Ca
     public void onRefresh() {
         if (DeviceInfo.checkNetConnected(getContext()))
         {
-            long second=nextPushTime-TimeUtil.getTime();
+            long second=nextPushTime-TimeUtil.getCurrentTime();
             //如果到下一次推送时间,或者当前的Adapter 没有元素,需要再次请求
-            boolean requireRequest=second<=0||mAdapter.getItemCount()==0||nextUrl==null;
+            boolean requireRequest=nextUrl==null
+                                    ||nextUrl.isEmpty()
+                                    ||mAdapter.isEmpty()
+                                    ||second<=0;
             if (requireRequest)
             {
                 mService.getHotVideo(this);
-                nextPushTime=TimeUtil.getNextDayTime(0);
+                nextPushTime=TimeUtil.getNextDayTime(0,0,0);
             }else {
                 setRefreshing(false);
                 showTopView("下次更新时间为"+TimeUtil.formatYMD(nextPushTime/1000));

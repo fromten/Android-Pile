@@ -13,7 +13,7 @@ public class JokeProvider {
 
     public static String createHotUrl(int count, int screenWidth)
     {
-        return TUIJIAN_URL+APP_PARAMS+"&count="+count+"&screen_width="+screenWidth+"&min_time="+ TimeUtil.getTime()/1000;
+        return TUIJIAN_URL+APP_PARAMS+"&count="+count+"&screen_width="+screenWidth+"&min_time="+ TimeUtil.getCurrentTime()/1000;
     }
 
     public static String createCommentUrl(int start,int length,String groupId)

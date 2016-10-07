@@ -52,6 +52,6 @@ public class OpenEyeService extends NetService {
 
     private Request buildRequest(String url)
     {
-        return new Request.Builder().url(url).addHeader("cookie","wdj_auth=;sdk=23").build();
+        return new Request.Builder().url(url).build();
     }
 }

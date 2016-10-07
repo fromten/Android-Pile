@@ -49,7 +49,7 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
                   }
               }
 
-              String name=TimeUtil.formatTimeFull(TimeUtil.getTime()/1000);
+              String name=TimeUtil.formatTimeFull(TimeUtil.getCurrentTime()/1000);
               File newFile=new File(mDir,name);
               try {
                   PrintStream stream=new PrintStream(newFile,"utf-8");

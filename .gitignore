@@ -6,5 +6,4 @@
 .DS_Store
 /build
 /captures
-app/src/main/java/learn/example/pile/object/
-projectFilesBackup/
+/projectFilesBackup

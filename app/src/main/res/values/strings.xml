@@ -9,6 +9,7 @@
     <string name="video_playcomplete">视频播放结束</string>
     <string name="gif">gif</string>
     <string name="edit_input">输入发送的消息</string>
+    <string name="def_empty_view_text">上拉重新刷新</string>
 
 
 

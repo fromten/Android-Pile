@@ -116,31 +116,6 @@ public class StartImageCacheService extends IntentService {
     }
 
 
-    /**
-     * 缓存图片到磁盘
-     * @param bitmap bitmap
-     */
-    public void cacheBitmap(Bitmap bitmap)
-    {   if (bitmap==null)return;
-
-        File file=getFileStreamPath(CACHE_FILE_NAME);
-        FileOutputStream outputStream=null;
-        try {
-            outputStream=new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.PNG,100,outputStream);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (outputStream!=null)
-            {
-                try {
-                    outputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
 
     public String getMatchStartImageUrl()
     {

@@ -119,7 +119,6 @@ public class ReaderActivity extends AppCompatActivity implements RendererComplet
         {
             mContentRenderer.onActivityDestroy();
         }
-        mWebFragment.getWebView().destroy();
         super.onDestroy();
     }
 

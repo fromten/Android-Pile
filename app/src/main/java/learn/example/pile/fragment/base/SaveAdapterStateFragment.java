@@ -63,7 +63,6 @@ public class SaveAdapterStateFragment extends RVListFragment {
 
     /**
      * 设置适配器,这能够在Fragment销毁时保存状态,重新创建时回复状态
-     * @param saveStateAdapter 继承SaveStateAbleAdapter
      * @see AbsSaveableRVAdapter;
      * @see GsonStateAdapter
      * @see ParcelableStateAdapter

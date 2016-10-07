@@ -46,7 +46,7 @@ public class NetEase {
     {   //EdhK6XoROwO4zVDtZT7s3CbpOEaotwy5nGQGUH2n6yB48ErR02zJ6/KXOnxX046I
         String queryUrl="http://c.3g.163.com/nc/article/headline/T1348647909107/"+page+"-20.html?";
         String normalParam= "from=toutiao&size=20&prog=LMA1&fn=1&passport=&devId=kKD8pCd0XRRW7xWYqMiVpEdxCGl%2F7BNok2%2FsiNT73k5TdKiqocj0eExU0s49fzqe&lat=&lon=&version=16.0&net=wifi&canal=netease_gw&mac=racUMC0A9havm%2BHe6jH3YAvVdjgSXYDtwEDZ03eH1l8%3D";
-        String tsParam="&ts="+String.valueOf(TimeUtil.getTime()/1000);
+        String tsParam="&ts="+String.valueOf(TimeUtil.getCurrentTime()/1000);
         String signParam="&sign="+sign;
         return queryUrl+normalParam+tsParam+signParam;
     }

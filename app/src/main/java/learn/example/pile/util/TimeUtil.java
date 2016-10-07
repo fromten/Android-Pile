@@ -50,24 +50,26 @@ public class TimeUtil {
     }
 
     //return ms
-    public static long getTime()
+    public static long getCurrentTime()
     {
         return new Date().getTime();
     }
 
 
     /**
-     * 获得下一天的时间
-     * @param when 几点钟
-     * @return 毫秒时间
+     * 获得下一天指定的时间
+     * @param hour 指定小时
+     * @param minute 指定分钟
+     * @param second 指定秒
+     * @return 时间戳
      */
-    public static long getNextDayTime(int when)
+    public static long getNextDayTime(int hour,int minute,int second)
     {
         Calendar calendar=Calendar.getInstance(Locale.CHINA);
         calendar.roll(Calendar.DAY_OF_YEAR, +1);
-        calendar.set(Calendar.HOUR_OF_DAY, when);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, second);
         calendar.set(Calendar.MILLISECOND, 0);
         return calendar.getTime().getTime();
     }

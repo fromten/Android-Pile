@@ -29,6 +29,7 @@ public class CommentActivity extends ToolBarActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle(null);
         mFrameLayout=new FrameLayout(this);
         mFrameLayout.setId(R.id.root);
         setContentView(mFrameLayout);

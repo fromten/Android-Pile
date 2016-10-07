@@ -67,6 +67,7 @@ public class JokeListFragment extends BaseListFragment implements IService.Callb
     @Override
     public void onSuccess(JokeBean data) {
         Log.d("joke", "onSuccess");
+
         if (isRefreshing())
         {
             mJokeListAdapter.clear();

@@ -29,30 +29,22 @@ public class BaseListFragment extends  SaveAdapterStateFragment {
 
 
     private TextView mTopLogView;
-    private Animator mTopAniamtor;
-
+    private Animator mTopAnimator;
+    private boolean isSupportTopView=true;
 
     private CommonFooterHolder mFooterHolder;
     private RecyclerView.Adapter mAdapter;
     private LinearLayoutManager mLinearLayoutManager;
-    private SimpleEmptyViewHolder mSimpleEmptyViewHolder;
     //子类必须调用此方法
     @OverridingMethodsMustInvokeSuper
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initView();
-        setEmptyView(createEmptyView());
-
-        View topView=createTopView();
-        if (topView!=null)
-        {
-            ViewGroup root= (ViewGroup) view;
-            root.addView(topView);
-        }
+        initListView();
+        createExtraViews();
     }
 
-    protected void initView()
+    protected void initListView()
     {
         mLinearLayoutManager=new LinearLayoutManager(getContext());
         setLayoutManager(mLinearLayoutManager);
@@ -60,34 +52,29 @@ public class BaseListFragment extends  SaveAdapterStateFragment {
         setRefreshSchemeColors(ResourcesCompat.getColor(getResources(),R.color.colorPrimary,null));
     }
 
-    @Override
-    public void setAdapter(RecyclerView.Adapter adapter) {
-        super.setAdapter(adapter);
-        mAdapter=adapter;
-        addFooterHolder(createAdapterFooterHolder());
+    private void createExtraViews()
+    {
+        View emptyView=createEmptyView();
+        setEmptyView(emptyView);
+
+        isSupportTopView=isSupportTopView();
+        if (isSupportTopView)
+        ((ViewGroup)getView()).addView(createTopView());
+
     }
-
-
-    @Override
-    public void onDestroy() {
-        if (mTopAniamtor!=null)
-        {
-            mTopAniamtor.cancel();
-            mTopAniamtor.removeAllListeners();
-        }
-        super.onDestroy();
-    }
-
 
     /**
      * 添加布局EmptyView,子类可以覆盖此方法,使用自己的EmptyView
-     * 方法会在initView()中调用
-     * 调用此方法后自动调用setEmptyView();
+     * 方法会在onViewCreated中调用
      */
-    protected View createEmptyView()
+    public View createEmptyView()
     {
-        mSimpleEmptyViewHolder=new SimpleEmptyViewHolder();
-        return mSimpleEmptyViewHolder.getView();
+        TextView textView=new TextView(getContext());
+        textView.setText(R.string.def_empty_view_text);
+        textView.setCompoundDrawablesWithIntrinsicBounds(0,R.mipmap.emoticon_sad,0,0);
+        textView.setClickable(false);
+        textView.setEnabled(false);
+        return textView;
     }
 
 
@@ -97,17 +84,17 @@ public class BaseListFragment extends  SaveAdapterStateFragment {
      * @see #setAdapter(RecyclerView.Adapter)  方法中调用此方法
      * @return FooterHolder
      */
-    protected RecyclerViewImprove.FooterHolder createAdapterFooterHolder()
+    public RecyclerViewImprove.FooterHolder createAdapterFooterHolder()
     {
         mFooterHolder=new CommonFooterHolder();
         return mFooterHolder;
     }
 
     /**
-     * 添加一个顶部视图,这不是添加在Adapter中,而是直接在Fragment Root布局中添加
+     * 添加一个顶部视图,不是直接添加在Adapter中,而是直接在Fragment Root布局中添加
      * 在onViewCreated()中调用
      */
-    protected View createTopView()
+    private TextView createTopView()
     {
         mTopLogView=new TextView(getContext());
         mTopLogView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -124,20 +111,20 @@ public class BaseListFragment extends  SaveAdapterStateFragment {
 
     /**
      * 动画显示顶部视图
-     * 如果覆盖createTopView()方法,此方法无效
+     * 如果isSupportTopView方法返回false,此方法无效
      * @param text 显示的文本
      */
     public void showTopView(String text)
     {
-        if (mTopLogView==null)
+        if (!isSupportTopView||mTopLogView==null)
         {
             return;
         }
         mTopLogView.setVisibility(View.VISIBLE);
-        mTopAniamtor=AnimatorInflater.loadAnimator(getContext(),R.animator.expand);
-        mTopAniamtor.setTarget(mTopLogView);
-        mTopAniamtor.start();
-        mTopAniamtor.addListener(new Animator.AnimatorListener() {
+        mTopAnimator =AnimatorInflater.loadAnimator(getContext(),R.animator.expand);
+        mTopAnimator.setTarget(mTopLogView);
+        mTopAnimator.start();
+        mTopAnimator.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
 
@@ -146,10 +133,10 @@ public class BaseListFragment extends  SaveAdapterStateFragment {
             @Override
             public void onAnimationEnd(Animator animation) {
                 //结束动画2秒后隐藏view
-                mTopAniamtor=AnimatorInflater.loadAnimator(getContext(),R.animator.collaspe);
-                mTopAniamtor.setStartDelay(2000);
-                mTopAniamtor.setTarget(mTopLogView);
-                mTopAniamtor.start();
+                mTopAnimator =AnimatorInflater.loadAnimator(getContext(),R.animator.collaspe);
+                mTopAnimator.setStartDelay(2000);
+                mTopAnimator.setTarget(mTopLogView);
+                mTopAnimator.start();
             }
 
             @Override
@@ -165,8 +152,31 @@ public class BaseListFragment extends  SaveAdapterStateFragment {
         mTopLogView.setText(text);
     }
 
+    /*
+       是否支持顶部视图
+     */
+    public boolean isSupportTopView()
+    {
+        return true;
+    }
+
+    @Override
+    public void setAdapter(RecyclerView.Adapter adapter) {
+        super.setAdapter(adapter);
+        mAdapter=adapter;
+        addFooterHolder(createAdapterFooterHolder());
+    }
 
 
+    @Override
+    public void onDestroy() {
+        if (mTopAnimator !=null)
+        {
+            mTopAnimator.cancel();
+            mTopAnimator.removeAllListeners();
+        }
+        super.onDestroy();
+    }
 
     @Override
     public void onRefresh() {
@@ -229,15 +239,7 @@ public class BaseListFragment extends  SaveAdapterStateFragment {
         clearRequestState();
 
         int adapterItemCount=mAdapter.getItemCount();
-        if (mSimpleEmptyViewHolder!=null)
-        {
-            mSimpleEmptyViewHolder.isClicked=false;
 
-            if (adapterItemCount<=0)
-            {
-                mSimpleEmptyViewHolder.showErrorText();
-            }
-        }
         if (mFooterHolder!=null)
         {
             if (adapterItemCount>0)
@@ -256,14 +258,10 @@ public class BaseListFragment extends  SaveAdapterStateFragment {
 
         if (isRefreshing())
         {
-            showTopView("成功更新"+mAdapter.getItemCount()+"内容");
+            showTopView("新"+mAdapter.getItemCount()+"条内容");
         }
         clearRequestState();
 
-        if (mSimpleEmptyViewHolder!=null)
-        {
-            mSimpleEmptyViewHolder.isClicked=false;
-        }
     }
 
 
@@ -284,7 +282,7 @@ public class BaseListFragment extends  SaveAdapterStateFragment {
 
     public void notifyRequestEnd()
     {
-        notifyRequestEnd("~~~到底了~~~");
+        notifyRequestEnd("~~~~~~");
     }
 
 
@@ -353,43 +351,4 @@ public class BaseListFragment extends  SaveAdapterStateFragment {
         }
     }
 
-
-    public class SimpleEmptyViewHolder implements View.OnClickListener{
-
-        public TextView mEmptyView;
-        public boolean isClicked;//是否点击过,防止重复点击
-        public View getView() {
-            if (mEmptyView!=null)
-            {
-                return mEmptyView;
-            }
-            mEmptyView =new TextView(getContext());
-            mEmptyView.setGravity(Gravity.CENTER);
-            mEmptyView.setCompoundDrawablesWithIntrinsicBounds(0,R.mipmap.ic_refresh,0,0);
-            mEmptyView.setOnClickListener(this);
-            //刚创建时隐藏View,并设置文本
-            mEmptyView.setVisibility(View.INVISIBLE);
-            mEmptyView.setText("加载错误,点击重新加载...");
-            return mEmptyView;
-        }
-
-        public void showErrorText()
-        {
-            if (mEmptyView.getVisibility()!=View.VISIBLE)
-            {
-                mEmptyView.setVisibility(View.VISIBLE);
-            }
-            mEmptyView.setText("加载错误,点击重新加载...");
-        }
-
-        public void onClick(View v) {
-            if (!isClicked)
-            {
-                mEmptyView.setText("加载中...");
-                onRefresh();
-                isClicked=true;
-            }
-        }
-
-    }
 }

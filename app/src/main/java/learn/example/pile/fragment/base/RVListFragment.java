@@ -81,8 +81,7 @@ public class RVListFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         if (adapter==null)
         {
-            mRecyclerView.setAdapter(null);
-            innerAdapter=null;
+            throw new NullPointerException("Adapter may be null");
         }else {
             innerAdapter=adapter;
             adapter.registerAdapterDataObserver(mAdapterDataObserver);
@@ -249,14 +248,7 @@ public class RVListFragment extends Fragment implements SwipeRefreshLayout.OnRef
         }
 
         public void checkItemCount() {
-            //如果在刷新,不显示空view
 
-//            int invalidChildCount=innerAdapter.getItemCount();
-//
-//            if (mSwipeRefreshLayout.isRefreshing())
-//            {
-//                return;
-//            }
             if (mEmptyView != null&&innerAdapter!=null) {
                 int visibility = innerAdapter.getItemCount() == 0 ? View.VISIBLE : View.INVISIBLE;
                 mEmptyView.setVisibility(visibility);

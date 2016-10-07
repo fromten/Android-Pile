@@ -3,6 +3,7 @@ package learn.example.pile.fragment.comment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,18 +35,19 @@ public class CommentFragment extends BaseListFragment {
         setAdapter(mCommentListAdapter);
     }
 
+    @Override
+    public boolean isSupportTopView() {
+        return false;
+    }
+
     public final void addComments(List<Comment.CommentItem> comments)
     {
         mCommentListAdapter.addAll(comments);
     }
 
-    @Override
-    protected final View createTopView() {
-        return null;
-    }
 
     @Override
-    protected final View createEmptyView() {
+    public final View createEmptyView() {
        mWaitEmptyViewHolder=new WaitEmptyViewHolder((ViewGroup) getView());
        return mWaitEmptyViewHolder.mRoot;
     }

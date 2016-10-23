@@ -1,9 +1,11 @@
 package learn.example.pile.adapters;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import learn.example.pile.R;
 import learn.example.pile.fragment.caterogy.JokeListFragment;
 import learn.example.pile.fragment.caterogy.NewsListFragment;
 import learn.example.pile.fragment.caterogy.ReadListFragment;
@@ -14,10 +16,11 @@ import learn.example.pile.fragment.caterogy.VideoListFragment;
  */
 public class FragmentPagerAdapter extends FragmentStatePagerAdapter {
 
-    private final String[] title={"新闻","阅读","视频","笑话"};
+    private final String[] title;
 
-    public FragmentPagerAdapter(FragmentManager fm) {
+    public FragmentPagerAdapter(Context context, FragmentManager fm) {
         super(fm);
+        title=context.getResources().getStringArray(R.array.tab_category);
     }
 
 

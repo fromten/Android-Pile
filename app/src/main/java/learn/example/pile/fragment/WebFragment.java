@@ -14,7 +14,7 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
 import learn.example.pile.R;
-import learn.example.pile.util.HtmlTagBuild;
+import learn.example.pile.util.HtmlBuilder;
 
 /**
  * Created on 2016/7/27.
@@ -73,7 +73,7 @@ public class WebFragment extends Fragment {
      */
     public void loadLocalDataWithDefCss(String html)
     {
-        String link= HtmlTagBuild.cssLinkTag("app.css");
+        String link= HtmlBuilder.cssLinkTag("app.css");
         String insertCss=html.replaceFirst("</head>",link+"</head>");
         mWebView.loadDataWithBaseURL("file:///android_asset/", insertCss, "text/html", "UTF-8", null);
     }

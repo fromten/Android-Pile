@@ -68,13 +68,10 @@ public class NineGridLayout extends ViewGroup implements View.OnClickListener{
         childWidth=width/COLUMN_COUNT;
         childMargin=childWidth/40;
 
-
         childHeight=childWidth+20;
-
 
         int row=(getChildCount()-1)/ROW_COUNT;
         int height=childHeight+(row*childHeight);
-
 
         int childCount=getChildCount();
         for (int i=0;i<childCount;i++)
@@ -102,12 +99,13 @@ public class NineGridLayout extends ViewGroup implements View.OnClickListener{
             int column=i%COLUMN_COUNT;
             int row=i/COLUMN_COUNT;
 
-            if (childCount==4)
-            {   //第三格移动到下一行
+            if (childCount==4)//只有四个图片
+            {
+                //第一行,第三格移动到下一行
                 if (column==2) {
                     column=0;
                     row=1;
-                }else if (row==1)//第四格向右移
+                }else if (row==1)//第二行,第一格向右移
                 {
                     column=1;
                 }

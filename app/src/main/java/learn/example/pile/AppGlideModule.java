@@ -21,10 +21,14 @@ public class AppGlideModule implements GlideModule {
 
     public static final String diskCacheName="img_cache";
     public static  String diskCacheFilePath;
+
+    public AppGlideModule() {
+    }
+
     @Override
     public void applyOptions(Context context, GlideBuilder builder) {
-        int byte300mb=314572800;
-        diskCacheFilePath=getFile(context).getPath()+"/"+diskCacheName;
+        int byte300mb=300*1024*1024;
+        diskCacheFilePath=getStoreFile(context).getPath()+"/"+diskCacheName;
         builder.setDiskCache(new DiskLruCacheFactory(diskCacheFilePath,byte300mb));
     }
 
@@ -32,7 +36,7 @@ public class AppGlideModule implements GlideModule {
     public void registerComponents(Context context, Glide glide) {
 
     }
-    public File getFile(Context context)
+    public File getStoreFile(Context context)
     {
         File file;
         if (DeviceInfo.checkExternalStorageState())

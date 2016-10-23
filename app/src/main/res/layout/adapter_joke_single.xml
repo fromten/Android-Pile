@@ -15,7 +15,7 @@
         android:id="@+id/content"
         android:layout_below="@+id/text">
 
-        <ImageView
+        <learn.example.pile.ui.FixImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleType="fitStart"

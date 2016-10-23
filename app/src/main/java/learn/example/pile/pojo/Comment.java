@@ -1,4 +1,4 @@
-package learn.example.pile.object;
+package learn.example.pile.pojo;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class Comment  {
 
-    //放入独自所需要的数据
+    //放入额外需要的数据
     private JsonObject mExtraMsg;
 
 
@@ -144,4 +144,5 @@ public class Comment  {
             }
         };
     }
+
 }

@@ -14,12 +14,13 @@ import java.util.List;
 import learn.example.pile.R;
 import learn.example.pile.adapters.VideoListAdapter;
 import learn.example.pile.database.AADatabaseStore;
+import learn.example.pile.database.DatabaseStore;
 import learn.example.pile.factory.OpenEyeJsonParserFactory;
 import learn.example.pile.fragment.base.PersistentFragment;
 import learn.example.pile.jsonbean.OpenEyeVideo;
 import learn.example.pile.net.IService;
 import learn.example.pile.net.OpenEyeService;
-import learn.example.pile.object.OpenEyes;
+import learn.example.pile.provider.OpenEyes;
 import learn.example.pile.ui.RecyclerViewImprove;
 import learn.example.pile.util.DeviceInfo;
 import learn.example.pile.util.TimeUtil;
@@ -136,7 +137,7 @@ public class VideoListFragment extends PersistentFragment implements IService.Ca
                 nextPushTime=TimeUtil.getNextDayTime(0,0,0);
             }else {
                 setRefreshing(false);
-                showTopView("下次更新时间为"+TimeUtil.formatYMD(nextPushTime/1000));
+                showTopView("下次更新时间为"+TimeUtil.formatTime(TimeUtil.FORMAT_YMD,nextPushTime/1000));
             }
         }else{
             if (mAdapter.getItemCount()<=0){//没有网络,而且adapter没有任何元素
@@ -181,7 +182,7 @@ public class VideoListFragment extends PersistentFragment implements IService.Ca
     }
 
     @Override
-    public AADatabaseStore onCreateDataStore() {
+    public DatabaseStore<?,?> onCreateDataStore() {
         return new AADatabaseStore(OpenEyes.VideoInfo.class);
     }
 

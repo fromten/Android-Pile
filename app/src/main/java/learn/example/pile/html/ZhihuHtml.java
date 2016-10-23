@@ -1,90 +1,79 @@
 package learn.example.pile.html;
 
-import learn.example.pile.util.HtmlTagBuild;
+
+import learn.example.pile.util.HtmlBuilder;
 
 /**
  * Created on 2016/7/27.
  */
-public class ZhihuHtml {
+public class ZhihuHtml implements Html{
 
     private String body;
-    private String[] cssLink;
-    private String[] jsLink;
-    private String js;
-    private String css;
-    public ZhihuHtml(String body, String[] cssLink, String[] jsLink) {
+    private String[] cssLinks;
+    private String[] jsLinks;
+    private String extraJs;
+    private String extraCss;
+    public ZhihuHtml(String body, String[] cssLinks, String[] jsLinks) {
         this.body = body;
-        this.cssLink = cssLink;
-        this.jsLink = jsLink;
+        this.cssLinks = cssLinks;
+        this.jsLinks = jsLinks;
     }
 
-    /**
-     * 生成完整的Html页面
-     * @return Html
-     */
-    public String generateHtml()
+
+
+
+    public void fillHead(HtmlBuilder builder)
     {
-        StringBuilder builder=new StringBuilder();
-        builder.append("<html lang='zh-CN'>");
-        builder.append(toHeadTag(cssLink,jsLink));
-        if (css!=null)
-        {
-           builder.append(HtmlTagBuild.styleTag(css));
-        }
-        builder.append("<body>");
-        builder.append(body);
-        builder.append("</body>");
+        builder.startHead(null);
 
-        if (js!=null)
+        for (String href:cssLinks)
         {
-            builder.append(HtmlTagBuild.jsTag(js));
+            builder.appendCssLink(href);
         }
 
-        builder.append("</html>");
-        return builder.toString();
+        //知乎默认css会添加200px的头部图片高度,覆盖原本的css属性
+        builder.appendCss(".headline .img-place-holder{" +
+                             " height: 0px;}");
+
+        builder.appendCss(extraCss);
+
+        for (String src:jsLinks)
+        {
+            builder.appendJsLink(src);
+        }
+
+       builder.appendJS(extraJs);
+
+        builder.endHead();
     }
 
 
-    public String toHeadTag(String[] css, String[] js)
-    {
-        StringBuilder builder=new StringBuilder();
-        builder.append("<head>");
-        for (String str:css)
-        {
-            builder.append(HtmlTagBuild.cssLinkTag(str));
-        }
-        builder.append(getMyCss());
-        for (String str:js)
-        {
-            builder.append(HtmlTagBuild.tag("script",HtmlTagBuild.attr("src",str),null));
-        }
-        builder.append("</head>");
-        return builder.toString();
-    }
-
-    /**
-     * 知乎默认css会添加200px的头部图片高度,覆盖原本的css属性
-     * @return
-     */
-    public String getMyCss()
-    {
-        return HtmlTagBuild.styleTag(".headline .img-place-holder{" +
-                " height: 0px;}");
-    }
 
     /**
      * 设置额外的Js 脚本代码
      * @param js javaScript
      */
-    public void setJs(String js) {
-        this.js = js;
+    public void setExtraJs(String js) {
+        this.extraJs = js;
     }
 
     /**
      * 设置额外的Css 样式
      * @param css css内容
      */
-    public void setCss(String css) {
-        this.css = css;
+    public void setExtraCss(String css) {
+        this.extraCss = css;
+    }
+
+    @Override
+    public String getHtml() {
+        HtmlBuilder htmlBuilder=new HtmlBuilder();
+        htmlBuilder.startHtml(HtmlBuilder.attr("lang","zh-CN"));
+        fillHead(htmlBuilder);
+        htmlBuilder.startBody(null)
+                .append(body)
+                .endBody().endHtml(); ;
+
+        return htmlBuilder.toString();
     }
 }

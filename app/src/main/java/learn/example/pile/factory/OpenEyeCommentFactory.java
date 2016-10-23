@@ -9,7 +9,7 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import learn.example.pile.object.Comment;
+import learn.example.pile.pojo.Comment;
 import learn.example.pile.util.TimeUtil;
 
 /**
@@ -78,7 +78,7 @@ public class OpenEyeCommentFactory implements CommentFactory.ProduceInterface {
         {   String name=reader.nextName();
             switch (name) {
                 case "createTime":
-                    commentItem.setTime(TimeUtil.formatTimeFull(reader.nextLong()/1000));
+                    commentItem.setTime(TimeUtil.formatTime(TimeUtil.FORMAT_YMD_HM,reader.nextLong()/1000));
                     break;
                 case "likeCount":
                     commentItem.setLikeNumber(reader.nextInt());

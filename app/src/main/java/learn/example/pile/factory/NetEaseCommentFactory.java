@@ -7,7 +7,7 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import learn.example.pile.object.Comment;
+import learn.example.pile.pojo.Comment;
 
 /**
  * Created on 2016/8/16.

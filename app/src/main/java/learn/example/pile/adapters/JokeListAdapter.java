@@ -1,6 +1,5 @@
 package learn.example.pile.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -35,14 +34,18 @@ public class JokeListAdapter extends GsonStateAdapter<JokeBean.DataBean.DataList
 
     private Context mContext;
     private GlideUtil.CropSquareTransformation mCropSquareTransformation;
-    private GlideUtil.MatchWidthTransformation mMatchWidthTransformation;
-    private int coverHeight;
+    private GlideUtil.MatchTransformation mMatchTransformation;
+    private GlideUtil.FitGifTransform mFitGifTransform;
     public JokeListAdapter(Context context) {
          mContext=context;
-         mCropSquareTransformation=new GlideUtil.CropSquareTransformation(mContext);
 
-         coverHeight = (int) (new DeviceInfo((Activity) mContext).SCREEN_HEIGHT/3.5f);
-         mMatchWidthTransformation=new GlideUtil.MatchWidthTransformation(context,coverHeight);
+
+         DeviceInfo info=new DeviceInfo(context);
+         int desireHeight = (int) (info.SCREEN_HEIGHT/3.5f);
+         mMatchTransformation =new GlideUtil.MatchTransformation(context,info.SCREEN_WIDTH,desireHeight);
+
+         mCropSquareTransformation=new GlideUtil.CropSquareTransformation(mContext);
+         mFitGifTransform=new GlideUtil.FitGifTransform(context);
     }
 
 
@@ -136,24 +139,24 @@ public class JokeListAdapter extends GsonStateAdapter<JokeBean.DataBean.DataList
         holder.cover.setTag(R.id.view_tag1,item);
         BitmapRequestBuilder b=Glide.with(mContext)
                 .load(url)
-                .asBitmap()
-                .diskCacheStrategy(DiskCacheStrategy.ALL);
+                .asBitmap();
 
-        if (item.is_video())
+        if (item.is_video())//视频封面宽度充满屏幕宽度
         {
             holder.ic_play.setVisibility(View.VISIBLE);
-            //让图片充满宽度
-            b.transform(mMatchWidthTransformation);
+            b.transform(mMatchTransformation);
         }else {
             holder.ic_play.setVisibility(View.INVISIBLE);
-            if (item.is_gif())
+            if (item.is_gif())//Gif封面图片
             {
                 //gif图片通常过于太小
-                b.transform(new GlideUtil.FitGifTransform(mContext));
-            }else {
-                //截取中央部分
+                b.transform(mFitGifTransform);
+
+            }else {//普通图片
                 b.transform(mCropSquareTransformation);
+                b.diskCacheStrategy(DiskCacheStrategy.ALL);
             }
+
         }
         b.into(holder.cover);
     }

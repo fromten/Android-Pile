@@ -5,7 +5,7 @@ package learn.example.pile.net;
 
 
 import learn.example.pile.jsonbean.ZhihuStories;
-import learn.example.pile.object.Zhihu;
+import learn.example.pile.provider.Zhihu;
 import okhttp3.Request;
 
 /**

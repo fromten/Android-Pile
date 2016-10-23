@@ -13,7 +13,7 @@ import com.bumptech.glide.Glide;
 import learn.example.pile.R;
 import learn.example.pile.adapters.base.ParcelableStateAdapter;
 import learn.example.pile.fragment.comment.OpenEyeCommentFragment;
-import learn.example.pile.object.OpenEyes;
+import learn.example.pile.provider.OpenEyes;
 import learn.example.pile.util.ActivityLauncher;
 import learn.example.pile.util.TimeUtil;
 

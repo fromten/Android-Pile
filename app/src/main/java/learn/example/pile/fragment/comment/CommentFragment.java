@@ -3,7 +3,6 @@ package learn.example.pile.fragment.comment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,7 @@ import java.util.List;
 import learn.example.pile.R;
 import learn.example.pile.adapters.CommentListAdapter;
 import learn.example.pile.fragment.base.BaseListFragment;
-import learn.example.pile.object.Comment;
+import learn.example.pile.pojo.Comment;
 
 
 /**

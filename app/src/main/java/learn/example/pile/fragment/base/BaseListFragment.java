@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import learn.example.pile.R;
 import learn.example.pile.ui.RecyclerViewImprove;
@@ -36,7 +36,7 @@ public class BaseListFragment extends  SaveAdapterStateFragment {
     private RecyclerView.Adapter mAdapter;
     private LinearLayoutManager mLinearLayoutManager;
     //子类必须调用此方法
-    @OverridingMethodsMustInvokeSuper
+    @CallSuper
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -243,7 +243,7 @@ public class BaseListFragment extends  SaveAdapterStateFragment {
         if (mFooterHolder!=null)
         {
             if (adapterItemCount>0)
-                mFooterHolder.mFooterText.setText("请求失败,点击重试");
+                mFooterHolder.mFooterText.setText(R.string.click_down_reload);
         }
     }
 
@@ -325,7 +325,7 @@ public class BaseListFragment extends  SaveAdapterStateFragment {
 
         @Override
         public void onClick(View v) {
-            setFooterText("重新请求...");
+            setFooterText(getString(R.string.reloading));
             onLoadMore();
         }
 

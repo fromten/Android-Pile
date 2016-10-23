@@ -7,11 +7,13 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.cache.DiskCacheAdapter;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 
@@ -20,6 +22,7 @@ import java.util.List;
 
 import learn.example.pile.R;
 import learn.example.pile.adapters.ViewPagerAdapter;
+import learn.example.pile.util.DeviceInfo;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
@@ -31,6 +34,7 @@ public class PhotoWatcherLayout extends FrameLayout implements ViewPager.OnPageC
     private ViewPager mViewPager;
     private ViewPagerAdapter mViewPagerAdapter;
     private RelativeLayout mRelativeLayout;
+    private boolean isWifiConnected;
 
     private TextView title;
     private TextView page;
@@ -80,34 +84,43 @@ public class PhotoWatcherLayout extends FrameLayout implements ViewPager.OnPageC
                 PhotoView imageView= createPhotoView();
                 viewList.add(imageView);
                 String url=adapter.getUrl(i);
-                Glide.with(getContext())
-                        .load(url)
-                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                        .placeholder(R.mipmap.ic_defplacer)
-                        .dontAnimate()
-                        .dontTransform()
-                        .into(new GlideDrawableImageViewTarget(imageView)
-                        {
-                            @Override
-                            protected void setResource(GlideDrawable resource) {
-
-                                PhotoView photoView= (PhotoView) this.getView();
-                                photoView.setImageDrawable(resource);
-
-                                RectF rectF=photoView.getDisplayRect();
-                                int vwidth=photoView.getWidth();
-                                float widthPercent=(float)vwidth/rectF.width();
-                                photoView.setScaleLevels(widthPercent*0.5f,widthPercent*1,widthPercent*2);
-                                photoView.setScale(widthPercent,0,0,false);//缩放匹配view宽度
-                            }
-                        });
-
+                isWifiConnected=DeviceInfo.ifWifiConnected(getContext());
+                if (isWifiConnected)//wifi可用
+                {
+                    loadImageIntoView(imageView,url);
+                }
             }
             mViewPagerAdapter=new ViewPagerAdapter(viewList);
             mViewPager.setAdapter(mViewPagerAdapter);
             mViewPager.addOnPageChangeListener(this);
         }
     }
+
+    public void loadImageIntoView(ImageView imageView,String url)
+    {
+
+        Glide.with(getContext())
+                .load(url)
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .placeholder(R.mipmap.ic_defplacer)
+                .dontAnimate()
+                .dontTransform()
+                .into(new GlideDrawableImageViewTarget(imageView)
+                {
+                    @Override
+                    protected void setResource(GlideDrawable resource) {
+
+                        PhotoView photoView= (PhotoView) this.getView();
+                        photoView.setImageDrawable(resource);
+                        RectF rectF=photoView.getDisplayRect();
+                        int vwidth=photoView.getWidth();
+                        float widthPercent=(float)vwidth/rectF.width();
+                        photoView.setScaleLevels(widthPercent*0.5f,widthPercent*1f,widthPercent*2f);
+                        photoView.setScale(widthPercent,0,0,false);//缩放匹配view宽度
+                    }
+                });
+    }
+
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -116,6 +129,15 @@ public class PhotoWatcherLayout extends FrameLayout implements ViewPager.OnPageC
 
     @Override
     public void onPageSelected(int position) {
+        if (!isWifiConnected)//wifi不可用,需要选择Page时再加载图片
+        {
+             String url=mPhotoWatcherAdapter.getUrl(position);
+             loadImageIntoView((ImageView) mViewPagerAdapter.getView(position),url);
+        }
+        //防止监听失效
+        ((PhotoView) mViewPagerAdapter.getView(position)).setOnViewTapListener(mOnViewTapListener);
+
+        //回调
         mPhotoWatcherAdapter.onPageSelected(position,this);
     }
 

@@ -241,6 +241,7 @@ public class MediaPlayControlView extends FrameLayout implements View.OnClickLis
     protected void onDetachedFromWindow() {
         mHandler.removeMessages(SHOW_PROGRESS);
         mHandler.removeMessages(FADE_OUT);
+        mHandler.removeCallbacksAndMessages(null);
         mControl=null;
         super.onDetachedFromWindow();
     }

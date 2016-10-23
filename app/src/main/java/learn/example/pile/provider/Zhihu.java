@@ -1,4 +1,4 @@
-package learn.example.pile.object;
+package learn.example.pile.provider;
 
 /**
  * Created on 2016/7/9.

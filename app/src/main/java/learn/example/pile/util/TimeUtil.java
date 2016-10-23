@@ -11,18 +11,10 @@ import java.util.Locale;
  */
 public class TimeUtil {
 
+    public static final String FORMAT_YMD_HMS="yyyy-MM-dd  HH:mm:ss";
+    public static final String FORMAT_YMD_HM="yyyy-MM-dd HH:mm";
+    public static final String FORMAT_YMD="yyyy-MM-dd";
 
-    /**
-     * 转换成 年-月-日
-     * @param timestamp 时间戳
-     * @return string
-     */
-    public static String formatYMD(long timestamp)
-    {
-        DateFormat format=SimpleDateFormat.getDateInstance(SimpleDateFormat.DEFAULT, Locale.CHINA);
-        Date date = new Date(timestamp*1000);
-        return format.format(date);
-    }
 
 
     /**
@@ -30,16 +22,16 @@ public class TimeUtil {
      * @param timestamp 时间戳
      * @return 字符串
      */
-    public static String formatTimeFull(long timestamp)
+    public static String formatTime(String format,long timestamp)
     {
-        SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd  HH:mm:ss",Locale.CHINA);
+        SimpleDateFormat dateFormat=new SimpleDateFormat(format,Locale.CHINA);
         Date date = new Date(timestamp*1000);
         return dateFormat.format(date);
     }
 
     /**
      * 转换成 分钟-秒,如 204 = 3'4
-     * @param second 秒数
+     * @param second 秒数 ,应该传递小于一小时的秒数
      * @return string
      */
     public static String formatMS(int second)

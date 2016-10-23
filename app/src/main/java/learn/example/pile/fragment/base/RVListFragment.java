@@ -2,6 +2,7 @@ package learn.example.pile.fragment.base;
 
 
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -14,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import learn.example.pile.R;
 import learn.example.pile.ui.RecyclerViewImprove;
@@ -46,7 +46,7 @@ public class RVListFragment extends Fragment implements SwipeRefreshLayout.OnRef
         return view;
     }
 
-    @OverridingMethodsMustInvokeSuper
+    @CallSuper
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         mSwipeRefreshLayout.setOnRefreshListener(this);

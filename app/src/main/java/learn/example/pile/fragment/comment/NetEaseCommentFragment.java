@@ -7,7 +7,7 @@ import android.view.View;
 import learn.example.pile.factory.CommentFactory;
 import learn.example.pile.factory.NetEaseCommentFactory;
 import learn.example.pile.net.NetEaseNewsService;
-import learn.example.pile.object.Comment;
+import learn.example.pile.pojo.Comment;
 
 /**
  * Created on 2016/8/3.

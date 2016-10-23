@@ -13,7 +13,7 @@ import learn.example.pile.factory.CommentFactory;
 import learn.example.pile.factory.JokeCommentFactory;
 import learn.example.pile.net.IService;
 import learn.example.pile.net.JokeService;
-import learn.example.pile.object.Comment;
+import learn.example.pile.pojo.Comment;
 
 /**
  * Created on 2016/8/14.

@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
@@ -18,15 +19,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 
 
 import learn.example.net.OkHttpRequest;
+import learn.example.pile.PileApplication;
 import learn.example.pile.R;
 import learn.example.pile.activity.base.ToolBarActivity;
 import learn.example.pile.adapters.FragmentPagerAdapter;
 import learn.example.pile.fragment.base.RVListFragment;
 import learn.example.pile.fragment.SettingFragment;
+import learn.example.pile.fragment.caterogy.JokeListFragment;
+import learn.example.pile.test.SingleFragmentPagerAdapter;
 import learn.example.pile.util.ActivityLauncher;
 import learn.example.pile.util.DeviceInfo;
 
@@ -137,7 +140,7 @@ public class MainActivity extends ToolBarActivity {
     public static class ViewPagerFragment extends Fragment  {
         private TabLayout mTabLayout;
         private ViewPager mViewPager;
-        private FragmentPagerAdapter mFragmentPagerAdapter;
+        private FragmentStatePagerAdapter mFragmentPagerAdapter;
         public static final String  TAG="ViewPagerFragment";
         @Nullable
         @Override
@@ -149,7 +152,15 @@ public class MainActivity extends ToolBarActivity {
             super.onViewCreated(view, savedInstanceState);
             mTabLayout= (TabLayout)view.findViewById(R.id.tab_layout);
             mViewPager= (ViewPager) view.findViewById(R.id.page_layout);
-            mFragmentPagerAdapter=new FragmentPagerAdapter(getFragmentManager());
+
+            if (PileApplication.DEBUG)
+            {
+                mFragmentPagerAdapter=new SingleFragmentPagerAdapter(getFragmentManager(),
+                                        new JokeListFragment());
+            }else {
+                mFragmentPagerAdapter=new FragmentPagerAdapter(getContext(),getFragmentManager());
+            }
+
             mViewPager.setAdapter(mFragmentPagerAdapter);
             mTabLayout.setupWithViewPager(mViewPager);
 

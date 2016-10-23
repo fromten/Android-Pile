@@ -9,7 +9,7 @@ import com.google.gson.JsonObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import learn.example.pile.object.OpenEyes;
+import learn.example.pile.provider.OpenEyes;
 import learn.example.pile.util.GsonHelper;
 
 /**

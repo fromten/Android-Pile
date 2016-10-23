@@ -10,11 +10,12 @@ import java.util.Locale;
 import learn.example.net.OkHttpRequest;
 import learn.example.pile.database.model.NewsArticle;
 import learn.example.pile.fragment.comment.NetEaseCommentFragment;
+import learn.example.pile.html.Html;
 import learn.example.pile.html.ImageClickInserter;
 import learn.example.pile.html.NetEaseHtml;
 import learn.example.pile.html.VideoClickInserter;
-import learn.example.pile.object.NetEase;
-import learn.example.pile.util.HtmlTagBuild;
+import learn.example.pile.provider.NetEase;
+import learn.example.pile.util.HtmlBuilder;
 import okhttp3.Call;
 import okhttp3.Request;
 
@@ -36,7 +37,7 @@ public class NetEaseRenderer  implements ContentRenderer {
         String historyHtml=readHistoryData();
         if (historyHtml!=null)
         {
-            mReaderActivity.onRenderCompleted(buildHtml(historyHtml),true);
+            mReaderActivity.onRenderCompleted(insertListener(historyHtml),true);
         }else {
             requestHtml();
         }
@@ -79,9 +80,9 @@ public class NetEaseRenderer  implements ContentRenderer {
             @Override
             public void onSuccess(String res) {
 
-                NetEaseHtml html=new NetEaseHtml(docid,res);
-                String originHtml=html.toString();
-                String completeHtml=buildHtml(originHtml);
+                Html html=new NetEaseHtml(docid,res);
+                String originHtml=html.getHtml();
+                String completeHtml= insertListener(originHtml);
 
                 mReaderActivity.onRenderCompleted(completeHtml,true);
 
@@ -101,14 +102,14 @@ public class NetEaseRenderer  implements ContentRenderer {
     {
         ImageClickInserter imageHandler=new ImageClickInserter(mReaderActivity);
         webView.addJavascriptInterface(imageHandler,imageHandler.getName());
-        return HtmlTagBuild.jsTag(imageHandler.getJavaScript());
+        return HtmlBuilder.tag("script","type='text/javascript'",imageHandler.getJavaScript());
     }
 
     private String addVideoClickJs(WebView webView)
     {
         VideoClickInserter videoHandler=new VideoClickInserter(mReaderActivity);
         webView.addJavascriptInterface(videoHandler,videoHandler.getName());
-        return HtmlTagBuild.jsTag(videoHandler.getJavaScript());
+        return HtmlBuilder.tag("script","type='text/javascript'",videoHandler.getJavaScript());
     }
 
 
@@ -117,7 +118,7 @@ public class NetEaseRenderer  implements ContentRenderer {
      * @param originHtml 原来的Html
      * @return 新的Html
      */
-    private String buildHtml(String originHtml)
+    private String insertListener(String originHtml)
     {
         mReaderActivity.getWebView().getSettings().setJavaScriptEnabled(true);
         String imageClickJs= addImageClickJs(mReaderActivity.getWebView());

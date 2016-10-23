@@ -8,7 +8,7 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import learn.example.pile.object.Comment;
+import learn.example.pile.pojo.Comment;
 import learn.example.pile.util.TimeUtil;
 
 /**
@@ -108,6 +108,8 @@ public class JokeCommentFactory implements CommentFactory.ProduceInterface {
                  }
              }
             reader.endObject();
-            return new Comment.CommentItem(userName,likeCount, TimeUtil.formatTimeFull(time),avatar,null,text);
+            return new Comment.CommentItem(userName,likeCount,
+                                            TimeUtil.formatTime(TimeUtil.FORMAT_YMD_HM,time),
+                                            avatar,null,text);
         }
 }

@@ -1,7 +1,7 @@
 package learn.example.pile.net;
 
 import learn.example.pile.jsonbean.NetEaseNews;
-import learn.example.pile.object.NetEase;
+import learn.example.pile.provider.NetEase;
 
 /**
  * Created on 2016/7/1.

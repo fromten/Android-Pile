@@ -24,6 +24,7 @@ public class ShortVideoActivity extends FullScreenActivity  implements MediaPlay
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle(null);
         setContentView(R.layout.activity_video);
         mVideoView= (VideoView) findViewById(R.id.video_view);
         mVideoView.setOnPreparedListener(this);

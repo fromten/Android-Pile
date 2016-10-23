@@ -17,7 +17,7 @@ import learn.example.pile.adapters.ChatListAdapter;
 import learn.example.pile.jsonbean.TuringMachineJson;
 import learn.example.pile.net.IService;
 import learn.example.pile.net.TuringMachineService;
-import learn.example.pile.object.ChatInfo;
+import learn.example.pile.pojo.ChatInfo;
 
 /**
  * Created on 2016/6/26.

@@ -36,7 +36,6 @@ public class DetailJokeActivity extends ToolBarActivity {
 
 
     private FrameLayout mRoot;
-    private VideoView mVideoView;
     private ExtraHeadCommentFragment mFragment;
 
     private JokeBean.DataBean.DataListBean.GroupBean group;
@@ -132,7 +131,7 @@ public class DetailJokeActivity extends ToolBarActivity {
                 String url=item.getImages().getFirstUrl();
                 Glide.with(mContext)
                         .load(url)
-                        .transform(new GlideUtil.MatchWidthTransformation(mContext))
+                        .transform(new GlideUtil.MatchTransformation(mContext))
                         .into(holder.cover);
                 holder.cover.setTag(R.id.view_tag1,item);
             }
@@ -157,7 +156,7 @@ public class DetailJokeActivity extends ToolBarActivity {
                     container.removeView(cover);
                     mVideoView=new VideoTextureView(context);
 
-                    int targetHeight= (int) (new DeviceInfo((Activity) context).SCREEN_WIDTH*0.7f);
+                    int targetHeight= (int) (new DeviceInfo( context).SCREEN_WIDTH*0.7f);
                     mVideoView.setMinimumWidth(300);
                     mVideoView.setMinimumHeight(targetHeight);
                     mVideoView.setMaxHeight(targetHeight);

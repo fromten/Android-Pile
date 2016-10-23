@@ -8,32 +8,28 @@ import com.activeandroid.query.Select;
 
 import java.util.List;
 
-
 /**
- * Created on 2016/10/4.
+ * Created on 2016/10/18.
  */
 
-public class AADatabaseStore{
-    private Class<? extends Model> mModel;
+public class AADatabaseStore implements DatabaseStore<Model,Model> {
 
-    public AADatabaseStore(Class<? extends Model> model) {
-        mModel = model;
+    private Class<? extends Model> mModelClass;
+
+    public AADatabaseStore(Class<? extends Model> modelClass) {
+        mModelClass = modelClass;
     }
 
-    public Class<? extends Model> getModel() {
-        return mModel;
+    @Override
+    public List<? extends Model> getItems(int start, int length) {
+        From from=new Select().from(mModelClass);
+        from.orderBy("id DESC")
+                .limit(start+","+length);
+        return from.execute();
     }
 
-    public void setModel(Class<? extends Model> model) {
-        mModel = model;
-    }
-
-    /**
-     * 保存数据到数据库
-     * @param items {@link com.activeandroid.Model}
-     * @return true 保存成功,else wise
-     */
-    public <T extends Model> boolean save(List<T> items) {
+    @Override
+    public boolean saveItems(List<? extends Model> items) {
         if (items==null||items.isEmpty())return false;
         ActiveAndroid.beginTransaction();
         try{
@@ -48,23 +44,36 @@ public class AADatabaseStore{
         return true;
     }
 
-    /**
-     * @param start 开始行位置
-     * @param length 相对起始位置的长度
-     * @return list
-     */
-    public <T extends Model> List<T> getItems(int start, int length) {
-        From from=new Select().from(mModel);
-        from.orderBy("id DESC")
-                .limit(start+","+length);
-        return from.execute();
+
+
+    @Override
+    public boolean delete(Model item) {
+        if (item!=null)
+        {
+            item.delete();
+            return true;
+        }
+        return false;
     }
 
-    public void deleteAll() {
-         new Delete().from(mModel).execute();
+    @Override
+    public boolean deleteAll() {
+        new Delete().from(mModelClass).execute();
+        return true;
     }
 
-    public int rowCount() {
-       return new Select().from(mModel).count();
+    @Override
+    public boolean update(Model item) {
+        if (item!=null)
+        {
+            item.save();
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public int getRowCount() {
+        return new Select().from(mModelClass).count();
     }
 }

@@ -1,7 +1,7 @@
 package learn.example.pile.net;
 
 import learn.example.pile.jsonbean.JokeBean;
-import learn.example.pile.object.JokeProvider;
+import learn.example.pile.provider.JokeProvider;
 import okhttp3.Request;
 
 /**

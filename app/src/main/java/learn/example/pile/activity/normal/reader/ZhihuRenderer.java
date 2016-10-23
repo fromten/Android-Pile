@@ -83,9 +83,9 @@ public class ZhihuRenderer implements ContentRenderer
                 ZhihuHtml html=new ZhihuHtml(data.getBody(),data.getCss(),data.getJs());
                 String aTagClickJs=tagClickInsert.getJavaScript();
                 String imageClickJs=imageClickInserter.getJavaScript();
-                html.setJs(imageClickJs+"\n"+aTagClickJs);
+                html.setExtraJs(imageClickJs+"\n"+aTagClickJs);
 
-                mReaderActivity.onRenderCompleted(html.generateHtml(),false);
+                mReaderActivity.onRenderCompleted(html.getHtml(),false);
             }
 
             @Override

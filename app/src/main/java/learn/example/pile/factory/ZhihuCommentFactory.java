@@ -7,7 +7,7 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import learn.example.pile.object.Comment;
+import learn.example.pile.pojo.Comment;
 import learn.example.pile.util.TimeUtil;
 
 /**
@@ -75,7 +75,7 @@ public class ZhihuCommentFactory implements CommentFactory.ProduceInterface {
                     comment.setLikeNumber(reader.nextInt());
                     break;
                 case "time":
-                    comment.setTime(TimeUtil.formatTimeFull(reader.nextInt()));
+                    comment.setTime(TimeUtil.formatTime(TimeUtil.FORMAT_YMD_HM,reader.nextInt()));
                     break;
                 case "avatar":
                     comment.setUsePic(reader.nextString());

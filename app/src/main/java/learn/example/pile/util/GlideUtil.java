@@ -52,24 +52,26 @@ public class GlideUtil {
         }
 
         @Override public String getId() {
-            return "CropSquareTransformation(width=" + mWidth + ", height=" + mHeight + ")";
+            return "CropSquareTransformation";
         }
     }
 
 
-    public static class MatchWidthTransformation extends BitmapTransformation {
-        int targetHeight;
-        int targetWidth;
-        boolean aspectRatio;
+    public static class MatchTransformation extends BitmapTransformation {
+        private int targetHeight;
+        private int targetWidth;
+        private boolean aspectRatio;
+        private Canvas mCanvas=new Canvas();
+        private Rect mDstRect=new Rect();
 
-        public MatchWidthTransformation(Context context,int desireHeight) {
+        public MatchTransformation(Context context,int desireWidth, int desireHeight) {
             super(context);
+            targetWidth=desireWidth;
             targetHeight=desireHeight;
-            targetWidth=new DeviceInfo((Activity) context).SCREEN_WIDTH;
             aspectRatio=false;
         }
 
-        public MatchWidthTransformation(Context context) {
+        public MatchTransformation(Context context) {
             super(context);
             aspectRatio=true;
         }
@@ -88,20 +90,34 @@ public class GlideUtil {
                 width=targetWidth;
                 height=targetHeight;
             }
-            Bitmap recycler=pool.get(width,height,toTransform.getConfig()==null? Bitmap.Config.ARGB_8888:toTransform.getConfig());
-            return TransformationUtils.centerCrop(recycler,toTransform,width,height);
+            //Bitmap recycler=pool.get(width,height,toTransform.getConfig()==null? Bitmap.Config.ARGB_8888:toTransform.getConfig());
+           // return TransformationUtils.centerCrop(recycler,toTransform,width,height);
+            Bitmap.Config config =
+                    toTransform.getConfig() != null ? toTransform.getConfig() : Bitmap.Config.ARGB_8888;
+            Bitmap bitmap = pool.get(width, height, config);
+            if (bitmap == null) {
+                bitmap = Bitmap.createBitmap(width,height,config);
+            }
+            mCanvas.setBitmap(bitmap);
+            mDstRect.set(0,0,width,height);
+            mCanvas.drawBitmap(toTransform,null,mDstRect,null);
+            return bitmap;
         }
 
         @Override public String getId() {
-            return "matchwidthtransformation";
+            return "match_transformation";
         }
     }
 
 
     public static class FitGifTransform extends BitmapTransformation{
+        private Canvas mCanvas;
+        private Rect mRect;
 
         public FitGifTransform(Context context) {
             super(context);
+            mCanvas=new Canvas();
+            mRect=new Rect();
         }
 
         @Override
@@ -119,9 +135,9 @@ public class GlideUtil {
             if (bitmap == null) {
                 bitmap = Bitmap.createBitmap( w, h,config);
             }
-            Canvas canvas=new Canvas(bitmap);
-            Rect dst=new Rect(0,0,w,h);
-            canvas.drawBitmap(toTransform,null,dst,null);
+            mCanvas.setBitmap(bitmap);
+            mRect.set(0,0,w,h);
+            mCanvas.drawBitmap(toTransform,null,mRect,null);
             return bitmap;
         }
 

@@ -5,7 +5,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import learn.example.pile.R;
-import learn.example.pile.object.PhotosMessage;
+import learn.example.pile.pojo.PhotosMessage;
 import learn.example.pile.ui.PhotoWatcherLayout;
 
 /**

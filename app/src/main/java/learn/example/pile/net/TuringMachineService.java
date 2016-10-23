@@ -29,7 +29,7 @@ public class TuringMachineService extends NetService {
             newRequest(TAG,TuringMachineJson.class,req,callback);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-            callback.onFailure("URL encode is fail "+"{question="+question+"}");
+            callback.onFailure("URL encode failed "+"{question="+question+"}");
         }
     }
 

@@ -13,7 +13,7 @@ import com.bumptech.glide.Glide;
 
 import learn.example.pile.R;
 import learn.example.pile.adapters.base.ParcelableStateAdapter;
-import learn.example.pile.object.Comment;
+import learn.example.pile.pojo.Comment;
 import learn.example.pile.ui.CircleViewTarget;
 
 /**

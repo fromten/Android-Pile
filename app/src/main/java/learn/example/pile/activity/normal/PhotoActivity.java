@@ -19,8 +19,8 @@ import learn.example.pile.R;
 import learn.example.pile.activity.base.CommentMenuActivity;
 import learn.example.pile.adapters.NetEasePhotoAdapter;
 import learn.example.pile.fragment.comment.NetEaseCommentFragment;
-import learn.example.pile.object.NetEase;
-import learn.example.pile.object.PhotosMessage;
+import learn.example.pile.provider.NetEase;
+import learn.example.pile.pojo.PhotosMessage;
 import learn.example.pile.ui.PhotoWatcherLayout;
 import learn.example.pile.util.GsonHelper;
 import okhttp3.Call;
@@ -217,7 +217,7 @@ public class PhotoActivity extends CommentMenuActivity {
                 intent.putExtra(CommentActivity.KEY_FRAGMENT_ARGUMENTS,args);
 
 
-                //可能网络请求慢,导致菜单不能创建,需要重新创建菜单
+                //网络请求时间不确定,可能菜单不会创建,需要重新创建菜单
                 invalidateOptionsMenu();
             }
         }

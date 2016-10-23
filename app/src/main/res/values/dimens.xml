@@ -9,7 +9,6 @@
     <dimen name="medium">6dp</dimen>
     <dimen name="big">10dp</dimen>
 
-
     <dimen name="setting_margin">20dp</dimen>
     <dimen name="news_img_width">100dp</dimen>
     <dimen name="news_img_height">74dp</dimen>

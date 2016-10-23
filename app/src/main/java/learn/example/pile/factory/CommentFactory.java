@@ -3,7 +3,7 @@ package learn.example.pile.factory;
 
 
 
-import learn.example.pile.object.Comment;
+import learn.example.pile.pojo.Comment;
 
 
 /**

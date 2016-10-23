@@ -6,12 +6,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 
-import com.activeandroid.Model;
 
 import java.util.List;
 
 import learn.example.pile.adapters.base.AbsSaveableRVAdapter;
-import learn.example.pile.database.AADatabaseStore;
+import learn.example.pile.database.DatabaseStore;
 
 /**
  * Created on 2016/10/4.
@@ -21,7 +20,7 @@ public abstract class PersistentFragment extends BaseListFragment {
 
     public static final String KEY_DB_INDEX="db_index";
     private RecyclerView.Adapter mAdapter;
-    private AADatabaseStore mAADatabaseStore;
+    private DatabaseStore mDatabaseStore;
     private int mDatabaseIndex;
     public static final int MAX_READ_NUMBER=10;
 
@@ -30,7 +29,7 @@ public abstract class PersistentFragment extends BaseListFragment {
      * 子类创建正确的AADatabaseStore
      * @return AADatabaseStore
      */
-    public abstract AADatabaseStore onCreateDataStore();
+    public abstract DatabaseStore onCreateDataStore();
 
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
@@ -48,10 +47,10 @@ public abstract class PersistentFragment extends BaseListFragment {
     }
 
 
-    public void saveDataToDB(List<? extends Model> list)
+    public void saveDataToDB(List<?> list)
     {
         check();
-        mAADatabaseStore.save(list);
+        mDatabaseStore.saveItems(list);
     }
 
     @Override
@@ -68,10 +67,10 @@ public abstract class PersistentFragment extends BaseListFragment {
     public void addDBItemsToAdapter(int start,int length)
     {
         check();
-        List list=mAADatabaseStore.getItems(start,length);
-        if (list!=null)
+        List<?> list=mDatabaseStore.getItems(start,length);
+        if (list!=null&&list.size()>0)
         {
-            if (mAdapter!=null&&mAdapter instanceof AbsSaveableRVAdapter)
+            if (mAdapter instanceof AbsSaveableRVAdapter)
             {
                ((AbsSaveableRVAdapter) mAdapter).addAll(list);
                mDatabaseIndex+=list.size();
@@ -81,15 +80,15 @@ public abstract class PersistentFragment extends BaseListFragment {
 
     public void check()
     {
-        if (mAADatabaseStore==null)
+        if (mDatabaseStore==null)
         {
-            mAADatabaseStore=onCreateDataStore();
+            mDatabaseStore= onCreateDataStore();
         }
-        int currentCount=mAADatabaseStore.rowCount();
+        int currentCount=mDatabaseStore.getRowCount();
         int max=getMaxColumnCount();
         if (max<currentCount)
         {
-            mAADatabaseStore.deleteAll();
+            mDatabaseStore.deleteAll();
         }
     }
 

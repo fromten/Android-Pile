@@ -91,7 +91,7 @@ public class JokeBean {
                 private JsonObject gifvideo;
                 private User user;
                 private int is_multi_image=-1;
-                @SerializedName(value = "middle_image",alternate = "medium_cover")
+                @SerializedName(value = "middle_image",alternate = "large_cover")
                 private ImagesBean images;
                 private ImagesBean[] large_image_list;
 

@@ -1,6 +1,9 @@
 package learn.example.pile.net;
 
-import java.util.HashMap;
+
+import android.support.v4.util.ArrayMap;
+import android.support.v4.util.SimpleArrayMap;
+
 
 import learn.example.net.OkHttpRequest;
 import okhttp3.Call;
@@ -10,37 +13,25 @@ import okhttp3.Request;
  * Created on 2016/7/11.
  */
 public class NetService implements IService{
-    private HashMap<String,Call> map=new HashMap<>();
+    private SimpleArrayMap<String,Call> map=new SimpleArrayMap<>();
+
+
+    public void newStringRequest(final String tag, String url, final IService.Callback<String> callback)
+    {
+        Request request=new Request.Builder().url(url).build();
+        newRequest(tag,String.class,request,callback);
+    }
+
+    public void newStringRequest(final String tag, Request request, final IService.Callback<String> callback)
+    {
+       newRequest(tag,String.class,request,callback);
+    }
 
     public <T> void newRequest(final String tag, Class<T> clazz, String url, final IService.Callback<T> callback)
     {
         Request request=new Request.Builder().url(url).build();
         newRequest(tag,clazz,request,callback);
     }
-    public void newStringRequest(final String tag, String url, final IService.Callback<String> callback)
-    {
-        Request request=new Request.Builder().url(url).build();
-        newStringRequest(tag,request,callback);
-    }
-
-    public void newStringRequest(final String tag, Request request, final IService.Callback<String> callback)
-    {
-        Call call=OkHttpRequest.getInstanceUnsafe().newStringRequest(request, new OkHttpRequest.RequestCallback<String>() {
-            @Override
-            public void onSuccess(String res) {
-                callback.onSuccess(res);
-                remove(tag);
-            }
-
-            @Override
-            public void onFailure(String msg) {
-                callback.onFailure(msg);
-                remove(tag);
-            }
-        });
-        addToMap(tag,call);
-    }
-
 
     public <T> void newRequest(final String tag, Class<T> clazz, Request request, final IService.Callback<T> callback)
     {
@@ -80,9 +71,13 @@ public class NetService implements IService{
     }
 
     public void cancelAll() {
-        for(String key:map.keySet())
-        {
-            cancel(key);
+        int count=map.size();
+        for (int i = 0; i <count ; i++) {
+            Call value=map.valueAt(i);
+            if (value!=null)
+            {
+                value.cancel();
+            }
         }
         map.clear();
     }

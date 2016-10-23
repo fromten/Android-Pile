@@ -1,4 +1,4 @@
-package learn.example.pile.object;
+package learn.example.pile.provider;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -11,12 +11,12 @@ import com.activeandroid.annotation.Table;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-import static learn.example.pile.object.OpenEyes.Category.ADVERTISEMENT;
-import static learn.example.pile.object.OpenEyes.Category.ART;
-import static learn.example.pile.object.OpenEyes.Category.DRAMA;
-import static learn.example.pile.object.OpenEyes.Category.PREVIEW;
-import static learn.example.pile.object.OpenEyes.Category.RECORD;
-import static learn.example.pile.object.OpenEyes.Category.TRIP;
+import static learn.example.pile.provider.OpenEyes.Category.ADVERTISEMENT;
+import static learn.example.pile.provider.OpenEyes.Category.ART;
+import static learn.example.pile.provider.OpenEyes.Category.DRAMA;
+import static learn.example.pile.provider.OpenEyes.Category.PREVIEW;
+import static learn.example.pile.provider.OpenEyes.Category.RECORD;
+import static learn.example.pile.provider.OpenEyes.Category.TRIP;
 
 
 /**

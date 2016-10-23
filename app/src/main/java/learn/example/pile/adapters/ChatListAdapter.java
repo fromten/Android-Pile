@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import learn.example.pile.R;
-import learn.example.pile.object.ChatInfo;
+import learn.example.pile.pojo.ChatInfo;
 
 /**
  * Created on 2016/6/26.

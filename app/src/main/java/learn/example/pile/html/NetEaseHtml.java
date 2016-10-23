@@ -6,12 +6,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import learn.example.pile.util.GsonHelper;
-import learn.example.pile.util.HtmlTagBuild;
+import learn.example.pile.util.HtmlBuilder;
 
 /**
  * Created on 2016/7/27.
  */
-public class NetEaseHtml {
+public class NetEaseHtml implements Html{
     private String res;
     private String docID;
 
@@ -23,40 +23,31 @@ public class NetEaseHtml {
     @Override
     public String toString()
     {
-        StringBuilder builder=new StringBuilder();
-        JsonObject object=new JsonParser().parse(res).getAsJsonObject();
-        object=object.getAsJsonObject(docID);
+//        StringBuilder builder=new StringBuilder();
+//        JsonObject object=new JsonParser().parse(res).getAsJsonObject();
+//        object=object.getAsJsonObject(docID);
+//
+//        builder.append("<html lang=\"zh-cn\">\n");
+//        builder.append(insertHead());
+//
+//        builder.append("<body>");
+//        builder.append("<div class='main'>");
+//        String title= GsonHelper.getAsString(object.get("title"),null);
+//        builder.append(insertTitle(title));
+//        String body= GsonHelper.getAsString(object.get("body"),null);
+//        JsonArray array=object.getAsJsonArray("img");
+//        body= replaceImages(body,array);
+//        body= replaceVideo(body,object.getAsJsonArray("video"));
+//        builder.append(body);
+//        builder.append("</div>");
+//        builder.append("</body>");
+//        builder.append("</html>");
 
-        builder.append("<html lang=\"zh-cn\">\n");
-        builder.append(insertHead());
-
-        builder.append("<body>");
-        builder.append("<div class='main'>");
-        String title= GsonHelper.getAsString(object.get("title"),null);
-        builder.append(insertTitle(title));
-        String body= GsonHelper.getAsString(object.get("body"),null);
-        JsonArray array=object.getAsJsonArray("img");
-        body=insertImages(body,array);
-        body=insertVideo(body,object.getAsJsonArray("video"));
-        builder.append(body);
-        builder.append("</div>");
-        builder.append("</body>");
-        builder.append("</html>");
-
-        return  builder.toString().replaceAll("(?<=<p>)\\s*","");//最后把所有的p标签内空格去掉
-    }
-    private String insertHead()
-    {
-        return HtmlTagBuild.headTag("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">");
-    }
-
-    private String insertTitle(String title)
-    {
-        return "<h2>"+title+"</h2>";
+        return  null;//最后把所有的p标签内空格去掉
     }
 
 
-    private String insertImages(String oldBody,JsonArray array)
+    private String replaceImages(String oldBody, JsonArray array)
     {
         if (array==null)
         {
@@ -70,15 +61,16 @@ public class NetEaseHtml {
             String ref=GsonHelper.getAsString(object.get("ref"),null);
             String src=GsonHelper.getAsString(object.get("src"),null);
 
-            String imageTag=HtmlTagBuild.imageTag(0,0,src);
-            imageTag+=HtmlTagBuild.tag("b",null,"(图片)"+alt);
+            String tagAttr=HtmlBuilder.attr("src",src);
+            String imageTag= HtmlBuilder.tag("image",tagAttr,null);
+            imageTag+= HtmlBuilder.tag("b",null,"(图片)"+alt);
             oldBody=oldBody.replace(ref,imageTag);
         }
         newBody=oldBody;
         return newBody;
     }
 
-    private String insertVideo(String oldBody,JsonArray array)
+    private String replaceVideos(String oldBody, JsonArray array)
     {
         if (array==null)
         {
@@ -93,19 +85,45 @@ public class NetEaseHtml {
             String cover=GsonHelper.getAsString(object.get("cover"),null);
             String mp4=GsonHelper.getAsString(object.get("mp4_url"),null);
 
-            String image1Attr=HtmlTagBuild.attrs("class","videoic","src","image_playbutton.png");
-            String image1Tag=HtmlTagBuild.tag("image",image1Attr,null);
+            String image1Attr= HtmlBuilder.attrs("class","videoic","src","image_playbutton.png");
+            String image1Tag= HtmlBuilder.tag("image",image1Attr,null);
 
-            String image2Attr=HtmlTagBuild.attrs("class","cover","src",cover);
-            String image2Tag=HtmlTagBuild.tag("image",image2Attr,null);
+            String image2Attr= HtmlBuilder.attrs("class","cover","src",cover);
+            String image2Tag= HtmlBuilder.tag("image",image2Attr,null);
 
-            String divAttr=HtmlTagBuild.attrs("class","videowrap","mp4",mp4);
-            String div=HtmlTagBuild.tag("div",divAttr,image1Tag+image2Tag);
+            String divAttr= HtmlBuilder.attrs("class","videowrap","mp4",mp4);
+            String div= HtmlBuilder.tag("div",divAttr,image1Tag+image2Tag);
 
-            div+=HtmlTagBuild.tag("b",null,"(视频)"+alt);
+            div+= HtmlBuilder.tag("b",null,"(视频)"+alt);
             oldBody=oldBody.replace(ref,div);
         }
         newBody=oldBody;
         return newBody;
+    }
+
+    @Override
+    public String getHtml() {
+        HtmlBuilder htmlBuilder=new HtmlBuilder();
+        htmlBuilder.startHtml("lang='zh-cn'");
+
+        JsonObject object=new JsonParser().parse(res).getAsJsonObject();
+        object=object.getAsJsonObject(docID);
+
+        htmlBuilder.startBody(null)
+                    .append("<div class='main'>");
+
+        String title= GsonHelper.getAsString(object.get("title"),null);
+        htmlBuilder.appendTag("h2",null,title);
+
+        String body= GsonHelper.getAsString(object.get("body"),null);
+        JsonArray array=object.getAsJsonArray("img");
+        body= replaceImages(body,array);
+        body= replaceVideos(body,object.getAsJsonArray("video"));
+
+        htmlBuilder.append(body)
+                    .append("</div>")
+                    .endBody().endHtml();;
+
+        return htmlBuilder.toString().replaceAll("(?<=<p>)\\s*","");
     }
 }

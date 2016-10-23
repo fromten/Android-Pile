@@ -14,6 +14,7 @@ import learn.example.pile.util.TimeUtil;
  */
 public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
 
+    private final int FILE_MAX_SIZE=2*1024*1024;//2M
     private String dirName="exception_catch";
     private File mDir;
 
@@ -41,7 +42,7 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
               {
                   len+=file.length();
               }
-              if (len>=3145728)//3M
+              if (len>=FILE_MAX_SIZE)//3M
               {
                   for (File file:mDir.listFiles())
                   {
@@ -49,7 +50,7 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
                   }
               }
 
-              String name=TimeUtil.formatTimeFull(TimeUtil.getCurrentTime()/1000);
+              String name=TimeUtil.formatTime(TimeUtil.FORMAT_YMD_HMS,TimeUtil.getCurrentTime()/1000);
               File newFile=new File(mDir,name);
               try {
                   PrintStream stream=new PrintStream(newFile,"utf-8");

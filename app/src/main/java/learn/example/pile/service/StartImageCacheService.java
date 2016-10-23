@@ -95,7 +95,7 @@ public class StartImageCacheService extends IntentService {
 
 
     /**
-     * 请求启动界面图片Json数据
+     * 请求启动界面图片所需要Json数据,并返回图片Url
      * @return 图片Url地址,null 请求失败
      * @throws IOException
      */

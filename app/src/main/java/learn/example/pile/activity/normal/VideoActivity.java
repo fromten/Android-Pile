@@ -189,9 +189,7 @@ public class VideoActivity extends CommentMenuActivity {
     @Override
     protected void onDestroy() {
 
-        mHandler.removeMessages(HIDE_ACTIONBAR);
-        mHandler.removeMessages(HIDE_VOLUME_PROGERESSBAR);
-        mHandler.removeMessages(RESUME_PLAY);
+        mHandler.removeCallbacksAndMessages(null);
         mHandler=null;
 
         mExoVideoView.release();

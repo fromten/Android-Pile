@@ -8,11 +8,14 @@ import com.squareup.leakcanary.LeakCanary;
  */
 public class PileApplication extends com.activeandroid.app.Application {
 
+    public static final boolean DEBUG=false;
+
     @Override
     public void onCreate() {
         super.onCreate();
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
         LeakCanary.install(this);
+
        // Stetho.initializeWithDefaults(this);
     }
 

@@ -1,4 +1,4 @@
-package learn.example.pile.object;
+package learn.example.pile.pojo;
 
 /**
  * Created on 2016/8/15.

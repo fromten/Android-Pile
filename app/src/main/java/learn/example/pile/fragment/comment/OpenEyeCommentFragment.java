@@ -10,7 +10,7 @@ import learn.example.pile.factory.CommentFactory;
 import learn.example.pile.factory.OpenEyeCommentFactory;
 import learn.example.pile.net.IService;
 import learn.example.pile.net.OpenEyeService;
-import learn.example.pile.object.Comment;
+import learn.example.pile.pojo.Comment;
 import learn.example.pile.util.GsonHelper;
 
 /**

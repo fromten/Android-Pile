@@ -7,6 +7,7 @@ import android.view.View;
 
 import learn.example.pile.adapters.NewsListAdapter;
 import learn.example.pile.database.AADatabaseStore;
+import learn.example.pile.database.DatabaseStore;
 import learn.example.pile.fragment.base.PersistentFragment;
 import learn.example.pile.jsonbean.NetEaseNews;
 import learn.example.pile.net.NetService;
@@ -43,7 +44,7 @@ public class NewsListFragment extends PersistentFragment implements NetService.C
     }
 
     @Override
-    public AADatabaseStore onCreateDataStore() {
+    public DatabaseStore<?, ?> onCreateDataStore() {
         return new AADatabaseStore(NetEaseNews.NewsItem.class);
     }
 

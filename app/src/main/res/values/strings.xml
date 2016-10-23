@@ -1,29 +1,24 @@
 <resources>
     <string name="app_name">Pile</string>
-    <string name="tab_joke">笑话</string>
-    <string name="tab_pic">图片</string>
-    <string name="menu_setting">设置</string>
-    <string name="menu_comment">评论</string>
-    <string name="menu_machine">机器聊天</string>
-    <string name="send">发送</string>
-    <string name="video_playcomplete">视频播放结束</string>
-    <string name="gif">gif</string>
-    <string name="edit_input">输入发送的消息</string>
-    <string name="def_empty_view_text">上拉重新刷新</string>
+
+    <!--分类列表文本-->
+    <string-array name="tab_category" >
+        <item>新闻</item>
+        <item>阅读</item>
+        <item>视频</item>
+        <item>笑话</item>
+    </string-array>
 
 
-
+    <!--设置环境文本-->
     <string name="git_rep">https://github.com/fromten/Android-Pile</string>
     <string name="setting_show1">源码地址:https://github.com/fromten/Android-Pile</string>
 
-    <item name="link" type="id"/>
-    <item name="view_tag1" type="id"/>
+    <!--菜单项文本-->
+    <string name="menu_setting">设置</string>
+    <string name="menu_comment">评论</string>
+    <string name="menu_machine">机器聊天</string>
 
-    <array name="setting_spinner">
-        <item>视频</item>
-        <item>笑话</item>
-        <item>阅读</item>
-    </array>
 
     <!--视频分类表-->
     <string name="art">创意</string>
@@ -32,4 +27,17 @@
     <string name="record">记录</string>
     <string name="preview">预告</string>
     <string name="trip">旅行</string>
+
+    <!--请求状态文本-->
+    <string name="pull_down_refresh">下拉重新刷新</string>
+    <string name="click_down_reload">点击重新加载</string>
+    <string name="reloading">重新加载…</string>
+    <string name="def_empty_view_text">上拉重新刷新</string>
+
+    <!--other-->
+    <string name="send">发送</string>
+    <string name="video_playcomplete">视频播放结束</string>
+    <string name="gif">gif</string>
+    <string name="edit_input">输入发送的消息</string>
+
 </resources>

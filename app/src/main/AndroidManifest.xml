@@ -33,10 +33,9 @@
         <activity android:name=".activity.normal.MainActivity"
                   android:launchMode="singleTask"/>
 
-
         <activity android:name=".activity.normal.WebViewActivity"
                   android:process="learn.example.pile.PileApplication.WebActivity"
-                  android:label=" "/>
+                  android:label=""/>
 
         <activity android:name=".activity.normal.VideoActivity"
                   android:configChanges="orientation|screenSize"

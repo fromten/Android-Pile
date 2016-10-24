@@ -34,16 +34,17 @@ public class CommentListAdapter extends ParcelableStateAdapter<Comment.CommentIt
         Comment.CommentItem c = get(position);
         final Context context = holder.itemView.getContext();
         holder.content.setText(c.getContent());
-        String author=c.getAuthor();
-        holder.author.setText(author==null?"网友":author);
+        String userName=c.getUserName();
+        holder.userName.setText(userName==null?"网友":userName);
 
-        Glide.with(context).load(c.getUsePic()).asBitmap()
+        Glide.with(context).load(c.getAvatar()).asBitmap()
                 .error(R.mipmap.ic_def_show_user)
                 .placeholder(R.mipmap.ic_def_show_user)
                 .fitCenter()
-                .into(new CircleViewTarget(holder.user_pic));
+                .into(new CircleViewTarget(holder.avatar));
         String address=c.getAddress()==null?"":c.getAddress()+"\n";
-        holder.addressAndTime.setText(address+c.getTime());
+        String addressAndTime=address.concat(c.getCommentTime());
+        holder.addressAndTime.setText(addressAndTime);
 
         holder.like.setText(String.valueOf(c.getLikeNumber()));
 
@@ -51,17 +52,17 @@ public class CommentListAdapter extends ParcelableStateAdapter<Comment.CommentIt
 
     public static class CommentViewHolder extends RecyclerView.ViewHolder {
         public TextView content;
-        public TextView author;
+        public TextView userName;
         public TextView like;
-        public ImageView user_pic;
+        public ImageView avatar;
         private TextView addressAndTime;
         public CommentViewHolder(View itemView) {
             super(itemView);
             content = (TextView) itemView.findViewById(R.id.content);
-            author = (TextView) itemView.findViewById(R.id.author);
-            user_pic = (ImageView) itemView.findViewById(R.id.user_pic);
+            userName = (TextView) itemView.findViewById(R.id.user_name);
+            avatar = (ImageView) itemView.findViewById(R.id.avatar);
             like = (TextView) itemView.findViewById(R.id.like);
-            addressAndTime= (TextView) itemView.findViewById(R.id.adress_and_time);
+            addressAndTime= (TextView) itemView.findViewById(R.id.address_and_time);
         }
     }
 }

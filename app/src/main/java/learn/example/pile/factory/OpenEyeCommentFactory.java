@@ -78,7 +78,7 @@ public class OpenEyeCommentFactory implements CommentFactory.ProduceInterface {
         {   String name=reader.nextName();
             switch (name) {
                 case "createTime":
-                    commentItem.setTime(TimeUtil.formatTime(TimeUtil.FORMAT_YMD_HM,reader.nextLong()/1000));
+                    commentItem.setCommentTime(TimeUtil.formatTime(TimeUtil.FORMAT_YMD_HM,reader.nextLong()/1000));
                     break;
                 case "likeCount":
                     commentItem.setLikeNumber(reader.nextInt());
@@ -87,7 +87,7 @@ public class OpenEyeCommentFactory implements CommentFactory.ProduceInterface {
                     commentItem.setContent(reader.nextString());
                     break;
                 case "user":
-                    commentItem.setUsePic(getUserPic(reader));
+                    commentItem.setAvatar(getUserPic(reader));
                     break;
                 default:
                     reader.skipValue();

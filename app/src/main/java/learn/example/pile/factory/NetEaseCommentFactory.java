@@ -80,10 +80,10 @@ public class NetEaseCommentFactory implements CommentFactory.ProduceInterface {
         {   String name=reader.nextName();
             switch (name) {
                 case "n":
-                    comment.setAuthor(reader.nextString());
+                    comment.setUserName(reader.nextString());
                     break;
                 case "t":
-                    comment.setTime(reader.nextString());
+                    comment.setCommentTime(reader.nextString());
                     break;
                 case "b":
                     comment.setContent(reader.nextString());
@@ -92,7 +92,7 @@ public class NetEaseCommentFactory implements CommentFactory.ProduceInterface {
                     comment.setLikeNumber(reader.nextInt());
                     break;
                 case "timg":
-                    comment.setUsePic(reader.nextString());
+                    comment.setAvatar(reader.nextString());
                     break;
                 case "f":
                     String address=reader.nextString();

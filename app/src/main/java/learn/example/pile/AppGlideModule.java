@@ -20,10 +20,8 @@ import learn.example.pile.util.DeviceInfo;
 public class AppGlideModule implements GlideModule {
 
     public static final String diskCacheName="img_cache";
-    public static  String diskCacheFilePath;
+    public static String diskCacheFilePath;
 
-    public AppGlideModule() {
-    }
 
     @Override
     public void applyOptions(Context context, GlideBuilder builder) {

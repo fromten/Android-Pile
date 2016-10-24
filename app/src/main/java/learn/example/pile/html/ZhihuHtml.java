@@ -72,7 +72,7 @@ public class ZhihuHtml implements Html{
         fillHead(htmlBuilder);
         htmlBuilder.startBody(null)
                 .append(body)
-                .endBody().endHtml(); ;
+                .endBody().endHtml();
 
         return htmlBuilder.toString();
     }

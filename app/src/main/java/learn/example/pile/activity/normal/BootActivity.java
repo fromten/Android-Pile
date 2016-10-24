@@ -20,7 +20,7 @@ import learn.example.pile.activity.base.FullScreenActivity;
 import learn.example.pile.service.StartImageCacheService;
 
 import static learn.example.pile.service.StartImageCacheService.CACHE_FILE_NAME;
-import static learn.example.pile.service.StartImageCacheService.KEY_IMAGE_OWN;
+import static learn.example.pile.service.StartImageCacheService.KEY_IMAGE_OWNER;
 
 /**
  * Created on 2016/9/25.
@@ -77,7 +77,7 @@ public class BootActivity extends FullScreenActivity{
         if (bitmap!=null)
         {
             String imageOwn=getSharedPreferences(StartImageCacheService.PREFERENCE_FILE_NAME,Context.MODE_PRIVATE)
-                    .getString(KEY_IMAGE_OWN,null);
+                    .getString(KEY_IMAGE_OWNER,null);
             mImageOwn.setText(imageOwn);
             mImageView.setImageBitmap(bitmap);
         }else {

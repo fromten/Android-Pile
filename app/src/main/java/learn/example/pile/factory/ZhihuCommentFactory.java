@@ -66,7 +66,7 @@ public class ZhihuCommentFactory implements CommentFactory.ProduceInterface {
             String name=reader.nextName();
             switch (name) {
                 case "author":
-                    comment.setAuthor(reader.nextString());
+                    comment.setUserName(reader.nextString());
                     break;
                 case "content":
                     comment.setContent(reader.nextString());
@@ -75,10 +75,10 @@ public class ZhihuCommentFactory implements CommentFactory.ProduceInterface {
                     comment.setLikeNumber(reader.nextInt());
                     break;
                 case "time":
-                    comment.setTime(TimeUtil.formatTime(TimeUtil.FORMAT_YMD_HM,reader.nextInt()));
+                    comment.setCommentTime(TimeUtil.formatTime(TimeUtil.FORMAT_YMD_HM,reader.nextInt()));
                     break;
                 case "avatar":
-                    comment.setUsePic(reader.nextString());
+                    comment.setAvatar(reader.nextString());
                     break;
                 default:
                     reader.skipValue();

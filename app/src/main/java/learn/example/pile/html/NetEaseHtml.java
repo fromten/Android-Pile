@@ -1,9 +1,19 @@
 package learn.example.pile.html;
 
+import android.support.v4.util.SimpleArrayMap;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
+
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.Map;
 
 import learn.example.pile.util.GsonHelper;
 import learn.example.pile.util.HtmlBuilder;
@@ -20,41 +30,34 @@ public class NetEaseHtml implements Html{
         this.docID=docID;
     }
 
-    @Override
-    public String toString()
-    {
-//        StringBuilder builder=new StringBuilder();
-//        JsonObject object=new JsonParser().parse(res).getAsJsonObject();
-//        object=object.getAsJsonObject(docID);
-//
-//        builder.append("<html lang=\"zh-cn\">\n");
-//        builder.append(insertHead());
-//
-//        builder.append("<body>");
-//        builder.append("<div class='main'>");
-//        String title= GsonHelper.getAsString(object.get("title"),null);
-//        builder.append(insertTitle(title));
-//        String body= GsonHelper.getAsString(object.get("body"),null);
-//        JsonArray array=object.getAsJsonArray("img");
-//        body= replaceImages(body,array);
-//        body= replaceVideo(body,object.getAsJsonArray("video"));
-//        builder.append(body);
-//        builder.append("</div>");
-//        builder.append("</body>");
-//        builder.append("</html>");
 
-        return  null;//最后把所有的p标签内空格去掉
+
+    /**
+     * 对应的 键 替换成 值
+     * @param originBody 原来的字符串
+     * @param map 替换对应映射
+     * @return 新的字符串
+     */
+    public String replaceBody(String originBody,SimpleArrayMap<String,String> map) {
+         StringBuilder builder=new StringBuilder(originBody);
+         for (int i=0,l=map.size();i<l;++i)
+         {
+             String key=map.keyAt(i);
+             String value=map.valueAt(i);
+
+             int start=builder.indexOf(key);
+             int end=start+key.length();
+             if (start>-1)
+             builder.replace(start,end,value);
+         }
+        return builder.toString();
     }
 
-
-    private String replaceImages(String oldBody, JsonArray array)
+    public void mapImages(SimpleArrayMap<String,String> out,JsonArray imageArray)
     {
-        if (array==null)
-        {
-            return oldBody;
-        }
-        String newBody;
-        for (JsonElement element:array)
+        if (imageArray==null)return;
+
+        for (JsonElement element:imageArray)
         {
             JsonObject object= (JsonObject) element;
             String alt=GsonHelper.getAsString(object.get("alt"),null);
@@ -64,20 +67,15 @@ public class NetEaseHtml implements Html{
             String tagAttr=HtmlBuilder.attr("src",src);
             String imageTag= HtmlBuilder.tag("image",tagAttr,null);
             imageTag+= HtmlBuilder.tag("b",null,"(图片)"+alt);
-            oldBody=oldBody.replace(ref,imageTag);
+            out.put(ref,imageTag);
         }
-        newBody=oldBody;
-        return newBody;
     }
 
-    private String replaceVideos(String oldBody, JsonArray array)
+    public void mapVideos(SimpleArrayMap<String,String> out,JsonArray videoArray)
     {
-        if (array==null)
-        {
-            return oldBody;
-        }
-        String newBody;
-        for (JsonElement element:array)
+        if (videoArray==null)return;
+
+        for (JsonElement element:videoArray)
         {
             JsonObject object= (JsonObject) element;
             String alt=GsonHelper.getAsString(object.get("alt"),null);
@@ -95,16 +93,16 @@ public class NetEaseHtml implements Html{
             String div= HtmlBuilder.tag("div",divAttr,image1Tag+image2Tag);
 
             div+= HtmlBuilder.tag("b",null,"(视频)"+alt);
-            oldBody=oldBody.replace(ref,div);
+            out.put(ref,div);
         }
-        newBody=oldBody;
-        return newBody;
     }
 
     @Override
     public String getHtml() {
         HtmlBuilder htmlBuilder=new HtmlBuilder();
-        htmlBuilder.startHtml("lang='zh-cn'");
+        htmlBuilder.startHtml("lang='zh-cn'")
+                   .startHead(null)
+                   .endHead();
 
         JsonObject object=new JsonParser().parse(res).getAsJsonObject();
         object=object.getAsJsonObject(docID);
@@ -116,14 +114,17 @@ public class NetEaseHtml implements Html{
         htmlBuilder.appendTag("h2",null,title);
 
         String body= GsonHelper.getAsString(object.get("body"),null);
-        JsonArray array=object.getAsJsonArray("img");
-        body= replaceImages(body,array);
-        body= replaceVideos(body,object.getAsJsonArray("video"));
+        JsonArray imageArray=object.getAsJsonArray("img");
+        JsonArray videoArray=object.getAsJsonArray("video");
+        SimpleArrayMap<String,String> map=new SimpleArrayMap<>();
+        mapImages(map,imageArray);
+        mapVideos(map,videoArray);
+        body= replaceBody(body,map);
 
         htmlBuilder.append(body)
                     .append("</div>")
-                    .endBody().endHtml();;
+                    .endBody().endHtml();
 
-        return htmlBuilder.toString().replaceAll("(?<=<p>)\\s*","");
+        return htmlBuilder.toString().replaceAll("(?<=<p>)\\s*","");//消除<P>标签内的空格
     }
 }

@@ -13,24 +13,36 @@ public class HtmlBuilder {
     public HtmlBuilder startHtml(String attrs)
     {
         mStringBuilder.append("<!DOCTYPE html>");
-        mStringBuilder.append("<html ");
-        mStringBuilder.append(attrs==null?"":attrs);
+        mStringBuilder.append("<html");
+        if (attrs!=null)
+        {
+            mStringBuilder.append(' ');
+            mStringBuilder.append(attrs);
+        }
         mStringBuilder.append(">");
         return this;
     }
 
     public HtmlBuilder startHead(String attrs)
     {
-        mStringBuilder.append("<head ");
-        mStringBuilder.append(attrs==null?"":attrs);
+        mStringBuilder.append("<head");
+        if (attrs!=null)
+        {
+            mStringBuilder.append(' ');
+            mStringBuilder.append(attrs);
+        }
         mStringBuilder.append(">");
         return this;
     }
 
     public HtmlBuilder startBody(String attrs)
     {
-        mStringBuilder.append("<body ");
-        mStringBuilder.append(attrs==null?"":attrs);
+        mStringBuilder.append("<body");
+        if (attrs!=null)
+        {
+            mStringBuilder.append(' ');
+            mStringBuilder.append(attrs);
+        }
         mStringBuilder.append(">");
         return this;
     }
@@ -70,6 +82,14 @@ public class HtmlBuilder {
         return this;
     }
 
+    public HtmlBuilder appendCssLink(String href)
+    {
+        String attrs=attrs("rel","stylesheet","type","text/css","href",href);
+        mStringBuilder.append(tag("link",attrs,null));
+        return this;
+    }
+
+
 
     public  HtmlBuilder appendJS(String js)
     {
@@ -83,12 +103,6 @@ public class HtmlBuilder {
         return this;
     }
 
-    public HtmlBuilder appendCssLink(String href)
-    {
-        String attrs=attrs("rel","stylesheet","type","text/css","href",href);
-        mStringBuilder.append(tag("link",attrs,null));
-        return this;
-    }
 
     @Override
     public String toString() {

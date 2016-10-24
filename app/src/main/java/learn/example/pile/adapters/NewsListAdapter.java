@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import java.util.Collection;
-import java.util.List;
 
 import learn.example.pile.R;
 import learn.example.pile.adapters.base.ParcelableStateAdapter;

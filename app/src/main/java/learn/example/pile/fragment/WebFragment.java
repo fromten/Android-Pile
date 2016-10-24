@@ -73,7 +73,8 @@ public class WebFragment extends Fragment {
      */
     public void loadLocalDataWithDefCss(String html)
     {
-        String link= HtmlBuilder.cssLinkTag("app.css");
+        String attrs=HtmlBuilder.attrs("rel","stylesheet","type","text/css","href","app.css");
+        String link= HtmlBuilder.tag("link",attrs,null);
         String insertCss=html.replaceFirst("</head>",link+"</head>");
         mWebView.loadDataWithBaseURL("file:///android_asset/", insertCss, "text/html", "UTF-8", null);
     }

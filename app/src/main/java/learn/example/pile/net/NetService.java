@@ -1,7 +1,6 @@
 package learn.example.pile.net;
 
 
-import android.support.v4.util.ArrayMap;
 import android.support.v4.util.SimpleArrayMap;
 
 
@@ -19,12 +18,25 @@ public class NetService implements IService{
     public void newStringRequest(final String tag, String url, final IService.Callback<String> callback)
     {
         Request request=new Request.Builder().url(url).build();
-        newRequest(tag,String.class,request,callback);
+        newStringRequest(tag,request,callback);
     }
 
     public void newStringRequest(final String tag, Request request, final IService.Callback<String> callback)
     {
-       newRequest(tag,String.class,request,callback);
+        final Call call=OkHttpRequest.getInstanceUnsafe().newStringRequest(request, new OkHttpRequest.RequestCallback<String>() {
+            @Override
+            public void onSuccess(String res) {
+                callback.onSuccess(res);
+                remove(tag);
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                callback.onFailure(msg);
+                remove(tag);
+            }
+        });
+        addToMap(tag,call);
     }
 
     public <T> void newRequest(final String tag, Class<T> clazz, String url, final IService.Callback<T> callback)

@@ -22,7 +22,7 @@ public interface ContentRenderer {
     boolean onHasCommentMenu();
 
     /**
-     * 创建评论Fragment,在ReaderActivity 界面上显示评论菜单项
+     * 创建评论Fragment
      * @return fragment
      */
     Fragment onCreateCommentFragment();

@@ -20,8 +20,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import learn.example.pile.R;
 import learn.example.pile.util.GlideUtil;
 
-import static android.R.attr.type;
-
 /**
  * Created on 2016/8/15.
  */

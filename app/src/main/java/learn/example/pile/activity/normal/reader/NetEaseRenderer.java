@@ -34,7 +34,9 @@ public class NetEaseRenderer  implements ContentRenderer {
         String[] array=activity.getIntent().getStringArrayExtra(ReaderActivity.KEY_NETEASE_CONTENT_ID);
         this.boardid =array[0];
         this.docid =array[1];
-        String historyHtml=readHistoryData();
+        String historyHtml=readHistoricalData();
+
+
         if (historyHtml!=null)
         {
             mReaderActivity.onRenderCompleted(insertListener(historyHtml),true);
@@ -44,7 +46,7 @@ public class NetEaseRenderer  implements ContentRenderer {
 
     }
 
-    public String readHistoryData()
+    public String readHistoricalData()
     {
        NewsArticle article= new Select().from(NewsArticle.class)
                 .where("docid= ?",docid)

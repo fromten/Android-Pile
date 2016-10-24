@@ -38,18 +38,18 @@ public class Comment  {
 
     public static class CommentItem implements Parcelable
     {
-        private String author;
+        private String userName;
         private int likeNumber;
-        private String time;
-        private String usePic;
+        private String commentTime;
+        private String avatar;
         private String address;
         private String content;
 
-        public CommentItem(String author, int likeNumber, String time, String usePic, String address, String content) {
-            this.author = author;
+        public CommentItem(String userName, int likeNumber, String commentTime, String avatar, String address, String content) {
+            this.userName = userName;
             this.likeNumber = likeNumber;
-            this.time = time;
-            this.usePic = usePic;
+            this.commentTime = commentTime;
+            this.avatar = avatar;
             this.address = address;
             this.content = content;
         }
@@ -59,20 +59,20 @@ public class Comment  {
 
         }
 
-        public String getAuthor() {
-            return author;
+        public String getUserName() {
+            return userName;
         }
 
         public int getLikeNumber() {
             return likeNumber;
         }
 
-        public String getTime() {
-            return time;
+        public String getCommentTime() {
+            return commentTime;
         }
 
-        public String getUsePic() {
-            return usePic;
+        public String getAvatar() {
+            return avatar;
         }
 
         public String getAddress() {
@@ -83,20 +83,20 @@ public class Comment  {
             return content;
         }
 
-        public void setAuthor(String author) {
-            this.author = author;
+        public void setUserName(String userName) {
+            this.userName = userName;
         }
 
         public void setLikeNumber(int likeNumber) {
             this.likeNumber = likeNumber;
         }
 
-        public void setTime(String time) {
-            this.time = time;
+        public void setCommentTime(String commentTime) {
+            this.commentTime = commentTime;
         }
 
-        public void setUsePic(String usePic) {
-            this.usePic = usePic;
+        public void setAvatar(String avatar) {
+            this.avatar = avatar;
         }
 
         public void setAddress(String address) {
@@ -115,19 +115,19 @@ public class Comment  {
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
-            dest.writeString(this.author);
+            dest.writeString(this.userName);
             dest.writeInt(this.likeNumber);
-            dest.writeString(this.time);
-            dest.writeString(this.usePic);
+            dest.writeString(this.commentTime);
+            dest.writeString(this.avatar);
             dest.writeString(this.address);
             dest.writeString(this.content);
         }
 
         protected CommentItem(Parcel in) {
-            this.author = in.readString();
+            this.userName = in.readString();
             this.likeNumber = in.readInt();
-            this.time = in.readString();
-            this.usePic = in.readString();
+            this.commentTime = in.readString();
+            this.avatar = in.readString();
             this.address = in.readString();
             this.content = in.readString();
         }

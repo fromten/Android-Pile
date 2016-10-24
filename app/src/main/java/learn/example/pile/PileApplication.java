@@ -8,7 +8,6 @@ import com.squareup.leakcanary.LeakCanary;
  */
 public class PileApplication extends com.activeandroid.app.Application {
 
-    public static final boolean DEBUG=false;
 
     @Override
     public void onCreate() {

@@ -2,7 +2,6 @@ package learn.example.pile.net;
 
 import learn.example.pile.jsonbean.OpenEyeVideo;
 import learn.example.pile.provider.OpenEyes;
-import okhttp3.Request;
 
 /**
  * Created on 2016/7/22.

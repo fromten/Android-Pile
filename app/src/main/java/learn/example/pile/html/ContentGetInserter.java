@@ -15,7 +15,7 @@ public class ContentGetInserter implements JavaScriptInserter {
     @Override
     public String getJavaScript() {
         return "var page=document.documentElement.outerHTML;\n"+
-                "ContentGetInserter.passHtml(String(page));\n";
+                "ContentGetInserter.passHtml(String(page));";
     }
 
     @JavascriptInterface

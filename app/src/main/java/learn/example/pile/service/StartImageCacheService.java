@@ -1,15 +1,8 @@
 package learn.example.pile.service;
 
 import android.app.IntentService;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Binder;
-import android.os.IBinder;
-import android.support.annotation.Nullable;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -32,8 +25,8 @@ public class StartImageCacheService extends IntentService {
 
     public static final String URL_JSON_START_IMAGE="http://news-at.zhihu.com/api/4/start-image";
     public static final String CACHE_FILE_NAME="startImageCacheABCD";
-    public static final String KEY_IMAGE_OWN="bootactivity_start_image_own";
-    public static final String PREFERENCE_FILE_NAME="service_preference_file";
+    public static final String KEY_IMAGE_OWNER ="bootactivity_start_image_owner";
+    public static final String PREFERENCE_FILE_NAME="service_preference";
 
     private String mImageUrl;
 
@@ -109,7 +102,7 @@ public class StartImageCacheService extends IntentService {
             final String text=GsonHelper.getAsString(object.get("text"),null);
 
             getSharedPreferences(PREFERENCE_FILE_NAME,Context.MODE_PRIVATE)
-                    .edit().putString(KEY_IMAGE_OWN,text).apply();
+                    .edit().putString(KEY_IMAGE_OWNER,text).apply();
             return imageUrl;
         }
         return null;

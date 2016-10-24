@@ -16,8 +16,7 @@ public class JokeService extends NetService {
     public void getTuijianJoke(int count,int screenWidth,IService.Callback<JokeBean> callback)
     {
         String url= JokeProvider.createHotUrl(count,screenWidth);
-        Request req=new Request.Builder().url(url).build();
-        newRequest(TAG,JokeBean.class,req,callback);
+        newRequest(TAG,JokeBean.class,url,callback);
     }
 
     public void getComment(int start,int len,String groupID,IService.Callback<String> callback)

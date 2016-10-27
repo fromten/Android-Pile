@@ -18,6 +18,11 @@
         <item name="android:textColorLink">@color/blue_light</item>
     </style>
 
+    <style name="LightActionBarTheme" parent="BaseAppTheme">
+        <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+    </style>
+
     <style name="FullScreenTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="windowActionBarOverlay">true</item>
         <item name="android:windowAnimationStyle">@style/SlideAnimationStyle</item>

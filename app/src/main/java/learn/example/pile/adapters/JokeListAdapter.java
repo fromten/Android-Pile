@@ -184,7 +184,7 @@ public class JokeListAdapter extends GsonStateAdapter<JokeBean.DataBean.DataList
                 ActivityLauncher.startPhotoActivityForSingle(mContext,url);
             }
         }else {
-            ActivityLauncher.startDetailActivity(mContext,new Gson().toJson(item));
+            ActivityLauncher.startDetailJokeActivity(mContext,new Gson().toJson(item));
         }
     }
 

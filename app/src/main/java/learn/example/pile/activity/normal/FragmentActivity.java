@@ -1,6 +1,8 @@
 package learn.example.pile.activity.normal;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,7 +15,7 @@ import learn.example.pile.activity.base.ToolBarActivity;
 /**
  * Created on 2016/9/16.
  */
-public class CommentActivity extends ToolBarActivity {
+public class FragmentActivity extends ToolBarActivity {
 
     //fragment类的名字
     public static final String KEY_FRAGMENT_CLASS_NAME="fragment_class_name";
@@ -23,31 +25,40 @@ public class CommentActivity extends ToolBarActivity {
      */
     public static final String KEY_FRAGMENT_ARGUMENTS="fragment_argus";
 
-
+    private static final String TAG_FRAGMENT="fragment_comment_tag";
 
     private FrameLayout mFrameLayout;
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle(null);
+        setActionBarBackgroundColor(Color.TRANSPARENT);
         mFrameLayout=new FrameLayout(this);
         mFrameLayout.setId(R.id.root);
         setContentView(mFrameLayout);
-        showAndCreateCommentFragment();
+
+        if(getSupportFragmentManager().findFragmentByTag(TAG_FRAGMENT)==null)
+        {
+            showAndCreateFragment();
+        }
+
     }
 
-    public void showAndCreateCommentFragment() {
+    public void showAndCreateFragment() {
         Intent intent=getIntent();
         if (intent.hasExtra(KEY_FRAGMENT_CLASS_NAME))
         {
             String name=intent.getStringExtra(KEY_FRAGMENT_CLASS_NAME);
             Bundle argus=intent.getBundleExtra(KEY_FRAGMENT_ARGUMENTS);
             try {
-                Class<Fragment> fragment= (Class<Fragment>) Class.forName(name);
-                Fragment comment= fragment.newInstance();
-                comment.setArguments(argus);
+                Class<Fragment> clazz= (Class<Fragment>) Class.forName(name);
+                Fragment fragment= clazz.newInstance();
+                fragment.setArguments(argus);
+
                 getSupportFragmentManager().beginTransaction()
-                        .add(R.id.root,comment)
+                        .add(R.id.root,fragment,TAG_FRAGMENT)
                         .commit();
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
@@ -63,4 +74,16 @@ public class CommentActivity extends ToolBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         return true;
     }
+
+
+    public static Intent makeIntent(Context context,String fragmentClassName, Bundle fragmentArgus)
+    {
+        Intent intent=new Intent(context,FragmentActivity.class);
+        intent.putExtra(KEY_FRAGMENT_CLASS_NAME,fragmentClassName);
+        intent.putExtra(KEY_FRAGMENT_ARGUMENTS,fragmentArgus);
+        return intent;
+    }
+
+
+
 }

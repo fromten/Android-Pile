@@ -52,6 +52,7 @@ public class OkHttpRequest{
         }
         mOkHttpClient =builder.connectTimeout(DEF_TIME_OUT,TimeUnit.SECONDS)
                              .readTimeout(DEF_TIME_OUT,TimeUnit.SECONDS)
+                             .addInterceptor(new NetLogInterceptor())
                              .writeTimeout(DEF_TIME_OUT*2,TimeUnit.SECONDS)
                              .build();
         mHandler=new Handler(Looper.getMainLooper());

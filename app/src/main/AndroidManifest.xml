@@ -33,10 +33,6 @@
         <activity android:name=".activity.normal.MainActivity"
                   android:launchMode="singleTask"/>
 
-        <activity android:name=".activity.normal.WebViewActivity"
-                  android:process="learn.example.pile.PileApplication.WebActivity"
-                  android:label=""/>
-
         <activity android:name=".activity.normal.VideoActivity"
                   android:configChanges="orientation|screenSize"
                   android:label="视频"/>
@@ -53,9 +49,11 @@
         <activity android:name=".activity.normal.DetailJokeActivity"
                   android:label="详细"/>
 
-        <activity android:name=".activity.normal.CommentActivity"/>
+        <activity android:name=".activity.normal.FragmentActivity"
+                  android:theme="@style/LightActionBarTheme"  />
 
-        <activity android:name=".activity.normal.reader.ReaderActivity"/>
+
+        <activity android:name=".activity.normal.ZhihuReaderActivity"/>
         <service android:name=".service.StartImageCacheService"/>
     </application>
 

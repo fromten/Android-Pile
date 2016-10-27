@@ -38,8 +38,9 @@ public class NewsListAdapter extends ParcelableStateAdapter<NetEaseNews.NewsItem
                 ActivityLauncher.startPhotoActivityForNetEase(v.getContext(),item.getSkipID());
             }else {
                 //启动新闻阅读器
-                String[] array=new String[]{item.getBoardid(),item.getDocid()};
-                ActivityLauncher.startReaderActivityForNetEase(v.getContext(),array);
+                String docId=item.getDocid();
+                String boardId=item.getBoardid();
+                ActivityLauncher.startNetEaseReaderActivity(v.getContext(),docId,boardId);
             }
 
         }

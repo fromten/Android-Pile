@@ -15,6 +15,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.io.File;
+
+import learn.example.pile.BuildConfig;
 import learn.example.pile.R;
 import learn.example.pile.activity.base.FullScreenActivity;
 import learn.example.pile.service.StartImageCacheService;
@@ -27,6 +29,9 @@ import static learn.example.pile.service.StartImageCacheService.KEY_IMAGE_OWNER;
  */
 
 public class BootActivity extends FullScreenActivity{
+
+    private static final boolean DEBUG= BuildConfig.DEBUG;
+
     private ImageView mImageView;
     private ProgressBar mProgressBar;
     private TextView mImageOwn;
@@ -36,12 +41,17 @@ public class BootActivity extends FullScreenActivity{
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (DEBUG)
+        {
+            startMainActivity();
+            return;
+        }
         setContentView(R.layout.activity_boot);
         setTitle(null);
         hideActionBar();
         mImageView= (ImageView) findViewById(R.id.image);
         mProgressBar= (ProgressBar) findViewById(R.id.progress);
-        mImageOwn= (TextView) findViewById(R.id.image_own);
+        mImageOwn= (TextView) findViewById(R.id.image_owner);
         setNextCacheAlarm();
         setStartImage();
         startCountDown();
@@ -110,7 +120,10 @@ public class BootActivity extends FullScreenActivity{
 
     @Override
     protected void onDestroy() {
-        mValueAnimator.cancel();
+        if (mValueAnimator!=null)//在Debug模式可能Null
+        {
+            mValueAnimator.cancel();
+        }
         super.onDestroy();
     }
 

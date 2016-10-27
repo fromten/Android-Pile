@@ -30,4 +30,10 @@ public class NetEaseNewsService extends NetService {
         String url=NetEase.generateNormalCommentUrl(boradId,docId,start,length);
         newStringRequest(TAG,url,callback);
     }
+
+    public void getArticle(String docId,Callback<String> callback)
+    {
+        String url=String.format(NetEase.ARTICLE_URL2,docId);
+        newStringRequest(TAG,url,callback);
+    }
 }

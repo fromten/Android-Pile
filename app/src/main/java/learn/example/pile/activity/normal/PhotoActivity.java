@@ -206,7 +206,7 @@ public class PhotoActivity extends CommentMenuActivity {
             {
                 Intent intent=getIntent();
 
-                intent.putExtra(CommentActivity.KEY_FRAGMENT_CLASS_NAME,NetEaseCommentFragment.class.getName());
+                intent.putExtra(FragmentActivity.KEY_FRAGMENT_CLASS_NAME,NetEaseCommentFragment.class.getName());
 
                 Bundle args=new Bundle();
                 String board=GsonHelper.getAsString(object.get("boardid"),null);
@@ -214,7 +214,7 @@ public class PhotoActivity extends CommentMenuActivity {
                 args.putString(NetEaseCommentFragment.KEY_DOCID,postId);
                 args.putString(NetEaseCommentFragment.KEY_BOARDID,board);
 
-                intent.putExtra(CommentActivity.KEY_FRAGMENT_ARGUMENTS,args);
+                intent.putExtra(FragmentActivity.KEY_FRAGMENT_ARGUMENTS,args);
 
 
                 //网络请求时间不确定,可能菜单不会创建,需要重新创建菜单

@@ -16,7 +16,7 @@
         android:textColor="@android:color/white"
         android:textStyle="bold"
         android:layout_margin="30dp"
-        android:id="@+id/image_own"/>
+        android:id="@+id/image_owner"/>
 
     <ProgressBar
         style="?android:attr/progressBarStyleHorizontal"

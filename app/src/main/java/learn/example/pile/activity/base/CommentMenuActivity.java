@@ -5,18 +5,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import learn.example.pile.R;
-import learn.example.pile.activity.normal.CommentActivity;
+import learn.example.pile.activity.normal.FragmentActivity;
 
 /**
- * 帮助类,创建评论菜单,点击时会开启新的CommentActivity;
- * @see CommentActivity
+ * 帮助类,创建评论菜单,点击时会开启新的FragmentActivity;
+ * @see FragmentActivity
  */
 public abstract class CommentMenuActivity extends FullScreenActivity {
 
 
     public void startCommentActivity() {
         Intent intent=getIntent();
-        intent.setClass(this,CommentActivity.class);
+        intent.setClass(this,FragmentActivity.class);
         startActivity(intent);
     }
 
@@ -32,9 +32,8 @@ public abstract class CommentMenuActivity extends FullScreenActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (getIntent().hasExtra(CommentActivity.KEY_FRAGMENT_CLASS_NAME))
+        if (getIntent().hasExtra(FragmentActivity.KEY_FRAGMENT_CLASS_NAME))
         {
-            //支持评论将显示菜单评论按钮
             getMenuInflater().inflate(R.menu.video_menu,menu);
             return true;
         }

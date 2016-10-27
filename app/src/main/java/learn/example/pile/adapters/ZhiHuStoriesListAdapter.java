@@ -25,7 +25,7 @@ public class ZhiHuStoriesListAdapter extends ParcelableStateAdapter<ZhihuStories
         @Override
         public void onClick(View v) {
             int id= (int) v.getTag();
-            ActivityLauncher.startReaderActivityForZhihu(v.getContext(),id);
+            ActivityLauncher.startZhihuReaderActivity(v.getContext(),id);
         }
     };
 

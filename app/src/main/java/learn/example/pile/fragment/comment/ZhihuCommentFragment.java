@@ -15,7 +15,7 @@ import learn.example.pile.pojo.Comment;
  */
 public class ZhihuCommentFragment extends CommentFragment implements IService.Callback<String> {
 
-    private static final String KEY_DOCID = "zhihudocid";
+    public static final String KEY_DOCID = "zhihudocid";
 
     private int docID;
     private ZhihuContentService mCommentService;

@@ -32,7 +32,7 @@
                 app:layout_collapseMode="parallax"/>
 
             <TextView
-                android:id="@+id/img_source"
+                android:id="@+id/image_owner"
                 style="@style/SmallText"
                 android:textColor="@color/white"
                 android:layout_width="wrap_content"
@@ -49,12 +49,23 @@
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <fragment
-        android:id="@+id/read_main_show"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="learn.example.pile.fragment.WebFragment"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:id="@+id/content_wrap">
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/nest_scroll_view"
+            android:scrollbars="vertical">
+            <WebView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/web_view"/>
+        </android.support.v4.widget.NestedScrollView>
+    </FrameLayout>
+
 </android.support.design.widget.CoordinatorLayout>
 
 

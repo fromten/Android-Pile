@@ -78,7 +78,7 @@ public class JokeListAdapter extends GsonStateAdapter<JokeBean.DataBean.DataList
             holder=new JokeSingleViewHolder(parent);
             ((JokeSingleViewHolder)holder).cover.setOnClickListener(this);
         }else {
-            View view=LayoutInflater.from(mContext).inflate(R.layout.adapter_joke_normal,parent,false);
+            View view=LayoutInflater.from(mContext).inflate(R.layout.item_joke_normal,parent,false);
             holder=new JokeViewHolder(view);
         }
         holder.itemView.setOnClickListener(this);
@@ -212,7 +212,7 @@ public class JokeListAdapter extends GsonStateAdapter<JokeBean.DataBean.DataList
         public ImageView ic_play;
         public TextView hint;
         public JokeSingleViewHolder(ViewGroup parent) {
-            this(LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_joke_single, parent, false));
+            this(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_joke_single, parent, false));
         }
 
         public JokeSingleViewHolder(View itemView) {
@@ -230,7 +230,7 @@ public class JokeListAdapter extends GsonStateAdapter<JokeBean.DataBean.DataList
 
 
         public JokeMultipleViewHolder(ViewGroup parent) {
-            this(LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_joke_multiple, parent, false));
+            this(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_joke_multiple, parent, false));
         }
 
         public JokeMultipleViewHolder(View itemView) {

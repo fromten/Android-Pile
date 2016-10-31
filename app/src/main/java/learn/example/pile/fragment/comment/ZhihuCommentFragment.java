@@ -15,7 +15,7 @@ import learn.example.pile.pojo.Comment;
  */
 public class ZhihuCommentFragment extends CommentFragment implements IService.Callback<String> {
 
-    public static final String KEY_DOCID = "zhihudocid";
+    public static final String ARGUMENT_DOCID = "ARGUMENT_DOCID";
 
     private int docID;
     private ZhihuContentService mCommentService;
@@ -25,7 +25,7 @@ public class ZhihuCommentFragment extends CommentFragment implements IService.Ca
     public static ZhihuCommentFragment newInstance(int zhihuDocID) {
 
         Bundle args = new Bundle();
-        args.putInt(KEY_DOCID, zhihuDocID);
+        args.putInt(ARGUMENT_DOCID, zhihuDocID);
         ZhihuCommentFragment fragment = new ZhihuCommentFragment();
         fragment.setArguments(args);
         return fragment;
@@ -38,7 +38,7 @@ public class ZhihuCommentFragment extends CommentFragment implements IService.Ca
             return;
         }
         super.onViewCreated(view, savedInstanceState);
-        docID = args.getInt(KEY_DOCID);
+        docID = args.getInt(ARGUMENT_DOCID);
         mCommentService = new ZhihuContentService();
         if (savedInstanceState == null) {
             mCommentService.getLongComment(docID, this);

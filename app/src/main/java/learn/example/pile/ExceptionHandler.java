@@ -14,8 +14,8 @@ import learn.example.pile.util.TimeUtil;
  */
 public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
 
-    private final int FILE_MAX_SIZE=2*1024*1024;//2M
-    private String dirName="exception_catch";
+    private static final int FILE_MAX_SIZE=2*1024*1024;//2M
+    private static final String DIR_NAME="exception_catch";
     private File mDir;
 
     private Thread.UncaughtExceptionHandler androidDefExceptionHandler;
@@ -24,7 +24,7 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
         androidDefExceptionHandler=Thread.getDefaultUncaughtExceptionHandler();
 
         File externalFile=context.getExternalFilesDir(null);
-        mDir=new File(externalFile,dirName);
+        mDir=new File(externalFile,DIR_NAME);
         if (!mDir.exists())
         {
            if (!mDir.mkdir()){
@@ -42,7 +42,7 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
               {
                   len+=file.length();
               }
-              if (len>=FILE_MAX_SIZE)//3M
+              if (len>=FILE_MAX_SIZE)
               {
                   for (File file:mDir.listFiles())
                   {

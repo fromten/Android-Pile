@@ -19,15 +19,15 @@ import learn.example.pile.util.DeviceInfo;
  */
 public class AppGlideModule implements GlideModule {
 
-    public static final String diskCacheName="img_cache";
-    public static String diskCacheFilePath;
+    public static final String DISK_CACHE_NAME ="img_cache";
+    public static String sDiskCacheFilePath;
 
 
     @Override
     public void applyOptions(Context context, GlideBuilder builder) {
         int byte300mb=300*1024*1024;
-        diskCacheFilePath=getStoreFile(context).getPath()+"/"+diskCacheName;
-        builder.setDiskCache(new DiskLruCacheFactory(diskCacheFilePath,byte300mb));
+        sDiskCacheFilePath =getStoreFile(context).getPath()+"/"+ DISK_CACHE_NAME;
+        builder.setDiskCache(new DiskLruCacheFactory(sDiskCacheFilePath,byte300mb));
     }
 
     @Override

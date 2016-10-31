@@ -5,7 +5,7 @@
                 android:background="?android:attr/selectableItemBackground"
                 android:padding="@dimen/normal">
 
-    <include layout="@layout/adapter_joke_top"
+    <include layout="@layout/item_joke_top"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"/>
 
@@ -25,7 +25,7 @@
             android:layout_height="@dimen/avatar_img_height"
             android:layout_centerInParent="true"
             android:id="@+id/ic_play"
-            android:src="@drawable/image_playbutton"/>
+            android:src="@drawable/ic_playbutton"/>
         <TextView
             style="@style/SmallText"
             android:layout_width="wrap_content"
@@ -38,7 +38,7 @@
             android:layout_alignRight="@id/cover"/>
     </RelativeLayout>
 
-    <include layout="@layout/adapter_joke_bottom"
+    <include layout="@layout/item_joke_bottom"
              android:layout_below="@+id/content"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"/>

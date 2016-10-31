@@ -10,9 +10,9 @@
 <li>Gson Json数据解析</li>
 </ul>
 ##  
- <image  src="https://github.com/fromten/Android-Pile/blob/master/screenshots/list-video.png" width=300 height=450/>
- <image  src="https://github.com/fromten/Android-Pile/blob/master/screenshots/list-news.png" width=300 height=450/>
- <image  src="https://github.com/fromten/Android-Pile/blob/master/screenshots/reader-zhihu.png" width=300 height=450/>
+ <image  src="screenshots/list-video.png" width=300 height=450/>
+ <image  src="screenshots/list-news.png" width=300 height=450/>
+ <image  src="screenshots/reader-zhihu.png" width=300 height=450/>
  
 
 ##Api提供者:

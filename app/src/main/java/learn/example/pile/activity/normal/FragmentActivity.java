@@ -18,14 +18,14 @@ import learn.example.pile.activity.base.ToolBarActivity;
 public class FragmentActivity extends ToolBarActivity {
 
     //fragment类的名字
-    public static final String KEY_FRAGMENT_CLASS_NAME="fragment_class_name";
+    public static final String EXTRA_FRAGMENT_CLASS_NAME ="EXTRA_FRAGMENT_CLASS_NAME";
 
     /**
      *   fragment 的参数 {@code  Fragment.setArguments(argus);}
      */
-    public static final String KEY_FRAGMENT_ARGUMENTS="fragment_argus";
+    public static final String EXTRA_FRAGMENT_ARGUMENTS ="EXTRA_FRAGMENT_ARGUMENTS";
 
-    private static final String TAG_FRAGMENT="fragment_comment_tag";
+    private static final String TAG_FRAGMENT="FRAGMENT_ACTIVITY_TAG_FRAGMENT";
 
     private FrameLayout mFrameLayout;
 
@@ -34,7 +34,7 @@ public class FragmentActivity extends ToolBarActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle(null);
-        setActionBarBackgroundColor(Color.TRANSPARENT);
+        setToolBarBackgroundColor(Color.TRANSPARENT);
         mFrameLayout=new FrameLayout(this);
         mFrameLayout.setId(R.id.root);
         setContentView(mFrameLayout);
@@ -48,10 +48,10 @@ public class FragmentActivity extends ToolBarActivity {
 
     public void showAndCreateFragment() {
         Intent intent=getIntent();
-        if (intent.hasExtra(KEY_FRAGMENT_CLASS_NAME))
+        if (intent.hasExtra(EXTRA_FRAGMENT_CLASS_NAME))
         {
-            String name=intent.getStringExtra(KEY_FRAGMENT_CLASS_NAME);
-            Bundle argus=intent.getBundleExtra(KEY_FRAGMENT_ARGUMENTS);
+            String name=intent.getStringExtra(EXTRA_FRAGMENT_CLASS_NAME);
+            Bundle argus=intent.getBundleExtra(EXTRA_FRAGMENT_ARGUMENTS);
             try {
                 Class<Fragment> clazz= (Class<Fragment>) Class.forName(name);
                 Fragment fragment= clazz.newInstance();
@@ -79,8 +79,8 @@ public class FragmentActivity extends ToolBarActivity {
     public static Intent makeIntent(Context context,String fragmentClassName, Bundle fragmentArgus)
     {
         Intent intent=new Intent(context,FragmentActivity.class);
-        intent.putExtra(KEY_FRAGMENT_CLASS_NAME,fragmentClassName);
-        intent.putExtra(KEY_FRAGMENT_ARGUMENTS,fragmentArgus);
+        intent.putExtra(EXTRA_FRAGMENT_CLASS_NAME,fragmentClassName);
+        intent.putExtra(EXTRA_FRAGMENT_ARGUMENTS,fragmentArgus);
         return intent;
     }
 

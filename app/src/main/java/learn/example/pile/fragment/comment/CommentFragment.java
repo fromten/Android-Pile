@@ -56,20 +56,20 @@ public class CommentFragment extends BaseListFragment {
         super.handleRequestError();
 
         //当前不可见时,意味着当前adapter数据不为空,忽略处理
-        if (mWaitEmptyViewHolder.mRoot.getVisibility()==View.INVISIBLE)
+        if (mWaitEmptyViewHolder==null||mWaitEmptyViewHolder.mRoot.getVisibility()==View.INVISIBLE)
         {
             return;
         }
-        mWaitEmptyViewHolder.mEmptyView.setText("请求失败点击重试");
+        mWaitEmptyViewHolder.mTextView.setText("请求失败点击重试");
         mWaitEmptyViewHolder.mRoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //如果长度小于等于7,表示当前的文本为 "重新加载..."
-                if (mWaitEmptyViewHolder.mEmptyView.getText().length()<=7)
+                //如果长度小于等于7,表示当前的文本为 "重新加载..."(防止重复点击)
+                if (mWaitEmptyViewHolder.mTextView.getText().length()<=7)
                 {
                     return;
                 }
-                mWaitEmptyViewHolder.mEmptyView.setText("重新加载...");
+                mWaitEmptyViewHolder.mTextView.setText("重新加载...");
                 onRefresh();
             }
         });
@@ -78,19 +78,42 @@ public class CommentFragment extends BaseListFragment {
     @Override
     protected void handleRequestSuccess() {
         super.handleRequestSuccess();
-        mWaitEmptyViewHolder.mEmptyView.setText(null);
-        mWaitEmptyViewHolder.mRoot.setOnClickListener(null);
+        View view=getView();
+        if (view!=null)
+        {
+            ((ViewGroup)view).removeViewInLayout(mWaitEmptyViewHolder.mRoot);
+            mWaitEmptyViewHolder=null;
+        }
     }
 
+    /**
+     * 通知没有可获得的评论
+     * 调用此方法后应该不再调用 notifySuccess()或notifyError() 方法
+     */
+    public void notifyNonComment()
+    {
+        if (mWaitEmptyViewHolder!=null)
+        {
+            mWaitEmptyViewHolder.showFailImageWithText("暂时没有评论");
+        }
+        disableLoadMore();
+    }
 
     public static class WaitEmptyViewHolder {
         private LinearLayout mRoot;
         private ProgressBar mProgressBar;
-        private TextView mEmptyView;
+        private TextView mTextView;
         public WaitEmptyViewHolder(ViewGroup parent) {
            mRoot= (LinearLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.progress_text_layout,parent,false);
            mProgressBar= (ProgressBar) mRoot.findViewById(R.id.progressBar);
-           mEmptyView= (TextView) mRoot.findViewById(R.id.text);
+           mTextView= (TextView) mRoot.findViewById(R.id.text);
+        }
+
+        public void showFailImageWithText(CharSequence charSequence)
+        {
+            mProgressBar.setVisibility(View.INVISIBLE);
+            mTextView.setCompoundDrawablesWithIntrinsicBounds(0,R.mipmap.emoticon_sad,0,0);
+            mTextView.setText(charSequence);
         }
     }
 }

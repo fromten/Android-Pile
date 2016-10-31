@@ -2,12 +2,9 @@ package learn.example.pile.activity.normal;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -37,8 +34,8 @@ import learn.example.pile.net.ZhihuContentService;
 
 public class ZhihuReaderActivity extends AppCompatActivity implements IService.Callback<ZhihuNewsContent> {
 
-    public static final String KEY_ZHIHU_DOC_ID="zhihu_doc_id";
-    private static final String TAG_FRAGMENT_COMMENT="tag_fragment_comment";
+    public static final String EXTRA_ZHIHU_DOC_ID ="EXTRA_ZHIHU_DOC_ID";
+
 
     private AppBarLayout mAppBarLayout;
     private CoordinatorLayout mCoordinatorLayout;
@@ -56,7 +53,7 @@ public class ZhihuReaderActivity extends AppCompatActivity implements IService.C
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle(null);
-        setContentView(R.layout.activity_reader);
+        setContentView(R.layout.activity_zhihu_reader);
         bindView();
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -94,7 +91,7 @@ public class ZhihuReaderActivity extends AppCompatActivity implements IService.C
     private void requestService()
     {
         Intent intent=getIntent();
-        docId=intent.getIntExtra(KEY_ZHIHU_DOC_ID,0);
+        docId=intent.getIntExtra(EXTRA_ZHIHU_DOC_ID,0);
         if (docId!=0)
         {
             mZhihuContentService=new ZhihuContentService();
@@ -131,7 +128,7 @@ public class ZhihuReaderActivity extends AppCompatActivity implements IService.C
     public void startCommentFragment()
     {
         Bundle args = new Bundle();
-        args.putInt(ZhihuCommentFragment.KEY_DOCID, docId);
+        args.putInt(ZhihuCommentFragment.ARGUMENT_DOCID, docId);
         String name= ZhihuCommentFragment.class.getCanonicalName();
         Intent intent=FragmentActivity.makeIntent(this,name,args);
         startActivity(intent);

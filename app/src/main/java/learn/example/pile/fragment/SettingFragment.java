@@ -78,7 +78,7 @@ public class SettingFragment extends Fragment {
      * @return
      */
     public String readGlideDiskCacheSize() {
-        File file = new File(AppGlideModule.diskCacheFilePath);
+        File file = new File(AppGlideModule.sDiskCacheFilePath);
         long size = 0;
         for (File cf : file.listFiles()) {
             size += cf.length();

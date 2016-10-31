@@ -15,10 +15,10 @@ import learn.example.pile.adapters.base.ParcelableStateAdapter;
 /**
  * Created on 2016/8/19.
  */
-public class SaveAdapterStateFragment extends RVListFragment {
+public class SaveStateAdapterFragment extends RVListFragment {
 
-    public static final String KEY_SAVE_PARCELABLE = "base_parcelable";
-    public static final String KEY_SAVE_JSON = "base_json";
+    public static final String STATE_PARCELABLE = "STATE_PARCELABLE";
+    public static final String STATE_JSON = "STATE_JSON";
 
     private RecyclerView.Adapter mStateSaveAdapter;
 
@@ -29,11 +29,11 @@ public class SaveAdapterStateFragment extends RVListFragment {
         {
             if (mStateSaveAdapter instanceof ParcelableStateAdapter)
             {  //恢复适配器状态
-                List<? extends Parcelable> list=savedInstanceState.getParcelableArrayList(KEY_SAVE_PARCELABLE);
+                List<? extends Parcelable> list=savedInstanceState.getParcelableArrayList(STATE_PARCELABLE);
                 ((ParcelableStateAdapter) mStateSaveAdapter).addAll(list);
             }else if (mStateSaveAdapter instanceof GsonStateAdapter)
             {
-                String json=savedInstanceState.getString(KEY_SAVE_JSON);
+                String json=savedInstanceState.getString(STATE_JSON);
                 ((GsonStateAdapter) mStateSaveAdapter).restoreSaveState(json);
             }
         }
@@ -44,11 +44,11 @@ public class SaveAdapterStateFragment extends RVListFragment {
     public void onSaveInstanceState(Bundle outState) {
         if (mStateSaveAdapter instanceof ParcelableStateAdapter)
         {   //保存适配器状态
-            outState.putParcelableArrayList(KEY_SAVE_PARCELABLE,
+            outState.putParcelableArrayList(STATE_PARCELABLE,
                     (ArrayList<? extends Parcelable>) ((ParcelableStateAdapter) mStateSaveAdapter).getList());
         }else if (mStateSaveAdapter instanceof GsonStateAdapter)
         {
-            outState.putString(KEY_SAVE_JSON,((GsonStateAdapter) mStateSaveAdapter).saveState());
+            outState.putString(STATE_JSON,((GsonStateAdapter) mStateSaveAdapter).saveState());
         }
 
         super.onSaveInstanceState(outState);

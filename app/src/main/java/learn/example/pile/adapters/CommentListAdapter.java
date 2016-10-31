@@ -24,29 +24,29 @@ public class CommentListAdapter extends ParcelableStateAdapter<Comment.CommentIt
 
     @Override
     public CommentViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_comment, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_comment, parent, false);
         CommentViewHolder holder = new CommentViewHolder(view);
         return holder;
     }
 
     @Override
     public void onBindViewHolder(final CommentViewHolder holder, int position) {
-        Comment.CommentItem c = get(position);
+        Comment.CommentItem comment = get(position);
         final Context context = holder.itemView.getContext();
-        holder.content.setText(c.getContent());
-        String userName=c.getUserName();
+        holder.content.setText(comment.getContent());
+        String userName=comment.getUserName();
         holder.userName.setText(userName==null?"网友":userName);
 
-        Glide.with(context).load(c.getAvatar()).asBitmap()
+        Glide.with(context).load(comment.getAvatar()).asBitmap()
                 .error(R.mipmap.ic_def_show_user)
                 .placeholder(R.mipmap.ic_def_show_user)
                 .fitCenter()
                 .into(new CircleViewTarget(holder.avatar));
-        String address=c.getAddress()==null?"":c.getAddress()+"\n";
-        String addressAndTime=address.concat(c.getCommentTime());
+        String address=comment.getAddress()==null?"":comment.getAddress()+"\n";
+        String addressAndTime=address+comment.getCommentTime();
         holder.addressAndTime.setText(addressAndTime);
 
-        holder.like.setText(String.valueOf(c.getLikeNumber()));
+        holder.like.setText(String.valueOf(comment.getLikeNumber()));
 
     }
 

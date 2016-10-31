@@ -5,7 +5,7 @@
               android:layout_height="wrap_content"
               android:padding="@dimen/normal">
 
-    <include layout="@layout/adapter_joke_top"
+    <include layout="@layout/item_joke_top"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"/>
 
@@ -17,7 +17,7 @@
         android:layout_below="@+id/text"
         android:columnCount="3"/>
 
-    <include layout="@layout/adapter_joke_bottom"
+    <include layout="@layout/item_joke_bottom"
              android:layout_below="@+id/table"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"/>

@@ -36,7 +36,7 @@ public class PhotoWatcherLayout extends FrameLayout implements ViewPager.OnPageC
     private boolean isWifiConnected;
 
     private TextView title;
-    private TextView page;
+    private TextView pageIndicate;
     private TextView content;
 
 
@@ -60,7 +60,7 @@ public class PhotoWatcherLayout extends FrameLayout implements ViewPager.OnPageC
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
         mRelativeLayout= (RelativeLayout) findViewById(R.id.container);
         title= (TextView) findViewById(R.id.title);
-        page = (TextView) findViewById(R.id.page);
+        pageIndicate = (TextView) findViewById(R.id.page);
         content= (TextView)findViewById(R.id.content);
 
     }

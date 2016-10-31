@@ -25,10 +25,8 @@ import learn.example.pile.video.MediaPlayControlView;
 public class VideoActivity extends CommentMenuActivity {
 
 
-
-    private static final String KEY_SAVE_VIDEO_POSITION = "video_position";
-    public static final String KEY_TITLE="video_title";
-
+    public static final String EXTRA_TITLE ="EXTRA_TITLE";
+    private static final String STATE_SAVE_VIDEO_POSITION = "STATE_SAVE_VIDEO_POSITION";
 
 
     private ExoVideoView mExoVideoView;
@@ -79,7 +77,7 @@ public class VideoActivity extends CommentMenuActivity {
         showTitle();
 
         if (savedInstanceState != null) {
-            mSavedSeekPosition=savedInstanceState.getInt(KEY_SAVE_VIDEO_POSITION,-1);
+            mSavedSeekPosition=savedInstanceState.getInt(STATE_SAVE_VIDEO_POSITION,-1);
         }
 
 
@@ -90,7 +88,7 @@ public class VideoActivity extends CommentMenuActivity {
 
     private void showTitle()
     {
-        String title=getIntent().getStringExtra(KEY_TITLE);
+        String title=getIntent().getStringExtra(EXTRA_TITLE);
         setTitle(title);
     }
 
@@ -120,7 +118,7 @@ public class VideoActivity extends CommentMenuActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         //保存现在的播放位置
-        outState.putInt(KEY_SAVE_VIDEO_POSITION,mPlayControl==null?0:mPlayControl.getCurrentPosition() );
+        outState.putInt(STATE_SAVE_VIDEO_POSITION,mPlayControl==null?0:mPlayControl.getCurrentPosition() );
         super.onSaveInstanceState(outState);
     }
 

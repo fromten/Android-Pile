@@ -29,9 +29,7 @@ import learn.example.pile.video.VideoTextureView;
  */
 public class DetailJokeActivity extends ToolBarActivity {
 
-    public  static final String KEY_GROUP_JSON="group_json";
-
-
+    public  static final String EXTRA_GROUP_JSON ="EXTRA_GROUP_JSON";
 
     private FrameLayout mRoot;
     private ExtraHeadCommentFragment mFragment;
@@ -43,7 +41,7 @@ public class DetailJokeActivity extends ToolBarActivity {
         setContentView(R.layout.activity_detail_joke);
         mRoot= (FrameLayout) findViewById(R.id.root);
 
-        String groupJson=getIntent().getStringExtra(KEY_GROUP_JSON);
+        String groupJson=getIntent().getStringExtra(EXTRA_GROUP_JSON);
         if (groupJson!=null)
         {
             group=new Gson().fromJson(groupJson, JokeBean.DataBean.DataListBean.GroupBean.class);
@@ -59,7 +57,7 @@ public class DetailJokeActivity extends ToolBarActivity {
     {
         mFragment=new ExtraHeadCommentFragment();
         Bundle args=new Bundle();
-        args.putString(JokeCommentFragment.KEY_GROUP_ID,group.getGroup_id());
+        args.putString(JokeCommentFragment.ARGUMENT_GROUP_ID,group.getGroup_id());
         mFragment.setArguments(args);
 
         getSupportFragmentManager()
@@ -70,6 +68,33 @@ public class DetailJokeActivity extends ToolBarActivity {
     }
 
 
+
+
+
+    public static class ExtraHeadCommentFragment extends JokeCommentFragment {
+
+        @Override
+        public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
+
+            JokeBean.DataBean.DataListBean.GroupBean group = ((DetailJokeActivity) getActivity()).group;
+            //复用
+            final JokeAdapterWrap wrapAdapter= new JokeAdapterWrap(getActivity());
+            wrapAdapter.getList().add(group);
+            int type = wrapAdapter.getItemViewType(0);
+            final JokeListAdapter.JokeViewHolder holder = wrapAdapter.onCreateViewHolder(getRecyclerView(), type);
+
+                //添加Adapter头部
+            addHeadHolder(new RecyclerViewImprove.HeadHolder(holder.itemView) {
+                    @Override
+                    public void viewAppear(RecyclerView.Adapter adapter) {
+                        wrapAdapter.onBindViewHolder(holder, 0);
+                    }
+                });
+
+        }
+
+    }
 
     /**
      * 改变视图的布局,进行复用
@@ -106,6 +131,7 @@ public class DetailJokeActivity extends ToolBarActivity {
         @Override
         public void onBindViewHolder(JokeViewHolder holder, int position) {
             super.onBindViewHolder(holder, position);
+            //移除底部的视图
             View bottomView=holder.itemView.findViewById(R.id.joke_bottom);
             if (bottomView!=null)
             {
@@ -136,60 +162,35 @@ public class DetailJokeActivity extends ToolBarActivity {
 
 
         }
-        public static class FitSingleJokeViewHolder extends JokeSingleViewHolder{
-            private VideoTextureView mVideoView;
-            FitSingleJokeViewHolder(ViewGroup parent,boolean isGif)
+
+        }
+    public static class FitSingleJokeViewHolder extends JokeListAdapter.JokeSingleViewHolder {
+        private VideoTextureView mVideoView;
+        FitSingleJokeViewHolder(ViewGroup parent,boolean isGif)
+        {
+            this(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_joke_single, parent, false),isGif);
+        }
+
+        private FitSingleJokeViewHolder(View itemView,boolean isGif) {
+            super(itemView);
+
+            Context context=itemView.getContext();
+            RelativeLayout container= (RelativeLayout) itemView.findViewById(R.id.content);
+            RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            if (isGif)
             {
-                this(LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_joke_single, parent, false),isGif);
-            }
+                container.removeView(cover);
+                mVideoView=new VideoTextureView(context);
 
-            private FitSingleJokeViewHolder(View itemView,boolean isGif) {
-                super(itemView);
-
-                Context context=itemView.getContext();
-                RelativeLayout container= (RelativeLayout) itemView.findViewById(R.id.content);
-                RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                if (isGif)
-                {
-                    container.removeView(cover);
-                    mVideoView=new VideoTextureView(context);
-
-                    int targetHeight= (int) (new DeviceInfo( context).SCREEN_WIDTH*0.7f);
-                    mVideoView.setMinimumWidth(300);
-                    mVideoView.setMinimumHeight(targetHeight);
-                    mVideoView.setMaxHeight(targetHeight);
-
-                    mVideoView.setLoop(true);
-                    params.addRule(RelativeLayout.CENTER_IN_PARENT,RelativeLayout.TRUE);
-                    container.addView(mVideoView,params);
-                }
+                int targetHeight= (int) (new DeviceInfo( context).SCREEN_WIDTH*0.7f);
+                mVideoView.setMinimumWidth(300);
+                mVideoView.setMinimumHeight(targetHeight);
+                mVideoView.setMaxHeight(targetHeight);
+                mVideoView.setLoop(true);
+                params.addRule(RelativeLayout.CENTER_IN_PARENT,RelativeLayout.TRUE);
+                container.addView(mVideoView,params);
             }
         }
     }
 
-
-    public static class ExtraHeadCommentFragment extends JokeCommentFragment {
-
-        @Override
-        public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-            super.onViewCreated(view, savedInstanceState);
-
-            JokeBean.DataBean.DataListBean.GroupBean group = ((DetailJokeActivity) getActivity()).group;
-            //复用
-            final JokeAdapterWrap wrap = new JokeAdapterWrap(getActivity());
-            wrap.getList().add(group);
-            int type = wrap.getItemViewType(0);
-            final JokeListAdapter.JokeViewHolder holder = wrap.onCreateViewHolder(getRecyclerView(), type);
-
-                //添加到Adapter头部
-                addHeadHolder(new RecyclerViewImprove.HeadHolder(holder.itemView) {
-                    @Override
-                    public void viewAppear(RecyclerView.Adapter adapter) {
-                        wrap.onBindViewHolder(holder, 0);
-                    }
-                });
-
-        }
-
-    }
 }

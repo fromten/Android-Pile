@@ -17,6 +17,8 @@ import android.widget.LinearLayout;
 
 import learn.example.pile.R;
 
+import static android.R.attr.value;
+
 /**
  * Created on 2016/6/23.
  */
@@ -29,25 +31,37 @@ public class ToolBarActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.toolbar);
-        mRootLayout = (LinearLayout) findViewById(R.id.root_linelayout);
-        mToolbar = (Toolbar) findViewById(R.id.tool_bar);
-        mToolbar.setTitleTextColor(Color.WHITE);
+        bindViews();
         setSupportActionBar(mToolbar);
+        //setToolBarBackgroundColor(Color.WHITE);
         onEnableActionBarHome();
     }
 
-    public void statusBarCompat() {
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
+    protected void bindViews()
+    {
+        mRootLayout = (LinearLayout) findViewById(R.id.root_linelayout);
+        mToolbar = (Toolbar) findViewById(R.id.tool_bar);
+    }
+
+    /**
+     * 添加View覆盖系统状态栏,只能在系统版本等于19或20使用
+     * 21以上直接使用Theme
+     * @throws RuntimeException 大于20或小于19系统版本调用此方法
+     */
+    @TargetApi(19)
+    public void coverSystemStatusBar() {
+        if (Build.VERSION.SDK_INT==19||Build.VERSION.SDK_INT==20) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             ViewGroup group = (ViewGroup) getWindow().getDecorView();
             mStatusView = createStatusView();
             group.addView(mStatusView);
+        }else {
+            throw new RuntimeException("Method must in Api==19 or Api==20 call");
         }
-        //else do nothing
     }
 
 
-    public void setActionBarBackgroundColor(int color) {
+    public void setToolBarBackgroundColor(int color) {
         if (mToolbar != null)
             mToolbar.setBackgroundColor(color);
     }
@@ -62,10 +76,10 @@ public class ToolBarActivity extends AppCompatActivity {
 
 
     /**
-     *
-     * @return 状态栏,只会在Api==19时调用
+     * 创建一个View ,背景颜色设置为Theme.colorPrimaryDark,高度设置为系统状态栏高度
+     * @return view
      */
-    @TargetApi(value = 19)
+     @TargetApi(value = 19)
      private View createStatusView()
      {
          int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
@@ -105,17 +119,17 @@ public class ToolBarActivity extends AppCompatActivity {
      * @see #setContentView(View view, ViewGroup.LayoutParams params)
      */
     @Override
-    public void setContentView(int layoutId) {
+    public final void setContentView(int layoutId) {
         LayoutInflater.from(this).inflate(layoutId, mRootLayout);
     }
 
     @Override
-    public void setContentView(View view) {
+    public final void setContentView(View view) {
         mRootLayout.addView(view);
     }
 
     @Override
-    public void setContentView(View view, ViewGroup.LayoutParams params) {
+    public final void setContentView(View view, ViewGroup.LayoutParams params) {
         mRootLayout.addView(view,params);
     }
 

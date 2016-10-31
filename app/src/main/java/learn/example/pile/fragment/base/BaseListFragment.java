@@ -24,7 +24,7 @@ import learn.example.pile.ui.decoration.DividerItemDecoration;
 /**
  * Created on 2016/7/17.
  */
-public class BaseListFragment extends  SaveAdapterStateFragment {
+public class BaseListFragment extends  SaveStateAdapterFragment {
 
 
 

@@ -14,6 +14,12 @@ import java.util.List;
 
 public abstract class GsonStateAdapter<T,VH extends RecyclerView.ViewHolder> extends AbsSaveableRVAdapter<T,VH> {
 
+    public GsonStateAdapter() {
+    }
+
+    public GsonStateAdapter(List<T> list) {
+        super(list);
+    }
 
     /**
      * @see #restoreSaveState(String)

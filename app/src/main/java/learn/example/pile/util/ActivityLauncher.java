@@ -27,7 +27,7 @@ public class ActivityLauncher {
 
 
     /**
-     * 启动视频播放器Activity,普通的显示视频
+     * 启动视频播放器Activity
      * @param context
      * @param url
      */
@@ -43,7 +43,7 @@ public class ActivityLauncher {
      * 开启视频播放器,这会显示评论菜单项
      * @param uri 视频播放Uri地址
      * @param title 视频显示的标题
-     * @param fragmentClassName fragment来显示内容;
+     * @param fragmentClassName fragment来显示评论内容;
      * @param argus fragment对应参数 <code> Fragment.setArguments(argus) </code>
      * @see FragmentActivity
      */
@@ -52,15 +52,15 @@ public class ActivityLauncher {
     {
         Intent intent=new Intent(context, VideoActivity.class);
         intent.setData(Uri.parse(uri));
-        intent.putExtra(FragmentActivity.KEY_FRAGMENT_CLASS_NAME,fragmentClassName);
-        intent.putExtra(VideoActivity.KEY_TITLE,title);
-        intent.putExtra(FragmentActivity.KEY_FRAGMENT_ARGUMENTS,argus);
+        intent.putExtra(FragmentActivity.EXTRA_FRAGMENT_CLASS_NAME,fragmentClassName);
+        intent.putExtra(VideoActivity.EXTRA_TITLE,title);
+        intent.putExtra(FragmentActivity.EXTRA_FRAGMENT_ARGUMENTS,argus);
         startActivity(context,intent,null);
     }
 
 
     /**
-     * 启动图片查看Activity
+     * 打开显示一个图片Activity
      * @param context
      * @param url 图片的URL
      */
@@ -71,16 +71,20 @@ public class ActivityLauncher {
     }
 
     /**
-     * 启动图片查看Activity
+     * 打开显示多个图片Activity
      * @param context
-     * @param url 图片的URL
+     * @param urls 图片地址数组
+     * @param position  最先显示哪一张图片
      */
-
-    public static void startPhotoActivityForMulti(@NonNull Context context, @NonNull String[] url, int position)
+    public static void startPhotoActivityForMulti(@NonNull Context context, @NonNull String[] urls, int position)
     {
+        if (position<0||position>=urls.length)
+        {
+            throw new IllegalArgumentException("position must in between 0:urls.length-1");
+        }
         Intent intent=new Intent(context, PhotoActivity.class);
-        intent.putExtra(PhotoActivity.KEY_IMAGE_URLS,url);
-        intent.putExtra(PhotoActivity.KEY_SCROLL_TO_POSITION,position);
+        intent.putExtra(PhotoActivity.EXTRA_IMAGE_URLS,urls);
+        intent.putExtra(PhotoActivity.EXTRA_SCROLL_TO_POSITION,position);
         startActivity(context,intent,makeExplodeAnimation(context));
     }
 
@@ -92,7 +96,7 @@ public class ActivityLauncher {
     public static void startPhotoActivityForNetEase(@NonNull Context context, @NonNull String skipID)
     {
         Intent intent=new Intent(context, PhotoActivity.class);
-        intent.putExtra(PhotoActivity.KEY_NETEASE_SKIPID,skipID);
+        intent.putExtra(PhotoActivity.EXTRA_NETEASE_SKIPID,skipID);
         startActivity(context,intent,makeExplodeAnimation(context));
     }
 
@@ -105,7 +109,7 @@ public class ActivityLauncher {
     public static void startDetailJokeActivity(@NonNull Context context, @NonNull String groupJson)
     {
         Intent intent=new Intent(context, DetailJokeActivity.class);
-        intent.putExtra(DetailJokeActivity.KEY_GROUP_JSON,groupJson);
+        intent.putExtra(DetailJokeActivity.EXTRA_GROUP_JSON,groupJson);
         startActivity(context,intent,null);
     }
 
@@ -116,15 +120,15 @@ public class ActivityLauncher {
     public static void startZhihuReaderActivity(@NonNull Context context, @NonNull int id)
     {
         Intent intent=new Intent(context, ZhihuReaderActivity.class);
-        intent.putExtra(ZhihuReaderActivity.KEY_ZHIHU_DOC_ID,id);
+        intent.putExtra(ZhihuReaderActivity.EXTRA_ZHIHU_DOC_ID,id);
         startActivity(context,intent,null);
     }
 
     public static void startNetEaseReaderActivity(Context context,String docId,String boardId)
     {
         Bundle args=new Bundle();
-        args.putString(NetEaseReaderFragment.KEY_DOCID,docId);
-        args.putString(NetEaseReaderFragment.KEY_BOARD_ID,boardId);
+        args.putString(NetEaseReaderFragment.ARGUMENT_DOCID,docId);
+        args.putString(NetEaseReaderFragment.ARGUMENT_BOARD_ID,boardId);
         String className=NetEaseReaderFragment.class.getCanonicalName();
 
         Intent intent=FragmentActivity.makeIntent(context,className,args);

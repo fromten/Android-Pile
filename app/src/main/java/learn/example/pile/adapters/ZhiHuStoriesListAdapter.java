@@ -35,7 +35,7 @@ public class ZhiHuStoriesListAdapter extends ParcelableStateAdapter<ZhihuStories
 
     @Override
     public ZhihuListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_read,parent,false);
+        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.item_read,parent,false);
         ZhihuListViewHolder holder=new ZhihuListViewHolder(view);
         view.setOnClickListener(viewClick);
         return holder;

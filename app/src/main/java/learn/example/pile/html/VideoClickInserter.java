@@ -22,8 +22,7 @@ public class VideoClickInserter implements JavaScriptInserter {
 
     public String getJavaScript()
     {
-        return
-                "var objs = document.getElementsByClassName(\"videowrap\");\n" +
+        return "var objs = document.getElementsByClassName(\"videowrap\");\n" +
                 "for(var i=0;i<objs.length;i++)\n" +
                 "    {\n" +
                 "      var imageTag= objs[i].children;\n" +

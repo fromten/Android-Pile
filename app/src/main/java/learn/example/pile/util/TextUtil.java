@@ -17,6 +17,11 @@ public class TextUtil {
     }
 
 
+    /**
+     * 分离字符串的句子,按中文句号('。')分离
+     * @param text 要分离的字符串
+     * @return 一个包含句子的数组
+     */
     public static String[] sentenceSub(String text)
     {
         return text==null?null:text.split("\\。");

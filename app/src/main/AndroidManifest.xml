@@ -21,7 +21,7 @@
         <meta-data android:name="AA_DB_NAME" android:value="store.db" />
         <meta-data android:name="AA_DB_VERSION" android:value="1" />
         <meta-data android:name="AA_SERIALIZERS"
-                   android:value="learn.example.pile.database.typeserializer.StringArraySerializer" />
+                   android:value="learn.example.pile.database.typeserializer.NewsImageExtraArraySerializer" />
 
         <activity android:name=".activity.normal.BootActivity">
             <intent-filter>

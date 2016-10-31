@@ -166,7 +166,10 @@ public class RVListFragment extends Fragment implements SwipeRefreshLayout.OnRef
         return mSwipeRefreshLayout.isRefreshing();
     }
 
-    //取消加载更多,如果没有调用,后续的onLoadMore方法将不会调用
+    /**
+     * 取消加载更多,如果回调onLoadMore()方法后,没有调用此方法
+     * onLoadMore()方法将不会继续调用
+     */
     public void cancelLoadMore()
     {
         if (mScrollHelper!=null)

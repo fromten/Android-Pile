@@ -18,7 +18,7 @@ import learn.example.pile.database.DatabaseStore;
 
 public abstract class PersistentFragment extends BaseListFragment {
 
-    public static final String KEY_DB_INDEX="db_index";
+    public static final String STATE_DB_INDEX ="STATE_DB_INDEX";
     private RecyclerView.Adapter mAdapter;
     private DatabaseStore mDatabaseStore;
     private int mDatabaseIndex;
@@ -35,14 +35,14 @@ public abstract class PersistentFragment extends BaseListFragment {
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         if (savedInstanceState!=null)
         {
-            mDatabaseIndex=savedInstanceState.getInt(KEY_DB_INDEX,0);
+            mDatabaseIndex=savedInstanceState.getInt(STATE_DB_INDEX,0);
         }
         super.onViewStateRestored(savedInstanceState);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putInt(KEY_DB_INDEX,mDatabaseIndex);
+        outState.putInt(STATE_DB_INDEX,mDatabaseIndex);
         super.onSaveInstanceState(outState);
     }
 

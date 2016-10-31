@@ -188,7 +188,7 @@ public class ExoVideoView extends SurfaceView implements SurfaceHolder.Callback
 
     @Override
     public void onStateChanged(boolean playWhenReady, int playbackState) {
-        if (playbackState== ExoPlayer.STATE_READY&&!isInvokePrepareListener)
+        if (!isInvokePrepareListener&&playbackState== ExoPlayer.STATE_READY)
         {
             if (mPlayInfoListener!=null)
             {

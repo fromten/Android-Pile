@@ -32,8 +32,8 @@ public class VideoListFragment extends PersistentFragment implements IService.Ca
 
 
     //save state key
-    private static final String KEY_NEXT_URL="next_url";
-    private static final String KEY_NEXT_PUSH_TIME="next_push_time";
+    private static final String STATE_NEXT_URL ="STATE_NEXT_URL";
+    private static final String STATE_NEXT_PUSH_TIME ="STATE_NEXT_PUSH_TIME";
 
 
     private VideoListAdapter mAdapter;
@@ -59,15 +59,15 @@ public class VideoListFragment extends PersistentFragment implements IService.Ca
             setRefreshing(true);
             onRefresh();
         }else {
-            nextUrl=savedInstanceState.getString(KEY_NEXT_URL);
-            nextPushTime=savedInstanceState.getLong(KEY_NEXT_PUSH_TIME);
+            nextUrl=savedInstanceState.getString(STATE_NEXT_URL);
+            nextPushTime=savedInstanceState.getLong(STATE_NEXT_PUSH_TIME);
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putString(KEY_NEXT_URL,nextUrl);
-        outState.putLong(KEY_NEXT_PUSH_TIME,nextPushTime);
+        outState.putString(STATE_NEXT_URL,nextUrl);
+        outState.putLong(STATE_NEXT_PUSH_TIME,nextPushTime);
         super.onSaveInstanceState(outState);
     }
 
@@ -191,7 +191,7 @@ public class VideoListFragment extends PersistentFragment implements IService.Ca
 
         CategoryViewHolder()
         {
-            this(LayoutInflater.from(getContext()).inflate(R.layout.category,getRecyclerView(),false));
+            this(LayoutInflater.from(getContext()).inflate(R.layout.video_category_head,getRecyclerView(),false));
         }
 
         private CategoryViewHolder(View view) {
@@ -211,26 +211,25 @@ public class VideoListFragment extends PersistentFragment implements IService.Ca
 
         @Override
         public void onClick(View v) {
-            switch (v.getId())
-            {
-                case R.id.trip:
-                    requestCategoryVideo(OpenEyes.Category.TRIP);
-                    break;
-                case R.id.ads:
-                    requestCategoryVideo(OpenEyes.Category.ADVERTISEMENT);
-                    break;
-                case R.id.art:
-                    requestCategoryVideo(OpenEyes.Category.ART);
-                    break;
-                case R.id.record:
-                    requestCategoryVideo(OpenEyes.Category.RECORD);
-                    break;
-                case R.id.drama:
-                    requestCategoryVideo(OpenEyes.Category.DRAMA);
-                    break;
-                case R.id.preview:
-                    requestCategoryVideo(OpenEyes.Category.PREVIEW);
-                    break;
+            int i = v.getId();
+            if (i == R.id.trip) {
+                requestCategoryVideo(OpenEyes.Category.TRIP);
+
+            } else if (i == R.id.ads) {
+                requestCategoryVideo(OpenEyes.Category.ADVERTISEMENT);
+
+            } else if (i == R.id.art) {
+                requestCategoryVideo(OpenEyes.Category.ART);
+
+            } else if (i == R.id.record) {
+                requestCategoryVideo(OpenEyes.Category.RECORD);
+
+            } else if (i == R.id.drama) {
+                requestCategoryVideo(OpenEyes.Category.DRAMA);
+
+            } else if (i == R.id.preview) {
+                requestCategoryVideo(OpenEyes.Category.PREVIEW);
+
             }
 
         }

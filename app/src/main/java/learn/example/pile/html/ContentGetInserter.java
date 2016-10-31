@@ -18,6 +18,10 @@ public class ContentGetInserter implements JavaScriptInserter {
                 "ContentGetInserter.passHtml(String(page));";
     }
 
+    /**
+     * WebView回调此方法
+     * @param outerHtml 网页的内容文本
+     */
     @JavascriptInterface
     public void passHtml(String outerHtml)
     {

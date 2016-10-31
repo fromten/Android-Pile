@@ -22,13 +22,13 @@ public class JokeCommentFragment extends CommentFragment implements IService.Cal
 
      private JokeService mJokeService;
 
-     public final static String KEY_LAST_POSITION="last_start";
-     public final static String KEY_GROUP_ID="group_id";
+     public final static String STATE_LAST_POSITION ="STATE_LAST_POSITION";
+     public final static String ARGUMENT_GROUP_ID ="ARGUMENT_GROUP_ID";
 
 
     public static JokeCommentFragment newInstance(String groupId) {
         Bundle args = new Bundle();
-        args.putString(KEY_GROUP_ID,groupId);
+        args.putString(ARGUMENT_GROUP_ID,groupId);
         JokeCommentFragment fragment = new JokeCommentFragment();
         fragment.setArguments(args);
         return fragment;
@@ -47,11 +47,11 @@ public class JokeCommentFragment extends CommentFragment implements IService.Cal
         }
         super.onViewCreated(view, savedInstanceState);
         mJokeService=new JokeService();
-        groupId=args.getString(KEY_GROUP_ID);
+        groupId=args.getString(ARGUMENT_GROUP_ID);
 
         if (savedInstanceState!=null)
         {
-            start=savedInstanceState.getInt(KEY_LAST_POSITION,0);
+            start=savedInstanceState.getInt(STATE_LAST_POSITION,0);
         }
 
         if (start<=0)
@@ -62,7 +62,7 @@ public class JokeCommentFragment extends CommentFragment implements IService.Cal
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putInt(KEY_LAST_POSITION,start);//保存请求开始位置
+        outState.putInt(STATE_LAST_POSITION,start);//保存请求开始位置
         super.onSaveInstanceState(outState);
     }
 

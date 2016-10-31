@@ -3,6 +3,7 @@ package learn.example.pile.provider;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.IntDef;
+import android.support.annotation.StringDef;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
@@ -17,6 +18,8 @@ import static learn.example.pile.provider.OpenEyes.Category.DRAMA;
 import static learn.example.pile.provider.OpenEyes.Category.PREVIEW;
 import static learn.example.pile.provider.OpenEyes.Category.RECORD;
 import static learn.example.pile.provider.OpenEyes.Category.TRIP;
+import static learn.example.pile.provider.OpenEyes.Strategy.DATE;
+import static learn.example.pile.provider.OpenEyes.Strategy.SHARE_COUNT;
 
 
 /**
@@ -46,9 +49,11 @@ public class OpenEyes {
 
 
     //视频策略
-    public static class Strategy{
-        public final static String SHARE_COUNT="shareCount";//按分享总数获得视频列表
-        public final static String DATE="date";//按时间获得视频列表
+    @StringDef({SHARE_COUNT,DATE})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface Strategy{
+        String SHARE_COUNT="shareCount";//按分享总数获得视频列表
+        String DATE="date";//按时间获得视频列表
     }
 
 
@@ -71,17 +76,17 @@ public class OpenEyes {
 
 
 
-    public static String getHotUrl(int num)
+    public static String createHotUrl(int num)
     {
         return HOT_URL+APP_PARAMS_OLD+"&num="+num;
     }
 
-    public static String getNextUrl(String nextUrl)
+    public static String createNextUrl(String nextUrl)
     {
         return nextUrl+APP_PARAMS;
     }
 
-    public static String getCategoryUrl(@Category int categoryID,String strategy)
+    public static String createCategoryUrl(@Category int categoryID,@Strategy String strategy)
     {
         return CATEGORY_URL+"categoryId="+categoryID+"&strategy"+strategy+APP_PARAMS;
     }

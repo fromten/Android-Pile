@@ -22,23 +22,17 @@ public class TuringMachineService extends NetService {
 
     public void getMessage(String question,Callback<TuringMachineJson> callback)
     {
-
-        try {
-            RequestBody body= getRequestBody(question);
-            Request req=new Request.Builder().url(URL).post(body).build();
-            newRequest(TAG,TuringMachineJson.class,req,callback);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            callback.onFailure("URL encode failed "+"{question="+question+"}");
-        }
+        RequestBody body= getRequestBody(question);
+        Request req=new Request.Builder().url(URL).post(body).build();
+        newRequest(TAG,TuringMachineJson.class,req,callback);
     }
 
     /**
      *
      * @param info 询问的问题
-     * @return RequestBody 如果成功
+     * @return RequestBody
      */
-    private  RequestBody getRequestBody(String info) throws UnsupportedEncodingException {
+    private  RequestBody getRequestBody(String info){
 
         JsonObject object=new JsonObject();
         object.addProperty("key",APi_KEY);

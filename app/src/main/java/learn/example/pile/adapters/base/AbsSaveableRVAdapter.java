@@ -118,9 +118,9 @@ public abstract class AbsSaveableRVAdapter<T, VH extends RecyclerView.ViewHolder
     @Override
     public boolean addAll(int location, Collection<? extends T> collection) {
         if (collection == null || collection.isEmpty()) return false;
-        boolean success=mList.addAll(location,collection);
+        boolean isSuccessful=mList.addAll(location,collection);
         notifyItemInserted(getItemCount());
-        return success;
+        return isSuccessful;
     }
 
     @Override

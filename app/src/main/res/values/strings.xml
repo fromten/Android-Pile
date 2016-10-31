@@ -11,8 +11,8 @@
 
 
     <!--设置环境文本-->
-    <string name="git_rep">https://github.com/fromten/Android-Pile</string>
-    <string name="setting_show1">源码地址:https://github.com/fromten/Android-Pile</string>
+    <string name="git_rep">https://github.com/xjssjx/Android-Pile</string>
+    <string name="setting_show1">源码地址:https://github.com/xjssjx/Android-Pile</string>
 
     <!--菜单项文本-->
     <string name="menu_setting">设置</string>

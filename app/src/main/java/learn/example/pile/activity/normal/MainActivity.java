@@ -39,17 +39,13 @@ public class MainActivity extends ToolBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //初始化okhttp
+        OkHttpRequest.getInstance(this);
         initView();
-
     }
 
     public void initView()
     {
-
-        //初始化okhttp
-        OkHttpRequest.getInstance(this);
-
-
         //如果版本大于23和外部存储可以用时,需要请求权限
         if (Build.VERSION.SDK_INT>=23&& DeviceInfo.checkExternalStorageState())
         {

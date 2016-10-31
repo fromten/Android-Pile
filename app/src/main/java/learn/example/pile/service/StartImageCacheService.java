@@ -67,7 +67,7 @@ public class StartImageCacheService extends IntentService {
      */
     private boolean startCache(String imageUrl) throws IOException {
         OkHttpRequest request=OkHttpRequest.getInstance(getApplicationContext());
-        Response response= request.newCall(imageUrl).execute();
+        Response response= request.syncCall(imageUrl).execute();
         if (response.isSuccessful())
         {
             InputStream inputStream=response.body().byteStream();
@@ -94,7 +94,7 @@ public class StartImageCacheService extends IntentService {
      */
     private String requestJson() throws IOException {
         OkHttpRequest request=OkHttpRequest.getInstance(getApplicationContext());
-        Response response= request.newCall(getMatchStartImageUrl()).execute();
+        Response response= request.syncCall(getMatchStartImageUrl()).execute();
         if (response.isSuccessful())
         {
             JsonObject object= (JsonObject) new JsonParser().parse(response.body().string());

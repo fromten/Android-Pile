@@ -12,8 +12,8 @@ import android.view.WindowManager;
  */
 public class DeviceInfo {
 
-    public int SCREEN_WIDTH;
-    public int SCREEN_HEIGHT;
+    public final int SCREEN_WIDTH;
+    public final int SCREEN_HEIGHT;
 
     public DeviceInfo(Context context) {
         DisplayMetrics displaymetrics = new DisplayMetrics();
@@ -24,13 +24,19 @@ public class DeviceInfo {
     }
 
     /**
-     * @return 外部存储是否可用
+     * 外部存储是否可用
+     * @return true 如果可以,否则 false
      */
     public static boolean checkExternalStorageState() {
         String state = Environment.getExternalStorageState();
         return state.equals(Environment.MEDIA_MOUNTED);
     }
 
+    /**
+     * 检查网络是否连接
+     * @param context
+     * @return 如果连接过或连接中返回true,否则false
+     */
     public static boolean checkNetConnected(Context context) {
         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = manager.getActiveNetworkInfo();
@@ -38,6 +44,11 @@ public class DeviceInfo {
     }
 
 
+    /**
+     * 检查连接类型是不是wifi
+     * @param context
+     * @return 网络连接类型是Wifi返回true,否则false
+     */
     public static boolean ifWifiConnected(Context context) {
         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);

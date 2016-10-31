@@ -15,3 +15,14 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+-dontwarn java.nio.file.*
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+-dontwarn okio.**
+-keep class com.activeandroid.**{
+*;
+}
+-keepnames class * com.bumptech.glide.samples.flickr.FlickrGlideModule
+-keep class learn.example.pile.jsonbean.**{
+*;
+}
+-keep class learn.example.pile.AppGlideModule

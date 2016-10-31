@@ -1,6 +1,7 @@
 package learn.example.pile.factory;
 
 import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -29,12 +30,11 @@ public class NetEaseCommentFactory implements CommentFactory.ProduceInterface {
                 String keyName=reader.nextName();
                 if (keyName.equals("hotPosts")||keyName.equals("newPosts"))//热门和普通评论
                 {
+                    if (reader.peek()== JsonToken.NULL)break;
                     List<Comment.CommentItem> list=new ArrayList<>();
                     readArray(reader,list);
-
                     comment=new Comment();
                     comment.setComments(list);
-
                 }else {
                     reader.skipValue();
                 }

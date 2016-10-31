@@ -23,8 +23,6 @@ public class FragmentPagerAdapter extends FragmentStatePagerAdapter {
         title=context.getResources().getStringArray(R.array.tab_category);
     }
 
-
-
     @Override
     public CharSequence getPageTitle(int position) {
         return title[position];

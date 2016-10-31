@@ -11,19 +11,19 @@ public class OpenEyeService extends NetService {
 
     public void getHotVideo(Callback<OpenEyeVideo> callback)
     {
-        String url=OpenEyes.getHotUrl(2);
+        String url=OpenEyes.createHotUrl(2);
         newRequest(TAG,OpenEyeVideo.class,url,callback);
     }
 
     public void getCategoryVideoInDateSort(@OpenEyes.Category int categoryID, Callback<OpenEyeVideo> callback)
     {
-        String url=OpenEyes.getCategoryUrl(categoryID,OpenEyes.Strategy.DATE);
+        String url=OpenEyes.createCategoryUrl(categoryID,OpenEyes.Strategy.DATE);
         newRequest(TAG,OpenEyeVideo.class,url,callback);
     }
 
     public void getCategoryVideoInShareCountSort(@OpenEyes.Category int categoryID, Callback<OpenEyeVideo> callback)
     {
-        String url=OpenEyes.getCategoryUrl(categoryID,OpenEyes.Strategy.SHARE_COUNT);
+        String url=OpenEyes.createCategoryUrl(categoryID,OpenEyes.Strategy.SHARE_COUNT);
         newRequest(TAG,OpenEyeVideo.class,url,callback);
     }
 
@@ -38,14 +38,14 @@ public class OpenEyeService extends NetService {
     //翻页,获得下个视频列表
     public void nextVideoList(String nextUrl, Callback<OpenEyeVideo> callback)
     {
-        String url=OpenEyes.getNextUrl(nextUrl);
+        String url=OpenEyes.createNextUrl(nextUrl);
         newRequest(TAG,OpenEyeVideo.class,url,callback);
     }
 
 
     public void nextCommentList(String nextUrl,Callback<String> callback)
     {
-        String url=OpenEyes.getNextUrl(nextUrl);
+        String url=OpenEyes.createNextUrl(nextUrl);
         newStringRequest(TAG,url,callback);
     }
 

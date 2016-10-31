@@ -77,11 +77,11 @@ public class NewsListAdapter extends ParcelableStateAdapter<NetEaseNews.NewsItem
     public BaseNewsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType==TYPE_IMAGES)
         {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_news_images, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news_images, parent, false);
             view.setOnClickListener(mItemClick);
             return new NewsImagesViewHolder(view);
         }
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_news_normal, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news_normal, parent, false);
         view.setOnClickListener(mItemClick);
         return new NewsNormalViewHolder(view);
     }

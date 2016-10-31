@@ -25,7 +25,7 @@ public class VideoListAdapter extends ParcelableStateAdapter<OpenEyes.VideoInfo,
 
     @Override
     public VideoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v= LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_video,parent,false);
+        View v= LayoutInflater.from(parent.getContext()).inflate(R.layout.item_video,parent,false);
         v.setOnClickListener(this);
         return new VideoViewHolder(v);
     }
@@ -51,7 +51,7 @@ public class VideoListAdapter extends ParcelableStateAdapter<OpenEyes.VideoInfo,
         {
             String uri=info.getPlayUrl();
             Bundle argus=new Bundle();
-            argus.putInt(OpenEyeCommentFragment.KEY_VIDEO_ID,info.getVideoId());
+            argus.putInt(OpenEyeCommentFragment.ARGUMENT_VIDEO_ID,info.getVideoId());
             String fragmentClassName=OpenEyeCommentFragment.class.getName();
             ActivityLauncher.startVideoActivitySupportCommentMenu(v.getContext(),uri,info.getTitle(),fragmentClassName,argus);
         }

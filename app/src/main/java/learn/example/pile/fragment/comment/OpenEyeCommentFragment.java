@@ -18,8 +18,8 @@ import learn.example.pile.util.GsonHelper;
  */
 public class OpenEyeCommentFragment extends CommentFragment implements IService.Callback<String> {
 
-    public static final String KEY_NEXT_PAGE_URL = "url";
-    public static final String KEY_VIDEO_ID = "id";
+    public static final String STATE_NEXT_PAGE_URL = "STATE_NEXT_PAGE_URL";
+    public static final String ARGUMENT_VIDEO_ID = "ARGUMENT_VIDEO_ID";
     private OpenEyeService mOpenEyeService;
     private int id;
     private String nextPageUrl;
@@ -27,7 +27,7 @@ public class OpenEyeCommentFragment extends CommentFragment implements IService.
     public static OpenEyeCommentFragment newInstance(int videoId) {
 
         Bundle args = new Bundle();
-        args.putInt(KEY_VIDEO_ID, videoId);
+        args.putInt(ARGUMENT_VIDEO_ID, videoId);
         OpenEyeCommentFragment fragment = new OpenEyeCommentFragment();
         fragment.setArguments(args);
         return fragment;
@@ -40,10 +40,10 @@ public class OpenEyeCommentFragment extends CommentFragment implements IService.
             return;
         }
         super.onViewCreated(view, savedInstanceState);
-        id = args.getInt(KEY_VIDEO_ID);
+        id = args.getInt(ARGUMENT_VIDEO_ID);
         mOpenEyeService = new OpenEyeService();
         if (savedInstanceState != null) {
-            nextPageUrl = savedInstanceState.getString(KEY_NEXT_PAGE_URL);
+            nextPageUrl = savedInstanceState.getString(STATE_NEXT_PAGE_URL);
         }
 
         if (nextPageUrl==null)
@@ -58,7 +58,7 @@ public class OpenEyeCommentFragment extends CommentFragment implements IService.
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putString(KEY_NEXT_PAGE_URL, nextPageUrl);
+        outState.putString(STATE_NEXT_PAGE_URL, nextPageUrl);
         super.onSaveInstanceState(outState);
     }
 

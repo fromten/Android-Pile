@@ -6,12 +6,12 @@ package learn.example.pile.pojo;
 public class PhotosMessage{
     private String title;
     private String content;
-    private String mUrl;
+    private String url;
 
     public PhotosMessage(String title, String content,String url) {
         this.title = title;
         this.content = content;
-        this.mUrl=url;
+        this.url =url;
     }
 
     public String getTitle() {
@@ -22,6 +22,6 @@ public class PhotosMessage{
     }
 
     public String getUrl() {
-        return mUrl;
+        return url;
     }
 }

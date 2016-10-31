@@ -9,9 +9,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 
+import com.activeandroid.query.Select;
+
 import learn.example.pile.R;
 import learn.example.pile.database.model.NewsArticle;
 import learn.example.pile.fragment.comment.NetEaseCommentFragment;
+import learn.example.pile.fragment.op.FragmentActor;
 import learn.example.pile.fragment.op.SimpleFragmentActor;
 import learn.example.pile.html.Html;
 import learn.example.pile.html.ImageClickInserter;
@@ -27,32 +30,57 @@ import learn.example.pile.util.HtmlBuilder;
 
 public class NetEaseReaderFragment extends WebViewFragment implements IService.Callback<String> {
 
-    public static final String KEY_DOCID="net_ease_doc_id";
-    public static final String KEY_BOARD_ID="net_ease_board_id";
-    private static final String TAG_COMMENT_FRAGMENT="comment_fragment_tag";
+    public static final String ARGUMENT_DOCID ="ARGUMENT_DOCID";
+    public static final String ARGUMENT_BOARD_ID ="ARGUMENT_BOARD_ID";
+    private static final String TAG_COMMENT_FRAGMENT="NetEaseReaderFragment_TAG_COMMENT_FRAGMENT";
+    private static final String STATE_HTML="STATE_HTML";
 
     private String docId;
     private String boardId;
     private NetEaseNewsService mNewsService;
-    private SimpleFragmentActor mFragmentActor;
-
+    private FragmentActor mFragmentActor;
+    private DatabaseOperation mDatabaseOperation;
+    private String mHtml;
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setHasOptionsMenu(true);
         setBackUpListener();
+        bindArgument();
+        mFragmentActor=new SimpleFragmentActor(getFragmentManager());
+        mDatabaseOperation=new DatabaseOperation();
+        if (savedInstanceState==null)
+        {
+            readOrRequest();
+        }else{
+            mHtml=savedInstanceState.getString(STATE_HTML);
+            String completeHtml=insertListener(mHtml);
+            loadLocalDataWithDefCss(completeHtml);
+        }
+    }
+
+    private void readOrRequest()
+    {
+        String historicalHtml=mDatabaseOperation.readArticle(docId);
+        if (historicalHtml!=null)
+        {
+            String completeHtml=insertListener(historicalHtml);
+            loadLocalDataWithDefCss(completeHtml);
+            mHtml=historicalHtml;
+        }else {
+            mNewsService=new NetEaseNewsService();
+            mNewsService.getArticle(docId,this);
+        }
+    }
+
+    private void bindArgument()
+    {
         Bundle args=getArguments();
         if (args!=null)
         {
-            docId=args.getString(KEY_DOCID);
-            boardId=args.getString(KEY_BOARD_ID);
+            docId=args.getString(ARGUMENT_DOCID);
+            boardId=args.getString(ARGUMENT_BOARD_ID);
         }
-        mNewsService=new NetEaseNewsService();
-        if (savedInstanceState==null)
-        {
-            mNewsService.getArticle(docId,this);
-        }
-        mFragmentActor=new SimpleFragmentActor(getFragmentManager());
     }
 
     @Override
@@ -110,23 +138,35 @@ public class NetEaseReaderFragment extends WebViewFragment implements IService.C
 
     @Override
     public void onSuccess(String data) {
-
-        Html html=new NetEaseHtml(docId,data);
-        String originHtml=html.getHtml();
+        Html netEaseHtml=new NetEaseHtml(docId,data);
+        String originHtml=netEaseHtml.getHtml();
         String completeHtml= insertListener(originHtml);
         loadLocalDataWithDefCss(completeHtml);
+        mHtml=originHtml;
 
-        //保存到数据库
-        NewsArticle article=new NewsArticle();
-        article.docid=docId;
-        article.html=originHtml;
-        article.save();
+        mDatabaseOperation.saveArticle(docId,originHtml);
     }
 
     @Override
     public void onFailure(String message) {
 
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(STATE_HTML,mHtml);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mNewsService!=null)
+        {
+            mNewsService.cancelAll();
+        }
+        super.onDestroy();
+    }
+
 
     private String addImageClickJs(WebView webView)
     {
@@ -153,5 +193,28 @@ public class NetEaseReaderFragment extends WebViewFragment implements IService.C
         String imageClickJs= addImageClickJs(getWebView());
         String videoClickJs=addVideoClickJs(getWebView());
         return originHtml+imageClickJs+videoClickJs;
+    }
+
+    public static class DatabaseOperation{
+
+        public void saveArticle(String docId,String article)
+        {
+            //保存到数据库
+            NewsArticle database=new NewsArticle();
+            database.docid=docId;
+            database.html=article;
+            database.save();
+        }
+
+        public String readArticle(String docId)
+        {
+            if (docId==null)return null;
+
+            NewsArticle article=new Select().from(NewsArticle.class)
+                                            .where("docid= ?",docId)
+                                            .executeSingle();
+            boolean isValid=article!=null&&article.html!=null&&article.html.length()>0;
+            return isValid?article.html:null;
+        }
     }
 }

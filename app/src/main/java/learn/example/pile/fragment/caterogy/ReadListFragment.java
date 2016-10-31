@@ -17,7 +17,7 @@ import learn.example.pile.net.ZhihuStoryService;
 public class ReadListFragment extends BaseListFragment implements IService.Callback<ZhihuStories> {
 
 
-    private static final String KEY_DATE="date";
+    private static final String STATE_DATE ="STATE_DATE";
 
     private ZhiHuStoriesListAdapter mAdapter;
 
@@ -35,7 +35,7 @@ public class ReadListFragment extends BaseListFragment implements IService.Callb
             setRefreshing(true);
             mService.getStories(this);
         }else {
-            date=savedInstanceState.getString(KEY_DATE);
+            date=savedInstanceState.getString(STATE_DATE);
             mAdapter.setDate(formatDate(date));
         }
     }
@@ -48,7 +48,7 @@ public class ReadListFragment extends BaseListFragment implements IService.Callb
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putString(KEY_DATE,date);
+        outState.putString(STATE_DATE,date);
         super.onSaveInstanceState(outState);
     }
 

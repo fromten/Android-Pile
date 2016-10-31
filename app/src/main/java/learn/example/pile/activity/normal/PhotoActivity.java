@@ -12,6 +12,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
+import java.util.EventListener;
 import java.util.List;
 
 import learn.example.net.OkHttpRequest;
@@ -35,19 +36,16 @@ public class PhotoActivity extends CommentMenuActivity {
 
 
 
-
-    public static final String KEY_NETEASE_SKIPID ="key_netease_skipid";
-
-    public static final String KEY_IMAGE_URLS ="muliti_image";
-    public static final String KEY_SCROLL_TO_POSITION ="scroll_position";
+    public static final String STATE_POSITION="STATE_POSITION";
+    public static final String EXTRA_NETEASE_SKIPID ="EXTRA_NETEASE_SKIPID";
+    public static final String EXTRA_IMAGE_URLS ="EXTRA_IMAGE_URLS";
+    public static final String EXTRA_SCROLL_TO_POSITION ="EXTRA_SCROLL_TO_POSITION";
 
     private ProgressBar mProgressBar;
-
     private PhotoWatcherLayout mPhotoWatcherLayout;
-
     private NetEasePhotoWatcher mNetEasePhotoWatcher;
-
     private PhotoViewAttacher.OnViewTapListener mPhotoViewTapListener;
+    private int mScrollPosition;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,13 +54,25 @@ public class PhotoActivity extends CommentMenuActivity {
         setTitle(null);
         mPhotoWatcherLayout= (PhotoWatcherLayout) findViewById(R.id.photo_layout);
 
-        String skipId=getIntent().getStringExtra(KEY_NETEASE_SKIPID);
-        String[] urlArray=getIntent().getStringArrayExtra(KEY_IMAGE_URLS);
-
-        if (urlArray!=null)
+        if (savedInstanceState!=null)
         {
+            mScrollPosition=savedInstanceState.getInt(STATE_POSITION);
+        }else if (getIntent().hasExtra(EXTRA_SCROLL_TO_POSITION)){
+            mScrollPosition=getIntent().getIntExtra(EXTRA_SCROLL_TO_POSITION,0);
+        }
+        inits();
+    }
+
+
+    private void inits()
+    {   Intent intent=getIntent();
+        if (intent.hasExtra(EXTRA_IMAGE_URLS))
+        {
+            String[] urlArray=getIntent().getStringArrayExtra(EXTRA_IMAGE_URLS);
             initPhotoView(urlArray);
-        }else if (skipId!=null){
+        }else if (intent.hasExtra(EXTRA_NETEASE_SKIPID))
+        {
+            String skipId=getIntent().getStringExtra(EXTRA_NETEASE_SKIPID);
             initNewsFragment(skipId);
         }
     }
@@ -80,24 +90,20 @@ public class PhotoActivity extends CommentMenuActivity {
             }
         };
         mPhotoWatcherLayout.setOnViewTapListener(mPhotoViewTapListener);
-
-        //滚动到请求的位置
-        int position=getIntent().getIntExtra(KEY_SCROLL_TO_POSITION,0);
-        if (position>0)
-        {
-            mPhotoWatcherLayout.getViewPager().setCurrentItem(position);
-        }
-
-        //手动调用,显示图片的位置
-        if (getIntent().hasExtra(KEY_IMAGE_URLS))
-        {
-            mPhotoWatcherLayout.onPageSelected(position);
-        }
+        mPhotoWatcherLayout.getViewPager().setCurrentItem(mScrollPosition);
+        //手动调用触发回调
+        mPhotoWatcherLayout.onPageSelected(mScrollPosition);
     }
 
     private void initNewsFragment(final String skipID)
     {
         mNetEasePhotoWatcher=new NetEasePhotoWatcher(skipID);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(STATE_POSITION,mPhotoWatcherLayout.getViewPager().getCurrentItem());
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -167,7 +173,7 @@ public class PhotoActivity extends CommentMenuActivity {
                 };
                 mPhotoWatcherLayout.setOnViewTapListener(mPhotoViewTapListener);
                 //手动调用
-                mPhotoWatcherLayout.onPageSelected(0);
+                mPhotoWatcherLayout.onPageSelected(mScrollPosition);
             }
         }
 
@@ -196,7 +202,7 @@ public class PhotoActivity extends CommentMenuActivity {
         }
 
         /**
-         * 网易新闻图集新闻,和其他新闻不同,在请求结束后,手动添加评论
+         * 网易新闻图集新闻,在请求结束后,手动添加评论
          * @param object
          */
         private void setCommentMenu(JsonObject object)
@@ -205,17 +211,12 @@ public class PhotoActivity extends CommentMenuActivity {
             if (postId!=null)
             {
                 Intent intent=getIntent();
-
-                intent.putExtra(FragmentActivity.KEY_FRAGMENT_CLASS_NAME,NetEaseCommentFragment.class.getName());
-
+                intent.putExtra(FragmentActivity.EXTRA_FRAGMENT_CLASS_NAME,NetEaseCommentFragment.class.getCanonicalName());
                 Bundle args=new Bundle();
                 String board=GsonHelper.getAsString(object.get("boardid"),null);
-
-                args.putString(NetEaseCommentFragment.KEY_DOCID,postId);
-                args.putString(NetEaseCommentFragment.KEY_BOARDID,board);
-
-                intent.putExtra(FragmentActivity.KEY_FRAGMENT_ARGUMENTS,args);
-
+                args.putString(NetEaseCommentFragment.ARGUMENT_DOCID,postId);
+                args.putString(NetEaseCommentFragment.ARGUMENT_BOARDID,board);
+                intent.putExtra(FragmentActivity.EXTRA_FRAGMENT_ARGUMENTS,args);
 
                 //网络请求时间不确定,可能菜单不会创建,需要重新创建菜单
                 invalidateOptionsMenu();

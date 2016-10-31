@@ -32,7 +32,7 @@ public abstract class CommentMenuActivity extends FullScreenActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (getIntent().hasExtra(FragmentActivity.KEY_FRAGMENT_CLASS_NAME))
+        if (getIntent().hasExtra(FragmentActivity.EXTRA_FRAGMENT_CLASS_NAME))
         {
             getMenuInflater().inflate(R.menu.video_menu,menu);
             return true;

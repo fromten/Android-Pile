@@ -19,7 +19,7 @@ import learn.example.pile.util.DeviceInfo;
  */
 public class NewsListFragment extends PersistentFragment implements NetService.Callback<NetEaseNews>{
 
-     private static final String KEY_REQUEST_INDEX ="requestindex";
+     private static final String STATE_REQUEST_INDEX ="STATE_REQUEST_INDEX";
 
     private NewsListAdapter mNewsListAdapter;
     private NetEaseNewsService mService;
@@ -39,7 +39,7 @@ public class NewsListFragment extends PersistentFragment implements NetService.C
             setRefreshing(true);
             mService.getNetEaseNews(mRequestIndex,this);
         }else {
-            mRequestIndex =savedInstanceState.getInt(KEY_REQUEST_INDEX);
+            mRequestIndex =savedInstanceState.getInt(STATE_REQUEST_INDEX);
         }
     }
 
@@ -50,7 +50,7 @@ public class NewsListFragment extends PersistentFragment implements NetService.C
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putInt(KEY_REQUEST_INDEX, mRequestIndex);
+        outState.putInt(STATE_REQUEST_INDEX, mRequestIndex);
         super.onSaveInstanceState(outState);
     }
 

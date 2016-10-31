@@ -5,11 +5,11 @@
               android:padding="@dimen/normal"
               android:background="?android:attr/selectableItemBackground">
 
-    <include layout="@layout/adapter_joke_top"
+    <include layout="@layout/item_joke_top"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"/>
 
-    <include layout="@layout/adapter_joke_bottom"
+    <include layout="@layout/item_joke_bottom"
              android:layout_below="@+id/text"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"/>

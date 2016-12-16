@@ -1,4 +1,4 @@
-package learn.example.pile.util;
+package learn.example.pile.util.gson;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -12,10 +12,7 @@ public class GsonHelper {
     {
         try {
             return element==null||element.isJsonNull()?defString:element.getAsString();
-        }catch (ClassCastException e)
-        {
-            e.printStackTrace();
-        }catch (IllegalStateException e)
+        }catch (ClassCastException | IllegalStateException e)
         {
             e.printStackTrace();
         }
@@ -26,10 +23,8 @@ public class GsonHelper {
     {
         try {
             return element==null?defInteger:element.getAsInt();
-        }catch (ClassCastException e)
+        }catch (ClassCastException | IllegalStateException e)
         {
-            e.printStackTrace();
-        }catch (IllegalStateException e) {
             e.printStackTrace();
         }
         return defInteger;
@@ -44,4 +39,5 @@ public class GsonHelper {
     {
         return new Gson().fromJson(string,clazz);
     }
- }
+
+}

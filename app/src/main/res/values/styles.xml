@@ -48,4 +48,9 @@
         <item name="android:indeterminateBehavior">repeat</item>
         <item name="android:indeterminateDrawable">@drawable/progress_circle_indeterminate</item>
     </style>
+
+    <declare-styleable name="CopyExoPlayerView">
+        <attr name="useController" format="boolean"/>
+        <attr name="useTextureView" format="boolean"/>
+    </declare-styleable>
 </resources>

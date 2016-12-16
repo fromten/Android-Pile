@@ -87,7 +87,9 @@ public class OpenEyeCommentFactory implements CommentFactory.ProduceInterface {
                     commentItem.setContent(reader.nextString());
                     break;
                 case "user":
-                    commentItem.setAvatar(getUserPic(reader));
+                    String[] array=getUserPicAndName(reader);
+                    commentItem.setAvatar(array[0]);
+                    commentItem.setUserName(array[1]);
                     break;
                 default:
                     reader.skipValue();
@@ -98,15 +100,19 @@ public class OpenEyeCommentFactory implements CommentFactory.ProduceInterface {
         return commentItem;
     }
 
-    private String getUserPic(JsonReader reader) throws IOException {
+    private String[] getUserPicAndName(JsonReader reader) throws IOException {
         reader.beginObject();
-        String url=null;
+        String url[]=new String[2];
         while (reader.hasNext())
         {
             String name=reader.nextName();
             if (name.equals("avatar"))
-            {  url=reader.nextString();
-            }else {
+            {
+                url[0]=reader.nextString();
+            }else if (name.equals("nickname"))
+            {
+                url[1]=reader.nextString();
+            }else  {
                 reader.skipValue();
             }
         }

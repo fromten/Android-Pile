@@ -64,7 +64,7 @@ public class NetEaseCommentFragment extends CommentFragment implements NetEaseNe
 
     @Override
     public void onSuccess(String data) {
-        Comment comment = CommentFactory.newInstance().produceComment(NetEaseCommentFactory.class, data);
+        Comment comment = CommentFactory.newInstance().produceNetEaseComment(data);
         if (comment != null) {
             addComments(comment.getComments());
             notifySuccess();

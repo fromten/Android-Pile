@@ -91,6 +91,13 @@ public class OkHttpRequest{
         return call;
     }
 
+    public <T> Call newGsonRequest(final Class<T> clazz, final Request request,Gson gson, final RequestCallback<T> callback)
+    {
+        Call call= mOkHttpClient.newCall(request);
+        call.enqueue(new GsonCallback<T>(clazz,gson,mHandler,callback));
+        return call;
+    }
+
     public Call newStringRequest(Request request, final RequestCallback<String> callback)
     {
         Call call= mOkHttpClient.newCall(request);

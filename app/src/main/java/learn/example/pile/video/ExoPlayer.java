@@ -202,6 +202,10 @@ public class ExoPlayer implements com.google.android.exoplayer.ExoPlayer.Listene
         listeners.remove(listener);
     }
 
+    public void removeAllListener() {
+        listeners.clear();
+    }
+
     public void setInternalErrorListener(InternalErrorListener listener) {
         internalErrorListener = listener;
     }

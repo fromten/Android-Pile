@@ -16,7 +16,7 @@ import android.view.WindowManager;
  */
 public class VolumeProgressView extends View {
     private Paint mPaint;
-    private int VOLUME_MAX_VALUE;
+    private final int VOLUME_MAX_VALUE;
     private Rect[] mRect;
     private int currentValue;
     private int rectColor;//格子的颜色
@@ -33,6 +33,13 @@ public class VolumeProgressView extends View {
 
     public VolumeProgressView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        mAudioManager= (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
+        int audiomax = mAudioManager.getStreamMaxVolume( AudioManager.STREAM_MUSIC );
+        int current = mAudioManager.getStreamVolume( AudioManager.STREAM_MUSIC );
+
+        VOLUME_MAX_VALUE =audiomax;
+        currentValue=current;
+
         initView();
     }
 
@@ -48,12 +55,6 @@ public class VolumeProgressView extends View {
     public void initView()
     {
         mPaint=new Paint();
-        mAudioManager= (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
-        int audiomax = mAudioManager.getStreamMaxVolume( AudioManager.STREAM_MUSIC );
-        int current = mAudioManager.getStreamVolume( AudioManager.STREAM_MUSIC );
-
-        VOLUME_MAX_VALUE =audiomax;
-        currentValue=current;
 
         mRect=new Rect[VOLUME_MAX_VALUE];
         for(int i = 0; i< VOLUME_MAX_VALUE; ++i){
@@ -73,27 +74,26 @@ public class VolumeProgressView extends View {
 
 
 
+
     @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
         int len=mRect.length;
-        int width=right-left;
-        int height=bottom-top;
-        int rectHeight=height/ VOLUME_MAX_VALUE;
-        mRect[0].set(0,0,width,rectHeight);
+        int rectHeight=h/ VOLUME_MAX_VALUE;
+        mRect[0].set(0,0,w,rectHeight);
         for(int i=1;i<len;++i)
         {
             int t=mRect[i-1].bottom;
             int b=t+rectHeight;
-            mRect[i].set(0,t,width,b);
+            mRect[i].set(0,t,w,b);
         }
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-         mPaint.setStrokeWidth(8);
-         int len=mRect.length;
-         int drawNum= VOLUME_MAX_VALUE -currentValue;//要绘制的格子个数
+        mPaint.setStrokeWidth(8);
+        int len=mRect.length;
+        int drawNum= VOLUME_MAX_VALUE -currentValue;//要绘制的格子个数
         for(int i=0;i<len;++i)
         {
             //绘制实心的格子
@@ -120,7 +120,6 @@ public class VolumeProgressView extends View {
         {
             return;
         }
-
         int value=currentValue;
         if(currentValue>= VOLUME_MAX_VALUE)
         {

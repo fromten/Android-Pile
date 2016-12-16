@@ -7,15 +7,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
-
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.Map;
-
-import learn.example.pile.util.GsonHelper;
+import learn.example.pile.util.gson.GsonHelper;
 import learn.example.pile.util.HtmlBuilder;
 
 /**

@@ -102,11 +102,9 @@ public class VideoListFragment extends PersistentFragment implements IService.Ca
         {
             mAdapter.clear();
         }
-
         nextUrl=data.getNextPageUrl();
         mAdapter.addAll(mList);
         notifySuccess();
-
 
         saveDataToDB(mList);
     }

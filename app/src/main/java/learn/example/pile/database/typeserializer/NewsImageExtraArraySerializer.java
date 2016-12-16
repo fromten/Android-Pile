@@ -5,7 +5,7 @@ import com.activeandroid.serializer.TypeSerializer;
 
 
 import learn.example.pile.jsonbean.NetEaseNews;
-import learn.example.pile.util.GsonHelper;
+import learn.example.pile.util.gson.GsonHelper;
 
 /**
  * Created on 2016/9/19.

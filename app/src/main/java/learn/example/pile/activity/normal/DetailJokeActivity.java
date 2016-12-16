@@ -18,6 +18,7 @@ import learn.example.pile.activity.base.ToolBarActivity;
 import learn.example.pile.adapters.JokeListAdapter;
 import learn.example.pile.fragment.comment.JokeCommentFragment;
 import learn.example.pile.jsonbean.JokeBean;
+import learn.example.pile.pojo.Joke;
 import learn.example.pile.ui.RecyclerViewImprove;
 import learn.example.pile.util.ActivityLauncher;
 import learn.example.pile.util.DeviceInfo;
@@ -34,7 +35,7 @@ public class DetailJokeActivity extends ToolBarActivity {
     private FrameLayout mRoot;
     private ExtraHeadCommentFragment mFragment;
 
-    private JokeBean.DataBean.DataListBean.GroupBean group;
+    private Joke.Item group;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +45,7 @@ public class DetailJokeActivity extends ToolBarActivity {
         String groupJson=getIntent().getStringExtra(EXTRA_GROUP_JSON);
         if (groupJson!=null)
         {
-            group=new Gson().fromJson(groupJson, JokeBean.DataBean.DataListBean.GroupBean.class);
+            group=new Gson().fromJson(groupJson, Joke.Item.class);
             if(savedInstanceState==null)
             {
                 showFragment();
@@ -57,7 +58,7 @@ public class DetailJokeActivity extends ToolBarActivity {
     {
         mFragment=new ExtraHeadCommentFragment();
         Bundle args=new Bundle();
-        args.putString(JokeCommentFragment.ARGUMENT_GROUP_ID,group.getGroup_id());
+        args.putString(JokeCommentFragment.ARGUMENT_GROUP_ID,group.getId_str());
         mFragment.setArguments(args);
 
         getSupportFragmentManager()
@@ -77,7 +78,7 @@ public class DetailJokeActivity extends ToolBarActivity {
         public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
 
-            JokeBean.DataBean.DataListBean.GroupBean group = ((DetailJokeActivity) getActivity()).group;
+            Joke.Item group = ((DetailJokeActivity) getActivity()).group;
             //复用
             final JokeAdapterWrap wrapAdapter= new JokeAdapterWrap(getActivity());
             wrapAdapter.getList().add(group);
@@ -109,9 +110,10 @@ public class DetailJokeActivity extends ToolBarActivity {
 
         @Override
         public JokeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            if (viewType==JokeListAdapter.TYPE_SINGLE)
+            if (viewType==JokeListAdapter.TYPE_SINGLE_VIDEO
+                    ||viewType==JokeListAdapter.TYPE_SINGLE_IMAGE)
             {
-                return new FitSingleJokeViewHolder(parent,get(0).is_gif());
+                return new FitSingleJokeViewHolder(parent,get(0).isGif());
             }
             return super.onCreateViewHolder(parent, viewType);
         }
@@ -139,31 +141,28 @@ public class DetailJokeActivity extends ToolBarActivity {
             }
         }
         @Override
-        public void bindSingle(final JokeSingleViewHolder holder, JokeBean.DataBean.DataListBean.GroupBean item) {
+        public void bindSingle(final JokeSingleViewHolder holder,Joke.Item item) {
             //显示和隐藏播放图标;
-            int icVisible=item.is_video()?View.VISIBLE:View.INVISIBLE;
+            int icVisible=item.isVideo()?View.VISIBLE:View.INVISIBLE;
             holder.ic_play.setVisibility(icVisible);
 
-            if (item.is_gif())
+            if (item.isGif())
             {
-                String url=item.getGifUrl();
+                String url=item.getVideo().getUrl();
                 if (url!=null)
                 {
-                    ((FitSingleJokeViewHolder)holder).mVideoView.setDataSource(item.getGifUrl());
+                    ((FitSingleJokeViewHolder)holder).mVideoView.setDataSource(url);
                 }
             }else {
-                String url=item.getImages().getFirstUrl();
+                String url=item.getImage().getUrl();
                 Glide.with(mContext)
                         .load(url)
                         .transform(new GlideUtil.MatchTransformation(mContext))
                         .into(holder.cover);
                 holder.cover.setTag(R.id.view_tag1,item);
             }
-
-
         }
-
-        }
+    }
     public static class FitSingleJokeViewHolder extends JokeListAdapter.JokeSingleViewHolder {
         private VideoTextureView mVideoView;
         FitSingleJokeViewHolder(ViewGroup parent,boolean isGif)
@@ -182,7 +181,7 @@ public class DetailJokeActivity extends ToolBarActivity {
                 container.removeView(cover);
                 mVideoView=new VideoTextureView(context);
 
-                int targetHeight= (int) (new DeviceInfo( context).SCREEN_WIDTH*0.7f);
+                int targetHeight= (int) (new DeviceInfo( context).SCREEN_WIDTH*0.85f);
                 mVideoView.setMinimumWidth(300);
                 mVideoView.setMinimumHeight(targetHeight);
                 mVideoView.setMaxHeight(targetHeight);

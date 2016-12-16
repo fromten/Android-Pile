@@ -11,7 +11,7 @@ import learn.example.pile.factory.OpenEyeCommentFactory;
 import learn.example.pile.net.IService;
 import learn.example.pile.net.OpenEyeService;
 import learn.example.pile.pojo.Comment;
-import learn.example.pile.util.GsonHelper;
+import learn.example.pile.util.gson.GsonHelper;
 
 /**
  * Created on 2016/8/5.
@@ -64,7 +64,7 @@ public class OpenEyeCommentFragment extends CommentFragment implements IService.
 
     @Override
     public void onSuccess(String data) {
-        Comment comment = CommentFactory.newInstance().produceComment(OpenEyeCommentFactory.class, data);
+        Comment comment = CommentFactory.newInstance().produceOpenEyesComment(data);
         if (comment != null) {
             JsonObject object = comment.getExtraMsg();
             if (object != null) {

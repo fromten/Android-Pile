@@ -79,7 +79,7 @@ public class CommentFragment extends BaseListFragment {
     protected void handleRequestSuccess() {
         super.handleRequestSuccess();
         View view=getView();
-        if (view!=null)
+        if (view!=null&&mWaitEmptyViewHolder!=null)
         {
             ((ViewGroup)view).removeViewInLayout(mWaitEmptyViewHolder.mRoot);
             mWaitEmptyViewHolder=null;

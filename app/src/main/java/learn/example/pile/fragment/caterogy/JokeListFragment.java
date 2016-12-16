@@ -3,24 +3,20 @@ package learn.example.pile.fragment.caterogy;
 import android.os.Bundle;
 
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.View;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import learn.example.pile.adapters.JokeListAdapter;
 import learn.example.pile.fragment.base.BaseListFragment;
-import learn.example.pile.jsonbean.JokeBean;
 import learn.example.pile.net.IService;
 import learn.example.pile.net.JokeService;
 
+import learn.example.pile.pojo.Joke;
 import learn.example.pile.util.DeviceInfo;
 
 /**
  * Created on 2016/5/5.
  */
-public class JokeListFragment extends BaseListFragment implements IService.Callback<JokeBean> {
+public class JokeListFragment extends BaseListFragment implements IService.Callback<Joke> {
 
 
 
@@ -65,31 +61,22 @@ public class JokeListFragment extends BaseListFragment implements IService.Callb
     }
 
     @Override
-    public void onSuccess(JokeBean data) {
+    public void onSuccess(Joke data) {
         if (isRefreshing())
         {
             mJokeListAdapter.clear();
         }
 
-        List<JokeBean.DataBean.DataListBean.GroupBean> list=new ArrayList<>();
-        int count=data.getData().getData().size();
-
+        int count=data.getJokeItems().size();
         if (count<=0)
         { //数据为空,当做失败处理
             notifyError();
             return;
         }
-
-        //不需要第一个
-        for (int i = 1; i < count; i++) {
-            JokeBean.DataBean.DataListBean listBean=data.getData().getData().get(i);
-            if (listBean.getType()!=5)//type==5是广告
-                list.add(listBean.getGroup());
-        }
-
-        mJokeListAdapter.addAll(list);
+        mJokeListAdapter.addAll(data.getJokeItems());
         notifySuccess();
     }
+
 
     @Override
     public void onFailure(String msg) {

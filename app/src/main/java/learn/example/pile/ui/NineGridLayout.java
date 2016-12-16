@@ -37,8 +37,6 @@ public class NineGridLayout extends ViewGroup implements View.OnClickListener{
 
     private String[] urls;
 
-
-
     private static final int ROW_COUNT=3;
     private static final int COLUMN_COUNT=3;
 
@@ -163,11 +161,8 @@ public class NineGridLayout extends ViewGroup implements View.OnClickListener{
 
         //添加imageview
         frameLayout.addView(createImageView());
-
         //添加textView
         frameLayout.addView(createImageTypeView());
-
-
         this.addView(frameLayout);
 
         return frameLayout;

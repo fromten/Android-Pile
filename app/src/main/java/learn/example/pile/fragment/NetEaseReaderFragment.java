@@ -15,11 +15,11 @@ import learn.example.pile.R;
 import learn.example.pile.database.model.NewsArticle;
 import learn.example.pile.fragment.comment.NetEaseCommentFragment;
 import learn.example.pile.fragment.op.FragmentActor;
-import learn.example.pile.fragment.op.SimpleFragmentActor;
+import learn.example.pile.fragment.op.SimpleAnimFragmentActor;
 import learn.example.pile.html.Html;
-import learn.example.pile.html.ImageClickInserter;
+import learn.example.pile.html.plugin.ImageClickPlugin;
 import learn.example.pile.html.NetEaseHtml;
-import learn.example.pile.html.VideoClickInserter;
+import learn.example.pile.html.plugin.VideoClickPlugin;
 import learn.example.pile.net.IService;
 import learn.example.pile.net.NetEaseNewsService;
 import learn.example.pile.util.HtmlBuilder;
@@ -47,7 +47,7 @@ public class NetEaseReaderFragment extends WebViewFragment implements IService.C
         setHasOptionsMenu(true);
         setBackUpListener();
         bindArgument();
-        mFragmentActor=new SimpleFragmentActor(getFragmentManager());
+        mFragmentActor=new SimpleAnimFragmentActor(getFragmentManager());
         mDatabaseOperation=new DatabaseOperation();
         if (savedInstanceState==null)
         {
@@ -170,14 +170,14 @@ public class NetEaseReaderFragment extends WebViewFragment implements IService.C
 
     private String addImageClickJs(WebView webView)
     {
-        ImageClickInserter imageHandler=new ImageClickInserter(getActivity());
+        ImageClickPlugin imageHandler=new ImageClickPlugin(getActivity());
         webView.addJavascriptInterface(imageHandler,imageHandler.getName());
         return HtmlBuilder.tag("script","type='text/javascript'",imageHandler.getJavaScript());
     }
 
     private String addVideoClickJs(WebView webView)
     {
-        VideoClickInserter videoHandler=new VideoClickInserter(getActivity());
+        VideoClickPlugin videoHandler=new VideoClickPlugin(getActivity());
         webView.addJavascriptInterface(videoHandler,videoHandler.getName());
         return HtmlBuilder.tag("script","type='text/javascript'",videoHandler.getJavaScript());
     }

@@ -3,19 +3,17 @@ package learn.example.pile.fragment.op;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
-import java.util.Objects;
-
 import learn.example.pile.R;
 
 /**
  * Created on 2016/10/26.
  */
 
-public class SimpleFragmentActor implements FragmentActor{
+public class SimpleAnimFragmentActor implements FragmentActor{
 
     private FragmentManager mFragmentManager;
 
-    public SimpleFragmentActor(FragmentManager fragmentManager) {
+    public SimpleAnimFragmentActor(FragmentManager fragmentManager) {
         mFragmentManager = fragmentManager;
     }
 

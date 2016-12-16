@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.MediaController;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -20,27 +19,23 @@ import learn.example.pile.R;
 /**
  * Created on 2016/9/7.
  */
-public class MediaPlayControlView extends FrameLayout implements View.OnClickListener,
-        SeekBar.OnSeekBarChangeListener{
+public class MediaPlayControlView extends FrameLayout{
 
 
     private static final int DEF_SHOW_TIMEOUT=3000;
-    private static final int FADE_OUT = 1;
+    private static final int HIDE_VIEW = 1;
     private static final int SHOW_PROGRESS = 2;
-    private boolean mShowing;
     private boolean mDragging;
 
     StringBuilder mFormatBuilder;
     Formatter mFormatter;
-
     public View mRoot;
     private ImageButton mPauseButton;
     private SeekBar mSeekBar;
     private TextView mCurrentTime;
     private TextView mEndTime;
-
-    private MediaController.MediaPlayerControl mControl;
-
+    private ExoPlayer mPlayer;
+    private ComponentListener mComponentListener;
 
     public MediaPlayControlView(Context context) {
         this(context,null);
@@ -59,70 +54,54 @@ public class MediaPlayControlView extends FrameLayout implements View.OnClickLis
         mCurrentTime= (TextView) mRoot.findViewById(R.id.time_current);
         mEndTime = (TextView) mRoot.findViewById(R.id.time);
 
-
         mSeekBar.setMax(1000);
         mCurrentTime.setText("00:00");
         mEndTime.setText("00:00");
 
-        mSeekBar.setOnSeekBarChangeListener(this);
-        mPauseButton.setOnClickListener(this);
+        mComponentListener=new ComponentListener();
+        mSeekBar.setOnSeekBarChangeListener(mComponentListener);
+        mPauseButton.setOnClickListener(mComponentListener);
 
         mFormatBuilder = new StringBuilder();
         mFormatter = new Formatter(mFormatBuilder, Locale.getDefault());
-        mShowing=true;
         mDragging=false;
-        disUnSupportButton();
     }
 
-
-    private void disUnSupportButton()
+    public void show(int timeOut)
     {
-        boolean hasControl=mControl!=null;
-
-        mPauseButton.setEnabled(hasControl);
-        mSeekBar.setEnabled(hasControl);
-    }
-
-
-    public void show(int time)
-    {
-
-
-        if (!mShowing)
+        if (timeOut<0)
         {
-            this.setVisibility(VISIBLE);
-            mDragging=false;
-            mShowing=true;
+            timeOut=DEF_SHOW_TIMEOUT;
         }
-
-        if (mControl!=null)
-        mHandler.sendEmptyMessage(SHOW_PROGRESS);
-
-        if (time!=0)
+        if (!isShown())
         {
-            mHandler.removeMessages(FADE_OUT);
-            mHandler.sendEmptyMessageDelayed(FADE_OUT,time);
+           setVisibility(VISIBLE);
         }
-
+        if (mPlayer!=null) mHandler.sendEmptyMessage(SHOW_PROGRESS);
+        mHandler.removeMessages(HIDE_VIEW);
+        mHandler.sendEmptyMessageDelayed(HIDE_VIEW,timeOut);
     }
 
     public void hide()
     {
-        if (mShowing)
+        if (isShown())
         {
             this.setVisibility(INVISIBLE);
             mDragging=false;
-            mShowing=false;
         }
     }
 
 
-    public void setMediaPlayerControl(MediaController.MediaPlayerControl control)
+    public void setExoPlayer(ExoPlayer player)
     {
-        mControl =control;
+        if (mPlayer!=null)
+        {
+            mPlayer.removeListener(mComponentListener);
+        }
+        mPlayer=player;
+        mPlayer.addListener(mComponentListener);
         updatePauseDrawable();
         show(DEF_SHOW_TIMEOUT);
-        disUnSupportButton();
     }
 
     private String stringForTime(int timeMs) {
@@ -140,22 +119,11 @@ public class MediaPlayControlView extends FrameLayout implements View.OnClickLis
         }
     }
 
-    @Override
-    public void onClick(View v) {
-        if (mControl.isPlaying())
-        {
-            mControl.pause();
-        }else {
-            mControl.start();
-        }
-        updatePauseDrawable();
-        show(DEF_SHOW_TIMEOUT);
-    }
 
-    public void updatePauseDrawable()
+    private void updatePauseDrawable()
     {
-        if (mControl==null)return;
-        if (mControl.isPlaying())
+        if (mPlayer==null)return;
+        if (mPlayer.getPlayWhenReady())
         {
             mPauseButton.setImageResource(android.R.drawable.ic_media_pause);
         }else {
@@ -163,18 +131,17 @@ public class MediaPlayControlView extends FrameLayout implements View.OnClickLis
         }
     }
 
-
     private final Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             int pos;
             switch (msg.what) {
-                case FADE_OUT:
+                case HIDE_VIEW:
                     hide();
                     break;
                 case SHOW_PROGRESS:
                     pos = setProgress();
-                    if (!mDragging && mShowing && mControl.isPlaying()) {
+                    if (!mDragging && isShown() && mPlayer.getPlayWhenReady()) {
                         msg = obtainMessage(SHOW_PROGRESS);
                         sendMessageDelayed(msg, 1000 - (pos % 1000));
                     }
@@ -184,17 +151,17 @@ public class MediaPlayControlView extends FrameLayout implements View.OnClickLis
     };
 
     private int setProgress() {
-        if (mControl == null || mDragging) {
+        if (mPlayer == null || mDragging) {
             return 0;
         }
-        int position = mControl.getCurrentPosition();
-        int duration = mControl.getDuration();
+        int position = (int) mPlayer.getCurrentPosition();
+        int duration = (int) mPlayer.getDuration();
         if (duration > 0) {
             // use long to avoid overflow
             long pos = 1000L * position / duration;
             mSeekBar.setProgress( (int) pos);
         }
-        int percent = mControl.getBufferPercentage();
+        int percent = mPlayer.getBufferedPercentage();
         mSeekBar.setSecondaryProgress(percent * 10);
 
         mEndTime.setText(stringForTime(duration));
@@ -203,46 +170,82 @@ public class MediaPlayControlView extends FrameLayout implements View.OnClickLis
         return position;
     }
 
-
     @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
-        if (fromUser)
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        if (mPlayer!=null)
         {
-            long duration = mControl.getDuration();
-            long videoPosition = (duration * progress) / 1000L;
-            mCurrentTime.setText(stringForTime((int) videoPosition));
+            mHandler.sendEmptyMessage(SHOW_PROGRESS);
         }
-
-    }
-
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-
-          mDragging=true;
-          mHandler.removeMessages(SHOW_PROGRESS);
-          mHandler.removeMessages(FADE_OUT);
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-           mDragging=false;
-           int progress=seekBar.getProgress();
-           long duration = mControl.getDuration();
-           long newposition = (duration * progress) / 1000L;
-           mControl.seekTo( (int) newposition);
-
-           setProgress();
-           updatePauseDrawable();
-           show(DEF_SHOW_TIMEOUT);
     }
 
     @Override
     protected void onDetachedFromWindow() {
-        mHandler.removeMessages(SHOW_PROGRESS);
-        mHandler.removeMessages(FADE_OUT);
-        mHandler.removeCallbacksAndMessages(null);
-        mControl=null;
         super.onDetachedFromWindow();
+        mHandler.removeMessages(SHOW_PROGRESS);
+        mHandler.removeMessages(HIDE_VIEW);
+        mPlayer=null;
+    }
+
+    public class ComponentListener implements View.OnClickListener,ExoPlayer.Listener,
+            SeekBar.OnSeekBarChangeListener{
+        @Override
+        public void onClick(View v) {
+            if (v.getId()==R.id.pause)
+            {
+                if (mPlayer!=null)
+                {
+                    mPlayer.setPlayWhenReady(!mPlayer.getPlayWhenReady());
+                }
+            }
+        }
+
+        @Override
+        public void onStateChanged(boolean playWhenReady, int playbackState) {
+            updatePauseDrawable();
+            if (playbackState==ExoPlayer.STATE_ENDED)
+            {
+                mHandler.removeMessages(HIDE_VIEW);
+            }
+        }
+
+        @Override
+        public void onError(Exception e) {
+
+        }
+
+        @Override
+        public void onVideoSizeChanged(int width, int height, int unappliedRotationDegrees, float pixelWidthHeightRatio) {
+
+        }
+
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            if (fromUser)
+            {
+                long duration = mPlayer.getDuration();
+                long videoPosition = (duration * progress) / 1000L;
+                mCurrentTime.setText(stringForTime((int) videoPosition));
+            }
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+            mDragging=true;
+            mHandler.removeMessages(SHOW_PROGRESS);
+            mHandler.removeMessages(HIDE_VIEW);
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+            mDragging=false;
+            int progress=seekBar.getProgress();
+            long duration = mPlayer.getDuration();
+            long newposition = (duration * progress) / 1000L;
+            mPlayer.seekTo( (int) newposition);
+            setProgress();
+            updatePauseDrawable();
+            show(DEF_SHOW_TIMEOUT);
+        }
     }
 }

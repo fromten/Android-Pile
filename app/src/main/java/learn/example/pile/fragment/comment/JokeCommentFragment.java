@@ -68,8 +68,9 @@ public class JokeCommentFragment extends CommentFragment implements IService.Cal
 
     @Override
     public void onSuccess(String data) {
-        Comment comment=CommentFactory.newInstance().produceComment(JokeCommentFactory.class,data);
+        Comment comment=CommentFactory.newInstance().produceJokeComment(data);
         if (comment!=null) {
+            //按评论数从大到小排序
             Collections.sort(comment.getComments(), new Comparator<Comment.CommentItem>() {
                 @Override
                 public int compare(Comment.CommentItem lhs, Comment.CommentItem rhs) {
@@ -77,7 +78,6 @@ public class JokeCommentFragment extends CommentFragment implements IService.Cal
                 }
             });
             addComments(comment.getComments());
-
             JsonObject extra = comment.getExtraMsg();
             hasMore = extra != null && extra.get("has_more").getAsBoolean();
         }

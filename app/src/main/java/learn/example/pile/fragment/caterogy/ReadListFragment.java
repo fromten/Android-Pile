@@ -94,10 +94,10 @@ public class ReadListFragment extends BaseListFragment implements IService.Callb
 
     @Override
     public void onLoadMore() {
-         correctGet();
+         correctGetRequest();
     }
 
-    private void correctGet()
+    private void correctGetRequest()
     {
         if (date==null)
         {

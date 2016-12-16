@@ -10,6 +10,7 @@ import java.util.Locale;
  */
 public class TimeUtil {
 
+
     public static final String FORMAT_YMD_HMS="yyyy-MM-dd  HH:mm:ss";
     public static final String FORMAT_YMD_HM="yyyy-MM-dd HH:mm";
     public static final String FORMAT_YMD="yyyy-MM-dd";
@@ -18,6 +19,9 @@ public class TimeUtil {
 
     /**
      * 转换成 年-月-日 小时-分钟-秒
+     * @param format {@link #FORMAT_YMD_HM }
+     *              {@link #FORMAT_YMD_HMS }
+     *              {@link #FORMAT_YMD }
      * @param timestamp 时间戳
      * @return 字符串
      */

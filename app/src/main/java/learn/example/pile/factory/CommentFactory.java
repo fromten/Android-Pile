@@ -30,17 +30,24 @@ public class CommentFactory {
         return new CommentFactory();
     }
 
-    public <T extends ProduceInterface> Comment produceComment(Class<T> clazz,String response)
+    public Comment produceZhihuComment(String response)
     {
-        try {
-            ProduceInterface producer=clazz.newInstance();
-            return producer.produceComment(response);
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        throw new RuntimeException("Disable access construction method ,must have default empty construction " +
-                "method ");
+        return new ZhihuCommentFactory().produceComment(response);
     }
+
+    public Comment produceNetEaseComment(String response)
+    {
+        return new NetEaseCommentFactory().produceComment(response);
+    }
+
+    public Comment produceOpenEyesComment(String response)
+    {
+        return new OpenEyeCommentFactory().produceComment(response);
+    }
+
+    public Comment produceJokeComment(String response)
+    {
+        return new JokeCommentFactory().produceComment(response);
+    }
+
 }

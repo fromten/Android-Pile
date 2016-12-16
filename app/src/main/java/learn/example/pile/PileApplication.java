@@ -13,7 +13,7 @@ public class PileApplication extends com.activeandroid.app.Application {
     public void onCreate() {
         super.onCreate();
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
-        LeakCanary.install(this);
+        if (BuildConfig.DEBUG) LeakCanary.install(this);
 
        // Stetho.initializeWithDefaults(this);
     }

@@ -39,5 +39,7 @@
     <string name="video_playcomplete">视频播放结束</string>
     <string name="gif">gif</string>
     <string name="edit_input">输入发送的消息</string>
+    <string name="cancel">取消</string>
+    <string name="ok">确定</string>
 
 </resources>

@@ -6,8 +6,6 @@ import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import com.google.android.exoplayer.util.PlayerControl;
-
 /**
  * Created on 2016/9/6.
  */
@@ -20,20 +18,16 @@ public class ExoVideoView extends SurfaceView implements SurfaceHolder.Callback
         void onError(ExoVideoView view, Exception error);
     }
 
-    private ExoPlayer mExoVideo;
+    private ExoPlayer mPlayer;
     private ExoPlayer.RendererBuilder  mRendererBuilder;
     private SurfaceHolder mSurfaceHolder;
     private Uri mUri;
 
     private int mVideoWidth;
     private int mVideoHeight;
-
-
-    private OnPlayInfoListener mPlayInfoListener;
-
     private boolean autoPlay;
     private boolean isInvokePrepareListener;
-
+    private OnPlayInfoListener mPlayInfoListener;
 
 
     public ExoVideoView(Context context) {
@@ -52,16 +46,16 @@ public class ExoVideoView extends SurfaceView implements SurfaceHolder.Callback
 
     public void start()
     {
-        if (mExoVideo!=null)
+        if (mPlayer !=null)
         {
-            mExoVideo.setPlayWhenReady(true);
+            mPlayer.setPlayWhenReady(true);
         }
     }
     public void pause()
     {
-        if (mExoVideo!=null)
+        if (mPlayer !=null)
         {
-            mExoVideo.setPlayWhenReady(false);
+            mPlayer.setPlayWhenReady(false);
         }
     }
 
@@ -128,8 +122,8 @@ public class ExoVideoView extends SurfaceView implements SurfaceHolder.Callback
     }
 
 
-    public PlayerControl getPlayerControl(){
-        return mExoVideo==null?null:mExoVideo.getPlayerControl();
+    public ExoPlayer getPlayer(){
+        return mPlayer==null?null:mPlayer;
     }
 
     /**
@@ -148,9 +142,9 @@ public class ExoVideoView extends SurfaceView implements SurfaceHolder.Callback
 
     public void setBackgrounded(boolean backgrounded )
     {
-      if (mExoVideo!=null)
+      if (mPlayer !=null)
       {
-          mExoVideo.setBackgrounded(backgrounded);
+          mPlayer.setBackgrounded(backgrounded);
       }
     }
 
@@ -162,11 +156,11 @@ public class ExoVideoView extends SurfaceView implements SurfaceHolder.Callback
         }
         release();//释放之前的播放器
         mRendererBuilder=getRenderBuilder(mUri);
-        mExoVideo=new ExoPlayer(mRendererBuilder);
-        mExoVideo.setSurface(mSurfaceHolder.getSurface());
-        mExoVideo.addListener(this);
-        mExoVideo.setPlayWhenReady(autoPlay);
-        mExoVideo.prepare();
+        mPlayer =new ExoPlayer(mRendererBuilder);
+        mPlayer.setSurface(mSurfaceHolder.getSurface());
+        mPlayer.addListener(this);
+        mPlayer.setPlayWhenReady(autoPlay);
+        mPlayer.prepare();
     }
 
     public ExoPlayer.RendererBuilder getRenderBuilder(Uri uri){
@@ -175,14 +169,14 @@ public class ExoVideoView extends SurfaceView implements SurfaceHolder.Callback
 
     public void release()
     {
-        if (mExoVideo!=null)
+        if (mPlayer !=null)
         {
-            mExoVideo.release();
-            mExoVideo.removeListener(this);
+            mPlayer.release();
+            mPlayer.removeAllListener();
             mRendererBuilder.cancel();
             mRendererBuilder=null;
             isInvokePrepareListener=false;
-            mExoVideo=null;
+            mPlayer =null;
         }
     }
 
@@ -230,12 +224,12 @@ public class ExoVideoView extends SurfaceView implements SurfaceHolder.Callback
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         mSurfaceHolder=holder;
-        if (mExoVideo==null)
+        if (mPlayer ==null)
         {
             openVideo();
         }else {
-            mExoVideo.setSurface(holder.getSurface());
-            mExoVideo.setBackgrounded(false);
+            mPlayer.setSurface(holder.getSurface());
+            mPlayer.setBackgrounded(false);
         }
     }
 
@@ -246,10 +240,11 @@ public class ExoVideoView extends SurfaceView implements SurfaceHolder.Callback
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        if (mExoVideo!=null)
+        if (mPlayer !=null)
         {
-            mExoVideo.setBackgrounded(true);
+            mPlayer.setBackgrounded(true);
         }
+         holder.getSurface().release();
          mSurfaceHolder=null;
     }
 

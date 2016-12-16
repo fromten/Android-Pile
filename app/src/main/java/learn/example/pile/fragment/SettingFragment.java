@@ -22,6 +22,7 @@ import java.io.File;
 
 import learn.example.pile.R;
 import learn.example.pile.AppGlideModule;
+import learn.example.pile.ui.Messages;
 
 /**
  * Created on 2016/5/6.
@@ -56,12 +57,15 @@ public class SettingFragment extends Fragment {
         ClickableSpan clickSpan = new ClickableSpan() {
             @Override
             public void onClick(View widget) {
-                showCommonDialog(getContext(), "清除缓存", "确定清楚图片缓存?", new DialogInterface.OnClickListener() {
+                Messages.showMessages(getContext(), "清除缓存", "确定清楚图片缓存?", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        clearGlideDiskCache();
+                        if (which==DialogInterface.BUTTON_POSITIVE)
+                        {
+                            clearGlideDiskCache();
+                        }
                     }
-                }, null);
+                });
                 mImgCache.setSelected(true);
             }
         };
@@ -98,24 +102,5 @@ public class SettingFragment extends Fragment {
             }
         }.start();
         mImgCache.setText("磁盘缓存大小:  0.0");
-    }
-
-
-
-
-    /**
-     * 显示带有确定和取消按钮的对话框
-     * @param context          context
-     * @param title            标题
-     * @param msg              消息
-     * @param positiveListener 确定点击监听
-     * @param negativeListener 取消点击监听
-     */
-    public void showCommonDialog(Context context, CharSequence title, CharSequence msg,
-                                        DialogInterface.OnClickListener positiveListener, DialogInterface.OnClickListener negativeListener) {
-        if (context == null) return;
-        new AlertDialog.Builder(context).setTitle(title).setMessage(msg)
-                .setNegativeButton("取消", negativeListener)
-                .setPositiveButton("确定", positiveListener).show();
     }
 }

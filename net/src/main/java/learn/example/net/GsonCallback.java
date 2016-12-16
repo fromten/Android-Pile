@@ -42,8 +42,8 @@ public class GsonCallback<T> extends MainThreadCallback {
         }catch (JsonSyntaxException e)
         {
             deliverFailureResult("JsonSyntaxException "+e.getMessage()+
-                                 "Request " +call.request()+
-                                 ",response data is "+resStr);
+                                 ",Request " +call.request()+
+                                 ",response is "+resStr);
         }
     }
 

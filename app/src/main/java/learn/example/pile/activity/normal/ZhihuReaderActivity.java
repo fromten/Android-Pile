@@ -21,8 +21,8 @@ import com.bumptech.glide.request.target.ImageViewTarget;
 
 import learn.example.pile.R;
 import learn.example.pile.fragment.comment.ZhihuCommentFragment;
-import learn.example.pile.html.ImageClickInserter;
-import learn.example.pile.html.JavaScriptInserter;
+import learn.example.pile.html.plugin.ImageClickPlugin;
+import learn.example.pile.html.plugin.JavaScriptPlugin;
 import learn.example.pile.html.ZhihuHtml;
 import learn.example.pile.jsonbean.ZhihuNewsContent;
 import learn.example.pile.net.IService;
@@ -142,7 +142,7 @@ public class ZhihuReaderActivity extends AppCompatActivity implements IService.C
         mWebView.addJavascriptInterface(commentClickListener,commentClickListener.getName());
 
         //添加图片点击监听
-        ImageClickInserter imageClickInserter =new ImageClickInserter(this);
+        ImageClickPlugin imageClickInserter =new ImageClickPlugin(this);
         mWebView.addJavascriptInterface(imageClickInserter, imageClickInserter.getName());
 
         ZhihuHtml zhihuHtml=new ZhihuHtml(data.getBody(),data.getCss(),data.getJs());
@@ -162,7 +162,7 @@ public class ZhihuReaderActivity extends AppCompatActivity implements IService.C
     /**
      * 替换知乎页面的评论点击
      */
-    public class ZhihuCommentClickListener implements JavaScriptInserter
+    public class ZhihuCommentClickListener implements JavaScriptPlugin
     {
 
         @JavascriptInterface()

@@ -1,21 +1,22 @@
-package learn.example.pile.html;
+package learn.example.pile.html.plugin;
 
+import android.content.Context;
 import android.webkit.JavascriptInterface;
 
 /**
  * Created on 2016/9/20.
  */
-public class ContentGetInserter implements JavaScriptInserter {
+public class ContentGetPlugin implements JavaScriptPlugin {
 
     @Override
     public String getName() {
-        return "ContentGetInserter";
+        return "ContentGetPlugin";
     }
 
     @Override
     public String getJavaScript() {
         return "var page=document.documentElement.outerHTML;\n"+
-                "ContentGetInserter.passHtml(String(page));";
+                "ContentGetPlugin.passHtml(String(page));";
     }
 
     /**

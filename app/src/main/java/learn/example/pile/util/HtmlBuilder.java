@@ -8,8 +8,6 @@ public class HtmlBuilder {
 
     private StringBuilder mStringBuilder=new StringBuilder();
 
-
-
     public HtmlBuilder startHtml(String attrs)
     {
         mStringBuilder.append("<!DOCTYPE html>");
@@ -146,15 +144,15 @@ public class HtmlBuilder {
     {
         if (args.length%2!=0)
         {
-            throw new IllegalArgumentException("Expect valid count but count of the args is "+ args.length);
+            throw new IllegalArgumentException("Expect valid count but args.size  is "+ args.length);
         }
         int count=args.length;
-        String result="";
+        StringBuilder builder=new StringBuilder();
         for (int i=0;i<count;i+=2)
         {
-            result+=attr(args[i],args[i+1]);
+            builder.append(attr(args[i],args[i+1]));
         }
-        return result;
+        return builder.toString();
     }
 
 
@@ -166,7 +164,7 @@ public class HtmlBuilder {
      */
     public static String attr(String attrName,String value)
     {
-        return String.format("%s='%s' ",attrName,value);
+        return attrName+'='+value+' ';
     }
 
 

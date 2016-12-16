@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import learn.example.pile.provider.OpenEyes;
-import learn.example.pile.util.GsonHelper;
+import learn.example.pile.util.gson.GsonHelper;
+import learn.example.pile.util.gson.SafeJsonObject;
 
 /**
  * Created on 2016/8/5.
@@ -51,10 +52,11 @@ public class OpenEyeJsonParserFactory {
 
 
     private OpenEyes.VideoInfo getVideoInfo(JsonObject data) {
-        String title = GsonHelper.getAsString(data.get("title"), null);
-        String playUrl = GsonHelper.getAsString(data.get("playUrl"), null);
-        int duration = GsonHelper.getAsInteger(data.get("duration"), 0);
-        int id = GsonHelper.getAsInteger(data.get("id"), 0);
+        SafeJsonObject wrap=new SafeJsonObject(data);
+        String title = wrap.getString("title");
+        String playUrl = wrap.getString("playUrl");
+        int duration = wrap.getInteger("duration");
+        int id = wrap.getInteger("id");
         JsonObject cover = data.getAsJsonObject("cover");
         String imageUrl = GsonHelper.getAsString(cover.get("feed"), null);
         return new OpenEyes.VideoInfo(title, playUrl, imageUrl, duration, id);

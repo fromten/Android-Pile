@@ -1,4 +1,4 @@
-package learn.example.pile.html;
+package learn.example.pile.html.plugin;
 
 import android.content.Context;
 import android.webkit.JavascriptInterface;
@@ -8,16 +8,19 @@ import learn.example.pile.util.ActivityLauncher;
 /**
  * Created on 2016/8/27.
  */
-public class VideoClickInserter implements JavaScriptInserter {
-    Context mContext;
-    public VideoClickInserter(Context context) {
-        mContext=context;
+public class VideoClickPlugin extends ContextPlugin {
+
+
+    public VideoClickPlugin(Context context) {
+        super(context);
     }
 
     @JavascriptInterface
     public void openVideo(String url)
     {
-        ActivityLauncher.startVideoActivity(mContext,url);
+        Context context=mWeakReference.get();
+        if (context!=null)
+            ActivityLauncher.startVideoActivity(context,url);
     }
 
     public String getJavaScript()
@@ -33,14 +36,14 @@ public class VideoClickInserter implements JavaScriptInserter {
                 "      objs[i].onclick=function()\n" +
                 "      {\n" +
                 "         var url=this.getAttribute(\"mp4\"); \n" +
-                "         VideoClickInserter.openVideo(url)\n" +
+                "         VideoClickPlugin.openVideo(url)\n" +
                 "      }  \n" +
                 "    }\n";
     }
 
     public String getName()
     {
-        return "VideoClickInserter";
+        return "VideoClickPlugin";
     }
 
 }

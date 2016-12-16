@@ -1,7 +1,6 @@
 package learn.example.pile.activity.base;
 
 import android.annotation.TargetApi;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,8 +15,6 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 import learn.example.pile.R;
-
-import static android.R.attr.value;
 
 /**
  * Created on 2016/6/23.

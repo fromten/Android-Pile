@@ -52,7 +52,6 @@
         <activity android:name=".activity.normal.FragmentActivity"
                   android:theme="@style/LightActionBarTheme"  />
 
-
         <activity android:name=".activity.normal.ZhihuReaderActivity"/>
         <service android:name=".service.StartImageCacheService"/>
     </application>

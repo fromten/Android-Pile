@@ -12,7 +12,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
-import java.util.EventListener;
 import java.util.List;
 
 import learn.example.net.OkHttpRequest;
@@ -23,7 +22,7 @@ import learn.example.pile.fragment.comment.NetEaseCommentFragment;
 import learn.example.pile.provider.NetEase;
 import learn.example.pile.pojo.PhotosMessage;
 import learn.example.pile.ui.PhotoWatcherLayout;
-import learn.example.pile.util.GsonHelper;
+import learn.example.pile.util.gson.GsonHelper;
 import okhttp3.Call;
 import okhttp3.Request;
 import uk.co.senab.photoview.PhotoViewAttacher;

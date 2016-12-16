@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.BitmapRequestBuilder;
@@ -15,71 +16,96 @@ import com.google.gson.Gson;
 
 import learn.example.pile.R;
 import learn.example.pile.adapters.base.GsonStateAdapter;
-import learn.example.pile.jsonbean.JokeBean;
+import learn.example.pile.pojo.Joke;
 import learn.example.pile.ui.CircleViewTarget;
 import learn.example.pile.ui.NineGridLayout;
 import learn.example.pile.util.ActivityLauncher;
 import learn.example.pile.util.DeviceInfo;
 import learn.example.pile.util.GlideUtil;
-import learn.example.pile.util.GsonHelper;
 
 /**
  * Created on 2016/8/11.
  */
-public class JokeListAdapter extends GsonStateAdapter<JokeBean.DataBean.DataListBean.GroupBean,JokeListAdapter.JokeViewHolder> implements View.OnClickListener{
+public class JokeListAdapter extends GsonStateAdapter<Joke.Item, JokeListAdapter.JokeViewHolder> implements View.OnClickListener {
 
-    public static final int TYPE_MULTI = 2;
-    public static final int TYPE_SINGLE = 4;
-    public static final int TYPE_NORMAL = 6;
+    public static final int TYPE_MULTI_IMAGE = 2;
+    public static final int TYPE_SINGLE_VIDEO = 4;
+    public static final int TYPE_SINGLE_IMAGE = 6;
+    public static final int TYPE_NORMAL = 8;
 
     private Context mContext;
     private GlideUtil.CropSquareTransformation mCropSquareTransformation;
-    private GlideUtil.MatchTransformation mMatchTransformation;
     private GlideUtil.FitGifTransform mFitGifTransform;
+    private final int VIDEO_COVER_HEIGHT;
+
     public JokeListAdapter(Context context) {
-         mContext=context;
+        mContext = context;
+        mCropSquareTransformation = new GlideUtil.CropSquareTransformation(mContext);
+        mFitGifTransform = new GlideUtil.FitGifTransform(context);
 
+        DeviceInfo info = new DeviceInfo(context);
+        if (info.SCREEN_HEIGHT>info.SCREEN_WIDTH)//竖屏
+        {
+            VIDEO_COVER_HEIGHT= (int) (info.SCREEN_HEIGHT / 3.5f);
+        }else {
+            VIDEO_COVER_HEIGHT= (int) (info.SCREEN_HEIGHT/1.5f);
+        }
 
-         DeviceInfo info=new DeviceInfo(context);
-         int desireHeight = (int) (info.SCREEN_HEIGHT/3.5f);
-         mMatchTransformation =new GlideUtil.MatchTransformation(context,info.SCREEN_WIDTH,desireHeight);
-
-         mCropSquareTransformation=new GlideUtil.CropSquareTransformation(mContext);
-         mFitGifTransform=new GlideUtil.FitGifTransform(context);
     }
 
 
     @Override
-    public Class<JokeBean.DataBean.DataListBean.GroupBean> getActualClass() {
-        return JokeBean.DataBean.DataListBean.GroupBean.class;
+    public Class<Joke.Item> getActualClass() {
+        return Joke.Item.class;
     }
 
+    private void resetLayoutParams(JokeSingleViewHolder holder)
+    {
+        RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams
+                        (ViewGroup.LayoutParams.MATCH_PARENT,
+                        VIDEO_COVER_HEIGHT);
+        holder.cover.setLayoutParams(params);
+    }
 
 
     @Override
     public int getItemViewType(int position) {
-        if (get(position).is_multi_image()) {
-            return TYPE_MULTI;
-        }else if (get(position).getImages()!=null){
-            return TYPE_SINGLE;
+        if (get(position).isMultiImages()) {
+            return TYPE_MULTI_IMAGE;
+        } else if (get(position).isVideo()) {
+            return TYPE_SINGLE_VIDEO;
+        }else if (get(position).getImage()!=null)
+        {
+            return TYPE_SINGLE_IMAGE;
         }
         return TYPE_NORMAL;
     }
 
 
-
     @Override
     public JokeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         JokeViewHolder holder;
-        if (viewType == TYPE_MULTI) {
-            holder= new JokeMultipleViewHolder(parent);
-        }else if (viewType== TYPE_SINGLE)
+        switch (viewType)
         {
-            holder=new JokeSingleViewHolder(parent);
-            ((JokeSingleViewHolder)holder).cover.setOnClickListener(this);
-        }else {
-            View view=LayoutInflater.from(mContext).inflate(R.layout.item_joke_normal,parent,false);
-            holder=new JokeViewHolder(view);
+            case TYPE_MULTI_IMAGE:holder=new JokeMultipleViewHolder(parent);break;
+            case TYPE_SINGLE_IMAGE:
+            case TYPE_SINGLE_VIDEO:
+                holder=new JokeSingleViewHolder(parent);
+                break;
+            case TYPE_NORMAL:
+            default:
+                View view = LayoutInflater.from(mContext)
+                        .inflate(R.layout.item_joke_normal, parent, false);
+                holder = new JokeViewHolder(view);
+                break;
+        }
+        if (viewType==TYPE_SINGLE_IMAGE||viewType==TYPE_SINGLE_VIDEO)
+        {
+            ((JokeSingleViewHolder) holder).cover.setOnClickListener(this);
+        }
+        if (viewType==TYPE_SINGLE_VIDEO)
+        {
+            resetLayoutParams((JokeSingleViewHolder) holder);
         }
         holder.itemView.setOnClickListener(this);
         return holder;
@@ -87,104 +113,85 @@ public class JokeListAdapter extends GsonStateAdapter<JokeBean.DataBean.DataList
 
     @Override
     public void onBindViewHolder(JokeViewHolder holder, int position) {
-        JokeBean.DataBean.DataListBean.GroupBean item = get(position);
-        String avatarUrl = item.getUser().getAvatar_url();
-        String name = item.getUser().getName();
-        String text=item.getText();
-        int commentCount=item.getComment_count();
-        int dislikeCount=item.getBury_count();
-        int likeCount=item.getDigg_count();
-        holder.userName.setText(name);
-        holder.contentText.setText(text);
-        holder.likeCount.setText(String.valueOf(likeCount));
-        holder.dislikeCount.setText(String.valueOf(dislikeCount));
-        holder.commentCount.setText("评论:"+String.valueOf(commentCount));
+        Joke.Item item = get(position);
+        holder.userName.setText(item.getUserName());
+        holder.contentText.setText(item.getText());
+        holder.likeCount.setText(String.valueOf(item.getLikeCount()));
+        holder.dislikeCount.setText(String.valueOf(item.getUnLikeCount()));
+        holder.commentCount.setText("评论:".concat(String.valueOf(item.getCommentCount())));
         Glide.with(mContext)
-                .load(avatarUrl)
+                .load(item.getAvatar())
                 .asBitmap()
                 .error(R.mipmap.ic_def_show_user)
                 .into(new CircleViewTarget(holder.avatar));
 
-        holder.itemView.setTag(R.id.view_tag1,item);
+        holder.itemView.setTag(R.id.view_tag1, item);
         if (holder instanceof JokeMultipleViewHolder) {
             bindMulti((JokeMultipleViewHolder) holder, item);
-        }else if (holder instanceof JokeSingleViewHolder)
-        {
-            bindSingle((JokeSingleViewHolder) holder,item);
+        } else if (holder instanceof JokeSingleViewHolder) {
+            bindSingle((JokeSingleViewHolder) holder, item);
         }
     }
 
 
-    public void bindMulti(JokeMultipleViewHolder holder, JokeBean.DataBean.DataListBean.GroupBean item) {
-        int len = item.getLarge_image_list().length;
-
-        String[] urls = new String[len];
-        boolean[] isGif=new boolean[len];
-        for (int i = 0; i < len; i++) {
-            JokeBean.DataBean.DataListBean.GroupBean.ImagesBean u = item.getLarge_image_list()[i];
-            urls[i] = u.getUrl()!=null?u.getUrl():u.getFirstUrl();
-            isGif[i]=u.is_gif();
+    public void bindMulti(JokeMultipleViewHolder holder, Joke.Item item) {
+        Joke.Image[] images = item.getImageUrls();
+        String[] urls = new String[images.length];
+        boolean[] isGif = new boolean[images.length];
+        for (int i = 0; i < images.length; i++) {
+            urls[i] = images[i].getUrl();
+            isGif[i] = images[i].isGif();
         }
-        holder.mGridLayout.updateViews(urls,isGif);
+        holder.mGridLayout.updateViews(urls, isGif);
     }
 
-    public void bindSingle(JokeSingleViewHolder holder, JokeBean.DataBean.DataListBean.GroupBean item) {
-        String url=item.getImages().getFirstUrl();
-        if (item.is_gif())
-        {
+    public void bindSingle(JokeSingleViewHolder holder, Joke.Item item) {
+        holder.cover.setTag(R.id.view_tag1, item);
+        if (item.isGif()) {
             holder.hint.setText(" gif ");
-        }else {
+        } else {
             holder.hint.setText(null);
         }
-        holder.cover.setTag(R.id.view_tag1,item);
-        BitmapRequestBuilder b=Glide.with(mContext)
-                .load(url)
-                .asBitmap();
 
-        if (item.is_video())//视频封面宽度充满屏幕宽度
+        String url = item.getImage().getUrl();
+        BitmapRequestBuilder b = Glide.with(mContext)
+                .load(url).asBitmap()
+                .dontAnimate()
+                .dontTransform();
+        if (item.isVideo())//视频封面宽度充满屏幕宽度
         {
             holder.ic_play.setVisibility(View.VISIBLE);
-            b.transform(mMatchTransformation);
-        }else {
+            b.centerCrop();
+        } else {
             holder.ic_play.setVisibility(View.INVISIBLE);
-            if (item.is_gif())//Gif封面图片
-            {
-                //gif图片通常过于太小
+            if (item.isGif())
+            {   //gif图片通常过于太小
                 b.transform(mFitGifTransform);
-
-            }else {//普通图片
+            }else {
                 b.transform(mCropSquareTransformation);
                 b.diskCacheStrategy(DiskCacheStrategy.ALL);
             }
-
         }
         b.into(holder.cover);
     }
 
     @Override
     public void onClick(View v) {
-        JokeBean.DataBean.DataListBean.GroupBean item= (JokeBean.DataBean.DataListBean.GroupBean) v.getTag(R.id.view_tag1);
-        if (v.getId()==R.id.cover){
-            if (item.is_video())
-            {
-                String url=item.getMp4_url();
-                ActivityLauncher.startVideoActivity(mContext,url);
-            }else if (item.is_gif())
-            {  if (item.getGifVideo()!=null)
-            {
-                String url= GsonHelper.getAsString(item.getGifVideo().get("mp4_url"),null);
-                if (url==null)
-                {
-                    url=item.getGifUrl();
+        Joke.Item item = (Joke.Item) v.getTag(R.id.view_tag1);
+        if (v.getId() == R.id.cover) {
+            if (item.isVideo() || item.isGif()) {
+                Joke.Video video = item.getVideo();
+                if (video != null) {
+                    String url = video.getUrl();
+                    if (item.isVideo()) ActivityLauncher.startVideoActivity(mContext, url);
+                    else ActivityLauncher.startShortVideoActivity(mContext, url);
                 }
-                ActivityLauncher.startShortVideoActivity(mContext,url);
+            } else {
+                String url = item.getImage().getUrl();
+                ActivityLauncher.startPhotoActivityForSingle(mContext, url);
             }
-            }else {
-                String url=item.getImages().getFirstUrl();
-                ActivityLauncher.startPhotoActivityForSingle(mContext,url);
-            }
-        }else {
-            ActivityLauncher.startDetailJokeActivity(mContext,new Gson().toJson(item));
+        } else {
+            ActivityLauncher.startDetailJokeActivity(mContext, new Gson().toJson(item));
         }
     }
 
@@ -201,9 +208,9 @@ public class JokeListAdapter extends GsonStateAdapter<JokeBean.DataBean.DataList
             avatar = (ImageView) itemView.findViewById(R.id.avatar);
             userName = (TextView) itemView.findViewById(R.id.user_name);
             contentText = (TextView) itemView.findViewById(R.id.text);
-            likeCount= (TextView) itemView.findViewById(R.id.like);
-            dislikeCount= (TextView) itemView.findViewById(R.id.dislike);
-            commentCount= (TextView) itemView.findViewById(R.id.comment_num);
+            likeCount = (TextView) itemView.findViewById(R.id.like);
+            dislikeCount = (TextView) itemView.findViewById(R.id.dislike);
+            commentCount = (TextView) itemView.findViewById(R.id.comment_num);
         }
     }
 
@@ -211,15 +218,16 @@ public class JokeListAdapter extends GsonStateAdapter<JokeBean.DataBean.DataList
         public ImageView cover;
         public ImageView ic_play;
         public TextView hint;
+
         public JokeSingleViewHolder(ViewGroup parent) {
             this(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_joke_single, parent, false));
         }
 
         public JokeSingleViewHolder(View itemView) {
             super(itemView);
-            cover= (ImageView) itemView.findViewById(R.id.cover);
-            ic_play= (ImageView) itemView.findViewById(R.id.ic_play);
-            hint= (TextView) itemView.findViewById(R.id.hint);
+            cover = (ImageView) itemView.findViewById(R.id.cover);
+            ic_play = (ImageView) itemView.findViewById(R.id.ic_play);
+            hint = (TextView) itemView.findViewById(R.id.hint);
         }
     }
 
@@ -235,11 +243,11 @@ public class JokeListAdapter extends GsonStateAdapter<JokeBean.DataBean.DataList
 
         public JokeMultipleViewHolder(View itemView) {
             super(itemView);
-            mGridLayout= (NineGridLayout) itemView.findViewById(R.id.table);
+            mGridLayout = (NineGridLayout) itemView.findViewById(R.id.table);
             mGridLayout.setItemClickListener(new NineGridLayout.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, ViewGroup parent, int position, String[] url) {
-                    ActivityLauncher.startPhotoActivityForMulti(view.getContext(),url,position);
+                    ActivityLauncher.startPhotoActivityForMulti(view.getContext(), url, position);
                 }
             });
         }

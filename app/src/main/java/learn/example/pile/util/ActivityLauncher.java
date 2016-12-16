@@ -80,7 +80,7 @@ public class ActivityLauncher {
     {
         if (position<0||position>=urls.length)
         {
-            throw new IllegalArgumentException("position must in between 0:urls.length-1");
+            throw new IllegalArgumentException("position must in between 0:"+(urls.length-1));
         }
         Intent intent=new Intent(context, PhotoActivity.class);
         intent.putExtra(PhotoActivity.EXTRA_IMAGE_URLS,urls);

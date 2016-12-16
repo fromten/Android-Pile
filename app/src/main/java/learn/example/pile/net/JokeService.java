@@ -1,7 +1,11 @@
 package learn.example.pile.net;
 
-import learn.example.pile.jsonbean.JokeBean;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import learn.example.pile.pojo.Joke;
 import learn.example.pile.provider.JokeProvider;
+import learn.example.pile.util.gson.JokeTypeAdapter;
 import okhttp3.Request;
 
 /**
@@ -13,15 +17,23 @@ public class JokeService extends NetService {
 
 
 
-    public void getTuijianJoke(int count,int screenWidth,IService.Callback<JokeBean> callback)
+    public void getTuijianJoke(int count,int screenWidth,IService.Callback<Joke> callback)
     {
         String url= JokeProvider.createHotUrl(count,screenWidth);
-        newRequest(TAG,JokeBean.class,url,callback);
+        Request request=new Request.Builder().url(url).build();
+        newRequest(TAG,Joke.class,request,buildMyGson(),callback);
     }
 
     public void getComment(int start,int len,String groupID,IService.Callback<String> callback)
     {
         String url= JokeProvider.createCommentUrl(start,len,groupID);
         newStringRequest(TAG,url,callback);
+    }
+
+    private Gson buildMyGson()
+    {
+        return new GsonBuilder()
+                .registerTypeAdapter(Joke.class,new JokeTypeAdapter())
+                .create();
     }
 }

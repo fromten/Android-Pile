@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.Menu;
 import android.widget.FrameLayout;
 
@@ -26,6 +27,7 @@ public class FragmentActivity extends ToolBarActivity {
     public static final String EXTRA_FRAGMENT_ARGUMENTS ="EXTRA_FRAGMENT_ARGUMENTS";
 
     private static final String TAG_FRAGMENT="FRAGMENT_ACTIVITY_TAG_FRAGMENT";
+    private static final String TAG = "FragmentActivity";
 
     private FrameLayout mFrameLayout;
 
@@ -38,12 +40,10 @@ public class FragmentActivity extends ToolBarActivity {
         mFrameLayout=new FrameLayout(this);
         mFrameLayout.setId(R.id.root);
         setContentView(mFrameLayout);
-
         if(getSupportFragmentManager().findFragmentByTag(TAG_FRAGMENT)==null)
         {
             showAndCreateFragment();
         }
-
     }
 
     public void showAndCreateFragment() {
@@ -52,20 +52,14 @@ public class FragmentActivity extends ToolBarActivity {
         {
             String name=intent.getStringExtra(EXTRA_FRAGMENT_CLASS_NAME);
             Bundle argus=intent.getBundleExtra(EXTRA_FRAGMENT_ARGUMENTS);
-            try {
-                Class<Fragment> clazz= (Class<Fragment>) Class.forName(name);
-                Fragment fragment= clazz.newInstance();
-                fragment.setArguments(argus);
-
+            try{
+                Fragment fragment=Fragment.instantiate(this,name,argus);
                 getSupportFragmentManager().beginTransaction()
                         .add(R.id.root,fragment,TAG_FRAGMENT)
                         .commit();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
+            }catch (Fragment.InstantiationException e)
+            {
+                Log.d(TAG,"instance error,class ："+name);
             }
         }
     }

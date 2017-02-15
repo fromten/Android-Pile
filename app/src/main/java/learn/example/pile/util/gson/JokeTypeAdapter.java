@@ -28,7 +28,7 @@ public class JokeTypeAdapter implements JsonDeserializer<Joke> {
                 continue;
             JsonObject ob=e.getAsJsonObject();
             int type=ob.getAsJsonPrimitive("type").getAsInt();
-            if (type==5)continue;//广告
+            if (type==5)continue;//跳过广告
             JsonObject group=ob.getAsJsonObject("group");
             Joke.Item item=createItem(group);
             if (item!=null)

@@ -35,8 +35,8 @@ public class ImageClickPlugin extends ContextPlugin {
                 "for(var i=0;i<objs.length;i++)\n" +
                 "    {\n" +
                 "       objs[i].onclick=function(){\n" +
-                "          ImageClickPlugin.openPhotoActivity(this.src);\n" +
-                "       }\n" +
+                        getName()+".openPhotoActivity(this.src);\n" +
+                "       }" +
                 "    }";
     }
 }

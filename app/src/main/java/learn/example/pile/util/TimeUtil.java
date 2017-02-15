@@ -44,7 +44,10 @@ public class TimeUtil {
         return minute+"'"+s;
     }
 
-    //return ms
+
+    /**
+     * @return time in millisecond
+     */
     public static long getCurrentTime()
     {
         return new Date().getTime();

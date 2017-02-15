@@ -6,6 +6,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
+
+import java.io.StringReader;
 
 import learn.example.pile.util.gson.GsonHelper;
 import learn.example.pile.util.HtmlBuilder;
@@ -95,8 +98,10 @@ public class NetEaseHtml implements Html{
         htmlBuilder.startHtml("lang='zh-cn'")
                    .startHead(null)
                    .endHead();
+        JsonReader reader=new JsonReader(new StringReader(res));
+        reader.setLenient(true);
+        JsonObject object=new JsonParser().parse(reader).getAsJsonObject();
 
-        JsonObject object=new JsonParser().parse(res).getAsJsonObject();
         object=object.getAsJsonObject(docID);
 
         htmlBuilder.startBody(null)

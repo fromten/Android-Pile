@@ -1,188 +1,229 @@
 package learn.example.pile.activity.normal;
 
 
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.ActionBar;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+
+import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.LoadControl;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
+import com.google.android.exoplayer2.extractor.ExtractorsFactory;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.trackselection.AdaptiveVideoTrackSelection;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelection;
+import com.google.android.exoplayer2.trackselection.TrackSelector;
+import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
+import com.google.android.exoplayer2.upstream.BandwidthMeter;
+import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 
 import learn.example.pile.R;
 import learn.example.pile.activity.base.CommentMenuActivity;
+import learn.example.pile.ui.VideoErrorDialog;
 import learn.example.pile.ui.VolumeProgressView;
-import learn.example.pile.video.ExoPlayer;
-import learn.example.pile.video.ExoVideoView;
-import learn.example.pile.video.MediaPlayControlView;
+import learn.example.pile.video.CopySimpleExoPlayerView;
+import learn.example.pile.video.SimpleEventListener;
 
 /**
  * Created on 2016/5/26.
  */
 public class VideoActivity extends CommentMenuActivity {
 
-
-    public static final String EXTRA_TITLE = "EXTRA_TITLE";
-    private static final String STATE_SAVE_VIDEO_POSITION = "STATE_SAVE_VIDEO_POSITION";
-
-
-    private ExoVideoView mExoVideoView;
-    private MediaPlayControlView mPlayerControlView;
-    private VolumeProgressView mVolumeProgressView;
-    private LinearLayout mRetryRoot;
-    private RetryViewHolder mRetryViewHolder;
-
-    private GestureDetector mScreenTouchListener;
-    private VideoStateListener mVideoStateListener;
-    private ExoPlayer mPlayer;
-    private int mSavedSeekPosition = -1;
-
-    public static final int HIDE_VOLUME_PROGERESSBAR = 0;
-    public static final int HIDE_ACTIONBAR = 1;
-    private static final int RESUME_PLAY = 4;
-    private Handler mHandler = new Handler() {
+    private static final int DELAY_MILLISECOND=3000;
+    private static final int MSG_HIDE_VOLUMEVIEW=0;
+    private static final int MSG_HIDE_ACTIONBAR=1;
+    private Handler mHandler=new Handler()
+    {
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case HIDE_VOLUME_PROGERESSBAR:
+            switch (msg.what)
+            {
+                case MSG_HIDE_VOLUMEVIEW:
                     mVolumeProgressView.hide();
                     break;
-                case HIDE_ACTIONBAR:
+                case MSG_HIDE_ACTIONBAR:
                     hideActionBar();
-                    break;
-                case RESUME_PLAY:
-                    mExoVideoView.start();
                     break;
             }
         }
     };
 
+
+    public static final String EXTRA_TITLE = "EXTRA_TITLE";
+    //private static final String STATE_SAVE_VIDEO_POSITION = "STATE_SAVE_VIDEO_POSITION";
+    //final String URL = "http://baobab.kaiyanapp.com/api/v1/playUrl?vid=13861&editionType=default&source=ucloud";
+
+    private VolumeProgressView mVolumeProgressView;
+    private CopySimpleExoPlayerView mSimpleExoPlayerView;
+    private SimpleExoPlayer mExoPlayer;
+    private PlayerListener mPlayerListener;
+    private long resumePosition;
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_exo);
-        bindViews();
-        setListener();
-        showTitle();
-        if (savedInstanceState != null) {
-            mSavedSeekPosition = savedInstanceState.getInt(STATE_SAVE_VIDEO_POSITION, -1);
+        mSimpleExoPlayerView = (CopySimpleExoPlayerView) findViewById(R.id.player_view);
+        mVolumeProgressView= (VolumeProgressView) findViewById(R.id.video_volume);
+        setTitle(getIntent().getStringExtra(EXTRA_TITLE));
+        initPlayerView();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (Util.SDK_INT > 23) {
+            initializePlayer();
         }
-        playVideo();
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
-        mHandler.sendEmptyMessageDelayed(RESUME_PLAY, 1000);
+        if ((Util.SDK_INT <= 23 || mExoPlayer == null)) {
+            initializePlayer();
+        }
     }
 
     @Override
-    protected void onPause() {
-        mExoVideoView.pause();
+    public void onPause() {
         super.onPause();
+        if (Util.SDK_INT <= 23) {
+            releasePlayer();
+        }
     }
 
+
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        //保存现在的播放位置
-        outState.putInt(STATE_SAVE_VIDEO_POSITION, mPlayer == null ? 0 : (int) mPlayer.getCurrentPosition());
-        super.onSaveInstanceState(outState);
+    public void onStop() {
+        super.onStop();
+        if (Util.SDK_INT > 23) {
+            releasePlayer();
+        }
     }
 
     @Override
     protected void onDestroy() {
         mHandler.removeCallbacksAndMessages(null);
-        mHandler = null;
-        mExoVideoView.release();
-        mExoVideoView.setPlayInfoListener(null);
-        mExoVideoView.setOnTouchListener(null);
-        mExoVideoView = null;
-        mVideoStateListener = null;
-        mSimpleOnGestureListener = null;
         super.onDestroy();
     }
 
-
-    private void showTitle() {
-        String title = getIntent().getStringExtra(EXTRA_TITLE);
-        setTitle(title);
-    }
-
-    private void bindViews() {
-        mExoVideoView = (ExoVideoView) findViewById(R.id.video);
-        mPlayerControlView = (MediaPlayControlView) findViewById(R.id.control);
-        mRetryRoot = (LinearLayout) findViewById(R.id.retry_root);
-        mVolumeProgressView = (VolumeProgressView) findViewById(R.id.video_volume);
-    }
-
-    private void playVideo() {
-        Uri uri = getIntent().getData();
-        if (uri != null) {
-            mExoVideoView.setVideoUri(uri);
-        }
-    }
-
-    public void setListener() {
-        mRetryViewHolder = new RetryViewHolder(mRetryRoot);
-        mVideoStateListener = new VideoStateListener();
-        mExoVideoView.setPlayInfoListener(mVideoStateListener);
-        mScreenTouchListener = new GestureDetector(this, mSimpleOnGestureListener);
-        mExoVideoView.setOnTouchListener(new View.OnTouchListener() {
+    public void initPlayerView() {
+        final GestureDetector detector = new GestureDetector(this, new PlayViewGestureListener());
+        mSimpleExoPlayerView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                mScreenTouchListener.onTouchEvent(event);
-                return true;
+                detector.onTouchEvent(event);
+                return true;//拦截View事件
             }
         });
-    }
-
-
-    private void enableView(View view, boolean enable) {
-        view.setEnabled(enable);
-        if (view instanceof ViewGroup) {
-            ViewGroup viewGroup = (ViewGroup) view;
-            for (int i = viewGroup.getChildCount() - 1; i >= 0; i--) {
-                enableView(viewGroup.getChildAt(i), enable);
-            }
+        boolean landscape = getResources().getConfiguration().orientation
+                == Configuration.ORIENTATION_LANDSCAPE;
+        if (landscape) {
+            mSimpleExoPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FILL);
+        } else {
+            mSimpleExoPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH);
         }
     }
 
+    public void initializePlayer() {
+        if (mExoPlayer == null) {
+            BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+            TrackSelection.Factory videoTrackSelectionFactory =
+                    new AdaptiveVideoTrackSelection.Factory(bandwidthMeter);
+            TrackSelector trackSelector =
+                    new DefaultTrackSelector(videoTrackSelectionFactory);
+            LoadControl loadControl = new DefaultLoadControl();
+            mExoPlayer = ExoPlayerFactory.newSimpleInstance(this, trackSelector, loadControl);
+            //view set
+            mSimpleExoPlayerView.setPlayer(mExoPlayer);
+            DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(this,
+                    Util.getUserAgent(this, "player"), null);
+            ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
+            Uri uri=getIntent().getData();
+            MediaSource videoSource = new ExtractorMediaSource(uri,
+                    dataSourceFactory, extractorsFactory, null, null);
 
-    private GestureDetector.SimpleOnGestureListener mSimpleOnGestureListener = new GestureDetector.SimpleOnGestureListener() {
-
-        private void toggleControlsVisible() {
-            if (mPlayerControlView.isShown()) {
-                mPlayerControlView.hide();
-                hideActionBar();
-            } else {
-                mPlayerControlView.show(3000);
-                showActionBar();
+            mPlayerListener=new PlayerListener();
+            mExoPlayer.addListener(mPlayerListener);
+            mExoPlayer.setPlayWhenReady(true);
+            if (resumePosition > 0) {
+                mExoPlayer.seekTo(resumePosition);
             }
-
-            if (mVolumeProgressView.isShown())//确保view隐藏
-            {
-                mHandler.sendEmptyMessage(HIDE_VOLUME_PROGERESSBAR);
-            }
-
-            // 在事件时间内如果重新点击,移除msg
-            mHandler.removeMessages(HIDE_ACTIONBAR);
-            //  3秒后隐藏ActionBar
-            mHandler.sendEmptyMessageDelayed(HIDE_ACTIONBAR, 3000);
+            mExoPlayer.prepare(videoSource);
         }
+    }
+
+    private void releasePlayer() {
+        if (mExoPlayer != null) {
+            resumePosition = mExoPlayer.getCurrentPosition();
+            mExoPlayer.removeListener(mPlayerListener);
+            mExoPlayer.release();
+            mExoPlayer = null;
+            mPlayerListener=null;
+        }
+    }
+
+    private void showAllAndRemoveMessage()
+    {
+        mHandler.removeMessages(MSG_HIDE_ACTIONBAR);
+        showActionBar();
+        //持续显示
+        mSimpleExoPlayerView.setControllerShowTimeoutMs(0);
+        mSimpleExoPlayerView.showController();
+    }
+
+    private void showErrorDialog()
+    {
+        final VideoErrorDialog fragment=new VideoErrorDialog();
+        fragment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initializePlayer();
+                fragment.dismiss();
+            }
+        });
+        fragment.show(getSupportFragmentManager(),"error");
+    }
+
+
+    private class PlayerListener extends SimpleEventListener{
+        private boolean isFirst=true;
+        @Override
+        public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+           if (isFirst&&playWhenReady)
+           {
+               mHandler.removeMessages(MSG_HIDE_ACTIONBAR);
+               mHandler.sendEmptyMessageDelayed(MSG_HIDE_ACTIONBAR,DELAY_MILLISECOND);
+               isFirst=false;
+           }
+        }
+
+        @Override
+        public void onPlayerError(ExoPlaybackException error) {
+            showAllAndRemoveMessage();
+            releasePlayer();
+            showErrorDialog();
+        }
+    }
+
+    private class PlayViewGestureListener extends GestureDetector.SimpleOnGestureListener {
 
         @Override
         public boolean onDown(MotionEvent e) {
-            return true;
-        }
-
-        @Override
-        public boolean onDoubleTap(MotionEvent e) {
-            if (mPlayer == null) return false;
-            mPlayerControlView.findViewById(R.id.pause).performClick();
-            toggleControlsVisible();
             return true;
         }
 
@@ -193,98 +234,57 @@ public class VideoActivity extends CommentMenuActivity {
 
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
-            toggleControlsVisible();
+            ActionBar actionBarV7 = getSupportActionBar();
+            if (actionBarV7 != null) {
+                if (actionBarV7.isShowing()) {
+                    getSupportActionBar().hide();
+                    mSimpleExoPlayerView.hideController();
+                } else {
+                    getSupportActionBar().show();
+                    mSimpleExoPlayerView.setControllerShowTimeoutMs(DELAY_MILLISECOND);
+                    mSimpleExoPlayerView.showController();
+
+                    mHandler.removeMessages(MSG_HIDE_ACTIONBAR);
+                    mHandler.sendEmptyMessageDelayed(MSG_HIDE_ACTIONBAR,DELAY_MILLISECOND);
+                }
+            }
             return true;
         }
 
-        int lastY;
-        private final int MAX_SCROLL_DISTANCE=50;
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            if (mExoPlayer != null) {
+                boolean isPlaying=mExoPlayer.getPlayWhenReady();
+                mExoPlayer.setPlayWhenReady(!isPlaying);
+            }
+            return true;
+        }
+
+
+        private static final int SCROLL_DISTANCE=50;
+        private int lastY;
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            if (lastY==0)lastY= (int) e1.getY();
+            if (lastY==0)
+            {
+                lastY= (int) e1.getY();
+            }
             int cy= (int) e2.getY();
-            distanceY=cy-lastY;
-            if (Math.abs(distanceY)>=MAX_SCROLL_DISTANCE) {
+            int scrollY=cy-lastY;
+            if (Math.abs(scrollY)>=SCROLL_DISTANCE) {
                 mVolumeProgressView.show();
-                if (distanceY > 0) {
+                if (scrollY > 0) {
                     mVolumeProgressView.decrease();
                 } else {
                     mVolumeProgressView.increase();
                 }
-                mHandler.removeMessages(HIDE_VOLUME_PROGERESSBAR);
-                mHandler.sendEmptyMessageDelayed(HIDE_VOLUME_PROGERESSBAR, 3000);
                 lastY=cy;
+
+                //先移除，后发送
+                mHandler.removeMessages(MSG_HIDE_VOLUMEVIEW);
+                mHandler.sendEmptyMessageDelayed(MSG_HIDE_VOLUMEVIEW,DELAY_MILLISECOND);
             }
             return true;
-        }
-    };
-
-
-    private class RetryViewHolder {
-        private View mRoot;
-        private TextView mTextView;
-
-        public RetryViewHolder(View view) {
-            mRoot = view;
-            mTextView = (TextView) mRoot.findViewById(R.id.hint);
-            mRoot.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mPlayer != null) {   //播放器实例还存在
-                        mPlayer.seekTo(0);
-                    } else {//重新播放视频
-                        playVideo();
-                    }
-                    hide();
-                    enableView(mPlayerControlView, true);
-                }
-            });
-        }
-
-        public void show(CharSequence hintText) {
-            mRoot.setVisibility(View.VISIBLE);
-            mRoot.setFocusable(true);
-            mRoot.setClickable(true);
-            mRoot.requestFocus();
-
-            mTextView.setText(hintText);
-        }
-
-        public void hide() {
-            mRoot.setVisibility(View.INVISIBLE);
-            mRoot.setFocusable(false);
-            mRoot.setClickable(false);
-        }
-
-    }
-
-    private class VideoStateListener implements ExoVideoView.OnPlayInfoListener {
-
-        @Override
-        public void onPrepare(ExoVideoView view) {
-            mPlayer = view.getPlayer();
-            if (mSavedSeekPosition > 0) {
-                mPlayer.seekTo(mSavedSeekPosition);
-            }
-            mPlayerControlView.setExoPlayer(mPlayer);
-            enableView(mPlayerControlView,true);
-            mHandler.sendEmptyMessageDelayed(HIDE_ACTIONBAR, 3000);
-            if (mRetryViewHolder.mRoot.isShown()) mRetryViewHolder.hide();
-        }
-
-
-        @Override
-        public void onCompleted(ExoVideoView view) {
-            mRetryViewHolder.show("重新播放");
-            enableView(mPlayerControlView, false);
-        }
-
-        @Override
-        public void onError(ExoVideoView view, Exception error) {
-            mRetryViewHolder.show("播放错误,重试");
-            enableView(mPlayerControlView,false);
-            mExoVideoView.release();
-            mPlayer = null;
         }
     }
 

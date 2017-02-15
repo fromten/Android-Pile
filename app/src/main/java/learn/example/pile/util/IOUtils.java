@@ -1,5 +1,6 @@
 package learn.example.pile.util;
 
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,15 +9,15 @@ import java.io.InputStreamReader;
 /**
  * Created on 2016/8/28.
  */
-public class IOutil {
+public class IOUtils {
 
-    public static String convertString(InputStream in) throws IOException {
+    public static String readString(InputStream in) throws IOException {
         if (in==null)
         {
             return null;
         }
         BufferedReader reader=new BufferedReader(new InputStreamReader(in));
-        StringBuffer sb=new StringBuffer();
+        StringBuilder sb=new StringBuilder();
         String readStr=null;
         try {
             while ((readStr=reader.readLine())!=null)

@@ -34,7 +34,7 @@
                   android:launchMode="singleTask"/>
 
         <activity android:name=".activity.normal.VideoActivity"
-                  android:configChanges="orientation|screenSize"
+                  android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
                   android:label="视频"/>
 
         <activity android:name=".activity.normal.PhotoActivity"/>
@@ -45,9 +45,6 @@
         </activity>
 
         <activity android:name=".activity.normal.ShortVideoActivity"/>
-
-        <activity android:name=".activity.normal.DetailJokeActivity"
-                  android:label="详细"/>
 
         <activity android:name=".activity.normal.FragmentActivity"
                   android:theme="@style/LightActionBarTheme"  />

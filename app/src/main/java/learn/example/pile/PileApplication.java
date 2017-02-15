@@ -2,6 +2,8 @@ package learn.example.pile;
 
 import com.squareup.leakcanary.LeakCanary;
 
+import java.nio.charset.Charset;
+
 
 /**
  * Created on 2016/6/9.
@@ -13,8 +15,7 @@ public class PileApplication extends com.activeandroid.app.Application {
     public void onCreate() {
         super.onCreate();
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
-        if (BuildConfig.DEBUG) LeakCanary.install(this);
-
+        LeakCanary.install(this);
        // Stetho.initializeWithDefaults(this);
     }
 

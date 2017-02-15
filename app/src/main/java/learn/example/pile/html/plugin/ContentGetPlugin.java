@@ -16,7 +16,7 @@ public class ContentGetPlugin implements JavaScriptPlugin {
     @Override
     public String getJavaScript() {
         return "var page=document.documentElement.outerHTML;\n"+
-                "ContentGetPlugin.passHtml(String(page));";
+                getName()+".passHtml(String(page));";
     }
 
     /**

@@ -12,12 +12,12 @@ import android.support.v4.content.ContextCompat;
 import learn.example.pile.R;
 import learn.example.pile.activity.normal.ChatActivity;
 import learn.example.pile.activity.normal.FragmentActivity;
-import learn.example.pile.activity.normal.DetailJokeActivity;
 import learn.example.pile.activity.normal.PhotoActivity;
 import learn.example.pile.activity.normal.ShortVideoActivity;
 import learn.example.pile.activity.normal.VideoActivity;
 import learn.example.pile.activity.normal.ZhihuReaderActivity;
 import learn.example.pile.fragment.NetEaseReaderFragment;
+import learn.example.pile.fragment.comment.JokeCommentFragment;
 
 /**
  * Created on 2016/6/23.
@@ -103,17 +103,6 @@ public class ActivityLauncher {
 
 
     /**
-     * 启动显示详细笑话内容Activity
-     * @param groupJson  groupBean class 反序列的json 数据
-     */
-    public static void startDetailJokeActivity(@NonNull Context context, @NonNull String groupJson)
-    {
-        Intent intent=new Intent(context, DetailJokeActivity.class);
-        intent.putExtra(DetailJokeActivity.EXTRA_GROUP_JSON,groupJson);
-        startActivity(context,intent,null);
-    }
-
-    /**
      * 启动阅读器,显示知乎内容
      * @param id  id 知乎文章ID
      */
@@ -150,6 +139,15 @@ public class ActivityLauncher {
         Intent intent=new Intent(context, ShortVideoActivity.class);
         intent.setData(Uri.parse(url));
         startActivity(context,intent,null);
+    }
+
+    public static void startJokeCommentActivity(Context context,String groupId)
+    {
+        String className= JokeCommentFragment.class.getCanonicalName();
+        Bundle bundle=new Bundle();
+        bundle.putString(JokeCommentFragment.ARGUMENT_GROUP_ID,groupId);
+        Intent intent=FragmentActivity.makeIntent(context,className,bundle);
+        startActivity(context,intent,makeSlideAnimation(context));
     }
 
     /**

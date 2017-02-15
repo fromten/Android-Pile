@@ -36,9 +36,8 @@ public class VideoClickPlugin extends ContextPlugin {
                 "      objs[i].onclick=function()\n" +
                 "      {\n" +
                 "         var url=this.getAttribute(\"mp4\"); \n" +
-                "         VideoClickPlugin.openVideo(url)\n" +
-                "      }  \n" +
-                "    }\n";
+                        getName()+".openVideo(url)\n" +
+                "      } }";
     }
 
     public String getName()

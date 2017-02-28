@@ -26,6 +26,7 @@
             android:layout_height="@dimen/avatar_img_height"
             android:layout_centerInParent="true"
             android:id="@+id/ic_play"
+            android:visibility="gone"
             android:src="@drawable/ic_playbutton"/>
         <TextView
             style="@style/SmallText"

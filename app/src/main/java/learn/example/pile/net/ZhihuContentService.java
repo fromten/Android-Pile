@@ -9,9 +9,9 @@ import learn.example.pile.provider.Zhihu;
  */
 public class ZhihuContentService extends NetService {
 
-    public String TAG_CONTENT = "tag_content";
-    public String TAG_COMMENT_LONG = "tag_comment_long";
-    public String TAG_COMMENT_SHORT = "tag_comment_short";
+    private static final String TAG_CONTENT = "TAG_CONTENT";
+    private static final String TAG_COMMENT_LONG = "TAG_COMMENT_LONG";
+    private static final String TAG_COMMENT_SHORT = "TAG_COMMENT_SHORT";
 
     public void getContent(int id, Callback<ZhihuNewsContent> callback) {
         String url = Zhihu.CONTENT_URL + id;

@@ -36,7 +36,7 @@ public class BootActivity extends FullScreenActivity{
     private ProgressBar mProgressBar;
     private TextView mImageOwn;
     private ValueAnimator mValueAnimator;
-    public static final int SHOW_DURATION=2500;//2.5 second
+    public static final int SHOW_DURATION=2*1000;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

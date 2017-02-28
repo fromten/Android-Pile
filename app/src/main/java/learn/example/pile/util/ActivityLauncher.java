@@ -13,7 +13,6 @@ import learn.example.pile.R;
 import learn.example.pile.activity.normal.ChatActivity;
 import learn.example.pile.activity.normal.FragmentActivity;
 import learn.example.pile.activity.normal.PhotoActivity;
-import learn.example.pile.activity.normal.ShortVideoActivity;
 import learn.example.pile.activity.normal.VideoActivity;
 import learn.example.pile.activity.normal.ZhihuReaderActivity;
 import learn.example.pile.fragment.NetEaseReaderFragment;
@@ -31,10 +30,13 @@ public class ActivityLauncher {
      * @param context
      * @param url
      */
-    public static void startVideoActivity(@NonNull Context context, @NonNull String url)
+    public static void startVideoActivity(@NonNull Context context, @NonNull String url,
+                                          boolean showController,boolean loopMode)
     {
         Intent intent=new Intent(context, VideoActivity.class);
         intent.setData(Uri.parse(url));
+        intent.putExtra(VideoActivity.EXTRA_USE_CONTROLLER,showController);
+        intent.putExtra(VideoActivity.EXTRA_SUPPORT_LOOP_MODE,loopMode);
         startActivity(context,intent,null);
     }
 
@@ -130,16 +132,6 @@ public class ActivityLauncher {
         startActivity(context,intent,null);
     }
 
-
-    /**
-     * 启动activity 播放短视屏
-     */
-    public static void startShortVideoActivity(Context context,String url)
-    {
-        Intent intent=new Intent(context, ShortVideoActivity.class);
-        intent.setData(Uri.parse(url));
-        startActivity(context,intent,null);
-    }
 
     public static void startJokeCommentActivity(Context context,String groupId)
     {

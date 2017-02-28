@@ -1,6 +1,5 @@
 package learn.example.pile.html.plugin;
 
-import android.content.Context;
 import android.webkit.JavascriptInterface;
 
 /**

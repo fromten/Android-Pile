@@ -1,5 +1,6 @@
 package learn.example.pile.ui;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -7,11 +8,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.res.ResourcesCompat;
-import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.TextView;
 
 import learn.example.pile.R;
@@ -40,7 +41,10 @@ public class VideoErrorDialog extends DialogFragment {
         textView.setTextColor(Color.WHITE);
         textView.setBackgroundColor(Color.BLACK);
         textView.setGravity(Gravity.CENTER);
-        getDialog().setCanceledOnTouchOutside(false);
+
+        Dialog dialog=getDialog();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         return textView;
     }
 

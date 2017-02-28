@@ -61,7 +61,7 @@ public class NetEaseHtml implements Html{
 
             String tagAttr=HtmlBuilder.attr("src",src);
             String imageTag= HtmlBuilder.tag("image",tagAttr,null);
-            imageTag+= HtmlBuilder.tag("b",null,"(图片)"+alt);
+            imageTag+= HtmlBuilder.tag("small",null,"▲图片"+alt);
             out.put(ref,imageTag);
         }
     }
@@ -87,7 +87,7 @@ public class NetEaseHtml implements Html{
             String divAttr= HtmlBuilder.attrs("class","videowrap","mp4",mp4);
             String div= HtmlBuilder.tag("div",divAttr,image1Tag+image2Tag);
 
-            div+= HtmlBuilder.tag("b",null,"(视频)"+alt);
+            div+= HtmlBuilder.tag("small",null,"▲视频"+alt);
             out.put(ref,div);
         }
     }

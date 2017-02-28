@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.view.View;
 
 import learn.example.pile.factory.CommentFactory;
-import learn.example.pile.factory.ZhihuCommentFactory;
 import learn.example.pile.net.IService;
 import learn.example.pile.net.ZhihuContentService;
 import learn.example.pile.pojo.Comment;

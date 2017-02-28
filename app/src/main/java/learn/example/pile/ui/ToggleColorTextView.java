@@ -1,20 +1,15 @@
 package learn.example.pile.ui;
 
 import android.animation.Animator;
-import android.animation.AnimatorInflater;
-import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.LightingColorFilter;
 import android.graphics.drawable.Drawable;
-import android.support.v7.widget.DrawableUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.BounceInterpolator;
 import android.widget.TextView;
-import android.widget.ViewAnimator;
 
 /**
  * Created on 2017/2/13.

@@ -16,17 +16,12 @@
  
 
 ##Api提供者:
-
-<a href='http://apistore.baidu.com/' >百度ApiStore</a>
-</br>
-<a href='http://gank.io/api' >干货集中营</a>
-</br>
 <a href='https://github.com/izzyleung/ZhihuDailyPurify/wiki/' >Zhihu.Inc</a>
  
 ##依赖Lib
 <ul>
 <li>Glide</li>
-<li>ExoPlayer></li>
+<li>ExoPlayer</li>
 <li>Gson</li>
 <li>ActiveAndroid</li>
 <li>Okhttp</li>

@@ -7,7 +7,6 @@ import android.view.View;
 import com.google.gson.JsonObject;
 
 import learn.example.pile.factory.CommentFactory;
-import learn.example.pile.factory.OpenEyeCommentFactory;
 import learn.example.pile.net.IService;
 import learn.example.pile.net.OpenEyeService;
 import learn.example.pile.pojo.Comment;

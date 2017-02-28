@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.gson.Gson;
 
 import learn.example.pile.R;
 import learn.example.pile.adapters.base.GsonStateAdapter;
@@ -44,13 +43,12 @@ public class JokeListAdapter extends GsonStateAdapter<Joke.Item, JokeListAdapter
         mFitGifTransform = new GlideUtil.FitGifTransform(context);
 
         DeviceInfo info = new DeviceInfo(context);
-        if (info.SCREEN_HEIGHT>info.SCREEN_WIDTH)//竖屏
+        if (info.SCREEN_HEIGHT > info.SCREEN_WIDTH)//竖屏
         {
-            VIDEO_COVER_HEIGHT= (int) (info.SCREEN_HEIGHT / 3.5f);
-        }else {
-            VIDEO_COVER_HEIGHT= (int) (info.SCREEN_HEIGHT/1.5f);
+            VIDEO_COVER_HEIGHT = (int) (info.SCREEN_HEIGHT / 3.5f);
+        } else {
+            VIDEO_COVER_HEIGHT = (int) (info.SCREEN_HEIGHT / 1.5f);
         }
-
     }
 
 
@@ -59,12 +57,13 @@ public class JokeListAdapter extends GsonStateAdapter<Joke.Item, JokeListAdapter
         return Joke.Item.class;
     }
 
-    private void resetLayoutParams(JokeSingleViewHolder holder)
-    {
-        RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams
-                        (ViewGroup.LayoutParams.MATCH_PARENT,
+    private void resetLayoutViewState(JokeSingleViewHolder holder) {
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams
+                (ViewGroup.LayoutParams.MATCH_PARENT,
                         VIDEO_COVER_HEIGHT);
         holder.cover.setLayoutParams(params);
+        holder.cover.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        holder.ic_play.setVisibility(View.VISIBLE);
     }
 
 
@@ -74,8 +73,7 @@ public class JokeListAdapter extends GsonStateAdapter<Joke.Item, JokeListAdapter
             return TYPE_MULTI_IMAGE;
         } else if (get(position).isVideo()) {
             return TYPE_SINGLE_VIDEO;
-        }else if (get(position).getImage()!=null)
-        {
+        } else if (get(position).getImage() != null) {
             return TYPE_SINGLE_IMAGE;
         }
         return TYPE_NORMAL;
@@ -85,12 +83,13 @@ public class JokeListAdapter extends GsonStateAdapter<Joke.Item, JokeListAdapter
     @Override
     public JokeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         JokeViewHolder holder;
-        switch (viewType)
-        {
-            case TYPE_MULTI_IMAGE:holder=new JokeMultipleViewHolder(parent);break;
+        switch (viewType) {
+            case TYPE_MULTI_IMAGE:
+                holder = new JokeMultipleViewHolder(parent);
+                break;
             case TYPE_SINGLE_IMAGE:
             case TYPE_SINGLE_VIDEO:
-                holder=new JokeSingleViewHolder(parent);
+                holder = new JokeSingleViewHolder(parent);
                 break;
             case TYPE_NORMAL:
             default:
@@ -99,13 +98,11 @@ public class JokeListAdapter extends GsonStateAdapter<Joke.Item, JokeListAdapter
                 holder = new JokeViewHolder(view);
                 break;
         }
-        if (viewType==TYPE_SINGLE_IMAGE||viewType==TYPE_SINGLE_VIDEO)
-        {
+        if (viewType == TYPE_SINGLE_IMAGE || viewType == TYPE_SINGLE_VIDEO) {
             ((JokeSingleViewHolder) holder).cover.setOnClickListener(this);
         }
-        if (viewType==TYPE_SINGLE_VIDEO)
-        {
-            resetLayoutParams((JokeSingleViewHolder) holder);
+        if (viewType == TYPE_SINGLE_VIDEO) {
+            resetLayoutViewState((JokeSingleViewHolder) holder);
         }
         holder.itemView.setOnClickListener(this);
         return holder;
@@ -158,19 +155,11 @@ public class JokeListAdapter extends GsonStateAdapter<Joke.Item, JokeListAdapter
                 .load(url).asBitmap()
                 .dontAnimate()
                 .dontTransform();
-        if (item.isVideo())//视频封面宽度充满屏幕宽度
-        {
-            holder.ic_play.setVisibility(View.VISIBLE);
-            b.centerCrop();
+        if (item.isGif()) {   //gif图片通常过于太小
+            b.transform(mFitGifTransform);
         } else {
-            holder.ic_play.setVisibility(View.INVISIBLE);
-            if (item.isGif())
-            {   //gif图片通常过于太小
-                b.transform(mFitGifTransform);
-            }else {
-                b.transform(mCropSquareTransformation);
-                b.diskCacheStrategy(DiskCacheStrategy.ALL);
-            }
+            b.transform(mCropSquareTransformation);
+            b.diskCacheStrategy(DiskCacheStrategy.ALL);
         }
         b.into(holder.cover);
     }
@@ -183,15 +172,16 @@ public class JokeListAdapter extends GsonStateAdapter<Joke.Item, JokeListAdapter
                 Joke.Video video = item.getVideo();
                 if (video != null) {
                     String url = video.getUrl();
-                    if (item.isVideo()) ActivityLauncher.startVideoActivity(mContext, url);
-                    else ActivityLauncher.startShortVideoActivity(mContext, url);
+                    if (item.isVideo())
+                        ActivityLauncher.startVideoActivity(mContext, url, true, false);
+                    else ActivityLauncher.startVideoActivity(mContext, url, false, true);
                 }
             } else {
                 String url = item.getImage().getUrl();
                 ActivityLauncher.startPhotoActivityForSingle(mContext, url);
             }
         } else {
-            ActivityLauncher.startJokeCommentActivity(mContext,item.getId_str());
+            ActivityLauncher.startJokeCommentActivity(mContext, item.getId_str());
         }
     }
 

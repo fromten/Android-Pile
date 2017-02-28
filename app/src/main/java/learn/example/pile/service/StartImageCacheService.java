@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -23,7 +24,7 @@ import okhttp3.Response;
 
 public class StartImageCacheService extends IntentService {
 
-    public static final String URL_JSON_START_IMAGE = "http://news-at.zhihu.com/api/4/start-image";
+    public static final String URL_JSON_START_IMAGE = "http://news-at.zhihu.com/api/7/prefetch-launch-images";
     public static final String CACHE_FILE_NAME = "startImageCacheABCD";
     public static final String KEY_IMAGE_OWNER = "bootactivity_start_image_owner";
     public static final String PREFERENCE_FILE_NAME = "service_preference";
@@ -37,8 +38,8 @@ public class StartImageCacheService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent == null) return;
-        //尝试八次
-        for (int i = 0; i < 8; i++) {
+        //尝试3次
+        for (int i = 0; i < 3; i++) {
             if (mImageUrl == null) {
                 try {
                     mImageUrl = getImageUrlAndSaveExtraMsg();
@@ -95,15 +96,26 @@ public class StartImageCacheService extends IntentService {
     private String getImageUrlAndSaveExtraMsg() throws IOException {
         OkHttpRequest request = OkHttpRequest.getInstance(getApplicationContext());
         Response response = request.syncCall(getMatchStartImageUrl()).execute();
+        String body=response.body().string();
+        response.close();
         if (response.isSuccessful()) {
-            JsonObject object = (JsonObject) new JsonParser().parse(response.body().string());
-            final String imageUrl = GsonHelper.getAsString(object.get("img"), null);
-            final String text = GsonHelper.getAsString(object.get("text"), null);
+            JsonObject object = (JsonObject) new JsonParser().parse(body);
+            try {
+               JsonArray array= object.getAsJsonArray("creatives");
+               if (array!=null&&!array.isJsonNull()&&array.size()>1)
+               {
+                   object=array.get(1).getAsJsonObject();
+                   final String imageUrl = GsonHelper.getAsString(object.get("url"), null);
+                   final String text = GsonHelper.getAsString(object.get("text"), null);
+                   //保存作者信息
+                   getSharedPreferences(PREFERENCE_FILE_NAME, Context.MODE_PRIVATE)
+                           .edit().putString(KEY_IMAGE_OWNER, text).apply();
+                   return imageUrl;
+               }
+            }catch (Exception e)
+            {
 
-            //保存作者信息
-            getSharedPreferences(PREFERENCE_FILE_NAME, Context.MODE_PRIVATE)
-                    .edit().putString(KEY_IMAGE_OWNER, text).apply();
-            return imageUrl;
+            }
         }
         return null;
     }

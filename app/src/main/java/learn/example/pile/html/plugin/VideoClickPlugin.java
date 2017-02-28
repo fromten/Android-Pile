@@ -20,7 +20,7 @@ public class VideoClickPlugin extends ContextPlugin {
     {
         Context context=mWeakReference.get();
         if (context!=null)
-            ActivityLauncher.startVideoActivity(context,url);
+            ActivityLauncher.startVideoActivity(context,url,true,false);
     }
 
     public String getJavaScript()

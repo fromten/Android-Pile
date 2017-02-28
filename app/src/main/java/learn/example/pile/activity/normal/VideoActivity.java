@@ -1,7 +1,6 @@
 package learn.example.pile.activity.normal;
 
 
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,6 +12,7 @@ import android.view.View;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -24,7 +24,6 @@ import com.google.android.exoplayer2.trackselection.AdaptiveVideoTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
-import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
@@ -64,6 +63,10 @@ public class VideoActivity extends CommentMenuActivity {
 
 
     public static final String EXTRA_TITLE = "EXTRA_TITLE";
+    public static final String EXTRA_USE_CONTROLLER="EXTRA_USE_CONTROLLER";
+    public static final String EXTRA_SUPPORT_LOOP_MODE="EXTRA_SUPPORT_LOOP";
+
+    private boolean isLooperMode;
     //private static final String STATE_SAVE_VIDEO_POSITION = "STATE_SAVE_VIDEO_POSITION";
     //final String URL = "http://baobab.kaiyanapp.com/api/v1/playUrl?vid=13861&editionType=default&source=ucloud";
 
@@ -79,6 +82,7 @@ public class VideoActivity extends CommentMenuActivity {
         mSimpleExoPlayerView = (CopySimpleExoPlayerView) findViewById(R.id.player_view);
         mVolumeProgressView= (VolumeProgressView) findViewById(R.id.video_volume);
         setTitle(getIntent().getStringExtra(EXTRA_TITLE));
+        isLooperMode=getIntent().getBooleanExtra(EXTRA_SUPPORT_LOOP_MODE,false);
         initPlayerView();
     }
 
@@ -117,11 +121,14 @@ public class VideoActivity extends CommentMenuActivity {
 
     @Override
     protected void onDestroy() {
+        mSimpleExoPlayerView.setPlayer(null);//移除回调
         mHandler.removeCallbacksAndMessages(null);
         super.onDestroy();
     }
 
     public void initPlayerView() {
+        boolean userController=getIntent().getBooleanExtra(EXTRA_USE_CONTROLLER,true);
+        mSimpleExoPlayerView.setUseController(userController);
         final GestureDetector detector = new GestureDetector(this, new PlayViewGestureListener());
         mSimpleExoPlayerView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -130,13 +137,6 @@ public class VideoActivity extends CommentMenuActivity {
                 return true;//拦截View事件
             }
         });
-        boolean landscape = getResources().getConfiguration().orientation
-                == Configuration.ORIENTATION_LANDSCAPE;
-        if (landscape) {
-            mSimpleExoPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FILL);
-        } else {
-            mSimpleExoPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH);
-        }
     }
 
     public void initializePlayer() {
@@ -181,7 +181,6 @@ public class VideoActivity extends CommentMenuActivity {
     {
         mHandler.removeMessages(MSG_HIDE_ACTIONBAR);
         showActionBar();
-        //持续显示
         mSimpleExoPlayerView.setControllerShowTimeoutMs(0);
         mSimpleExoPlayerView.showController();
     }
@@ -210,6 +209,12 @@ public class VideoActivity extends CommentMenuActivity {
                mHandler.sendEmptyMessageDelayed(MSG_HIDE_ACTIONBAR,DELAY_MILLISECOND);
                isFirst=false;
            }
+            if (playbackState== ExoPlayer.STATE_ENDED&&isLooperMode
+                    &&mExoPlayer!=null)
+            {
+               resumePosition=0;
+               mExoPlayer.seekTo(0);
+            }
         }
 
         @Override
@@ -234,6 +239,11 @@ public class VideoActivity extends CommentMenuActivity {
 
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
+            if (isLooperMode)
+            {
+                finish();
+                return true;
+            }
             ActionBar actionBarV7 = getSupportActionBar();
             if (actionBarV7 != null) {
                 if (actionBarV7.isShowing()) {
